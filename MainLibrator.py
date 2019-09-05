@@ -5,6 +5,8 @@ from PyQt5 import QtWidgets, QtPrintSupport
 
 from PyQt5.QtWidgets import QApplication
 from MainLibrator_UI import Ui_MainLibrator
+import re
+
 global BaseSeq
 BaseSeq = ''
 from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, \
@@ -42,6 +44,8 @@ global working_prefix
 working_prefix = '/Users/leil/Documents/Projects/Librator/'
 global bin_prefix
 bin_prefix = '/usr/local/bin/'
+
+
 
 
 class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
@@ -2688,7 +2692,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 	def on_btnClearAll_clicked(self):
 		self.removeAll()
 
-
 	@pyqtSlot()
 	def on_btnSeqIn_clicked(self):
 		self.AddActive()
@@ -3013,6 +3016,44 @@ class LibratorMain(QtWidgets.QMainWindow):
 			if item[8] == 'Base':
 				BaseSeq = SeqName
 				self.ui.lblBaseName.setText(BaseSeq)
+
+	def show3Dstructure(self, mutation, pdbPath, pymolPath):
+		with open("local.pml", "w") as pml:
+			# write pml script
+			text = "load " + pdbPath + "\n"
+			pml.write(text)
+			text = "as cartoon\nbg_color white\ncolor lightorange\n"
+			pml.write(text)
+
+			position = re.sub('[A-Za-z]', '', mutation)
+			position = position.replace(",", "+")
+			text = "sel mutation, resi " + position + "\n"
+			pml.write(text)
+			text = "color red, mutation\n"
+			pml.write(text)
+
+			labels = mutation.split(",")
+			for label in labels:
+				number = re.sub('[A-Za-z]', '', label)
+				text = "label resi " + number + " and name C, \"" + label + "\"\n"
+				pml.write(text)
+
+			text = "set label_size, 25\n"
+			pml.write(text)
+
+		cmd = pymolPath + " local.pml"
+		#os.system('./11.sh')
+		os.system(cmd)
+		#subprocess.Popen(cmd, shell=True)
+
+	@pyqtSlot()
+	def on_btnFieldSearch_clicked(self):
+		mutation = "M131L,N171K,Q144R"
+		pdbPath = "./3hto.pdb"
+		pymolPath = "/Users/leil/anaconda3/bin/pymol"
+
+		self.show3Dstructure(mutation, pdbPath, pymolPath)
+
 
 
 def ReadFASTA(outfilename):
