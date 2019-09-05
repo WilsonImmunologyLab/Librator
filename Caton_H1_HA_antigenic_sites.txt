@@ -1,0 +1,67 @@
+# This file lists the antigenic sites in the HA of H1 influenza (PR8). 
+#
+# It refers to the following reference:
+# Caton et al, Cell, 31:417-427 (1982)
+#
+# In this paper, Caton et al define the antigenic sites of the HA, partitioning them
+# into four categories (Ca, Cb, Sa, and Sb). Actually, they partition Ca into Ca1
+# and Ca2, but here they are just grouped as CA.
+# These data are in Table 3 of Caton et al.
+# The following residues are in Table 3 but are not considered to be
+# in the antigenic sites for the reasons explained by Caton et al.
+#  * residue 273 (H3 numbering), see page 422 of Caton et al
+#  * residue 182 (H3 numbering), see page 421 of Caton et al
+#
+# Note that the WSN HA has gained a glycosylation site at residue 142 (sequential numbering),
+# which is 125 in H1 numbering and 129 in H3 numbering relative to the PR8 influenza HA that
+# was studied by Caton et al. This additional glycosylation can differentially affect viral
+# growth in different cell types, see:
+# Deom et al, Proc Natl Acad Sci USA, 83:3771-3775 (1986)
+# Because this analysis studies the WSN HA, it seems that this new glycosylation site should no
+# longer be considered an antigenic site. Therefore, this position is excluded from being
+# considered in an antigenic site even though it is classifed as being in Sa by Caton et al.
+#
+# Below, these antigenic sites are listed with the following columns:
+# 1) WSN_NUMBER: number in sequential 1, 2, ... numbering of the A/WSN/33
+#    sequence beginning with 1 at the N-terminal Met. 
+# 2) WSN_RESIDUE: amino acid in WSN
+# 3) ANTIGENIC_SITE: Ca, Cb, Sa, or Sb
+# 4) H1_NUMBER: the H1 number used by Caton et al
+# 5) H3_NUMBER: the H3 number used by Caton et al
+# 6) PR8_RESIDUE: amino acid in the PR8 used by Caton et al
+#
+# WSN_NUMBER WSN_RESIDUE ANTIGENIC_SITE H1_NUMBER H3_NUMBER PR8_RESIDUE
+141 P Sa 124 128 P
+#excluded due to gain of glycosylation 142 N Sa 125 129 N
+171 G Sa 154 158 E
+173 S Sa 156 160 S
+175 P Sa 158 162 P
+176 K Sa 159 163 K
+178 T Sa 161 165 K
+179 N Sa 162 166 N
+180 S Sa 163 167 S
+
+169 K Sb 152 156 E
+172 D Sb 155 159 G
+205 Q Sb 188 192 Q
+206 S Sb 189 193 N
+209 S Sb 192 196 Q
+211 G Sb 194 198 E
+
+182 V Ca 165 169 V
+186 G Ca 169 173 G
+220 S Ca 203 207 S
+253 G Ca 236 240 G
+
+153 S Ca 136 140 S
+156 G Ca 139 143 G
+158 S Ca 141 145 S
+237 R Ca 220 224 R
+238 D Ca 221 225 D
+
+87 L Cb 70 78 L
+88 L Cb 71 79 L
+90 A Cb 73 81 V
+91 R Cb 74 82 R
+92 S Cb 75 83 S
+135 P Cb 115 122 E

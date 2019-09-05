@@ -1,0 +1,2273 @@
+
+Beginning execution of HA_numbering.py script.
+Reading input from Input/Input_ca09.txt
+Making MUSCLE alignments...
+Alignments complete.
+
+Here are the corresponding residue numbers:
+
+Residue M1 in sequential numbering of your HA sequence corresponds to:
+  * Q1 in HA1 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue K2 in sequential numbering of your HA sequence corresponds to:
+  * D2 in HA1 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue A3 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue I4 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue L5 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue V6 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue V7 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue L8 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue L9 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue Y10 in sequential numbering of your HA sequence corresponds to:
+  * L3 in HA1 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue T11 in sequential numbering of your HA sequence corresponds to:
+  * P4 in HA1 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue F12 in sequential numbering of your HA sequence corresponds to:
+  * G5 in HA1 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue A13 in sequential numbering of your HA sequence corresponds to:
+  * N6 in HA1 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue T14 in sequential numbering of your HA sequence corresponds to:
+  * D7 in HA1 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue A15 in sequential numbering of your HA sequence corresponds to:
+  * N8 in HA1 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue N16 in sequential numbering of your HA sequence corresponds to:
+  * S9 in HA1 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue A17 in sequential numbering of your HA sequence corresponds to:
+  * T10 in HA1 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue D18 in sequential numbering of your HA sequence corresponds to:
+  * A11 in HA1 in 4HMG
+  * D7 of HA1 in 4JTV
+
+Residue T19 in sequential numbering of your HA sequence corresponds to:
+  * T12 in HA1 in 4HMG
+  * T8 of HA1 in 4JTV
+
+Residue L20 in sequential numbering of your HA sequence corresponds to:
+  * L13 in HA1 in 4HMG
+  * L9 of HA1 in 4JTV
+
+Residue C21 in sequential numbering of your HA sequence corresponds to:
+  * C14 in HA1 in 4HMG
+  * C10 of HA1 in 4JTV
+
+Residue I22 in sequential numbering of your HA sequence corresponds to:
+  * L15 in HA1 in 4HMG
+  * I11 of HA1 in 4JTV
+
+Residue G23 in sequential numbering of your HA sequence corresponds to:
+  * G16 in HA1 in 4HMG
+  * G12 of HA1 in 4JTV
+
+Residue Y24 in sequential numbering of your HA sequence corresponds to:
+  * H17 in HA1 in 4HMG
+  * Y13 of HA1 in 4JTV
+
+Residue H25 in sequential numbering of your HA sequence corresponds to:
+  * H18 in HA1 in 4HMG
+  * H14 of HA1 in 4JTV
+
+Residue A26 in sequential numbering of your HA sequence corresponds to:
+  * A19 in HA1 in 4HMG
+  * A15 of HA1 in 4JTV
+
+Residue N27 in sequential numbering of your HA sequence corresponds to:
+  * V20 in HA1 in 4HMG
+  * N16 of HA1 in 4JTV
+
+Residue N28 in sequential numbering of your HA sequence corresponds to:
+  * P21 in HA1 in 4HMG
+  * N17 of HA1 in 4JTV
+
+Residue S29 in sequential numbering of your HA sequence corresponds to:
+  * N22 in HA1 in 4HMG
+  * S18 of HA1 in 4JTV
+
+Residue T30 in sequential numbering of your HA sequence corresponds to:
+  * G23 in HA1 in 4HMG
+  * T19 of HA1 in 4JTV
+
+Residue D31 in sequential numbering of your HA sequence corresponds to:
+  * T24 in HA1 in 4HMG
+  * D20 of HA1 in 4JTV
+
+Residue T32 in sequential numbering of your HA sequence corresponds to:
+  * L25 in HA1 in 4HMG
+  * T21 of HA1 in 4JTV
+
+Residue V33 in sequential numbering of your HA sequence corresponds to:
+  * V26 in HA1 in 4HMG
+  * V22 of HA1 in 4JTV
+
+Residue D34 in sequential numbering of your HA sequence corresponds to:
+  * K27 in HA1 in 4HMG
+  * D23 of HA1 in 4JTV
+
+Residue T35 in sequential numbering of your HA sequence corresponds to:
+  * T28 in HA1 in 4HMG
+  * T24 of HA1 in 4JTV
+
+Residue V36 in sequential numbering of your HA sequence corresponds to:
+  * I29 in HA1 in 4HMG
+  * V25 of HA1 in 4JTV
+
+Residue L37 in sequential numbering of your HA sequence corresponds to:
+  * T30 in HA1 in 4HMG
+  * L26 of HA1 in 4JTV
+
+Residue E38 in sequential numbering of your HA sequence corresponds to:
+  * D31 in HA1 in 4HMG
+  * E27 of HA1 in 4JTV
+
+Residue K39 in sequential numbering of your HA sequence corresponds to:
+  * D32 in HA1 in 4HMG
+  * K28 of HA1 in 4JTV
+
+Residue N40 in sequential numbering of your HA sequence corresponds to:
+  * Q33 in HA1 in 4HMG
+  * N29 of HA1 in 4JTV
+
+Residue V41 in sequential numbering of your HA sequence corresponds to:
+  * I34 in HA1 in 4HMG
+  * V30 of HA1 in 4JTV
+
+Residue T42 in sequential numbering of your HA sequence corresponds to:
+  * E35 in HA1 in 4HMG
+  * T31 of HA1 in 4JTV
+
+Residue V43 in sequential numbering of your HA sequence corresponds to:
+  * V36 in HA1 in 4HMG
+  * V32 of HA1 in 4JTV
+
+Residue T44 in sequential numbering of your HA sequence corresponds to:
+  * T37 in HA1 in 4HMG
+  * T33 of HA1 in 4JTV
+
+Residue H45 in sequential numbering of your HA sequence corresponds to:
+  * N38 in HA1 in 4HMG
+  * H34 of HA1 in 4JTV
+
+Residue S46 in sequential numbering of your HA sequence corresponds to:
+  * A39 in HA1 in 4HMG
+  * S35 of HA1 in 4JTV
+
+Residue V47 in sequential numbering of your HA sequence corresponds to:
+  * T40 in HA1 in 4HMG
+  * V36 of HA1 in 4JTV
+
+Residue N48 in sequential numbering of your HA sequence corresponds to:
+  * E41 in HA1 in 4HMG
+  * N37 of HA1 in 4JTV
+
+Residue L49 in sequential numbering of your HA sequence corresponds to:
+  * L42 in HA1 in 4HMG
+  * L38 of HA1 in 4JTV
+
+Residue L50 in sequential numbering of your HA sequence corresponds to:
+  * V43 in HA1 in 4HMG
+  * L39 of HA1 in 4JTV
+
+Residue E51 in sequential numbering of your HA sequence corresponds to:
+  * Q44 in HA1 in 4HMG
+  * E40 of HA1 in 4JTV
+
+Residue D52 in sequential numbering of your HA sequence corresponds to:
+  * S45 in HA1 in 4HMG
+  * D41 of HA1 in 4JTV
+
+Residue K53 in sequential numbering of your HA sequence corresponds to:
+  * S46 in HA1 in 4HMG
+  * K42 of HA1 in 4JTV
+
+Residue H54 in sequential numbering of your HA sequence corresponds to:
+  * S47 in HA1 in 4HMG
+  * H43 of HA1 in 4JTV
+
+Residue N55 in sequential numbering of your HA sequence corresponds to:
+  * T48 in HA1 in 4HMG
+  * N44 of HA1 in 4JTV
+
+Residue G56 in sequential numbering of your HA sequence corresponds to:
+  * G49 in HA1 in 4HMG
+  * G45 of HA1 in 4JTV
+
+Residue K57 in sequential numbering of your HA sequence corresponds to:
+  * K50 in HA1 in 4HMG
+  * K46 of HA1 in 4JTV
+
+Residue L58 in sequential numbering of your HA sequence corresponds to:
+  * I51 in HA1 in 4HMG
+  * L47 of HA1 in 4JTV
+
+Residue C59 in sequential numbering of your HA sequence corresponds to:
+  * C52 in HA1 in 4HMG
+  * C48 of HA1 in 4JTV
+
+Residue K60 in sequential numbering of your HA sequence corresponds to:
+  * N53 in HA1 in 4HMG
+  * K49 of HA1 in 4JTV
+
+Residue L61 in sequential numbering of your HA sequence corresponds to:
+  * L59 in HA1 in 4HMG
+  * L50 of HA1 in 4JTV
+
+Residue R62 in sequential numbering of your HA sequence corresponds to:
+  * D60 in HA1 in 4HMG
+  * R51 of HA1 in 4JTV
+
+Residue G63 in sequential numbering of your HA sequence corresponds to:
+  * G61 in HA1 in 4HMG
+  * G52 of HA1 in 4JTV
+
+Residue V64 in sequential numbering of your HA sequence corresponds to:
+  * I62 in HA1 in 4HMG
+  * V53 of HA1 in 4JTV
+
+Residue A65 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * A54 of HA1 in 4JTV
+
+Residue P66 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * P55 of HA1 in 4JTV
+
+Residue L67 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * L56 of HA1 in 4JTV
+
+Residue H68 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * H57 of HA1 in 4JTV
+
+Residue L69 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * L58 of HA1 in 4JTV
+
+Residue G70 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * G59 of HA1 in 4JTV
+
+Residue K71 in sequential numbering of your HA sequence corresponds to:
+  * D63 in HA1 in 4HMG
+  * K60 of HA1 in 4JTV
+
+Residue C72 in sequential numbering of your HA sequence corresponds to:
+  * C64 in HA1 in 4HMG
+  * C61 of HA1 in 4JTV
+
+Residue N73 in sequential numbering of your HA sequence corresponds to:
+  * T65 in HA1 in 4HMG
+  * N62 of HA1 in 4JTV
+
+Residue I74 in sequential numbering of your HA sequence corresponds to:
+  * L66 in HA1 in 4HMG
+  * I63 of HA1 in 4JTV
+
+Residue A75 in sequential numbering of your HA sequence corresponds to:
+  * I67 in HA1 in 4HMG
+  * A64 of HA1 in 4JTV
+
+Residue G76 in sequential numbering of your HA sequence corresponds to:
+  * D68 in HA1 in 4HMG
+  * G65 of HA1 in 4JTV
+
+Residue W77 in sequential numbering of your HA sequence corresponds to:
+  * A69 in HA1 in 4HMG
+  * W66 of HA1 in 4JTV
+
+Residue I78 in sequential numbering of your HA sequence corresponds to:
+  * L70 in HA1 in 4HMG
+  * I67 of HA1 in 4JTV
+
+Residue L79 in sequential numbering of your HA sequence corresponds to:
+  * L71 in HA1 in 4HMG
+  * L68 of HA1 in 4JTV
+
+Residue G80 in sequential numbering of your HA sequence corresponds to:
+  * G72 in HA1 in 4HMG
+  * G69 of HA1 in 4JTV
+
+Residue N81 in sequential numbering of your HA sequence corresponds to:
+  * D73 in HA1 in 4HMG
+  * N70 of HA1 in 4JTV
+
+Residue P82 in sequential numbering of your HA sequence corresponds to:
+  * P74 in HA1 in 4HMG
+  * P71 of HA1 in 4JTV
+
+Residue E83 in sequential numbering of your HA sequence corresponds to:
+  * H75 in HA1 in 4HMG
+  * E72 of HA1 in 4JTV
+
+Residue C84 in sequential numbering of your HA sequence corresponds to:
+  * C76 in HA1 in 4HMG
+  * C73 of HA1 in 4JTV
+
+Residue E85 in sequential numbering of your HA sequence corresponds to:
+  * D77 in HA1 in 4HMG
+  * E74 of HA1 in 4JTV
+
+Residue S86 in sequential numbering of your HA sequence corresponds to:
+  * V78 in HA1 in 4HMG
+  * S75 of HA1 in 4JTV
+
+Residue L87 in sequential numbering of your HA sequence corresponds to:
+  * F79 in HA1 in 4HMG
+  * L76 of HA1 in 4JTV
+
+Residue S88 in sequential numbering of your HA sequence corresponds to:
+  * Q80 in HA1 in 4HMG
+  * S77 of HA1 in 4JTV
+
+Residue T89 in sequential numbering of your HA sequence corresponds to:
+  * N81 in HA1 in 4HMG
+  * T78 of HA1 in 4JTV
+
+Residue A90 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * A79 of HA1 in 4JTV
+
+Residue S91 in sequential numbering of your HA sequence corresponds to:
+  * E82 in HA1 in 4HMG
+  * S80 of HA1 in 4JTV
+
+Residue S92 in sequential numbering of your HA sequence corresponds to:
+  * T83 in HA1 in 4HMG
+  * S81 of HA1 in 4JTV
+
+Residue W93 in sequential numbering of your HA sequence corresponds to:
+  * W84 in HA1 in 4HMG
+  * W82 of HA1 in 4JTV
+
+Residue S94 in sequential numbering of your HA sequence corresponds to:
+  * D85 in HA1 in 4HMG
+  * S83 of HA1 in 4JTV
+
+Residue Y95 in sequential numbering of your HA sequence corresponds to:
+  * L86 in HA1 in 4HMG
+  * Y84 of HA1 in 4JTV
+
+Residue I96 in sequential numbering of your HA sequence corresponds to:
+  * F87 in HA1 in 4HMG
+  * I85 of HA1 in 4JTV
+
+Residue V97 in sequential numbering of your HA sequence corresponds to:
+  * V88 in HA1 in 4HMG
+  * V86 of HA1 in 4JTV
+
+Residue E98 in sequential numbering of your HA sequence corresponds to:
+  * E89 in HA1 in 4HMG
+  * E87 of HA1 in 4JTV
+
+Residue T99 in sequential numbering of your HA sequence corresponds to:
+  * R90 in HA1 in 4HMG
+  * T88 of HA1 in 4JTV
+
+Residue P100 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * P89 of HA1 in 4JTV
+
+Residue S101 in sequential numbering of your HA sequence corresponds to:
+  * S91 in HA1 in 4HMG
+  * S90 of HA1 in 4JTV
+
+Residue S102 in sequential numbering of your HA sequence corresponds to:
+  * K92 in HA1 in 4HMG
+  * S91 of HA1 in 4JTV
+
+Residue D103 in sequential numbering of your HA sequence corresponds to:
+  * A93 in HA1 in 4HMG
+  * D92 of HA1 in 4JTV
+
+Residue N104 in sequential numbering of your HA sequence corresponds to:
+  * F94 in HA1 in 4HMG
+  * N93 of HA1 in 4JTV
+
+Residue G105 in sequential numbering of your HA sequence corresponds to:
+  * S95 in HA1 in 4HMG
+  * G94 of HA1 in 4JTV
+
+Residue T106 in sequential numbering of your HA sequence corresponds to:
+  * N96 in HA1 in 4HMG
+  * T95 of HA1 in 4JTV
+
+Residue C107 in sequential numbering of your HA sequence corresponds to:
+  * C97 in HA1 in 4HMG
+  * C96 of HA1 in 4JTV
+
+Residue Y108 in sequential numbering of your HA sequence corresponds to:
+  * Y98 in HA1 in 4HMG
+  * Y97 of HA1 in 4JTV
+
+Residue P109 in sequential numbering of your HA sequence corresponds to:
+  * P99 in HA1 in 4HMG
+  * P98 of HA1 in 4JTV
+
+Residue G110 in sequential numbering of your HA sequence corresponds to:
+  * Y100 in HA1 in 4HMG
+  * G99 of HA1 in 4JTV
+
+Residue D111 in sequential numbering of your HA sequence corresponds to:
+  * D101 in HA1 in 4HMG
+  * D100 of HA1 in 4JTV
+
+Residue F112 in sequential numbering of your HA sequence corresponds to:
+  * V102 in HA1 in 4HMG
+  * F101 of HA1 in 4JTV
+
+Residue I113 in sequential numbering of your HA sequence corresponds to:
+  * P103 in HA1 in 4HMG
+  * I102 of HA1 in 4JTV
+
+Residue D114 in sequential numbering of your HA sequence corresponds to:
+  * D104 in HA1 in 4HMG
+  * D103 of HA1 in 4JTV
+
+Residue Y115 in sequential numbering of your HA sequence corresponds to:
+  * Y105 in HA1 in 4HMG
+  * Y104 of HA1 in 4JTV
+
+Residue E116 in sequential numbering of your HA sequence corresponds to:
+  * A106 in HA1 in 4HMG
+  * E105 of HA1 in 4JTV
+
+Residue E117 in sequential numbering of your HA sequence corresponds to:
+  * S107 in HA1 in 4HMG
+  * E106 of HA1 in 4JTV
+
+Residue L118 in sequential numbering of your HA sequence corresponds to:
+  * L108 in HA1 in 4HMG
+  * L107 of HA1 in 4JTV
+
+Residue R119 in sequential numbering of your HA sequence corresponds to:
+  * R109 in HA1 in 4HMG
+  * R108 of HA1 in 4JTV
+
+Residue E120 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * E109 of HA1 in 4JTV
+
+Residue Q121 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * Q110 of HA1 in 4JTV
+
+Residue L122 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * L111 of HA1 in 4JTV
+
+Residue S123 in sequential numbering of your HA sequence corresponds to:
+  * S110 in HA1 in 4HMG
+  * S112 of HA1 in 4JTV
+
+Residue S124 in sequential numbering of your HA sequence corresponds to:
+  * L111 in HA1 in 4HMG
+  * S113 of HA1 in 4JTV
+
+Residue V125 in sequential numbering of your HA sequence corresponds to:
+  * V112 in HA1 in 4HMG
+  * V114 of HA1 in 4JTV
+
+Residue S126 in sequential numbering of your HA sequence corresponds to:
+  * A113 in HA1 in 4HMG
+  * S115 of HA1 in 4JTV
+
+Residue S127 in sequential numbering of your HA sequence corresponds to:
+  * S114 in HA1 in 4HMG
+  * S116 of HA1 in 4JTV
+
+Residue F128 in sequential numbering of your HA sequence corresponds to:
+  * S115 in HA1 in 4HMG
+  * F117 of HA1 in 4JTV
+
+Residue E129 in sequential numbering of your HA sequence corresponds to:
+  * G116 in HA1 in 4HMG
+  * E118 of HA1 in 4JTV
+
+Residue R130 in sequential numbering of your HA sequence corresponds to:
+  * T117 in HA1 in 4HMG
+  * R119 of HA1 in 4JTV
+
+Residue F131 in sequential numbering of your HA sequence corresponds to:
+  * L118 in HA1 in 4HMG
+  * F120 of HA1 in 4JTV
+
+Residue E132 in sequential numbering of your HA sequence corresponds to:
+  * E119 in HA1 in 4HMG
+  * E121 of HA1 in 4JTV
+
+Residue I133 in sequential numbering of your HA sequence corresponds to:
+  * F120 in HA1 in 4HMG
+  * I122 of HA1 in 4JTV
+
+Residue F134 in sequential numbering of your HA sequence corresponds to:
+  * I121 in HA1 in 4HMG
+  * F123 of HA1 in 4JTV
+
+Residue P135 in sequential numbering of your HA sequence corresponds to:
+  * T122 in HA1 in 4HMG
+  * P124 of HA1 in 4JTV
+
+Residue K136 in sequential numbering of your HA sequence corresponds to:
+  * E123 in HA1 in 4HMG
+  * K125 of HA1 in 4JTV
+
+Residue T137 in sequential numbering of your HA sequence corresponds to:
+  * G124 in HA1 in 4HMG
+  * T126 of HA1 in 4JTV
+
+Residue S138 in sequential numbering of your HA sequence corresponds to:
+  * F125 in HA1 in 4HMG
+  * S127 of HA1 in 4JTV
+
+Residue S139 in sequential numbering of your HA sequence corresponds to:
+  * T126 in HA1 in 4HMG
+  * S128 of HA1 in 4JTV
+
+Residue W140 in sequential numbering of your HA sequence corresponds to:
+  * W127 in HA1 in 4HMG
+  * W129 of HA1 in 4JTV
+
+Residue P141 in sequential numbering of your HA sequence corresponds to:
+  * T128 in HA1 in 4HMG
+  * P130 of HA1 in 4JTV
+
+Residue N142 in sequential numbering of your HA sequence corresponds to:
+  * G129 in HA1 in 4HMG
+  * N131 of HA1 in 4JTV
+
+Residue H143 in sequential numbering of your HA sequence corresponds to:
+  * V130 in HA1 in 4HMG
+  * H132 of HA1 in 4JTV
+
+Residue D144 in sequential numbering of your HA sequence corresponds to:
+  * T131 in HA1 in 4HMG
+  * D133 of HA1 in 4JTV
+
+Residue S145 in sequential numbering of your HA sequence corresponds to:
+  * Q132 in HA1 in 4HMG
+  * S134 of HA1 in 4JTV
+
+Residue N146 in sequential numbering of your HA sequence corresponds to:
+  * N133 in HA1 in 4HMG
+  * N135 of HA1 in 4JTV
+
+Residue K147 in sequential numbering of your HA sequence corresponds to:
+  * G134 in HA1 in 4HMG
+  * K136 of HA1 in 4JTV
+
+Residue G148 in sequential numbering of your HA sequence corresponds to:
+  * G135 in HA1 in 4HMG
+  * G137 of HA1 in 4JTV
+
+Residue V149 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * V138 of HA1 in 4JTV
+
+Residue T150 in sequential numbering of your HA sequence corresponds to:
+  * S136 in HA1 in 4HMG
+  * T139 of HA1 in 4JTV
+
+Residue A151 in sequential numbering of your HA sequence corresponds to:
+  * N137 in HA1 in 4HMG
+  * A140 of HA1 in 4JTV
+
+Residue A152 in sequential numbering of your HA sequence corresponds to:
+  * A138 in HA1 in 4HMG
+  * A141 of HA1 in 4JTV
+
+Residue C153 in sequential numbering of your HA sequence corresponds to:
+  * C139 in HA1 in 4HMG
+  * C142 of HA1 in 4JTV
+
+Residue P154 in sequential numbering of your HA sequence corresponds to:
+  * K140 in HA1 in 4HMG
+  * P143 of HA1 in 4JTV
+
+Residue H155 in sequential numbering of your HA sequence corresponds to:
+  * R141 in HA1 in 4HMG
+  * H144 of HA1 in 4JTV
+
+Residue A156 in sequential numbering of your HA sequence corresponds to:
+  * G142 in HA1 in 4HMG
+  * A145 of HA1 in 4JTV
+
+Residue G157 in sequential numbering of your HA sequence corresponds to:
+  * P143 in HA1 in 4HMG
+  * G146 of HA1 in 4JTV
+
+Residue A158 in sequential numbering of your HA sequence corresponds to:
+  * G144 in HA1 in 4HMG
+  * A147 of HA1 in 4JTV
+
+Residue K159 in sequential numbering of your HA sequence corresponds to:
+  * S145 in HA1 in 4HMG
+  * K148 of HA1 in 4JTV
+
+Residue S160 in sequential numbering of your HA sequence corresponds to:
+  * G146 in HA1 in 4HMG
+  * S149 of HA1 in 4JTV
+
+Residue F161 in sequential numbering of your HA sequence corresponds to:
+  * F147 in HA1 in 4HMG
+  * F150 of HA1 in 4JTV
+
+Residue Y162 in sequential numbering of your HA sequence corresponds to:
+  * F148 in HA1 in 4HMG
+  * Y151 of HA1 in 4JTV
+
+Residue K163 in sequential numbering of your HA sequence corresponds to:
+  * S149 in HA1 in 4HMG
+  * K152 of HA1 in 4JTV
+
+Residue N164 in sequential numbering of your HA sequence corresponds to:
+  * R150 in HA1 in 4HMG
+  * N153 of HA1 in 4JTV
+
+Residue L165 in sequential numbering of your HA sequence corresponds to:
+  * L151 in HA1 in 4HMG
+  * L154 of HA1 in 4JTV
+
+Residue I166 in sequential numbering of your HA sequence corresponds to:
+  * N152 in HA1 in 4HMG
+  * I155 of HA1 in 4JTV
+
+Residue W167 in sequential numbering of your HA sequence corresponds to:
+  * W153 in HA1 in 4HMG
+  * W156 of HA1 in 4JTV
+
+Residue L168 in sequential numbering of your HA sequence corresponds to:
+  * L154 in HA1 in 4HMG
+  * L157 of HA1 in 4JTV
+
+Residue V169 in sequential numbering of your HA sequence corresponds to:
+  * T155 in HA1 in 4HMG
+  * V158 of HA1 in 4JTV
+
+Residue K170 in sequential numbering of your HA sequence corresponds to:
+  * K156 in HA1 in 4HMG
+  * K159 of HA1 in 4JTV
+
+Residue K171 in sequential numbering of your HA sequence corresponds to:
+  * S157 in HA1 in 4HMG
+  * K160 of HA1 in 4JTV
+
+Residue G172 in sequential numbering of your HA sequence corresponds to:
+  * G158 in HA1 in 4HMG
+  * G161 of HA1 in 4JTV
+
+Residue N173 in sequential numbering of your HA sequence corresponds to:
+  * S159 in HA1 in 4HMG
+  * N162 of HA1 in 4JTV
+
+Residue S174 in sequential numbering of your HA sequence corresponds to:
+  * T160 in HA1 in 4HMG
+  * S163 of HA1 in 4JTV
+
+Residue Y175 in sequential numbering of your HA sequence corresponds to:
+  * Y161 in HA1 in 4HMG
+  * Y164 of HA1 in 4JTV
+
+Residue P176 in sequential numbering of your HA sequence corresponds to:
+  * P162 in HA1 in 4HMG
+  * P165 of HA1 in 4JTV
+
+Residue K177 in sequential numbering of your HA sequence corresponds to:
+  * V163 in HA1 in 4HMG
+  * K166 of HA1 in 4JTV
+
+Residue L178 in sequential numbering of your HA sequence corresponds to:
+  * L164 in HA1 in 4HMG
+  * L167 of HA1 in 4JTV
+
+Residue S179 in sequential numbering of your HA sequence corresponds to:
+  * N165 in HA1 in 4HMG
+  * S168 of HA1 in 4JTV
+
+Residue K180 in sequential numbering of your HA sequence corresponds to:
+  * V166 in HA1 in 4HMG
+  * K169 of HA1 in 4JTV
+
+Residue S181 in sequential numbering of your HA sequence corresponds to:
+  * T167 in HA1 in 4HMG
+  * S170 of HA1 in 4JTV
+
+Residue Y182 in sequential numbering of your HA sequence corresponds to:
+  * M168 in HA1 in 4HMG
+  * Y171 of HA1 in 4JTV
+
+Residue I183 in sequential numbering of your HA sequence corresponds to:
+  * P169 in HA1 in 4HMG
+  * I172 of HA1 in 4JTV
+
+Residue N184 in sequential numbering of your HA sequence corresponds to:
+  * N170 in HA1 in 4HMG
+  * N173 of HA1 in 4JTV
+
+Residue D185 in sequential numbering of your HA sequence corresponds to:
+  * N171 in HA1 in 4HMG
+  * D174 of HA1 in 4JTV
+
+Residue K186 in sequential numbering of your HA sequence corresponds to:
+  * D172 in HA1 in 4HMG
+  * K175 of HA1 in 4JTV
+
+Residue G187 in sequential numbering of your HA sequence corresponds to:
+  * N173 in HA1 in 4HMG
+  * G176 of HA1 in 4JTV
+
+Residue K188 in sequential numbering of your HA sequence corresponds to:
+  * F174 in HA1 in 4HMG
+  * K177 of HA1 in 4JTV
+
+Residue E189 in sequential numbering of your HA sequence corresponds to:
+  * D175 in HA1 in 4HMG
+  * E178 of HA1 in 4JTV
+
+Residue V190 in sequential numbering of your HA sequence corresponds to:
+  * K176 in HA1 in 4HMG
+  * V179 of HA1 in 4JTV
+
+Residue L191 in sequential numbering of your HA sequence corresponds to:
+  * L177 in HA1 in 4HMG
+  * L180 of HA1 in 4JTV
+
+Residue V192 in sequential numbering of your HA sequence corresponds to:
+  * Y178 in HA1 in 4HMG
+  * V181 of HA1 in 4JTV
+
+Residue L193 in sequential numbering of your HA sequence corresponds to:
+  * I179 in HA1 in 4HMG
+  * L182 of HA1 in 4JTV
+
+Residue W194 in sequential numbering of your HA sequence corresponds to:
+  * W180 in HA1 in 4HMG
+  * W183 of HA1 in 4JTV
+
+Residue G195 in sequential numbering of your HA sequence corresponds to:
+  * G181 in HA1 in 4HMG
+  * G184 of HA1 in 4JTV
+
+Residue I196 in sequential numbering of your HA sequence corresponds to:
+  * I182 in HA1 in 4HMG
+  * I185 of HA1 in 4JTV
+
+Residue H197 in sequential numbering of your HA sequence corresponds to:
+  * H183 in HA1 in 4HMG
+  * H186 of HA1 in 4JTV
+
+Residue H198 in sequential numbering of your HA sequence corresponds to:
+  * H184 in HA1 in 4HMG
+  * H187 of HA1 in 4JTV
+
+Residue P199 in sequential numbering of your HA sequence corresponds to:
+  * P185 in HA1 in 4HMG
+  * P188 of HA1 in 4JTV
+
+Residue S200 in sequential numbering of your HA sequence corresponds to:
+  * S186 in HA1 in 4HMG
+  * S189 of HA1 in 4JTV
+
+Residue T201 in sequential numbering of your HA sequence corresponds to:
+  * T187 in HA1 in 4HMG
+  * T190 of HA1 in 4JTV
+
+Residue S202 in sequential numbering of your HA sequence corresponds to:
+  * N188 in HA1 in 4HMG
+  * S191 of HA1 in 4JTV
+
+Residue A203 in sequential numbering of your HA sequence corresponds to:
+  * Q189 in HA1 in 4HMG
+  * A192 of HA1 in 4JTV
+
+Residue D204 in sequential numbering of your HA sequence corresponds to:
+  * E190 in HA1 in 4HMG
+  * D193 of HA1 in 4JTV
+
+Residue Q205 in sequential numbering of your HA sequence corresponds to:
+  * Q191 in HA1 in 4HMG
+  * Q194 of HA1 in 4JTV
+
+Residue Q206 in sequential numbering of your HA sequence corresponds to:
+  * T192 in HA1 in 4HMG
+  * Q195 of HA1 in 4JTV
+
+Residue S207 in sequential numbering of your HA sequence corresponds to:
+  * S193 in HA1 in 4HMG
+  * S196 of HA1 in 4JTV
+
+Residue L208 in sequential numbering of your HA sequence corresponds to:
+  * L194 in HA1 in 4HMG
+  * L197 of HA1 in 4JTV
+
+Residue Y209 in sequential numbering of your HA sequence corresponds to:
+  * Y195 in HA1 in 4HMG
+  * Y198 of HA1 in 4JTV
+
+Residue Q210 in sequential numbering of your HA sequence corresponds to:
+  * V196 in HA1 in 4HMG
+  * Q199 of HA1 in 4JTV
+
+Residue N211 in sequential numbering of your HA sequence corresponds to:
+  * Q197 in HA1 in 4HMG
+  * N200 of HA1 in 4JTV
+
+Residue A212 in sequential numbering of your HA sequence corresponds to:
+  * A198 in HA1 in 4HMG
+  * A201 of HA1 in 4JTV
+
+Residue D213 in sequential numbering of your HA sequence corresponds to:
+  * S199 in HA1 in 4HMG
+  * D202 of HA1 in 4JTV
+
+Residue T214 in sequential numbering of your HA sequence corresponds to:
+  * G200 in HA1 in 4HMG
+  * T203 of HA1 in 4JTV
+
+Residue Y215 in sequential numbering of your HA sequence corresponds to:
+  * R201 in HA1 in 4HMG
+  * Y204 of HA1 in 4JTV
+
+Residue V216 in sequential numbering of your HA sequence corresponds to:
+  * V202 in HA1 in 4HMG
+  * V205 of HA1 in 4JTV
+
+Residue F217 in sequential numbering of your HA sequence corresponds to:
+  * T203 in HA1 in 4HMG
+  * F206 of HA1 in 4JTV
+
+Residue V218 in sequential numbering of your HA sequence corresponds to:
+  * V204 in HA1 in 4HMG
+  * V207 of HA1 in 4JTV
+
+Residue G219 in sequential numbering of your HA sequence corresponds to:
+  * S205 in HA1 in 4HMG
+  * G208 of HA1 in 4JTV
+
+Residue S220 in sequential numbering of your HA sequence corresponds to:
+  * T206 in HA1 in 4HMG
+  * S209 of HA1 in 4JTV
+
+Residue S221 in sequential numbering of your HA sequence corresponds to:
+  * R207 in HA1 in 4HMG
+  * S210 of HA1 in 4JTV
+
+Residue R222 in sequential numbering of your HA sequence corresponds to:
+  * R208 in HA1 in 4HMG
+  * R211 of HA1 in 4JTV
+
+Residue Y223 in sequential numbering of your HA sequence corresponds to:
+  * S209 in HA1 in 4HMG
+  * Y212 of HA1 in 4JTV
+
+Residue S224 in sequential numbering of your HA sequence corresponds to:
+  * Q210 in HA1 in 4HMG
+  * S213 of HA1 in 4JTV
+
+Residue K225 in sequential numbering of your HA sequence corresponds to:
+  * Q211 in HA1 in 4HMG
+  * K214 of HA1 in 4JTV
+
+Residue K226 in sequential numbering of your HA sequence corresponds to:
+  * T212 in HA1 in 4HMG
+  * K215 of HA1 in 4JTV
+
+Residue F227 in sequential numbering of your HA sequence corresponds to:
+  * I213 in HA1 in 4HMG
+  * F216 of HA1 in 4JTV
+
+Residue K228 in sequential numbering of your HA sequence corresponds to:
+  * I214 in HA1 in 4HMG
+  * K217 of HA1 in 4JTV
+
+Residue P229 in sequential numbering of your HA sequence corresponds to:
+  * P215 in HA1 in 4HMG
+  * P218 of HA1 in 4JTV
+
+Residue E230 in sequential numbering of your HA sequence corresponds to:
+  * N216 in HA1 in 4HMG
+  * E219 of HA1 in 4JTV
+
+Residue I231 in sequential numbering of your HA sequence corresponds to:
+  * I217 in HA1 in 4HMG
+  * I220 of HA1 in 4JTV
+
+Residue A232 in sequential numbering of your HA sequence corresponds to:
+  * G218 in HA1 in 4HMG
+  * A221 of HA1 in 4JTV
+
+Residue I233 in sequential numbering of your HA sequence corresponds to:
+  * S219 in HA1 in 4HMG
+  * I222 of HA1 in 4JTV
+
+Residue R234 in sequential numbering of your HA sequence corresponds to:
+  * R220 in HA1 in 4HMG
+  * R223 of HA1 in 4JTV
+
+Residue P235 in sequential numbering of your HA sequence corresponds to:
+  * P221 in HA1 in 4HMG
+  * P224 of HA1 in 4JTV
+
+Residue K236 in sequential numbering of your HA sequence corresponds to:
+  * W222 in HA1 in 4HMG
+  * K225 of HA1 in 4JTV
+
+Residue V237 in sequential numbering of your HA sequence corresponds to:
+  * V223 in HA1 in 4HMG
+  * V226 of HA1 in 4JTV
+
+Residue R238 in sequential numbering of your HA sequence corresponds to:
+  * R224 in HA1 in 4HMG
+  * R227 of HA1 in 4JTV
+
+Residue D239 in sequential numbering of your HA sequence corresponds to:
+  * G225 in HA1 in 4HMG
+  * D228 of HA1 in 4JTV
+
+Residue Q240 in sequential numbering of your HA sequence corresponds to:
+  * Q226 in HA1 in 4HMG
+  * Q229 of HA1 in 4JTV
+
+Residue E241 in sequential numbering of your HA sequence corresponds to:
+  * S227 in HA1 in 4HMG
+  * E230 of HA1 in 4JTV
+
+Residue G242 in sequential numbering of your HA sequence corresponds to:
+  * S228 in HA1 in 4HMG
+  * G231 of HA1 in 4JTV
+
+Residue R243 in sequential numbering of your HA sequence corresponds to:
+  * R229 in HA1 in 4HMG
+  * R232 of HA1 in 4JTV
+
+Residue M244 in sequential numbering of your HA sequence corresponds to:
+  * I230 in HA1 in 4HMG
+  * M233 of HA1 in 4JTV
+
+Residue N245 in sequential numbering of your HA sequence corresponds to:
+  * S231 in HA1 in 4HMG
+  * N234 of HA1 in 4JTV
+
+Residue Y246 in sequential numbering of your HA sequence corresponds to:
+  * I232 in HA1 in 4HMG
+  * Y235 of HA1 in 4JTV
+
+Residue Y247 in sequential numbering of your HA sequence corresponds to:
+  * Y233 in HA1 in 4HMG
+  * Y236 of HA1 in 4JTV
+
+Residue W248 in sequential numbering of your HA sequence corresponds to:
+  * W234 in HA1 in 4HMG
+  * W237 of HA1 in 4JTV
+
+Residue T249 in sequential numbering of your HA sequence corresponds to:
+  * T235 in HA1 in 4HMG
+  * T238 of HA1 in 4JTV
+
+Residue L250 in sequential numbering of your HA sequence corresponds to:
+  * I236 in HA1 in 4HMG
+  * L239 of HA1 in 4JTV
+
+Residue V251 in sequential numbering of your HA sequence corresponds to:
+  * V237 in HA1 in 4HMG
+  * V240 of HA1 in 4JTV
+
+Residue E252 in sequential numbering of your HA sequence corresponds to:
+  * K238 in HA1 in 4HMG
+  * E241 of HA1 in 4JTV
+
+Residue P253 in sequential numbering of your HA sequence corresponds to:
+  * P239 in HA1 in 4HMG
+  * P242 of HA1 in 4JTV
+
+Residue G254 in sequential numbering of your HA sequence corresponds to:
+  * G240 in HA1 in 4HMG
+  * G243 of HA1 in 4JTV
+
+Residue D255 in sequential numbering of your HA sequence corresponds to:
+  * D241 in HA1 in 4HMG
+  * D244 of HA1 in 4JTV
+
+Residue K256 in sequential numbering of your HA sequence corresponds to:
+  * V242 in HA1 in 4HMG
+  * K245 of HA1 in 4JTV
+
+Residue I257 in sequential numbering of your HA sequence corresponds to:
+  * L243 in HA1 in 4HMG
+  * I246 of HA1 in 4JTV
+
+Residue T258 in sequential numbering of your HA sequence corresponds to:
+  * V244 in HA1 in 4HMG
+  * T247 of HA1 in 4JTV
+
+Residue F259 in sequential numbering of your HA sequence corresponds to:
+  * I245 in HA1 in 4HMG
+  * F248 of HA1 in 4JTV
+
+Residue E260 in sequential numbering of your HA sequence corresponds to:
+  * N246 in HA1 in 4HMG
+  * E249 of HA1 in 4JTV
+
+Residue A261 in sequential numbering of your HA sequence corresponds to:
+  * S247 in HA1 in 4HMG
+  * A250 of HA1 in 4JTV
+
+Residue T262 in sequential numbering of your HA sequence corresponds to:
+  * N248 in HA1 in 4HMG
+  * T251 of HA1 in 4JTV
+
+Residue G263 in sequential numbering of your HA sequence corresponds to:
+  * G249 in HA1 in 4HMG
+  * G252 of HA1 in 4JTV
+
+Residue N264 in sequential numbering of your HA sequence corresponds to:
+  * N250 in HA1 in 4HMG
+  * N253 of HA1 in 4JTV
+
+Residue L265 in sequential numbering of your HA sequence corresponds to:
+  * L251 in HA1 in 4HMG
+  * L254 of HA1 in 4JTV
+
+Residue V266 in sequential numbering of your HA sequence corresponds to:
+  * I252 in HA1 in 4HMG
+  * V255 of HA1 in 4JTV
+
+Residue V267 in sequential numbering of your HA sequence corresponds to:
+  * A253 in HA1 in 4HMG
+  * V256 of HA1 in 4JTV
+
+Residue P268 in sequential numbering of your HA sequence corresponds to:
+  * P254 in HA1 in 4HMG
+  * P257 of HA1 in 4JTV
+
+Residue R269 in sequential numbering of your HA sequence corresponds to:
+  * R255 in HA1 in 4HMG
+  * R258 of HA1 in 4JTV
+
+Residue Y270 in sequential numbering of your HA sequence corresponds to:
+  * G256 in HA1 in 4HMG
+  * Y259 of HA1 in 4JTV
+
+Residue A271 in sequential numbering of your HA sequence corresponds to:
+  * Y257 in HA1 in 4HMG
+  * A260 of HA1 in 4JTV
+
+Residue F272 in sequential numbering of your HA sequence corresponds to:
+  * F258 in HA1 in 4HMG
+  * F261 of HA1 in 4JTV
+
+Residue A273 in sequential numbering of your HA sequence corresponds to:
+  * K259 in HA1 in 4HMG
+  * A262 of HA1 in 4JTV
+
+Residue M274 in sequential numbering of your HA sequence corresponds to:
+  * M260 in HA1 in 4HMG
+  * M263 of HA1 in 4JTV
+
+Residue E275 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * E264 of HA1 in 4JTV
+
+Residue R276 in sequential numbering of your HA sequence corresponds to:
+  * R261 in HA1 in 4HMG
+  * R265 of HA1 in 4JTV
+
+Residue N277 in sequential numbering of your HA sequence corresponds to:
+  * T262 in HA1 in 4HMG
+  * N266 of HA1 in 4JTV
+
+Residue A278 in sequential numbering of your HA sequence corresponds to:
+  * G263 in HA1 in 4HMG
+  * A267 of HA1 in 4JTV
+
+Residue G279 in sequential numbering of your HA sequence corresponds to:
+  * K264 in HA1 in 4HMG
+  * G268 of HA1 in 4JTV
+
+Residue S280 in sequential numbering of your HA sequence corresponds to:
+  * S265 in HA1 in 4HMG
+  * S269 of HA1 in 4JTV
+
+Residue G281 in sequential numbering of your HA sequence corresponds to:
+  * S266 in HA1 in 4HMG
+  * G270 of HA1 in 4JTV
+
+Residue I282 in sequential numbering of your HA sequence corresponds to:
+  * I267 in HA1 in 4HMG
+  * I271 of HA1 in 4JTV
+
+Residue I283 in sequential numbering of your HA sequence corresponds to:
+  * M268 in HA1 in 4HMG
+  * I272 of HA1 in 4JTV
+
+Residue I284 in sequential numbering of your HA sequence corresponds to:
+  * R269 in HA1 in 4HMG
+  * I273 of HA1 in 4JTV
+
+Residue S285 in sequential numbering of your HA sequence corresponds to:
+  * S270 in HA1 in 4HMG
+  * S274 of HA1 in 4JTV
+
+Residue D286 in sequential numbering of your HA sequence corresponds to:
+  * D271 in HA1 in 4HMG
+  * D275 of HA1 in 4JTV
+
+Residue T287 in sequential numbering of your HA sequence corresponds to:
+  * A272 in HA1 in 4HMG
+  * T276 of HA1 in 4JTV
+
+Residue P288 in sequential numbering of your HA sequence corresponds to:
+  * P273 in HA1 in 4HMG
+  * P277 of HA1 in 4JTV
+
+Residue V289 in sequential numbering of your HA sequence corresponds to:
+  * I274 in HA1 in 4HMG
+  * V278 of HA1 in 4JTV
+
+Residue H290 in sequential numbering of your HA sequence corresponds to:
+  * D275 in HA1 in 4HMG
+  * H279 of HA1 in 4JTV
+
+Residue D291 in sequential numbering of your HA sequence corresponds to:
+  * T276 in HA1 in 4HMG
+  * D280 of HA1 in 4JTV
+
+Residue C292 in sequential numbering of your HA sequence corresponds to:
+  * C277 in HA1 in 4HMG
+  * C281 of HA1 in 4JTV
+
+Residue N293 in sequential numbering of your HA sequence corresponds to:
+  * I278 in HA1 in 4HMG
+  * N282 of HA1 in 4JTV
+
+Residue T294 in sequential numbering of your HA sequence corresponds to:
+  * S279 in HA1 in 4HMG
+  * T283 of HA1 in 4JTV
+
+Residue T295 in sequential numbering of your HA sequence corresponds to:
+  * E280 in HA1 in 4HMG
+  * T284 of HA1 in 4JTV
+
+Residue C296 in sequential numbering of your HA sequence corresponds to:
+  * C281 in HA1 in 4HMG
+  * C285 of HA1 in 4JTV
+
+Residue Q297 in sequential numbering of your HA sequence corresponds to:
+  * I282 in HA1 in 4HMG
+  * Q286 of HA1 in 4JTV
+
+Residue T298 in sequential numbering of your HA sequence corresponds to:
+  * T283 in HA1 in 4HMG
+  * T287 of HA1 in 4JTV
+
+Residue P299 in sequential numbering of your HA sequence corresponds to:
+  * P284 in HA1 in 4HMG
+  * P288 of HA1 in 4JTV
+
+Residue K300 in sequential numbering of your HA sequence corresponds to:
+  * N285 in HA1 in 4HMG
+  * K289 of HA1 in 4JTV
+
+Residue G301 in sequential numbering of your HA sequence corresponds to:
+  * G286 in HA1 in 4HMG
+  * G290 of HA1 in 4JTV
+
+Residue A302 in sequential numbering of your HA sequence corresponds to:
+  * S287 in HA1 in 4HMG
+  * A291 of HA1 in 4JTV
+
+Residue I303 in sequential numbering of your HA sequence corresponds to:
+  * I288 in HA1 in 4HMG
+  * I292 of HA1 in 4JTV
+
+Residue N304 in sequential numbering of your HA sequence corresponds to:
+  * P289 in HA1 in 4HMG
+  * N293 of HA1 in 4JTV
+
+Residue T305 in sequential numbering of your HA sequence corresponds to:
+  * N290 in HA1 in 4HMG
+  * T294 of HA1 in 4JTV
+
+Residue S306 in sequential numbering of your HA sequence corresponds to:
+  * D291 in HA1 in 4HMG
+  * S295 of HA1 in 4JTV
+
+Residue L307 in sequential numbering of your HA sequence corresponds to:
+  * K292 in HA1 in 4HMG
+  * L296 of HA1 in 4JTV
+
+Residue P308 in sequential numbering of your HA sequence corresponds to:
+  * P293 in HA1 in 4HMG
+  * P297 of HA1 in 4JTV
+
+Residue F309 in sequential numbering of your HA sequence corresponds to:
+  * F294 in HA1 in 4HMG
+  * F298 of HA1 in 4JTV
+
+Residue Q310 in sequential numbering of your HA sequence corresponds to:
+  * Q295 in HA1 in 4HMG
+  * Q299 of HA1 in 4JTV
+
+Residue N311 in sequential numbering of your HA sequence corresponds to:
+  * N296 in HA1 in 4HMG
+  * N300 of HA1 in 4JTV
+
+Residue I312 in sequential numbering of your HA sequence corresponds to:
+  * V297 in HA1 in 4HMG
+  * I301 of HA1 in 4JTV
+
+Residue H313 in sequential numbering of your HA sequence corresponds to:
+  * N298 in HA1 in 4HMG
+  * H302 of HA1 in 4JTV
+
+Residue P314 in sequential numbering of your HA sequence corresponds to:
+  * K299 in HA1 in 4HMG
+  * P303 of HA1 in 4JTV
+
+Residue I315 in sequential numbering of your HA sequence corresponds to:
+  * I300 in HA1 in 4HMG
+  * I304 of HA1 in 4JTV
+
+Residue T316 in sequential numbering of your HA sequence corresponds to:
+  * T301 in HA1 in 4HMG
+  * T305 of HA1 in 4JTV
+
+Residue I317 in sequential numbering of your HA sequence corresponds to:
+  * Y302 in HA1 in 4HMG
+  * I306 of HA1 in 4JTV
+
+Residue G318 in sequential numbering of your HA sequence corresponds to:
+  * G303 in HA1 in 4HMG
+  * G307 of HA1 in 4JTV
+
+Residue K319 in sequential numbering of your HA sequence corresponds to:
+  * A304 in HA1 in 4HMG
+  * K308 of HA1 in 4JTV
+
+Residue C320 in sequential numbering of your HA sequence corresponds to:
+  * C305 in HA1 in 4HMG
+  * C309 of HA1 in 4JTV
+
+Residue P321 in sequential numbering of your HA sequence corresponds to:
+  * P306 in HA1 in 4HMG
+  * P310 of HA1 in 4JTV
+
+Residue K322 in sequential numbering of your HA sequence corresponds to:
+  * K307 in HA1 in 4HMG
+  * K311 of HA1 in 4JTV
+
+Residue Y323 in sequential numbering of your HA sequence corresponds to:
+  * Y308 in HA1 in 4HMG
+  * Y312 of HA1 in 4JTV
+
+Residue V324 in sequential numbering of your HA sequence corresponds to:
+  * V309 in HA1 in 4HMG
+  * V313 of HA1 in 4JTV
+
+Residue K325 in sequential numbering of your HA sequence corresponds to:
+  * K310 in HA1 in 4HMG
+  * K314 of HA1 in 4JTV
+
+Residue S326 in sequential numbering of your HA sequence corresponds to:
+  * Q311 in HA1 in 4HMG
+  * S315 of HA1 in 4JTV
+
+Residue T327 in sequential numbering of your HA sequence corresponds to:
+  * N312 in HA1 in 4HMG
+  * T316 of HA1 in 4JTV
+
+Residue K328 in sequential numbering of your HA sequence corresponds to:
+  * T313 in HA1 in 4HMG
+  * K317 of HA1 in 4JTV
+
+Residue L329 in sequential numbering of your HA sequence corresponds to:
+  * L314 in HA1 in 4HMG
+  * L318 of HA1 in 4JTV
+
+Residue R330 in sequential numbering of your HA sequence corresponds to:
+  * K315 in HA1 in 4HMG
+  * R319 of HA1 in 4JTV
+
+Residue L331 in sequential numbering of your HA sequence corresponds to:
+  * L316 in HA1 in 4HMG
+  * L320 of HA1 in 4JTV
+
+Residue A332 in sequential numbering of your HA sequence corresponds to:
+  * A317 in HA1 in 4HMG
+  * A321 of HA1 in 4JTV
+
+Residue T333 in sequential numbering of your HA sequence corresponds to:
+  * T318 in HA1 in 4HMG
+  * T322 of HA1 in 4JTV
+
+Residue G334 in sequential numbering of your HA sequence corresponds to:
+  * G319 in HA1 in 4HMG
+  * G323 of HA1 in 4JTV
+
+Residue L335 in sequential numbering of your HA sequence corresponds to:
+  * M320 in HA1 in 4HMG
+  * L324 of HA1 in 4JTV
+
+Residue R336 in sequential numbering of your HA sequence corresponds to:
+  * R321 in HA1 in 4HMG
+  * R325 of HA1 in 4JTV
+
+Residue N337 in sequential numbering of your HA sequence corresponds to:
+  * N322 in HA1 in 4HMG
+  * N326 of HA1 in 4JTV
+
+Residue I338 in sequential numbering of your HA sequence corresponds to:
+  * V323 in HA1 in 4HMG
+  * I327 of HA1 in 4JTV
+
+Residue P339 in sequential numbering of your HA sequence corresponds to:
+  * P324 in HA1 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue S340 in sequential numbering of your HA sequence corresponds to:
+  * E325 in HA1 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue I341 in sequential numbering of your HA sequence corresponds to:
+  * K326 in HA1 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue Q342 in sequential numbering of your HA sequence corresponds to:
+  * Q327 in HA1 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue S343 in sequential numbering of your HA sequence corresponds to:
+  * T328 in HA1 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue R344 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue G345 in sequential numbering of your HA sequence corresponds to:
+  * G1 in HA2 in 4HMG
+  * G1 of HA2 in 4JTV
+
+Residue L346 in sequential numbering of your HA sequence corresponds to:
+  * L2 in HA2 in 4HMG
+  * L2 of HA2 in 4JTV
+
+Residue F347 in sequential numbering of your HA sequence corresponds to:
+  * F3 in HA2 in 4HMG
+  * F3 of HA2 in 4JTV
+
+Residue G348 in sequential numbering of your HA sequence corresponds to:
+  * G4 in HA2 in 4HMG
+  * G4 of HA2 in 4JTV
+
+Residue A349 in sequential numbering of your HA sequence corresponds to:
+  * A5 in HA2 in 4HMG
+  * A5 of HA2 in 4JTV
+
+Residue I350 in sequential numbering of your HA sequence corresponds to:
+  * I6 in HA2 in 4HMG
+  * I6 of HA2 in 4JTV
+
+Residue A351 in sequential numbering of your HA sequence corresponds to:
+  * A7 in HA2 in 4HMG
+  * A7 of HA2 in 4JTV
+
+Residue G352 in sequential numbering of your HA sequence corresponds to:
+  * G8 in HA2 in 4HMG
+  * G8 of HA2 in 4JTV
+
+Residue F353 in sequential numbering of your HA sequence corresponds to:
+  * F9 in HA2 in 4HMG
+  * F9 of HA2 in 4JTV
+
+Residue I354 in sequential numbering of your HA sequence corresponds to:
+  * I10 in HA2 in 4HMG
+  * I10 of HA2 in 4JTV
+
+Residue E355 in sequential numbering of your HA sequence corresponds to:
+  * E11 in HA2 in 4HMG
+  * E11 of HA2 in 4JTV
+
+Residue G356 in sequential numbering of your HA sequence corresponds to:
+  * N12 in HA2 in 4HMG
+  * G12 of HA2 in 4JTV
+
+Residue G357 in sequential numbering of your HA sequence corresponds to:
+  * G13 in HA2 in 4HMG
+  * G13 of HA2 in 4JTV
+
+Residue W358 in sequential numbering of your HA sequence corresponds to:
+  * W14 in HA2 in 4HMG
+  * W14 of HA2 in 4JTV
+
+Residue T359 in sequential numbering of your HA sequence corresponds to:
+  * E15 in HA2 in 4HMG
+  * T15 of HA2 in 4JTV
+
+Residue G360 in sequential numbering of your HA sequence corresponds to:
+  * G16 in HA2 in 4HMG
+  * G16 of HA2 in 4JTV
+
+Residue M361 in sequential numbering of your HA sequence corresponds to:
+  * M17 in HA2 in 4HMG
+  * M17 of HA2 in 4JTV
+
+Residue V362 in sequential numbering of your HA sequence corresponds to:
+  * I18 in HA2 in 4HMG
+  * V18 of HA2 in 4JTV
+
+Residue D363 in sequential numbering of your HA sequence corresponds to:
+  * D19 in HA2 in 4HMG
+  * D19 of HA2 in 4JTV
+
+Residue G364 in sequential numbering of your HA sequence corresponds to:
+  * G20 in HA2 in 4HMG
+  * G20 of HA2 in 4JTV
+
+Residue W365 in sequential numbering of your HA sequence corresponds to:
+  * W21 in HA2 in 4HMG
+  * W21 of HA2 in 4JTV
+
+Residue Y366 in sequential numbering of your HA sequence corresponds to:
+  * Y22 in HA2 in 4HMG
+  * Y22 of HA2 in 4JTV
+
+Residue G367 in sequential numbering of your HA sequence corresponds to:
+  * G23 in HA2 in 4HMG
+  * G23 of HA2 in 4JTV
+
+Residue Y368 in sequential numbering of your HA sequence corresponds to:
+  * F24 in HA2 in 4HMG
+  * Y24 of HA2 in 4JTV
+
+Residue H369 in sequential numbering of your HA sequence corresponds to:
+  * R25 in HA2 in 4HMG
+  * H25 of HA2 in 4JTV
+
+Residue H370 in sequential numbering of your HA sequence corresponds to:
+  * H26 in HA2 in 4HMG
+  * H26 of HA2 in 4JTV
+
+Residue Q371 in sequential numbering of your HA sequence corresponds to:
+  * Q27 in HA2 in 4HMG
+  * Q27 of HA2 in 4JTV
+
+Residue N372 in sequential numbering of your HA sequence corresponds to:
+  * N28 in HA2 in 4HMG
+  * N28 of HA2 in 4JTV
+
+Residue E373 in sequential numbering of your HA sequence corresponds to:
+  * S29 in HA2 in 4HMG
+  * E29 of HA2 in 4JTV
+
+Residue Q374 in sequential numbering of your HA sequence corresponds to:
+  * E30 in HA2 in 4HMG
+  * Q30 of HA2 in 4JTV
+
+Residue G375 in sequential numbering of your HA sequence corresponds to:
+  * G31 in HA2 in 4HMG
+  * G31 of HA2 in 4JTV
+
+Residue S376 in sequential numbering of your HA sequence corresponds to:
+  * T32 in HA2 in 4HMG
+  * S32 of HA2 in 4JTV
+
+Residue G377 in sequential numbering of your HA sequence corresponds to:
+  * G33 in HA2 in 4HMG
+  * G33 of HA2 in 4JTV
+
+Residue Y378 in sequential numbering of your HA sequence corresponds to:
+  * Q34 in HA2 in 4HMG
+  * Y34 of HA2 in 4JTV
+
+Residue A379 in sequential numbering of your HA sequence corresponds to:
+  * A35 in HA2 in 4HMG
+  * A35 of HA2 in 4JTV
+
+Residue A380 in sequential numbering of your HA sequence corresponds to:
+  * A36 in HA2 in 4HMG
+  * A36 of HA2 in 4JTV
+
+Residue D381 in sequential numbering of your HA sequence corresponds to:
+  * D37 in HA2 in 4HMG
+  * D37 of HA2 in 4JTV
+
+Residue L382 in sequential numbering of your HA sequence corresponds to:
+  * L38 in HA2 in 4HMG
+  * L38 of HA2 in 4JTV
+
+Residue K383 in sequential numbering of your HA sequence corresponds to:
+  * K39 in HA2 in 4HMG
+  * K39 of HA2 in 4JTV
+
+Residue S384 in sequential numbering of your HA sequence corresponds to:
+  * S40 in HA2 in 4HMG
+  * S40 of HA2 in 4JTV
+
+Residue T385 in sequential numbering of your HA sequence corresponds to:
+  * T41 in HA2 in 4HMG
+  * T41 of HA2 in 4JTV
+
+Residue Q386 in sequential numbering of your HA sequence corresponds to:
+  * Q42 in HA2 in 4HMG
+  * Q42 of HA2 in 4JTV
+
+Residue N387 in sequential numbering of your HA sequence corresponds to:
+  * A43 in HA2 in 4HMG
+  * N43 of HA2 in 4JTV
+
+Residue A388 in sequential numbering of your HA sequence corresponds to:
+  * A44 in HA2 in 4HMG
+  * A44 of HA2 in 4JTV
+
+Residue I389 in sequential numbering of your HA sequence corresponds to:
+  * I45 in HA2 in 4HMG
+  * I45 of HA2 in 4JTV
+
+Residue D390 in sequential numbering of your HA sequence corresponds to:
+  * D46 in HA2 in 4HMG
+  * D46 of HA2 in 4JTV
+
+Residue E391 in sequential numbering of your HA sequence corresponds to:
+  * Q47 in HA2 in 4HMG
+  * E47 of HA2 in 4JTV
+
+Residue I392 in sequential numbering of your HA sequence corresponds to:
+  * I48 in HA2 in 4HMG
+  * I48 of HA2 in 4JTV
+
+Residue T393 in sequential numbering of your HA sequence corresponds to:
+  * N49 in HA2 in 4HMG
+  * T49 of HA2 in 4JTV
+
+Residue N394 in sequential numbering of your HA sequence corresponds to:
+  * G50 in HA2 in 4HMG
+  * N50 of HA2 in 4JTV
+
+Residue K395 in sequential numbering of your HA sequence corresponds to:
+  * K51 in HA2 in 4HMG
+  * K51 of HA2 in 4JTV
+
+Residue V396 in sequential numbering of your HA sequence corresponds to:
+  * L52 in HA2 in 4HMG
+  * V52 of HA2 in 4JTV
+
+Residue N397 in sequential numbering of your HA sequence corresponds to:
+  * N53 in HA2 in 4HMG
+  * N53 of HA2 in 4JTV
+
+Residue S398 in sequential numbering of your HA sequence corresponds to:
+  * R54 in HA2 in 4HMG
+  * S54 of HA2 in 4JTV
+
+Residue V399 in sequential numbering of your HA sequence corresponds to:
+  * V55 in HA2 in 4HMG
+  * V55 of HA2 in 4JTV
+
+Residue I400 in sequential numbering of your HA sequence corresponds to:
+  * I56 in HA2 in 4HMG
+  * I56 of HA2 in 4JTV
+
+Residue E401 in sequential numbering of your HA sequence corresponds to:
+  * E57 in HA2 in 4HMG
+  * E57 of HA2 in 4JTV
+
+Residue K402 in sequential numbering of your HA sequence corresponds to:
+  * K58 in HA2 in 4HMG
+  * K58 of HA2 in 4JTV
+
+Residue M403 in sequential numbering of your HA sequence corresponds to:
+  * T59 in HA2 in 4HMG
+  * M59 of HA2 in 4JTV
+
+Residue N404 in sequential numbering of your HA sequence corresponds to:
+  * N60 in HA2 in 4HMG
+  * N60 of HA2 in 4JTV
+
+Residue T405 in sequential numbering of your HA sequence corresponds to:
+  * E61 in HA2 in 4HMG
+  * T61 of HA2 in 4JTV
+
+Residue Q406 in sequential numbering of your HA sequence corresponds to:
+  * K62 in HA2 in 4HMG
+  * Q62 of HA2 in 4JTV
+
+Residue F407 in sequential numbering of your HA sequence corresponds to:
+  * F63 in HA2 in 4HMG
+  * F63 of HA2 in 4JTV
+
+Residue T408 in sequential numbering of your HA sequence corresponds to:
+  * H64 in HA2 in 4HMG
+  * T64 of HA2 in 4JTV
+
+Residue A409 in sequential numbering of your HA sequence corresponds to:
+  * Q65 in HA2 in 4HMG
+  * A65 of HA2 in 4JTV
+
+Residue V410 in sequential numbering of your HA sequence corresponds to:
+  * I66 in HA2 in 4HMG
+  * V66 of HA2 in 4JTV
+
+Residue G411 in sequential numbering of your HA sequence corresponds to:
+  * E67 in HA2 in 4HMG
+  * G67 of HA2 in 4JTV
+
+Residue K412 in sequential numbering of your HA sequence corresponds to:
+  * K68 in HA2 in 4HMG
+  * K68 of HA2 in 4JTV
+
+Residue E413 in sequential numbering of your HA sequence corresponds to:
+  * E69 in HA2 in 4HMG
+  * E69 of HA2 in 4JTV
+
+Residue F414 in sequential numbering of your HA sequence corresponds to:
+  * F70 in HA2 in 4HMG
+  * F70 of HA2 in 4JTV
+
+Residue N415 in sequential numbering of your HA sequence corresponds to:
+  * S71 in HA2 in 4HMG
+  * N71 of HA2 in 4JTV
+
+Residue H416 in sequential numbering of your HA sequence corresponds to:
+  * E72 in HA2 in 4HMG
+  * H72 of HA2 in 4JTV
+
+Residue L417 in sequential numbering of your HA sequence corresponds to:
+  * V73 in HA2 in 4HMG
+  * L73 of HA2 in 4JTV
+
+Residue E418 in sequential numbering of your HA sequence corresponds to:
+  * E74 in HA2 in 4HMG
+  * E74 of HA2 in 4JTV
+
+Residue K419 in sequential numbering of your HA sequence corresponds to:
+  * G75 in HA2 in 4HMG
+  * K75 of HA2 in 4JTV
+
+Residue R420 in sequential numbering of your HA sequence corresponds to:
+  * R76 in HA2 in 4HMG
+  * R76 of HA2 in 4JTV
+
+Residue I421 in sequential numbering of your HA sequence corresponds to:
+  * I77 in HA2 in 4HMG
+  * I77 of HA2 in 4JTV
+
+Residue E422 in sequential numbering of your HA sequence corresponds to:
+  * Q78 in HA2 in 4HMG
+  * E78 of HA2 in 4JTV
+
+Residue N423 in sequential numbering of your HA sequence corresponds to:
+  * D79 in HA2 in 4HMG
+  * N79 of HA2 in 4JTV
+
+Residue L424 in sequential numbering of your HA sequence corresponds to:
+  * L80 in HA2 in 4HMG
+  * L80 of HA2 in 4JTV
+
+Residue N425 in sequential numbering of your HA sequence corresponds to:
+  * E81 in HA2 in 4HMG
+  * N81 of HA2 in 4JTV
+
+Residue K426 in sequential numbering of your HA sequence corresponds to:
+  * K82 in HA2 in 4HMG
+  * K82 of HA2 in 4JTV
+
+Residue K427 in sequential numbering of your HA sequence corresponds to:
+  * Y83 in HA2 in 4HMG
+  * K83 of HA2 in 4JTV
+
+Residue V428 in sequential numbering of your HA sequence corresponds to:
+  * V84 in HA2 in 4HMG
+  * V84 of HA2 in 4JTV
+
+Residue D429 in sequential numbering of your HA sequence corresponds to:
+  * E85 in HA2 in 4HMG
+  * D85 of HA2 in 4JTV
+
+Residue D430 in sequential numbering of your HA sequence corresponds to:
+  * D86 in HA2 in 4HMG
+  * D86 of HA2 in 4JTV
+
+Residue G431 in sequential numbering of your HA sequence corresponds to:
+  * T87 in HA2 in 4HMG
+  * G87 of HA2 in 4JTV
+
+Residue F432 in sequential numbering of your HA sequence corresponds to:
+  * K88 in HA2 in 4HMG
+  * F88 of HA2 in 4JTV
+
+Residue L433 in sequential numbering of your HA sequence corresponds to:
+  * I89 in HA2 in 4HMG
+  * L89 of HA2 in 4JTV
+
+Residue D434 in sequential numbering of your HA sequence corresponds to:
+  * D90 in HA2 in 4HMG
+  * D90 of HA2 in 4JTV
+
+Residue I435 in sequential numbering of your HA sequence corresponds to:
+  * L91 in HA2 in 4HMG
+  * I91 of HA2 in 4JTV
+
+Residue W436 in sequential numbering of your HA sequence corresponds to:
+  * W92 in HA2 in 4HMG
+  * W92 of HA2 in 4JTV
+
+Residue T437 in sequential numbering of your HA sequence corresponds to:
+  * S93 in HA2 in 4HMG
+  * T93 of HA2 in 4JTV
+
+Residue Y438 in sequential numbering of your HA sequence corresponds to:
+  * Y94 in HA2 in 4HMG
+  * Y94 of HA2 in 4JTV
+
+Residue N439 in sequential numbering of your HA sequence corresponds to:
+  * N95 in HA2 in 4HMG
+  * N95 of HA2 in 4JTV
+
+Residue A440 in sequential numbering of your HA sequence corresponds to:
+  * A96 in HA2 in 4HMG
+  * A96 of HA2 in 4JTV
+
+Residue E441 in sequential numbering of your HA sequence corresponds to:
+  * E97 in HA2 in 4HMG
+  * E97 of HA2 in 4JTV
+
+Residue L442 in sequential numbering of your HA sequence corresponds to:
+  * L98 in HA2 in 4HMG
+  * L98 of HA2 in 4JTV
+
+Residue L443 in sequential numbering of your HA sequence corresponds to:
+  * L99 in HA2 in 4HMG
+  * L99 of HA2 in 4JTV
+
+Residue V444 in sequential numbering of your HA sequence corresponds to:
+  * V100 in HA2 in 4HMG
+  * V100 of HA2 in 4JTV
+
+Residue L445 in sequential numbering of your HA sequence corresponds to:
+  * A101 in HA2 in 4HMG
+  * L101 of HA2 in 4JTV
+
+Residue L446 in sequential numbering of your HA sequence corresponds to:
+  * L102 in HA2 in 4HMG
+  * L102 of HA2 in 4JTV
+
+Residue E447 in sequential numbering of your HA sequence corresponds to:
+  * E103 in HA2 in 4HMG
+  * E103 of HA2 in 4JTV
+
+Residue N448 in sequential numbering of your HA sequence corresponds to:
+  * N104 in HA2 in 4HMG
+  * N104 of HA2 in 4JTV
+
+Residue E449 in sequential numbering of your HA sequence corresponds to:
+  * Q105 in HA2 in 4HMG
+  * E105 of HA2 in 4JTV
+
+Residue R450 in sequential numbering of your HA sequence corresponds to:
+  * H106 in HA2 in 4HMG
+  * R106 of HA2 in 4JTV
+
+Residue T451 in sequential numbering of your HA sequence corresponds to:
+  * T107 in HA2 in 4HMG
+  * T107 of HA2 in 4JTV
+
+Residue L452 in sequential numbering of your HA sequence corresponds to:
+  * I108 in HA2 in 4HMG
+  * L108 of HA2 in 4JTV
+
+Residue D453 in sequential numbering of your HA sequence corresponds to:
+  * D109 in HA2 in 4HMG
+  * D109 of HA2 in 4JTV
+
+Residue Y454 in sequential numbering of your HA sequence corresponds to:
+  * L110 in HA2 in 4HMG
+  * Y110 of HA2 in 4JTV
+
+Residue H455 in sequential numbering of your HA sequence corresponds to:
+  * T111 in HA2 in 4HMG
+  * H111 of HA2 in 4JTV
+
+Residue D456 in sequential numbering of your HA sequence corresponds to:
+  * D112 in HA2 in 4HMG
+  * D112 of HA2 in 4JTV
+
+Residue S457 in sequential numbering of your HA sequence corresponds to:
+  * S113 in HA2 in 4HMG
+  * S113 of HA2 in 4JTV
+
+Residue N458 in sequential numbering of your HA sequence corresponds to:
+  * E114 in HA2 in 4HMG
+  * N114 of HA2 in 4JTV
+
+Residue V459 in sequential numbering of your HA sequence corresponds to:
+  * M115 in HA2 in 4HMG
+  * V115 of HA2 in 4JTV
+
+Residue K460 in sequential numbering of your HA sequence corresponds to:
+  * N116 in HA2 in 4HMG
+  * K116 of HA2 in 4JTV
+
+Residue N461 in sequential numbering of your HA sequence corresponds to:
+  * K117 in HA2 in 4HMG
+  * N117 of HA2 in 4JTV
+
+Residue L462 in sequential numbering of your HA sequence corresponds to:
+  * L118 in HA2 in 4HMG
+  * L118 of HA2 in 4JTV
+
+Residue Y463 in sequential numbering of your HA sequence corresponds to:
+  * F119 in HA2 in 4HMG
+  * Y119 of HA2 in 4JTV
+
+Residue E464 in sequential numbering of your HA sequence corresponds to:
+  * E120 in HA2 in 4HMG
+  * E120 of HA2 in 4JTV
+
+Residue K465 in sequential numbering of your HA sequence corresponds to:
+  * K121 in HA2 in 4HMG
+  * K121 of HA2 in 4JTV
+
+Residue V466 in sequential numbering of your HA sequence corresponds to:
+  * T122 in HA2 in 4HMG
+  * V122 of HA2 in 4JTV
+
+Residue R467 in sequential numbering of your HA sequence corresponds to:
+  * R123 in HA2 in 4HMG
+  * R123 of HA2 in 4JTV
+
+Residue S468 in sequential numbering of your HA sequence corresponds to:
+  * R124 in HA2 in 4HMG
+  * S124 of HA2 in 4JTV
+
+Residue Q469 in sequential numbering of your HA sequence corresponds to:
+  * Q125 in HA2 in 4HMG
+  * Q125 of HA2 in 4JTV
+
+Residue L470 in sequential numbering of your HA sequence corresponds to:
+  * L126 in HA2 in 4HMG
+  * L126 of HA2 in 4JTV
+
+Residue K471 in sequential numbering of your HA sequence corresponds to:
+  * R127 in HA2 in 4HMG
+  * K127 of HA2 in 4JTV
+
+Residue N472 in sequential numbering of your HA sequence corresponds to:
+  * E128 in HA2 in 4HMG
+  * N128 of HA2 in 4JTV
+
+Residue N473 in sequential numbering of your HA sequence corresponds to:
+  * N129 in HA2 in 4HMG
+  * N129 of HA2 in 4JTV
+
+Residue A474 in sequential numbering of your HA sequence corresponds to:
+  * A130 in HA2 in 4HMG
+  * A130 of HA2 in 4JTV
+
+Residue K475 in sequential numbering of your HA sequence corresponds to:
+  * E131 in HA2 in 4HMG
+  * K131 of HA2 in 4JTV
+
+Residue E476 in sequential numbering of your HA sequence corresponds to:
+  * E132 in HA2 in 4HMG
+  * E132 of HA2 in 4JTV
+
+Residue I477 in sequential numbering of your HA sequence corresponds to:
+  * M133 in HA2 in 4HMG
+  * I133 of HA2 in 4JTV
+
+Residue G478 in sequential numbering of your HA sequence corresponds to:
+  * G134 in HA2 in 4HMG
+  * G134 of HA2 in 4JTV
+
+Residue N479 in sequential numbering of your HA sequence corresponds to:
+  * N135 in HA2 in 4HMG
+  * N135 of HA2 in 4JTV
+
+Residue G480 in sequential numbering of your HA sequence corresponds to:
+  * G136 in HA2 in 4HMG
+  * G136 of HA2 in 4JTV
+
+Residue C481 in sequential numbering of your HA sequence corresponds to:
+  * C137 in HA2 in 4HMG
+  * C137 of HA2 in 4JTV
+
+Residue F482 in sequential numbering of your HA sequence corresponds to:
+  * F138 in HA2 in 4HMG
+  * F138 of HA2 in 4JTV
+
+Residue E483 in sequential numbering of your HA sequence corresponds to:
+  * K139 in HA2 in 4HMG
+  * E139 of HA2 in 4JTV
+
+Residue F484 in sequential numbering of your HA sequence corresponds to:
+  * I140 in HA2 in 4HMG
+  * F140 of HA2 in 4JTV
+
+Residue Y485 in sequential numbering of your HA sequence corresponds to:
+  * Y141 in HA2 in 4HMG
+  * Y141 of HA2 in 4JTV
+
+Residue H486 in sequential numbering of your HA sequence corresponds to:
+  * H142 in HA2 in 4HMG
+  * H142 of HA2 in 4JTV
+
+Residue K487 in sequential numbering of your HA sequence corresponds to:
+  * K143 in HA2 in 4HMG
+  * K143 of HA2 in 4JTV
+
+Residue C488 in sequential numbering of your HA sequence corresponds to:
+  * C144 in HA2 in 4HMG
+  * C144 of HA2 in 4JTV
+
+Residue D489 in sequential numbering of your HA sequence corresponds to:
+  * D145 in HA2 in 4HMG
+  * D145 of HA2 in 4JTV
+
+Residue N490 in sequential numbering of your HA sequence corresponds to:
+  * N146 in HA2 in 4HMG
+  * N146 of HA2 in 4JTV
+
+Residue T491 in sequential numbering of your HA sequence corresponds to:
+  * A147 in HA2 in 4HMG
+  * T147 of HA2 in 4JTV
+
+Residue C492 in sequential numbering of your HA sequence corresponds to:
+  * C148 in HA2 in 4HMG
+  * C148 of HA2 in 4JTV
+
+Residue M493 in sequential numbering of your HA sequence corresponds to:
+  * I149 in HA2 in 4HMG
+  * M149 of HA2 in 4JTV
+
+Residue E494 in sequential numbering of your HA sequence corresponds to:
+  * E150 in HA2 in 4HMG
+  * E150 of HA2 in 4JTV
+
+Residue S495 in sequential numbering of your HA sequence corresponds to:
+  * S151 in HA2 in 4HMG
+  * S151 of HA2 in 4JTV
+
+Residue V496 in sequential numbering of your HA sequence corresponds to:
+  * I152 in HA2 in 4HMG
+  * V152 of HA2 in 4JTV
+
+Residue K497 in sequential numbering of your HA sequence corresponds to:
+  * R153 in HA2 in 4HMG
+  * K153 of HA2 in 4JTV
+
+Residue N498 in sequential numbering of your HA sequence corresponds to:
+  * N154 in HA2 in 4HMG
+  * N154 of HA2 in 4JTV
+
+Residue G499 in sequential numbering of your HA sequence corresponds to:
+  * G155 in HA2 in 4HMG
+  * G155 of HA2 in 4JTV
+
+Residue T500 in sequential numbering of your HA sequence corresponds to:
+  * T156 in HA2 in 4HMG
+  * T156 of HA2 in 4JTV
+
+Residue Y501 in sequential numbering of your HA sequence corresponds to:
+  * Y157 in HA2 in 4HMG
+  * Y157 of HA2 in 4JTV
+
+Residue D502 in sequential numbering of your HA sequence corresponds to:
+  * D158 in HA2 in 4HMG
+  * D158 of HA2 in 4JTV
+
+Residue Y503 in sequential numbering of your HA sequence corresponds to:
+  * H159 in HA2 in 4HMG
+  * Y159 of HA2 in 4JTV
+
+Residue P504 in sequential numbering of your HA sequence corresponds to:
+  * D160 in HA2 in 4HMG
+  * P160 of HA2 in 4JTV
+
+Residue K505 in sequential numbering of your HA sequence corresponds to:
+  * V161 in HA2 in 4HMG
+  * K161 of HA2 in 4JTV
+
+Residue Y506 in sequential numbering of your HA sequence corresponds to:
+  * Y162 in HA2 in 4HMG
+  * Y162 of HA2 in 4JTV
+
+Residue S507 in sequential numbering of your HA sequence corresponds to:
+  * R163 in HA2 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue E508 in sequential numbering of your HA sequence corresponds to:
+  * D164 in HA2 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue E509 in sequential numbering of your HA sequence corresponds to:
+  * E165 in HA2 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue A510 in sequential numbering of your HA sequence corresponds to:
+  * A166 in HA2 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue K511 in sequential numbering of your HA sequence corresponds to:
+  * L167 in HA2 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue L512 in sequential numbering of your HA sequence corresponds to:
+  * N168 in HA2 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue N513 in sequential numbering of your HA sequence corresponds to:
+  * N169 in HA2 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue R514 in sequential numbering of your HA sequence corresponds to:
+  * R170 in HA2 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue E515 in sequential numbering of your HA sequence corresponds to:
+  * F171 in HA2 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue E516 in sequential numbering of your HA sequence corresponds to:
+  * Q172 in HA2 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue I517 in sequential numbering of your HA sequence corresponds to:
+  * I173 in HA2 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue D518 in sequential numbering of your HA sequence corresponds to:
+  * K174 in HA2 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue G519 in sequential numbering of your HA sequence corresponds to:
+  * G175 in HA2 in 4HMG
+  * an alignment gap in 4JTV
+
+Residue V520 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue K521 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue L522 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue E523 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue S524 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue T525 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue R526 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue I527 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue Y528 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue Q529 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue I530 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue L531 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue A532 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue I533 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue Y534 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue S535 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue T536 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue V537 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue A538 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue S539 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue S540 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue L541 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue V542 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue L543 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue V544 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue V545 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue S546 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue L547 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue G548 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue A549 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue I550 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue S551 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue F552 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue W553 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue M554 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue C555 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue S556 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue N557 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue G558 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue S559 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue L560 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue Q561 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue C562 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue R563 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue I564 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue C565 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Residue I566 in sequential numbering of your HA sequence corresponds to:
+  * an alignment gap in 4HMG
+  * an alignment gap in 4JTV
+
+Script complete.
