@@ -2,13 +2,311 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f472839-8a65-4dce-be83-d1c7511e6e93" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AAATester.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/AAATester.ldb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/037200d261fd4345968244b13250c129Out.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/20190422-HA_numbering-master/H3H1numbering.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/20190422-HA_numbering-master/HA_numbering.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/20190422-HA_numbering-master/Input/Input_ca09.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/20190422-HA_numbering-master/Input/Input_il19.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/20190422-HA_numbering-master/Input/Input_kansas17.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/20190422-HA_numbering-master/Input/Input_spg16.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/20190422-HA_numbering-master/Output/ca09.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/20190422-HA_numbering-master/Output/il19.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/20190422-HA_numbering-master/Output/kansas17.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/20190422-HA_numbering-master/Output/spg16.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/20190422-HA_numbering-master/QuerySequence.fasta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/20190422-HA_numbering-master/README.rst.sb-206a19ff-dFaHRf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/20190422-HA_numbering-master/README.rtf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/20190422-HA_numbering-master/run.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3hto.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/A-Kansas-14-2017(H3N2) Probe Insert Codon Optimized.fasta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AAATester.ldb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Caton_H1_HA_antigenic_sites.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/039914202139498c8b6d10ade8f66555In.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/039914202139498c8b6d10ade8f66555Out.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/05f3a6242e94477f97d2309133894523In.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/05f3a6242e94477f97d2309133894523Out.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/0a4790841daa400bb1ec03aca1ffbdb3In.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/0a4790841daa400bb1ec03aca1ffbdb3Out.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/1ce6a16a610f43a995741298f9838a01In.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/1ce6a16a610f43a995741298f9838a01Out.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/335a7a83b3044e70bdec4253cb924ed3In.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/335a7a83b3044e70bdec4253cb924ed3Out.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/3fba4c918f154f319e2ca82d275dd36bIn.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/3fba4c918f154f319e2ca82d275dd36bOut.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/4edceeb9fa6f4a4baeebc2ae0abac99aIn.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/4edceeb9fa6f4a4baeebc2ae0abac99aOut.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/50a4f3216e7c4c27b7603fb51b623772In.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/50a4f3216e7c4c27b7603fb51b623772Out.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/55d90ef2b7954260a9ae6eedf0ddd8c7In.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/55d90ef2b7954260a9ae6eedf0ddd8c7Out.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/5649282b0daOut.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/88d689a5ac324131afb4b09fec5a7c70In.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/88d689a5ac324131afb4b09fec5a7c70Out.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/96e6347ad3e74e788c89448e643b8cd7In.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/96e6347ad3e74e788c89448e643b8cd7Out.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/9bd50db2503f4aabb23e7431bac34dbdIn.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/9bd50db2503f4aabb23e7431bac34dbdOut.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/AUTHORS" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/COPYING" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/ChangeLog" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/Doxyfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/Doxyfile.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/INSTALL" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/Makefile.am" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/Makefile.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/NEWS" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/README" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/RepertoireStudyOut.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/TODO" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/aclocal.m4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/argtable2.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/cb9448d1b3854d7b80bd96c5be73927aIn.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/cb9448d1b3854d7b80bd96c5be73927aOut.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/clustalo" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/clustalo.pc.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/config.guess" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/config.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/config.sub" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/configure" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/configure.ac" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/d5ad29743af34a0f9334594c9949ff7dIn.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/d5ad29743af34a0f9334594c9949ff7dOut.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/dddee233cb014946b881dc70da3afa1dIn.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/dddee233cb014946b881dc70da3afa1dOut.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/depcomp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/f42a6eccd11b48dca0eb3f0c57086dfcIn.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/f42a6eccd11b48dca0eb3f0c57086dfcOut.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/install-sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/ltmain.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/m4/ax_openmp.m4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/m4/ax_prefix_config_h.m4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/m4/libtool.m4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/m4/ltoptions.m4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/m4/ltsugar.m4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/m4/ltversion.m4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/m4/lt~obsolete.m4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/missing" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/Makefile.am" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/Makefile.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal-omega-config.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal-omega.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal-omega.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/Makefile.am" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/Makefile.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/hhalign_wrapper.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/hhalign_wrapper.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/ktuple_pair.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/ktuple_pair.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/list.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/list.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/log.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/log.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/mbed.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/mbed.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/muscle_tree.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/muscle_tree.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/muscle_upgma.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/muscle_upgma.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/pair_dist.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/pair_dist.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/progress.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/progress.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/queue.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/seq.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/seq.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/symmatrix.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/symmatrix.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/tree.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/tree.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/util.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/util.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/weights.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustal/weights.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/clustalo-api-test.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/config.h.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/Makefile.am" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/Makefile.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/general.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hash-C.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hash.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhalign.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhalign.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhalignment-C.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhalignment.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhdecl-C.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhfullalignment-C.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhfullalignment.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhfunc-C.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhfunc.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhhalfalignment-C.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhhalfalignment.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhhit-C.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhhit.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhhitlist-C.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhhitlist.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhhmm-C.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhhmm.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhmatrices-C.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/hhutil-C.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/list-C.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/list.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/hhalign/util-C.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/kmpp/KMeans.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/kmpp/KMeans.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/kmpp/KmTree.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/kmpp/KmTree.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/kmpp/KmUtils.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/kmpp/KmUtils.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/kmpp/Makefile.am" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/kmpp/Makefile.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/main.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/mymain.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/mymain.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/00README" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/COPYRIGHT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/Makefile.am" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/Makefile.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/a2m.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/aligneval.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/alignio.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/clustal.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/clustalo.README" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/cluster.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/dayhoff.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/eps.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/file.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/getopt.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/gki.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/gki.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/gsi.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/gsi.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/gsi64.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/gsi64.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/hsregex.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/iupac.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/msa.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/msa.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/msf.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/phylip.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/revcomp.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/rk.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/rk.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/selex.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/seqencode.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/shuffle.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/sqerror.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/sqfuncs.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/sqio.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/squid-1.9g.tar.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/squid.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/squidcore.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/sre_ctype.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/sre_math.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/sre_random.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/sre_random.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/sre_string.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/ssi.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/ssi.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/stack.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/stockholm.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/stockholm.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/stopwatch.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/stopwatch.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/translate.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/types.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/vectorops.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/vectorops.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/version.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/src/squid/weight.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/test.vdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Florian-HA List.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Florian-HA List.fasta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/H3H1numbering.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/H3N2_rep_set_filtered.in_collection.nt.fasta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/H3N2_rep_set_filtered.new.nt.fasta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/In.txt" beforeDir="false" afterPath="$PROJECT_DIR$/In.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Influenza HA Antigenic Site Alingments.pptx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator notes.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/.idea/Librator.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/A-Kansas-14-2017(H3N2) Probe Insert Codon Optimized.fasta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/H3H1numbering.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/H3N2_rep_set_filtered.in_collection.nt.fasta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/H3N2_rep_set_filtered.new.nt.fasta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/HA_Numbering-Py3.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/Influenza HA Antigenic Site Alingments.pptx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/LibDialogues.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/LibratorSQL.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/ListView Example.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/MainLibrator.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/MainLibrator_UI.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/MainLibrator_UI.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/probcons/CompareToRef.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/probcons/Defaults.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/probcons/EvolutionaryTree.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/probcons/FileBuffer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/probcons/FixRef.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/probcons/Main.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/probcons/MakeGnuPlot.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/probcons/Makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/probcons/MultiSequence.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/probcons/ProbabilisticModel.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/probcons/ProjectPairwise.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/probcons/README" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/probcons/SafeVector.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/probcons/ScoreType.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/probcons/Sequence.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/probcons/SparseMatrix.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/probcons_v1_12.tar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Librator/test.ldb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LibratotV.ui" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.ui" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/test.ldb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/New database.ldb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Numbering.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Out.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecentFiles" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/errors.temp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fb0723ca809745a69f1d5e5939c5519bOut.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/local.pml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/muscle/muscle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/muscle/muscle3.8.31_i86darwin64.tar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/muscle3.8.31_i86darwin64" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mytest.ldb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/probcons/CompareToRef.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/probcons/Defaults.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/probcons/EvolutionaryTree.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/probcons/FileBuffer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/probcons/FixRef.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/probcons/Main.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/probcons/MakeGnuPlot.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/probcons/Makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/probcons/MultiSequence.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/probcons/ProbabilisticModel.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/probcons/ProjectPairwise.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/probcons/README" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/probcons/SafeVector.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/probcons/ScoreType.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/probcons/Sequence.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/probcons/SparseMatrix.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/probcons_v1_12.tar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.fasta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.ldb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tester 2.ldb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/bin/activate" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/bin/activate.csh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/bin/activate.fish" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/bin/python" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/bin/python3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/bin/python3.7" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/pyvenv.cfg" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,6 +320,7 @@
   <component name="ProjectId" id="1QNxc5ojAE0mwOwFCFyrMt3mH5x" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
@@ -105,7 +404,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

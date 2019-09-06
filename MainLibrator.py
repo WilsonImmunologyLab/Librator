@@ -3049,8 +3049,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 	@pyqtSlot()
 	def on_btnFieldSearch_clicked(self):
 		mutation = "M131L,N171K,Q144R"
-		pdbPath = "./3hto.pdb"
-		pymolPath = "/Users/leil/anaconda3/bin/pymol"
+		pdbPath = "PDB/3hto.pdb"
+		pymolPath = "pymol"
 
 		self.show3Dstructure(mutation, pdbPath, pymolPath)
 
