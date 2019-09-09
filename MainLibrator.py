@@ -489,10 +489,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 		if RepOption == 'Make Secreted Probe':
 			self.MakeProbe()
 		elif RepOption == 'Generate Gibson':
-			self.GernerateGibson()
+			self.GenerateGibson()
 		elif RepOption == 'New sequence with user specific mutations':
 			#pop up window
-			self.GernerateGibson()
+			self.GenerateGibson()
 		self.ui.cboReportOptions.setCurrentIndex(0)
 
 	@pyqtSlot()
