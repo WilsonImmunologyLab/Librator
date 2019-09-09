@@ -3086,7 +3086,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		subtype = str(self.ui.cboSubtype.currentText())
 
 		if subtype == "H1N1":
-			pdbPath = working_prefix + "Librator/PDB/4jtv.pdb"
+			pdbPath = working_prefix + "Librator/PDB/1ruz.pdb"
 		elif subtype == "H3N2":
 			pdbPath = working_prefix + "Librator/PDB/4hmg.pdb"
 		elif subtype == "B":
