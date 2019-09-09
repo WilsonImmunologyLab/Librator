@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MainLibrator_UI.ui'
 #
-# Created by: PyQt5 UI code generator 5.12.2
+# Created by: PyQt5 UI code generator 5.12
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -296,13 +296,14 @@ class Ui_MainLibrator(object):
         self.cboReportOptions.addItem("")
         self.cboReportOptions.addItem("")
         self.cboReportOptions.addItem("")
+        self.cboReportOptions.addItem("")
         self.horizontalLayout_2.addWidget(self.cboReportOptions)
         self.verticalLayout.addWidget(self.frame_7)
         self.scrollArea_2 = QtWidgets.QScrollArea(self.tabMain)
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollArea_2.setObjectName("scrollArea_2")
         self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 943, 944))
+        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 928, 930))
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
         self.gridLayout_14 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_2)
         self.gridLayout_14.setObjectName("gridLayout_14")
@@ -1318,14 +1319,15 @@ class Ui_MainLibrator(object):
         self.btnExtractRecords.setToolTip(_translate("MainLibrator", "<html><head/><body><p>Make a new VGenes database file from checked records</p></body></html>"))
         self.seqlabel_26.setText(_translate("MainLibrator", "Generate report:"))
         self.cboReportOptions.setItemText(0, _translate("MainLibrator", "Select report type:"))
-        self.cboReportOptions.setItemText(1, _translate("MainLibrator", "Gibson fragments"))
-        self.cboReportOptions.setItemText(2, _translate("MainLibrator", "Make Secreted Probe"))
-        self.cboReportOptions.setItemText(3, _translate("MainLibrator", "Make Secreted"))
-        self.cboReportOptions.setItemText(4, _translate("MainLibrator", "FASTA Nucleotide file"))
-        self.cboReportOptions.setItemText(5, _translate("MainLibrator", "FASTA Amino Acid file"))
-        self.cboReportOptions.setItemText(6, _translate("MainLibrator", "Sequence summary"))
-        self.cboReportOptions.setItemText(7, _translate("MainLibrator", "Comma seperated values (.csv)"))
-        self.cboReportOptions.setItemText(8, _translate("MainLibrator", "Custom report"))
+        self.cboReportOptions.setItemText(1, _translate("MainLibrator", "New sequence with user specific mutations"))
+        self.cboReportOptions.setItemText(2, _translate("MainLibrator", "Gibson fragments"))
+        self.cboReportOptions.setItemText(3, _translate("MainLibrator", "Make Secreted Probe"))
+        self.cboReportOptions.setItemText(4, _translate("MainLibrator", "Make Secreted"))
+        self.cboReportOptions.setItemText(5, _translate("MainLibrator", "FASTA Nucleotide file"))
+        self.cboReportOptions.setItemText(6, _translate("MainLibrator", "FASTA Amino Acid file"))
+        self.cboReportOptions.setItemText(7, _translate("MainLibrator", "Sequence summary"))
+        self.cboReportOptions.setItemText(8, _translate("MainLibrator", "Comma seperated values (.csv)"))
+        self.cboReportOptions.setItemText(9, _translate("MainLibrator", "Custom report"))
         self.txtName.setToolTip(_translate("MainLibrator", "Double click name to edit"))
         self.label_29.setText(_translate("MainLibrator", "Active sequences:"))
         self.btnImport.setText(_translate("MainLibrator", "Import Sequences"))

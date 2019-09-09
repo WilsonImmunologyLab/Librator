@@ -490,6 +490,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.MakeProbe()
 		elif RepOption == 'Generate Gibson':
 			self.GernerateGibson()
+		elif RepOption == 'New sequence with user specific mutations':
+			#pop up window
+			self.GernerateGibson()
 		self.ui.cboReportOptions.setCurrentIndex(0)
 
 	@pyqtSlot()
@@ -3024,35 +3027,35 @@ class LibratorMain(QtWidgets.QMainWindow):
 			text = "load " + pdbPath + "\n"
 			pml.write(text)
 			text = "as cartoon\n" \
-				   + "show mesh\n" \
-				   + "bg_color white\n" \
-				   + "color lightorange\n"
+					+ "show mesh\n" \
+					+ "bg_color white\n" \
+					+ "color lightorange\n"
 			pml.write(text)
 
 			# highlight antigentic sites for H3N2 (A,B,C,D,E) and H1N1 (Ca1, Ca2, Cb, Sa, Sb)
 			if subtype == "H1N1":
-				text = "sel Ca1, resi 171+173+175+176+178+179+180\n" \
-						+ "sel Ca2, resi 169+172+205+206+209+211\n" \
-						+ "sel Cb, resi 182+186+220+253\n" \
-						+ "sel Sa, resi 153+156+158+237+238\n" \
-						+ "sel Sb, resi 87+88+90+91+92+135\n" \
-						+ "color purple, Ca1\n" \
-						+ "color yellow, Ca2\n" \
-						+ "color gray, Cb\n" \
-						+ "color chocolate, Sa\n" \
-						+ "color green, Sb\n"
+				text = "sel ABS-Ca1, resi 171+173+175+176+178+179+180\n" \
+						+ "sel ABS-Ca2, resi 169+172+205+206+209+211\n" \
+						+ "sel ABS-Cb, resi 182+186+220+253\n" \
+						+ "sel ABS-Sa, resi 153+156+158+237+238\n" \
+						+ "sel ABS-Sb, resi 87+88+90+91+92+135\n" \
+						+ "color purple, ABS-Ca1\n" \
+						+ "color yellow, ABS-Ca2\n" \
+						+ "color gray, ABS-Cb\n" \
+						+ "color chocolate, ABS-Sa\n" \
+						+ "color green, ABS-Sb\n"
 				pml.write(text)
 			elif subtype == "H3N2":
-				text = "sel A, resi 122+126+127+128+129+130+131+132+133+137+141+142+143+144\n" \
-						+ "sel B, resi 155+156+157+158+159+160+164+186+188+189+190+191+192+193+194+195+196+197+198+201\n" \
-						+ "sel C, resi 52+53+54+275+276\n" \
-						+ "sel D, resi 174+182+207+220+226+229+230+242+244\n" \
-						+ "sel E, resi 62+63+77+81+83\n" \
-						+ "color purple, A\n" \
-						+ "color yellow, B\n" \
-						+ "color gray, C\n" \
-						+ "color chocolate, D\n" \
-						+ "color green, E\n"
+				text = "sel ABS-A, resi 122+126+127+128+129+130+131+132+133+137+141+142+143+144\n" \
+						+ "sel ABS-B, resi 155+156+157+158+159+160+164+186+188+189+190+191+192+193+194+195+196+197+198+201\n" \
+						+ "sel ABS-C, resi 52+53+54+275+276\n" \
+						+ "sel ABS-D, resi 174+182+207+220+226+229+230+242+244\n" \
+						+ "sel ABS-E, resi 62+63+77+81+83\n" \
+						+ "color purple, ABS-A\n" \
+						+ "color yellow, ABS-B\n" \
+						+ "color gray, ABS-C\n" \
+						+ "color chocolate, ABS-D\n" \
+						+ "color green, ABS-E\n"
 				pml.write(text)
 
 			# highlight mutations in red on the 3D structure
@@ -3079,27 +3082,26 @@ class LibratorMain(QtWidgets.QMainWindow):
 	@pyqtSlot()
 	def on_btnFieldSearch_clicked(self):
 		mutation = "M131L,N171K,Q144R"
-		pymolPath = "pymol"
+		pymol_path = "pymol"
 
-		AASeq = self.ui.textAA.toPlainText()
+		#AASeq = self.ui.textAA.toPlainText()
 		mutation = self.ui.txtInsert_Base.toPlainText().strip(",")
 		subtype = str(self.ui.cboSubtype.currentText())
 
 		if subtype == "H1N1":
-			pdbPath = working_prefix + "Librator/PDB/1ruz.pdb"
+			pdb_path = working_prefix + "Librator/PDB/1ruz.pdb"
 		elif subtype == "H3N2":
-			pdbPath = working_prefix + "Librator/PDB/4hmg.pdb"
+			pdb_path = working_prefix + "Librator/PDB/4hmg.pdb"
 		elif subtype == "B":
-			pdbPath = working_prefix + "Librator/PDB/3hto.pdb"
+			pdb_path = working_prefix + "Librator/PDB/3hto.pdb"
 		elif subtype == "Group 1":
-			pdbPath = working_prefix + "Librator/PDB/3hto.pdb"
+			pdb_path = working_prefix + "Librator/PDB/3hto.pdb"
 		elif subtype == "Group 2":
-			pdbPath = working_prefix + "Librator/PDB/3hto.pdb"
+			pdb_path = working_prefix + "Librator/PDB/3hto.pdb"
 		else:
-			pdbPath = working_prefix + "Librator/PDB/3hto.pdb"
+			pdb_path = working_prefix + "Librator/PDB/3hto.pdb"
 
-
-		self.show3Dstructure(mutation, pdbPath, pymolPath, subtype)
+		self.show3Dstructure(mutation, pdb_path, pymol_path, subtype)
 
 
 
