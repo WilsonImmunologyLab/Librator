@@ -154,19 +154,6 @@
           <property name="bottomMargin">
            <number>0</number>
           </property>
-          <item row="0" column="3">
-           <spacer name="horizontalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
           <item row="0" column="2">
            <widget class="QSpinBox" name="NumDistinctions">
             <property name="enabled">
@@ -294,6 +281,19 @@
              </item>
             </layout>
            </widget>
+          </item>
+          <item row="0" column="3">
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </widget>
@@ -720,7 +720,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>0</y>
+             <y>-163</y>
              <width>928</width>
              <height>930</height>
             </rect>
@@ -1345,6 +1345,11 @@
                     <item>
                      <property name="text">
                       <string>Reference</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Generated</string>
                      </property>
                     </item>
                    </widget>

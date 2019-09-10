@@ -1,19 +1,21 @@
 # Librator by Patrick Wilson
-from PyQt5.QtCore import pyqtSlot, QTimer, QDateTime, Qt, QSortFilterProxyModel, QModelIndex
+from PyQt5.QtCore import pyqtSlot, QTimer, QDateTime, Qt, QSortFilterProxyModel, QModelIndex, QEventLoop, pyqtSignal,QEventLoop
 from PyQt5 import QtWidgets, QtPrintSupport
-
-
 from PyQt5.QtWidgets import QApplication
+from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QTextCursor, QCursor
+from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords
+import os, sys, re
+
 from MainLibrator_UI import Ui_MainLibrator
-import re
+from mutationdialog import Ui_MutationDialog
+from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText, openfastq
+from VgenesTextEdit import VGenesTextMain
+from ui_VGenesTextEdit import ui_TextEditor
+import LibratorSeq
 
 global BaseSeq
 BaseSeq = ''
-from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, \
-	setText, openfastq
-import LibratorSeq
 
-from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QTextCursor, QCursor
 # from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 
 global MoveNotChange
@@ -29,11 +31,7 @@ NumberingMap = {}
 
 global GLMsg
 GLMsg = False
-from VgenesTextEdit import VGenesTextMain
-from ui_VGenesTextEdit import ui_TextEditor
 
-from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords
-import os, sys
 global DataIs
 DataIs = []
 
@@ -46,7 +44,32 @@ global bin_prefix
 bin_prefix = '/usr/local/bin/'
 
 
+class MutationDialog(QtWidgets.QDialog):
+	applySignal = pyqtSignal(str, str, str, str)  # user define signal
+	def __init__(self):
+		super(MutationDialog, self).__init__()
+		self.ui = Ui_MutationDialog()
+		self.ui.setupUi(self)
 
+		self.ui.addMutation.clicked.connect(self.accept)
+		self.ui.cancel.clicked.connect(self.reject)
+
+	def accept(self):  # redo accept method
+		# send signal
+		active_tab = self.ui.tabWidget.currentIndex()
+		seq_name = self.ui.SeqName.text()
+		mutation = self.ui.Mutation.text()
+		mutation_ha1 = self.ui.HA1mutation.text()
+		mutation_ha2 = self.ui.HA2mutation.text()
+
+		if active_tab == 0: 		# OriPos
+			self.applySignal.emit("OriPos", seq_name, mutation, "Nothing")
+		elif active_tab == 1:		# H1H3pos
+			self.applySignal.emit("H1N3pos", seq_name, mutation_ha1, mutation_ha2)
+
+		#self.applySignal.emit(seq_name, seq_name, mutation_ha1, mutation_ha2)
+
+	 	#self.hide()
 
 class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 	def __init__(self, parent=None):
@@ -95,13 +118,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.ui.textSeq.textChanged.connect(self.SeqChanged)
 
-
-
-
-
 		self.TextEdit = VGenesTextMain()
 
 		self.UpdateRecent()
+
+		self.modalessMutationDialog = None
 
 
 
@@ -488,11 +509,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 		RepOption = self.ui.cboReportOptions.currentText()
 		if RepOption == 'Make Secreted Probe':
 			self.MakeProbe()
-		elif RepOption == 'Generate Gibson':
+		elif RepOption == 'Gibson fragments':
 			self.GenerateGibson()
 		elif RepOption == 'New sequence with user specific mutations':
-			#pop up window
-			self.GenerateGibson()
+			self.open_mutation_dialog()
 		self.ui.cboReportOptions.setCurrentIndex(0)
 
 	@pyqtSlot()
@@ -532,9 +552,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo, SubType FROM LibDB WHERE ' + WhereState  # SeqName = "327_Cl15_H1" OR SeqName = "327_Cl16_H1" OR SeqName = "327_Cl17_H1"'
 			# Position: H3-segment (HA1 or HA2), Amino Acid, H3Number, A/Aichi/2/1968-residue, H3-antigenic-region
 			DataIn = RunSQL(DBFilename, SQLStatement)
-
-
-
 
 			for item in DataIn:
 				SeqName = item[0]
@@ -3102,6 +3119,24 @@ class LibratorMain(QtWidgets.QMainWindow):
 			pdb_path = working_prefix + "Librator/PDB/3hto.pdb"
 
 		self.show3Dstructure(mutation, pdb_path, pymol_path, subtype)
+
+	def updateUI(self, a, b, c, d):  # For modaless dialog
+		print("Mutation mode: " + a)
+		print("Sequence Name: " + b)
+		if a == "OriPos":
+			print("Mutations: " + c)
+		elif a == "H1N3pos":
+			print("Mutations on HA1: " + c)
+			print("Mutations on HA2: " + d)
+
+	def open_mutation_dialog(self):
+		if self.modalessMutationDialog is None:
+			cur_seq_name = "Current Sequence: " + self.ui.txtName.toPlainText()
+			self.modalessMutationDialog = MutationDialog()
+			self.modalessMutationDialog.ui.CurSeq.setText(cur_seq_name)
+			self.modalessMutationDialog.ui.SeqName.setText(self.ui.txtName.toPlainText())
+			self.modalessMutationDialog.applySignal.connect(self.updateUI)
+		self.modalessMutationDialog.show()
 
 
 
