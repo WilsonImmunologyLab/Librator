@@ -668,6 +668,11 @@
              </item>
              <item>
               <property name="text">
+               <string>Sequence Editing</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
                <string>Gibson fragments</string>
               </property>
              </item>
@@ -720,7 +725,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-163</y>
+             <y>0</y>
              <width>928</width>
              <height>930</height>
             </rect>

@@ -15,6 +15,7 @@ class Ui_MutationDialog(object):
         MutationDialog.resize(538, 390)
         self.addMutation = QtWidgets.QPushButton(MutationDialog)
         self.addMutation.setGeometry(QtCore.QRect(30, 320, 301, 31))
+        self.addMutation.setDefault(True)
         self.addMutation.setObjectName("addMutation")
         self.Title = QtWidgets.QLabel(MutationDialog)
         self.Title.setGeometry(QtCore.QRect(40, 20, 421, 31))
@@ -60,7 +61,7 @@ class Ui_MutationDialog(object):
         self.SeqName.setObjectName("SeqName")
 
         self.retranslateUi(MutationDialog)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MutationDialog)
 
     def retranslateUi(self, MutationDialog):

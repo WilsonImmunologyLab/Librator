@@ -1,13 +1,15 @@
 # Librator by Patrick Wilson
 from PyQt5.QtCore import pyqtSlot, QTimer, QDateTime, Qt, QSortFilterProxyModel, QModelIndex, QEventLoop, pyqtSignal,QEventLoop
 from PyQt5 import QtWidgets, QtPrintSupport
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QMessageBox, QAbstractItemView
 from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QTextCursor, QCursor
 from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords
 import os, sys, re
 
 from MainLibrator_UI import Ui_MainLibrator
 from mutationdialog import Ui_MutationDialog
+from sequenceedit import Ui_SequenceEditDialog
+
 from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText, openfastq
 from VgenesTextEdit import VGenesTextMain
 from ui_VGenesTextEdit import ui_TextEditor
@@ -62,22 +64,74 @@ class MutationDialog(QtWidgets.QDialog):
 		mutation_ha1 = self.ui.HA1mutation.text()
 		mutation_ha2 = self.ui.HA2mutation.text()
 
-		if active_tab == 0: 		# OriPos
-			self.applySignal.emit("OriPos", seq_name, mutation, "Nothing")
-		elif active_tab == 1:		# H1H3pos
-			self.applySignal.emit("H1N3pos", seq_name, mutation_ha1, mutation_ha2)
-
-		#self.applySignal.emit(seq_name, seq_name, mutation_ha1, mutation_ha2)
-
+		if seq_name in self.active_sequence:
+			QMessageBox.warning(self, 'Warning', 'The sequence name is already taken! Please make a unique name for '
+												 'your mutated sequence!', QMessageBox.Ok, QMessageBox.Ok)
+		else:
+			if active_tab == 0: 		# OriPos
+				self.applySignal.emit("OriPos", seq_name, mutation, "Nothing")
+			elif active_tab == 1:		# H1H3pos
+				self.applySignal.emit("H1N3pos", seq_name, mutation_ha1, mutation_ha2)
 	 	#self.hide()
+
+class SequenceEditDialog(QtWidgets.QDialog):
+	seqEditSignal = pyqtSignal(int, str, str)  # user define signal
+
+	def __init__(self):
+		super(SequenceEditDialog, self).__init__()
+		self.ui = Ui_SequenceEditDialog()
+		self.ui.setupUi(self)
+
+		self.ui.GenerateSeq.clicked.connect(self.accept)
+		self.ui.Cancel.clicked.connect(self.reject)
+
+	def accept(self):  # redo accept method
+		# send signal
+		active_tab = self.ui.ModeTab.currentIndex()
+		base_name = self.ui.BaseSeqName.text()
+
+		if active_tab == 0: 		# Base biased
+			donor_list = self.ui.DonorList_tab1.selectedItems()
+			if len(donor_list) == 0:
+				QMessageBox.warning(self, 'Warning', 'Please select at least one donor sequence!', QMessageBox.Ok,
+									QMessageBox.Ok)
+			else:
+				text = [i.text() for i in list(donor_list)]
+				text = '\t'.join(text)
+				self.seqEditSignal.emit(0, base_name, text)
+		elif active_tab == 1:		# Cocktail
+			donor_list = self.ui.DonorList_tab2.selectedItems()
+			if len(donor_list) == 0:
+				QMessageBox.warning(self, 'Warning', 'Please select at least one donor sequence!', QMessageBox.Ok,
+									QMessageBox.Ok)
+			else:
+				text = [i.text() for i in list(donor_list)]
+				text = '\t'.join(text)
+				self.seqEditSignal.emit(1, base_name, text)
+		elif active_tab == 2: 		# Biased Cocktail
+			donor_list = self.ui.DonorList_tab3.selectedItems()
+			if len(donor_list) == 0:
+				QMessageBox.warning(self, 'Warning', 'Please select at least one donor sequence!', QMessageBox.Ok,
+									QMessageBox.Ok)
+			else:
+				text = [i.text() for i in list(donor_list)]
+				text = '\t'.join(text)
+				self.seqEditSignal.emit(2, base_name, text)
+		elif active_tab == 3:  		# Distinctions
+			donor_list = self.ui.DonorList_tab4.selectedItems()
+			if len(donor_list) == 0:
+				QMessageBox.warning(self, 'Warning', 'Please select at least one donor sequence!', QMessageBox.Ok,
+									QMessageBox.Ok)
+			else:
+				text = [i.text() for i in list(donor_list)]
+				text = '\t'.join(text)
+				self.seqEditSignal.emit(3, base_name, text)
 
 class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 	def __init__(self, parent=None):
 		QtWidgets.QMainWindow.__init__(self, parent)
 		# super(VGenesTextMain, self).__init__()
 		self.setupUi()
-
-
 
 class LibratorMain(QtWidgets.QMainWindow):
 	def __init__(self):  # , parent=None):
@@ -123,6 +177,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.UpdateRecent()
 
 		self.modalessMutationDialog = None
+
+		self.modalessSeqEditDialog = None
 
 
 
@@ -511,6 +567,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.MakeProbe()
 		elif RepOption == 'Gibson fragments':
 			self.GenerateGibson()
+		elif RepOption == 'Sequence Editing':
+			self.sequence_editing()
 		elif RepOption == 'New sequence with user specific mutations':
 			self.open_mutation_dialog()
 		self.ui.cboReportOptions.setCurrentIndex(0)
@@ -2152,35 +2210,31 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global DataIs
 
 		DBFilename = openFile(self, 'ldb')
+		if isinstance(DBFilename, str):
+			titletext = 'Librator - ' + DBFilename
+			self.setWindowTitle(titletext)
 
-		titletext = 'Librator - ' + DBFilename
-		self.setWindowTitle(titletext)
+			# self.ui.listWidgetStrainsIn.setCurrentRow(0)
 
+			self.PopulateCombos()
+			# self.UpdateRecentFilelist()
+			# self.ui.listWidgetStrainsIn.setCurrentIndex(0)
 
+			ItemsList = self.ui.listWidgetStrainsIn.count()
+			if ItemsList >0:
+				self.ui.listWidgetStrainsIn.setCurrentRow(0)
+				self.ListItemChanged()
+				for item in DataIs:
+					FromV = int(item[5])-1
+					if FromV == -1: FromV = 0
+					ToV = int(item[6])-1
 
-		# self.ui.listWidgetStrainsIn.setCurrentRow(0)
+					HASeq = item[1]
+					HASeq = HASeq[FromV:ToV]
 
-		self.PopulateCombos()
-		# self.UpdateRecentFilelist()
-		# self.ui.listWidgetStrainsIn.setCurrentIndex(0)
-
-
-		ItemsList = self.ui.listWidgetStrainsIn.count()
-		if ItemsList >0:
-			self.ui.listWidgetStrainsIn.setCurrentRow(0)
-			self.ListItemChanged()
-			for item in DataIs:
-				FromV = int(item[5])-1
-				if FromV == -1: FromV = 0
-				ToV = int(item[6])-1
-
-				HASeq = item[1]
-				HASeq = HASeq[FromV:ToV]
-
-				AASeq = Translator(HASeq.upper(), 0)
-				AASeqIs = AASeq[0]
-			self.HANumbering(AASeqIs)
-
+					AASeq = Translator(HASeq.upper(), 0)
+					AASeqIs = AASeq[0]
+				self.HANumbering(AASeqIs)
 
 	@pyqtSlot()
 	def OpenRecent(self):  # how to activate menu and toolbar actions!!!
@@ -3098,9 +3152,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_btnFieldSearch_clicked(self):
-		mutation = "M131L,N171K,Q144R"
 		pymol_path = "pymol"
-
 		#AASeq = self.ui.textAA.toPlainText()
 		mutation = self.ui.txtInsert_Base.toPlainText().strip(",")
 		subtype = str(self.ui.cboSubtype.currentText())
@@ -3134,9 +3186,46 @@ class LibratorMain(QtWidgets.QMainWindow):
 			cur_seq_name = "Current Sequence: " + self.ui.txtName.toPlainText()
 			self.modalessMutationDialog = MutationDialog()
 			self.modalessMutationDialog.ui.CurSeq.setText(cur_seq_name)
+			# get active sequences from Qlist in main window
+			donor_num = self.ui.listWidgetStrainsIn.count()
+			donor_list = []
+			for i in range(donor_num):
+				donor_list.append(self.ui.listWidgetStrainsIn.item(i).text())
+			self.modalessMutationDialog.active_sequence = donor_list
 			self.modalessMutationDialog.ui.SeqName.setText(self.ui.txtName.toPlainText())
 			self.modalessMutationDialog.applySignal.connect(self.updateUI)
 		self.modalessMutationDialog.show()
+
+	def sequence_editing(self):
+		if BaseSeq == "":
+			QMessageBox.warning(self, 'Warning', 'Please determine base sequence first!', QMessageBox.Ok, QMessageBox.Ok)
+		elif self.modalessSeqEditDialog is None:
+			self.modalessSeqEditDialog = SequenceEditDialog()
+			self.modalessSeqEditDialog.ui.BaseSeqName.setText(BaseSeq)
+			# get active sequences from Qlist in main window
+			donor_num = self.ui.listWidgetStrainsIn.count()
+			donor_list = []
+			for i in range(donor_num):
+				donor_list.append(self.ui.listWidgetStrainsIn.item(i).text())
+			# remove the base seq from donor list
+			donor_list.remove(BaseSeq)
+			# set donor list for Qlists in pop up window
+			self.modalessSeqEditDialog.ui.DonorList_tab1.addItems(donor_list)
+			self.modalessSeqEditDialog.ui.DonorList_tab2.addItems(donor_list)
+			self.modalessSeqEditDialog.ui.DonorList_tab3.addItems(donor_list)
+			self.modalessSeqEditDialog.ui.DonorList_tab4.addItems(donor_list)
+			# set multiple selection mode for Qlist in tab1
+			self.modalessSeqEditDialog.ui.DonorList_tab1.setSelectionMode(QAbstractItemView.ExtendedSelection)
+			# connect the signal with a handle function
+			self.modalessSeqEditDialog.seqEditSignal.connect(self.get_sequence_edit_info)
+			self.modalessSeqEditDialog.show()
+		else:
+			self.modalessSeqEditDialog.show()
+
+	def get_sequence_edit_info(self, a,b,c):  # For modaless dialog
+		print(a)
+		print("Base Sequence Name: " + b)
+		print(c)
 
 
 
