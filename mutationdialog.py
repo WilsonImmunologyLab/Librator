@@ -20,9 +20,6 @@ class Ui_MutationDialog(object):
         self.Title = QtWidgets.QLabel(MutationDialog)
         self.Title.setGeometry(QtCore.QRect(40, 20, 421, 31))
         self.Title.setObjectName("Title")
-        self.CurSeq = QtWidgets.QLabel(MutationDialog)
-        self.CurSeq.setGeometry(QtCore.QRect(40, 60, 421, 31))
-        self.CurSeq.setObjectName("CurSeq")
         self.cancel = QtWidgets.QPushButton(MutationDialog)
         self.cancel.setGeometry(QtCore.QRect(360, 320, 121, 31))
         self.cancel.setObjectName("cancel")
@@ -59,6 +56,13 @@ class Ui_MutationDialog(object):
         self.SeqName = QtWidgets.QLineEdit(MutationDialog)
         self.SeqName.setGeometry(QtCore.QRect(160, 270, 311, 31))
         self.SeqName.setObjectName("SeqName")
+        self.CurSeq = QtWidgets.QLabel(MutationDialog)
+        self.CurSeq.setGeometry(QtCore.QRect(160, 60, 351, 29))
+        self.CurSeq.setText("")
+        self.CurSeq.setObjectName("CurSeq")
+        self.CurSeqLab = QtWidgets.QLabel(MutationDialog)
+        self.CurSeqLab.setGeometry(QtCore.QRect(40, 60, 121, 29))
+        self.CurSeqLab.setObjectName("CurSeqLab")
 
         self.retranslateUi(MutationDialog)
         self.tabWidget.setCurrentIndex(0)
@@ -69,7 +73,6 @@ class Ui_MutationDialog(object):
         MutationDialog.setWindowTitle(_translate("MutationDialog", "Generate mutated sequence"))
         self.addMutation.setText(_translate("MutationDialog", "Create new sequence with your mutations"))
         self.Title.setText(_translate("MutationDialog", "Please type your mutations below: e.g. R98Y, K141E"))
-        self.CurSeq.setText(_translate("MutationDialog", "Current Sequence: "))
         self.cancel.setText(_translate("MutationDialog", "Cancel"))
         self.labelSeqName.setText(_translate("MutationDialog", "New SEQ Name"))
         self.labelpos.setText(_translate("MutationDialog", "Mutations"))
@@ -77,5 +80,6 @@ class Ui_MutationDialog(object):
         self.labelHA1.setText(_translate("MutationDialog", "HA1 mutations"))
         self.labelHA2.setText(_translate("MutationDialog", "HA2 mutations"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.H1H3pos), _translate("MutationDialog", "H1/H3 Numbering"))
+        self.CurSeqLab.setText(_translate("MutationDialog", "Current Sequence: "))
 
 

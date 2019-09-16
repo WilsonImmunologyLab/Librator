@@ -47,7 +47,7 @@ bin_prefix = '/usr/local/bin/'
 
 
 class MutationDialog(QtWidgets.QDialog):
-	applySignal = pyqtSignal(str, str, str, str)  # user define signal
+	applySignal = pyqtSignal(str, str, str, str, str)  # user define signal
 	def __init__(self):
 		super(MutationDialog, self).__init__()
 		self.ui = Ui_MutationDialog()
@@ -63,15 +63,24 @@ class MutationDialog(QtWidgets.QDialog):
 		mutation = self.ui.Mutation.text()
 		mutation_ha1 = self.ui.HA1mutation.text()
 		mutation_ha2 = self.ui.HA2mutation.text()
+		template_name = self.ui.CurSeq.text()
 
 		if seq_name in self.active_sequence:
 			QMessageBox.warning(self, 'Warning', 'The sequence name is already taken! Please make a unique name for '
 												 'your mutated sequence!', QMessageBox.Ok, QMessageBox.Ok)
 		else:
 			if active_tab == 0: 		# OriPos
-				self.applySignal.emit("OriPos", seq_name, mutation, "Nothing")
+				if mutation == "":
+					QMessageBox.warning(self, 'Warning',
+										'The mutation can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
+				else:
+					self.applySignal.emit("OriPos", template_name, seq_name, mutation, "Nothing")
 			elif active_tab == 1:		# H1H3pos
-				self.applySignal.emit("H1N3pos", seq_name, mutation_ha1, mutation_ha2)
+				if (mutation_ha1 == "" and mutation_ha2 == ""):
+					QMessageBox.warning(self, 'Warning',
+										'The mutation can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
+				else:
+					self.applySignal.emit("H1N3pos", template_name, seq_name, mutation_ha1, mutation_ha2)
 	 	#self.hide()
 
 class SequenceEditDialog(QtWidgets.QDialog):
@@ -3151,20 +3160,67 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.show3Dstructure(mutation, pdb_path, pymol_path, subtype)
 
-	def updateUI(self, a, b, c, d):  # For modaless dialog
-		print("Mutation mode: " + a)
-		print("Sequence Name: " + b)
-		if a == "OriPos":
-			print("Mutations: " + c)
-		elif a == "H1N3pos":
-			print("Mutations on HA1: " + c)
-			print("Mutations on HA2: " + d)
+	def generate_mutation_sequence(self, mode, template_name, seq_name, mutation1, mutation2):  # For modaless dialog
+		# load data records from database
+		WhereState = "SeqName = " + '"' + template_name + '"'
+		SQLStatement = 'SELECT * FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+		HASeq = DataIn[0][1]
+		subtype = DataIn[0][3]
+		FromV = int(DataIn[0][5]) - 1
+		if FromV == -1: FromV = 0
+		ToV = int(DataIn[0][6]) - 1
+		HASeq = HASeq[FromV:ToV]
+		# translate nt to aa
+		HAAA = Translator(HASeq.upper(), 0)
+		HAAA = HAAA[0]
+		# HA numbering
+		self.HANumbering(HAAA)
+		if subtype == "H1N1" or subtype == "Group 1":
+			numbering = H1Numbering
+		else:
+			numbering = H3Numbering
+
+		# get correct positions, also check if the mutation is correct
+		if mode == "OriPos":
+			# create mutation dictionarys
+			mutations = mutation1.split(",")
+			mutations_dic_oriAA = {}
+			mutations_dic_mutAA = {}
+			for ele in mutations:
+				ele = ele.upper()
+				match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$',ele,re.M|re.I)
+				if match_obj == None:
+					QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
+									QMessageBox.Ok, QMessageBox.Ok)
+				else:
+					mutations_dic_oriAA[int(match_obj.group(2))] = match_obj.group(1)
+					mutations_dic_mutAA[int(match_obj.group(2))] = match_obj.group(3)
+			# foreach by sort the mutation position, check if all the mutation are correct
+			for pos in sorted(mutations_dic_oriAA.keys()):
+				cur_oriAA = mutations_dic_oriAA[pos]
+				if cur_oriAA == numbering[pos][1]:
+					pass
+				else:
+					QMessageBox.warning(self, 'Warning', "On the AA sequence, position " + str(pos) + " is "
+										+ numbering[pos][1] + ", not " + cur_oriAA
+										+ ". Please check your numbering carefully!",
+										QMessageBox.Ok, QMessageBox.Ok)
+
+			# after all the mutations passed the check, we can start to add mutation into template sequence
+
+
+
+
+		elif mode == "H1N3pos":
+			mutations_ha1 = mutation1.split(",")
+			mutations_ha2 = mutation2.split(",")
 
 	def open_mutation_dialog(self):
 		if self.ui.txtName.toPlainText() == "":
 			QMessageBox.warning(self, 'Warning', 'Please select a sequence first!', QMessageBox.Ok, QMessageBox.Ok)
 		else:
-			cur_seq_name = "Current Sequence: " + self.ui.txtName.toPlainText()
+			cur_seq_name = self.ui.txtName.toPlainText()
 			self.modalessMutationDialog = MutationDialog()
 			self.modalessMutationDialog.ui.CurSeq.setText(cur_seq_name)
 			# get active sequences from Qlist in main window
@@ -3174,7 +3230,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				donor_list.append(self.ui.listWidgetStrainsIn.item(i).text())
 			self.modalessMutationDialog.active_sequence = donor_list
 			self.modalessMutationDialog.ui.SeqName.setText(self.ui.txtName.toPlainText())
-			self.modalessMutationDialog.applySignal.connect(self.updateUI)
+			self.modalessMutationDialog.applySignal.connect(self.generate_mutation_sequence)
 			self.modalessMutationDialog.show()
 
 	def sequence_editing(self):
