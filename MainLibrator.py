@@ -776,6 +776,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			AASeqIs = self.ui.textAA.toPlainText()
 
 			self.HANumbering(AASeqIs)
+
 		else:
 			return
 
@@ -820,9 +821,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 					residue = H3Numbering[pos]
 					AA = residue[1]
 
-
-
-
 					AASeq += AA
 
 					resPos = str(pos)
@@ -833,7 +831,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 						NumLine += str(pos)
 						AAPosColorMap += '0'
 
-
 					elif tesResNP.is_integer():  # is divisible by 5
 						ResTP = str(pos)
 						LenResP = len(ResTP)
@@ -841,29 +838,20 @@ class LibratorMain(QtWidgets.QMainWindow):
 						if NumberingMap['H3HA1end'] > (pos + LenResP + 1):
 							ResDownP = LenResP
 							NumLine += ResTP[LenResP - ResDownP]
-
-
 							ResDownP -= 1
-
 							AAPosColorMap += '0'
-
 						else:
 							NumLine += '.'
-
 							AAPosColorMap += '0'
-
 					else:
 						if ResDownP != 0:
 							NumLine += ResTP[LenResP - ResDownP]
-
 							AAPosColorMap += '0'
-
 							# H3ColorMap += '0'
 							ResDownP -= 1
 						else:
 							NumLine += '.'
 							AAPosColorMap += '0'
-
 
 					region = residue[0]
 
@@ -892,37 +880,28 @@ class LibratorMain(QtWidgets.QMainWindow):
 				break
 
 			if Decoration == 'H3Num':
-
 				H3NumOn = True
 
 			if Decoration == 'H1Num':
-
 				H1NumLine = ''
 				H1NumOn = True
 
 			if Decoration == 'H3Ag':
-
 				H3AgLine = ''
 
 				H3AgOn = True
 
 			if Decoration == 'H1Ag':
-
 				H1AgLine = ''
 				H1AgOn = True
 
 			if Decoration == 'DonRegs':
-
 				DomainsLine = ''
 				DomainsOn = True
 
 			if Decoration == 'Muts':
-
 				MutsLine = ''
 				MutsOn = True
-
-
-
 
 		# need to build the alignment and colormap in conjunction where colormap has a
 		# indicating what color that matches identically to the alignment character for
@@ -2347,12 +2326,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 		MyOutFiles = NameBase + 'Out.txt'
 
 		workingfilename = os.path.join(working_prefix, 'Librator', MyInFiles)
-		#workingfilename = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', MyInFiles)
+		# workingfilename = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', MyInFiles)
 		musclepath = os.path.join(bin_prefix)
-		#musclepath = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', 'muscle')
+		# musclepath = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', 'muscle')
 		savefilename = os.path.join(working_prefix, 'Librator', MyOutFiles)
-		#savefilename = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', MyOutFiles)
-	# 	probconspath /Users/jbloom/probcons/
+		# savefilename = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', MyOutFiles)
+		# 	probconspath /Users/jbloom/probcons/
 
 		workingdir, filename = os.path.split(workingfilename)
 		os.chdir(workingdir)
@@ -3182,7 +3161,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			print("Mutations on HA2: " + d)
 
 	def open_mutation_dialog(self):
-		if self.modalessMutationDialog is None:
+		if self.ui.txtName.toPlainText() == "":
+			QMessageBox.warning(self, 'Warning', 'Please select a sequence first!', QMessageBox.Ok, QMessageBox.Ok)
+		else:
 			cur_seq_name = "Current Sequence: " + self.ui.txtName.toPlainText()
 			self.modalessMutationDialog = MutationDialog()
 			self.modalessMutationDialog.ui.CurSeq.setText(cur_seq_name)
@@ -3194,12 +3175,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessMutationDialog.active_sequence = donor_list
 			self.modalessMutationDialog.ui.SeqName.setText(self.ui.txtName.toPlainText())
 			self.modalessMutationDialog.applySignal.connect(self.updateUI)
-		self.modalessMutationDialog.show()
+			self.modalessMutationDialog.show()
 
 	def sequence_editing(self):
 		if BaseSeq == "":
 			QMessageBox.warning(self, 'Warning', 'Please determine base sequence first!', QMessageBox.Ok, QMessageBox.Ok)
-		elif self.modalessSeqEditDialog is None:
+		else:
 			self.modalessSeqEditDialog = SequenceEditDialog()
 			self.modalessSeqEditDialog.ui.BaseSeqName.setText(BaseSeq)
 			# get active sequences from Qlist in main window
@@ -3218,8 +3199,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessSeqEditDialog.ui.DonorList_tab1.setSelectionMode(QAbstractItemView.ExtendedSelection)
 			# connect the signal with a handle function
 			self.modalessSeqEditDialog.seqEditSignal.connect(self.get_sequence_edit_info)
-			self.modalessSeqEditDialog.show()
-		else:
 			self.modalessSeqEditDialog.show()
 
 	def get_sequence_edit_info(self, a,b,c):  # For modaless dialog

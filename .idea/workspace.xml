@@ -2,15 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f472839-8a65-4dce-be83-d1c7511e6e93" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/sequenceedit.ui" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DB/AAATester.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/AAATester.ldb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.ui" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/local.pml" beforeDir="false" afterPath="$PROJECT_DIR$/local.pml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mutationdialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/mutationdialog.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mutationdialog.ui" beforeDir="false" afterPath="$PROJECT_DIR$/mutationdialog.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sequenceedit.py" beforeDir="false" afterPath="$PROJECT_DIR$/sequenceedit.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sequenceedit.ui" beforeDir="false" afterPath="$PROJECT_DIR$/sequenceedit.ui" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -115,5 +113,12 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="aa[344]" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

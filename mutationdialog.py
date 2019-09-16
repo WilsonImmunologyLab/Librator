@@ -66,7 +66,7 @@ class Ui_MutationDialog(object):
 
     def retranslateUi(self, MutationDialog):
         _translate = QtCore.QCoreApplication.translate
-        MutationDialog.setWindowTitle(_translate("MutationDialog", "Dialog"))
+        MutationDialog.setWindowTitle(_translate("MutationDialog", "Generate mutated sequence"))
         self.addMutation.setText(_translate("MutationDialog", "Create new sequence with your mutations"))
         self.Title.setText(_translate("MutationDialog", "Please type your mutations below: e.g. R98Y, K141E"))
         self.CurSeq.setText(_translate("MutationDialog", "Current Sequence: "))

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Edit Sequences</string>
   </property>
   <widget class="QTabWidget" name="ModeTab">
    <property name="geometry">

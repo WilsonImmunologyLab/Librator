@@ -80,7 +80,7 @@ class Ui_SequenceEditDialog(object):
 
     def retranslateUi(self, SequenceEditDialog):
         _translate = QtCore.QCoreApplication.translate
-        SequenceEditDialog.setWindowTitle(_translate("SequenceEditDialog", "Dialog"))
+        SequenceEditDialog.setWindowTitle(_translate("SequenceEditDialog", "Edit Sequences"))
         self.label_tab1.setText(_translate("SequenceEditDialog", "Please select donor sequences, multiple selection is allowed"))
         self.ModeTab.setTabText(self.ModeTab.indexOf(self.tab), _translate("SequenceEditDialog", "Base Biased"))
         self.label_tab2.setText(_translate("SequenceEditDialog", "Please select donor sequence, only single selection allowed"))

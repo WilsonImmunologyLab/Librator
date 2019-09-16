@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Generate mutated sequence</string>
   </property>
   <widget class="QPushButton" name="addMutation">
    <property name="geometry">
