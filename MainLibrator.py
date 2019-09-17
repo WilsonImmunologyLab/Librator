@@ -3,7 +3,7 @@ from PyQt5.QtCore import pyqtSlot, QTimer, QDateTime, Qt, QSortFilterProxyModel,
 from PyQt5 import QtWidgets, QtPrintSupport
 from PyQt5.QtWidgets import QApplication, QMessageBox, QAbstractItemView
 from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QTextCursor, QCursor
-from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords
+from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion
 import os, sys, re
 
 from MainLibrator_UI import Ui_MainLibrator
@@ -41,7 +41,7 @@ global DBFilename
 DBFilename = 'none'
 
 global working_prefix
-working_prefix = '/Users/leil/Documents/Projects/Librator/'
+working_prefix = os.path.abspath('..')
 global bin_prefix
 bin_prefix = '/usr/local/bin/'
 
@@ -81,7 +81,7 @@ class MutationDialog(QtWidgets.QDialog):
 										'The mutation can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
 				else:
 					self.applySignal.emit("H1N3pos", template_name, seq_name, mutation_ha1, mutation_ha2)
-	 	#self.hide()
+		#self.hide()
 
 class SequenceEditDialog(QtWidgets.QDialog):
 	seqEditSignal = pyqtSignal(int, str, str)  # user define signal
@@ -135,6 +135,7 @@ class SequenceEditDialog(QtWidgets.QDialog):
 				text = [i.text() for i in list(donor_list)]
 				text = '\t'.join(text)
 				self.seqEditSignal.emit(3, base_name, text)
+		#self.hide()
 
 class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 	def __init__(self, parent=None):
@@ -519,40 +520,41 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.ui.actionGL.setChecked(False)
 			self.ui.listWidgetStrainsIn.selectAll()
 			listItems = self.ui.listWidgetStrainsIn.selectedItems()
-			# if not listItems: return
 			WhereState = ''
 			NumSeqs = len(listItems)
-			i = 1
-			for item in listItems:
+			# if not listItems: do nothing
+			if NumSeqs < 1:
+				pass
+			else:
+				i = 1
+				for item in listItems:
 
-				eachItemIs = item.text()
-				WhereState += 'SeqName = "' + eachItemIs + '"'
-				if NumSeqs > i:
-					WhereState += ' OR '
+					eachItemIs = item.text()
+					WhereState += 'SeqName = "' + eachItemIs + '"'
+					if NumSeqs > i:
+						WhereState += ' OR '
 
-				i += 1
-
-
-			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState  #SeqName = "327_Cl15_H1" OR SeqName = "327_Cl16_H1" OR SeqName = "327_Cl17_H1"'
-			# SQLStatement = 'SELECT * FROM LibDB WHERE SeqName = "' + eachItemIs + '"'
-			DataIn = RunSQL(DBFilename, SQLStatement)
-
-			for item in DataIn:
-				SeqName = item[0]
-				Sequence = item[1]
-				VFrom = int(item[2])-1
-				if VFrom == -1: VFrom = 0
-
-				VTo = int(item[3])
-				Sequence = Sequence[VFrom:VTo]
-				Sequence = Sequence.upper()
-				EachIn = (SeqName, Sequence)
-				AlignIn.append(EachIn)
+					i += 1
 
 
+				SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState  #SeqName = "327_Cl15_H1" OR SeqName = "327_Cl16_H1" OR SeqName = "327_Cl17_H1"'
+				# SQLStatement = 'SELECT * FROM LibDB WHERE SeqName = "' + eachItemIs + '"'
+				DataIn = RunSQL(DBFilename, SQLStatement)
 
-			Notes = 'Tab'
-			self.AlignSequences(AlignIn, Notes)
+				for item in DataIn:
+					SeqName = item[0]
+					Sequence = item[1]
+					VFrom = int(item[2])-1
+					if VFrom == -1: VFrom = 0
+
+					VTo = int(item[3])
+					Sequence = Sequence[VFrom:VTo]
+					Sequence = Sequence.upper()
+					EachIn = (SeqName, Sequence)
+					AlignIn.append(EachIn)
+
+				Notes = 'Tab'
+				self.AlignSequences(AlignIn, Notes)
 
 		elif self.ui.tabWidget.currentIndex() == 1:
 			#displays all info about the selected sequence
@@ -3166,10 +3168,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 		SQLStatement = 'SELECT * FROM LibDB WHERE ' + WhereState
 		DataIn = RunSQL(DBFilename, SQLStatement)
 		HASeq = DataIn[0][1]
+		Seqlen = DataIn[0][2]
 		subtype = DataIn[0][3]
+		Form = DataIn[0][4]
 		FromV = int(DataIn[0][5]) - 1
 		if FromV == -1: FromV = 0
 		ToV = int(DataIn[0][6]) - 1
+		Active = DataIn[0][7]
+		Role = DataIn[0][8]
+		Donor = DataIn[0][9]
+
 		HASeq = HASeq[FromV:ToV]
 		# translate nt to aa
 		HAAA = Translator(HASeq.upper(), 0)
@@ -3197,24 +3205,135 @@ class LibratorMain(QtWidgets.QMainWindow):
 					mutations_dic_oriAA[int(match_obj.group(2))] = match_obj.group(1)
 					mutations_dic_mutAA[int(match_obj.group(2))] = match_obj.group(3)
 			# foreach by sort the mutation position, check if all the mutation are correct
+			contiune_run = 0
 			for pos in sorted(mutations_dic_oriAA.keys()):
 				cur_oriAA = mutations_dic_oriAA[pos]
 				if cur_oriAA == numbering[pos][1]:
-					pass
+					contiune_run = 1
 				else:
 					QMessageBox.warning(self, 'Warning', "On the AA sequence, position " + str(pos) + " is "
 										+ numbering[pos][1] + ", not " + cur_oriAA
 										+ ". Please check your numbering carefully!",
 										QMessageBox.Ok, QMessageBox.Ok)
+					contiune_run = 0
 
 			# after all the mutations passed the check, we can start to add mutation into template sequence
+			if contiune_run == 1:
+				for pos in sorted(mutations_dic_oriAA.keys()):
+					cur_mutAA = mutations_dic_mutAA[pos]
+					cur_condon = AACodonDict[cur_mutAA]
+					condon_start = (pos - 1) * 3
+					condon_end = pos * 3
+					HASeq = HASeq[:condon_start] + cur_condon + HASeq[condon_end:]
 
+				# after generate nt sequence with all mutations, we can import the sequence into the DB
+				SQLStatement = "INSERT INTO LibDB(SeqName, Sequence, SeqLen, SubType, Form, VFrom, VTo, Active, Role, " \
+								"Donor, Mutations, ID, Base) VALUES('" \
+								+ seq_name + "','" \
+								+ HASeq + "','" \
+								+ str(len(HASeq)) + "','" \
+								+ subtype + "','" \
+								+ Form + "','" \
+								+ "1" + "','" \
+								+ "5000" + "','" \
+								+ Active + "','" \
+								+ "Mutated" + "','" \
+								+ "none" + "','" \
+								+ mutation1 + "','" \
+								+ "0" + "','" \
+								+ template_name + "')"
+				RunInsertion(DBFilename, SQLStatement)
 
-
-
+				# add new sequence information into listWidgetStrainsIn
+				self.ui.listWidgetStrainsIn.addItem(seq_name)
+				self.modalessMutationDialog.close()
 		elif mode == "H1N3pos":
 			mutations_ha1 = mutation1.split(",")
 			mutations_ha2 = mutation2.split(",")
+			mutations = []
+			# convert H1/H3 numbering to original numbering
+			# start with HA1
+			for ele in mutations_ha1:
+				match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
+				if match_obj == None:
+					QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
+										QMessageBox.Ok, QMessageBox.Ok)
+				else:
+					pos = int(match_obj.group(2))
+					for n in range(1,len(numbering)):
+						if numbering[n][0] == "HA1" and numbering[n][2] == pos:
+							tmp_str = match_obj.group(1) + str(n) + match_obj.group(3)
+							mutations.append(tmp_str)
+			# then HA2
+			for ele in mutations_ha2:
+				match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
+				if match_obj == None:
+					QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
+										QMessageBox.Ok, QMessageBox.Ok)
+				else:
+					pos = int(match_obj.group(2))
+					for n in range(1,len(numbering)):
+						if numbering[n][0] == "HA2" and numbering[n][2] == pos:
+							tmp_str = match_obj.group(1) + str(n) + match_obj.group(3)
+							mutations.append(tmp_str)
+
+			# Now all the H1/H3 numbering mutations have been converted to original positions
+			mutations_dic_oriAA = {}
+			mutations_dic_mutAA = {}
+			for ele in mutations:
+				ele = ele.upper()
+				match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
+				if match_obj == None:
+					QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
+										QMessageBox.Ok, QMessageBox.Ok)
+				else:
+					mutations_dic_oriAA[int(match_obj.group(2))] = match_obj.group(1)
+					mutations_dic_mutAA[int(match_obj.group(2))] = match_obj.group(3)
+			# foreach by sort the mutation position, check if all the mutation are correct
+			contiune_run = 0
+			for pos in sorted(mutations_dic_oriAA.keys()):
+				cur_oriAA = mutations_dic_oriAA[pos]
+				if cur_oriAA == numbering[pos][1]:
+					contiune_run = 1
+				else:
+					QMessageBox.warning(self, 'Warning', "On the AA sequence, position " + str(pos) + " is "
+										+ numbering[pos][1] + ", not " + cur_oriAA
+										+ ". Please check your numbering carefully!",
+										QMessageBox.Ok, QMessageBox.Ok)
+					contiune_run = 0
+
+			# after all the mutations passed the check, we can start to add mutation into template sequence
+			if contiune_run == 1:
+				for pos in sorted(mutations_dic_oriAA.keys()):
+					cur_mutAA = mutations_dic_mutAA[pos]
+					cur_condon = AACodonDict[cur_mutAA]
+					condon_start = (pos - 1) * 3
+					condon_end = pos * 3
+					HASeq = HASeq[:condon_start] + cur_condon + HASeq[condon_end:]
+
+				# after generate nt sequence with all mutations, we can import the sequence into the DB
+				SQLStatement = "INSERT INTO LibDB(SeqName, Sequence, SeqLen, SubType, Form, VFrom, VTo, Active, Role, " \
+							   "Donor, Mutations, ID, Base) VALUES('" \
+							   + seq_name + "','" \
+							   + HASeq + "','" \
+							   + str(len(HASeq)) + "','" \
+							   + subtype + "','" \
+							   + Form + "','" \
+							   + "1" + "','" \
+							   + "5000" + "','" \
+							   + Active + "','" \
+							   + "Mutated" + "','" \
+							   + "none" + "','" \
+							   + mutation1 + "','" \
+							   + "0" + "','" \
+							   + template_name + "')"
+				RunInsertion(DBFilename, SQLStatement)
+
+				# add new sequence information into listWidgetStrainsIn
+				self.ui.listWidgetStrainsIn.addItem(seq_name)
+				self.modalessMutationDialog.close()
+
+
 
 	def open_mutation_dialog(self):
 		if self.ui.txtName.toPlainText() == "":
@@ -3394,6 +3513,12 @@ CodonDict={'ATT':'I',   'ATC':'I',  'ATA':'I',  'CTT':'L',  'CTC':'L',
 'AAA':'K',  'AAG':'K',  'CGT':'R',  'CGC':'R',  'CGA':'R',  'CGG':'R',
 'AGA':'R',  'AGG':'R',  'TAA':'*',  'TAG':'*',  'TGA':'*',  '...':'.',
 'NNN':'.'}
+
+
+AACodonDict={'I':'ATT','L':'CTT','V':'GTT','F':'TTT','M':'ATG','C':'TGT',
+			 'A':'GCT','G':'GGT','P':'CCT','T':'ACT','S':'TCT','Y':'TAT',
+			 'W':'TGG','Q':'CAA','N':'AAT','H':'CAT','E':'GAA','D':'GAT',
+			 'K':'AAA','R':'CGT'}
 
 
 H1HA1Regions = {'1':'Stalk', '2':'Stalk', '3':'Stalk', '4':'Stalk', '5':'Stalk', '6':'Stalk', '7':'Stalk',

@@ -6,7 +6,7 @@ import LibratorSQL
 from PyQt5.QtWidgets import QApplication
 
 global working_prefix
-working_prefix = '/Users/leil/Documents/Projects/Librator/'
+working_prefix = os.path.abspath('..')
 global bin_prefix
 bin_prefix = '/usr/local/bin/'
 

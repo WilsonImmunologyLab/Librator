@@ -1357,6 +1357,11 @@
                       <string>Generated</string>
                      </property>
                     </item>
+                    <item>
+                     <property name="text">
+                      <string>Mutated</string>
+                     </property>
+                    </item>
                    </widget>
                   </item>
                   <item row="1" column="0">
