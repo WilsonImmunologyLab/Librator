@@ -3248,38 +3248,46 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.listWidgetStrainsIn.addItem(seq_name)
 				self.modalessMutationDialog.close()
 		elif mode == "H1N3pos":
-			mutations_ha1 = mutation1.split(",")
-			mutations_ha2 = mutation2.split(",")
 			mutations = []
 			# convert H1/H3 numbering to original numbering
 			# start with HA1
-			for ele in mutations_ha1:
-				match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
-				if match_obj == None:
-					QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
-										QMessageBox.Ok, QMessageBox.Ok)
-				else:
-					pos = int(match_obj.group(2))
-					for n in range(1,len(numbering)):
-						if numbering[n][0] == "HA1" and numbering[n][2] == pos:
-							tmp_str = match_obj.group(1) + str(n) + match_obj.group(3)
-							mutations.append(tmp_str)
+			if mutation1 == "":
+				pass
+			else:
+				mutations_ha1 = mutation1.split(",")
+				for ele in mutations_ha1:
+					match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
+					if match_obj == None:
+						QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
+											QMessageBox.Ok, QMessageBox.Ok)
+					else:
+						pos = int(match_obj.group(2))
+						for n in range(1,len(numbering)):
+							if numbering[n][0] == "HA1" and numbering[n][2] == pos:
+								tmp_str = match_obj.group(1) + str(n) + match_obj.group(3)
+								mutations.append(tmp_str)
 			# then HA2
-			for ele in mutations_ha2:
-				match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
-				if match_obj == None:
-					QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
-										QMessageBox.Ok, QMessageBox.Ok)
-				else:
-					pos = int(match_obj.group(2))
-					for n in range(1,len(numbering)):
-						if numbering[n][0] == "HA2" and numbering[n][2] == pos:
-							tmp_str = match_obj.group(1) + str(n) + match_obj.group(3)
-							mutations.append(tmp_str)
+			if mutation2 == "":
+				pass
+			else:
+				mutations_ha2 = mutation2.split(",")
+				for ele in mutations_ha2:
+					match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
+					if match_obj == None:
+						QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
+											QMessageBox.Ok, QMessageBox.Ok)
+					else:
+						pos = int(match_obj.group(2))
+						for n in range(1,len(numbering)):
+							if numbering[n][0] == "HA2" and numbering[n][2] == pos:
+								tmp_str = match_obj.group(1) + str(n) + match_obj.group(3)
+								mutations.append(tmp_str)
 
 			# Now all the H1/H3 numbering mutations have been converted to original positions
 			mutations_dic_oriAA = {}
 			mutations_dic_mutAA = {}
+			seprator = ','
+			mutation_text = seprator.join(mutations)
 			for ele in mutations:
 				ele = ele.upper()
 				match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
@@ -3324,14 +3332,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 							   + Active + "','" \
 							   + "Mutated" + "','" \
 							   + "none" + "','" \
-							   + mutation1 + "','" \
+							   + mutation_text + "','" \
 							   + "0" + "','" \
 							   + template_name + "')"
-				RunInsertion(DBFilename, SQLStatement)
-
-				# add new sequence information into listWidgetStrainsIn
-				self.ui.listWidgetStrainsIn.addItem(seq_name)
-				self.modalessMutationDialog.close()
+				response = RunInsertion(DBFilename, SQLStatement)
+				if response == 0:
+					QMessageBox.warning(self, 'Warning', "The new sequence name has been taken!",
+										QMessageBox.Ok, QMessageBox.Ok)
+				else:
+					# add new sequence information into listWidgetStrainsIn
+					self.ui.listWidgetStrainsIn.addItem(seq_name)
+					self.modalessMutationDialog.close()
 
 
 
