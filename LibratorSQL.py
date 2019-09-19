@@ -247,16 +247,18 @@ def RunInsertion(DBpathname, SQLStatement):
     os.chdir(dirname)
     conn = db.connect(DBpathname)
     cursor = conn.cursor()
-    response = cursor.execute(SQLStatement)
-    if response.rowcount == 1:
-        conn.commit()
+    try:
+        cursor.execute(SQLStatement)
+    except db.Error:
         cursor.close()
         conn.close()
         return 1
     else:
+        conn.commit()
         cursor.close()
         conn.close()
         return 0
+
 
 
 def RunSQL(DBpathname, SQLStatement):

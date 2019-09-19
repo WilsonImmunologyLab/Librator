@@ -3162,187 +3162,198 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.show3Dstructure(mutation, pdb_path, pymol_path, subtype)
 
-	def generate_mutation_sequence(self, mode, template_name, seq_name, mutation1, mutation2):  # For modaless dialog
+	def generate_mutation_sequence(self, mode, template_name, seq_name, mutation1, mutation2):
 		# load data records from database
-		WhereState = "SeqName = " + '"' + template_name + '"'
+		WhereState = "SeqName = " + '"' + seq_name + '"'
 		SQLStatement = 'SELECT * FROM LibDB WHERE ' + WhereState
 		DataIn = RunSQL(DBFilename, SQLStatement)
-		HASeq = DataIn[0][1]
-		Seqlen = DataIn[0][2]
-		subtype = DataIn[0][3]
-		Form = DataIn[0][4]
-		FromV = int(DataIn[0][5]) - 1
-		if FromV == -1: FromV = 0
-		ToV = int(DataIn[0][6]) - 1
-		Active = DataIn[0][7]
-		Role = DataIn[0][8]
-		Donor = DataIn[0][9]
 
-		HASeq = HASeq[FromV:ToV]
-		# translate nt to aa
-		HAAA = Translator(HASeq.upper(), 0)
-		HAAA = HAAA[0]
-		# HA numbering
-		self.HANumbering(HAAA)
-		if subtype == "H1N1" or subtype == "Group 1":
-			numbering = H1Numbering
+		if len(DataIn) == 1:
+			QMessageBox.warning(self, 'Warning', 'The sequence name \n' + seq_name + "\nhas been taken!",
+								QMessageBox.Ok, QMessageBox.Ok)
 		else:
-			numbering = H3Numbering
+			# load data records from database
+			WhereState = "SeqName = " + '"' + template_name + '"'
+			SQLStatement = 'SELECT * FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			HASeq = DataIn[0][1]
+			Seqlen = DataIn[0][2]
+			subtype = DataIn[0][3]
+			Form = DataIn[0][4]
+			FromV = int(DataIn[0][5]) - 1
+			if FromV == -1: FromV = 0
+			ToV = int(DataIn[0][6]) - 1
+			Active = DataIn[0][7]
+			Role = DataIn[0][8]
+			Donor = DataIn[0][9]
 
-		# get correct positions, also check if the mutation is correct
-		if mode == "OriPos":
-			# create mutation dictionarys
-			mutations = mutation1.split(",")
-			mutations_dic_oriAA = {}
-			mutations_dic_mutAA = {}
-			for ele in mutations:
-				ele = ele.upper()
-				match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$',ele,re.M|re.I)
-				if match_obj == None:
-					QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
-									QMessageBox.Ok, QMessageBox.Ok)
-				else:
-					mutations_dic_oriAA[int(match_obj.group(2))] = match_obj.group(1)
-					mutations_dic_mutAA[int(match_obj.group(2))] = match_obj.group(3)
-			# foreach by sort the mutation position, check if all the mutation are correct
-			contiune_run = 0
-			for pos in sorted(mutations_dic_oriAA.keys()):
-				cur_oriAA = mutations_dic_oriAA[pos]
-				if cur_oriAA == numbering[pos][1]:
-					contiune_run = 1
-				else:
-					QMessageBox.warning(self, 'Warning', "On the AA sequence, position " + str(pos) + " is "
-										+ numbering[pos][1] + ", not " + cur_oriAA
-										+ ". Please check your numbering carefully!",
-										QMessageBox.Ok, QMessageBox.Ok)
-					contiune_run = 0
-
-			# after all the mutations passed the check, we can start to add mutation into template sequence
-			if contiune_run == 1:
-				for pos in sorted(mutations_dic_oriAA.keys()):
-					cur_mutAA = mutations_dic_mutAA[pos]
-					cur_condon = AACodonDict[cur_mutAA]
-					condon_start = (pos - 1) * 3
-					condon_end = pos * 3
-					HASeq = HASeq[:condon_start] + cur_condon + HASeq[condon_end:]
-
-				# after generate nt sequence with all mutations, we can import the sequence into the DB
-				SQLStatement = "INSERT INTO LibDB(SeqName, Sequence, SeqLen, SubType, Form, VFrom, VTo, Active, Role, " \
-								"Donor, Mutations, ID, Base) VALUES('" \
-								+ seq_name + "','" \
-								+ HASeq + "','" \
-								+ str(len(HASeq)) + "','" \
-								+ subtype + "','" \
-								+ Form + "','" \
-								+ "1" + "','" \
-								+ "5000" + "','" \
-								+ Active + "','" \
-								+ "Mutated" + "','" \
-								+ "none" + "','" \
-								+ mutation1 + "','" \
-								+ "0" + "','" \
-								+ template_name + "')"
-				RunInsertion(DBFilename, SQLStatement)
-
-				# add new sequence information into listWidgetStrainsIn
-				self.ui.listWidgetStrainsIn.addItem(seq_name)
-				self.modalessMutationDialog.close()
-		elif mode == "H1N3pos":
-			mutations = []
-			# convert H1/H3 numbering to original numbering
-			# start with HA1
-			if mutation1 == "":
-				pass
+			HASeq = HASeq[FromV:ToV]
+			# translate nt to aa
+			HAAA = Translator(HASeq.upper(), 0)
+			HAAA = HAAA[0]
+			# HA numbering
+			self.HANumbering(HAAA)
+			if subtype == "H1N1" or subtype == "Group 1":
+				numbering = H1Numbering
 			else:
-				mutations_ha1 = mutation1.split(",")
-				for ele in mutations_ha1:
+				numbering = H3Numbering
+
+			# get correct positions, also check if the mutation is correct
+			if mode == "OriPos":
+				# create mutation dictionarys
+				mutations = mutation1.split(",")
+				mutations_dic_oriAA = {}
+				mutations_dic_mutAA = {}
+				for ele in mutations:
+					ele = ele.upper()
 					match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
 					if match_obj == None:
 						QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
 											QMessageBox.Ok, QMessageBox.Ok)
 					else:
-						pos = int(match_obj.group(2))
-						for n in range(1,len(numbering)):
-							if numbering[n][0] == "HA1" and numbering[n][2] == pos:
-								tmp_str = match_obj.group(1) + str(n) + match_obj.group(3)
-								mutations.append(tmp_str)
-			# then HA2
-			if mutation2 == "":
-				pass
-			else:
-				mutations_ha2 = mutation2.split(",")
-				for ele in mutations_ha2:
-					match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
-					if match_obj == None:
-						QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
-											QMessageBox.Ok, QMessageBox.Ok)
-					else:
-						pos = int(match_obj.group(2))
-						for n in range(1,len(numbering)):
-							if numbering[n][0] == "HA2" and numbering[n][2] == pos:
-								tmp_str = match_obj.group(1) + str(n) + match_obj.group(3)
-								mutations.append(tmp_str)
-
-			# Now all the H1/H3 numbering mutations have been converted to original positions
-			mutations_dic_oriAA = {}
-			mutations_dic_mutAA = {}
-			seprator = ','
-			mutation_text = seprator.join(mutations)
-			for ele in mutations:
-				ele = ele.upper()
-				match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
-				if match_obj == None:
-					QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
-										QMessageBox.Ok, QMessageBox.Ok)
-				else:
-					mutations_dic_oriAA[int(match_obj.group(2))] = match_obj.group(1)
-					mutations_dic_mutAA[int(match_obj.group(2))] = match_obj.group(3)
-			# foreach by sort the mutation position, check if all the mutation are correct
-			contiune_run = 0
-			for pos in sorted(mutations_dic_oriAA.keys()):
-				cur_oriAA = mutations_dic_oriAA[pos]
-				if cur_oriAA == numbering[pos][1]:
-					contiune_run = 1
-				else:
-					QMessageBox.warning(self, 'Warning', "On the AA sequence, position " + str(pos) + " is "
-										+ numbering[pos][1] + ", not " + cur_oriAA
-										+ ". Please check your numbering carefully!",
-										QMessageBox.Ok, QMessageBox.Ok)
-					contiune_run = 0
-
-			# after all the mutations passed the check, we can start to add mutation into template sequence
-			if contiune_run == 1:
+						mutations_dic_oriAA[int(match_obj.group(2))] = match_obj.group(1)
+						mutations_dic_mutAA[int(match_obj.group(2))] = match_obj.group(3)
+				# foreach by sort the mutation position, check if all the mutation are correct
+				contiune_run = 0
 				for pos in sorted(mutations_dic_oriAA.keys()):
-					cur_mutAA = mutations_dic_mutAA[pos]
-					cur_condon = AACodonDict[cur_mutAA]
-					condon_start = (pos - 1) * 3
-					condon_end = pos * 3
-					HASeq = HASeq[:condon_start] + cur_condon + HASeq[condon_end:]
+					cur_oriAA = mutations_dic_oriAA[pos]
+					if cur_oriAA == numbering[pos][1]:
+						contiune_run = 1
+					else:
+						QMessageBox.warning(self, 'Warning', "On the AA sequence, position " + str(pos) + " is "
+											+ numbering[pos][1] + ", not " + cur_oriAA
+											+ ". Please check your numbering carefully!",
+											QMessageBox.Ok, QMessageBox.Ok)
+						contiune_run = 0
 
-				# after generate nt sequence with all mutations, we can import the sequence into the DB
-				SQLStatement = "INSERT INTO LibDB(SeqName, Sequence, SeqLen, SubType, Form, VFrom, VTo, Active, Role, " \
-							   "Donor, Mutations, ID, Base) VALUES('" \
-							   + seq_name + "','" \
-							   + HASeq + "','" \
-							   + str(len(HASeq)) + "','" \
-							   + subtype + "','" \
-							   + Form + "','" \
-							   + "1" + "','" \
-							   + "5000" + "','" \
-							   + Active + "','" \
-							   + "Mutated" + "','" \
-							   + "none" + "','" \
-							   + mutation_text + "','" \
-							   + "0" + "','" \
-							   + template_name + "')"
-				response = RunInsertion(DBFilename, SQLStatement)
-				if response == 0:
-					QMessageBox.warning(self, 'Warning', "The new sequence name has been taken!",
-										QMessageBox.Ok, QMessageBox.Ok)
-				else:
+				# after all the mutations passed the check, we can start to add mutation into template sequence
+				if contiune_run == 1:
+					for pos in sorted(mutations_dic_oriAA.keys()):
+						cur_mutAA = mutations_dic_mutAA[pos]
+						cur_condon = AACodonDict[cur_mutAA]
+						condon_start = (pos - 1) * 3
+						condon_end = pos * 3
+						HASeq = HASeq[:condon_start] + cur_condon + HASeq[condon_end:]
+
+					# after generate nt sequence with all mutations, we can import the sequence into the DB
+					SQLStatement = "INSERT INTO LibDB(SeqName, Sequence, SeqLen, SubType, Form, VFrom, VTo, Active, Role, " \
+								   "Donor, Mutations, ID, Base) VALUES('" \
+								   + seq_name + "','" \
+								   + HASeq + "','" \
+								   + str(len(HASeq)) + "','" \
+								   + subtype + "','" \
+								   + Form + "','" \
+								   + "1" + "','" \
+								   + "5000" + "','" \
+								   + Active + "','" \
+								   + "Mutated" + "','" \
+								   + "none" + "','" \
+								   + mutation1 + "','" \
+								   + "0" + "','" \
+								   + template_name + "')"
+					RunInsertion(DBFilename, SQLStatement)
+
 					# add new sequence information into listWidgetStrainsIn
 					self.ui.listWidgetStrainsIn.addItem(seq_name)
 					self.modalessMutationDialog.close()
+			elif mode == "H1N3pos":
+				mutations = []
+				# convert H1/H3 numbering to original numbering
+				# start with HA1
+				if mutation1 == "":
+					pass
+				else:
+					mutations_ha1 = mutation1.split(",")
+					for ele in mutations_ha1:
+						match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
+						if match_obj == None:
+							QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
+												QMessageBox.Ok, QMessageBox.Ok)
+						else:
+							pos = int(match_obj.group(2))
+							for n in range(1, len(numbering)):
+								if numbering[n][0] == "HA1" and numbering[n][2] == pos:
+									tmp_str = match_obj.group(1) + str(n) + match_obj.group(3)
+									mutations.append(tmp_str)
+				# then HA2
+				if mutation2 == "":
+					pass
+				else:
+					mutations_ha2 = mutation2.split(",")
+					for ele in mutations_ha2:
+						match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
+						if match_obj == None:
+							QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
+												QMessageBox.Ok, QMessageBox.Ok)
+						else:
+							pos = int(match_obj.group(2))
+							for n in range(1, len(numbering)):
+								if numbering[n][0] == "HA2" and numbering[n][2] == pos:
+									tmp_str = match_obj.group(1) + str(n) + match_obj.group(3)
+									mutations.append(tmp_str)
+
+				# Now all the H1/H3 numbering mutations have been converted to original positions
+				mutations_dic_oriAA = {}
+				mutations_dic_mutAA = {}
+				seprator = ','
+				mutation_text = seprator.join(mutations)
+				for ele in mutations:
+					ele = ele.upper()
+					match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
+					if match_obj == None:
+						QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
+											QMessageBox.Ok, QMessageBox.Ok)
+					else:
+						mutations_dic_oriAA[int(match_obj.group(2))] = match_obj.group(1)
+						mutations_dic_mutAA[int(match_obj.group(2))] = match_obj.group(3)
+				# foreach by sort the mutation position, check if all the mutation are correct
+				contiune_run = 0
+				for pos in sorted(mutations_dic_oriAA.keys()):
+					cur_oriAA = mutations_dic_oriAA[pos]
+					if cur_oriAA == numbering[pos][1]:
+						contiune_run = 1
+					else:
+						QMessageBox.warning(self, 'Warning', "On the AA sequence, position " + str(pos) + " is "
+											+ numbering[pos][1] + ", not " + cur_oriAA
+											+ ". Please check your numbering carefully!",
+											QMessageBox.Ok, QMessageBox.Ok)
+						contiune_run = 0
+
+				# after all the mutations passed the check, we can start to add mutation into template sequence
+				if contiune_run == 1:
+					for pos in sorted(mutations_dic_oriAA.keys()):
+						cur_mutAA = mutations_dic_mutAA[pos]
+						cur_condon = AACodonDict[cur_mutAA]
+						condon_start = (pos - 1) * 3
+						condon_end = pos * 3
+						HASeq = HASeq[:condon_start] + cur_condon + HASeq[condon_end:]
+
+					# after generate nt sequence with all mutations, we can import the sequence into the DB
+					SQLStatement = "INSERT INTO LibDB(SeqName, Sequence, SeqLen, SubType, Form, VFrom, VTo, Active, Role, " \
+								   "Donor, Mutations, ID, Base) VALUES('" \
+								   + seq_name + "','" \
+								   + HASeq + "','" \
+								   + str(len(HASeq)) + "','" \
+								   + subtype + "','" \
+								   + Form + "','" \
+								   + "1" + "','" \
+								   + "5000" + "','" \
+								   + Active + "','" \
+								   + "Mutated" + "','" \
+								   + "none" + "','" \
+								   + mutation_text + "','" \
+								   + "0" + "','" \
+								   + template_name + "')"
+					response = RunInsertion(DBFilename, SQLStatement)
+					if response == 1:
+						QMessageBox.warning(self, 'Warning', "The new sequence name has been taken!",
+											QMessageBox.Ok, QMessageBox.Ok)
+					else:
+						# add new sequence information into listWidgetStrainsIn
+						self.ui.listWidgetStrainsIn.addItem(seq_name)
+						self.modalessMutationDialog.close()
+
+
 
 
 
