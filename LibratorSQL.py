@@ -16,7 +16,21 @@ def creatnewDB(DBpathname):
     cursor = conn.cursor()
     cursor.execute('drop table if exists LibDB')
 
-    cursor.execute("create table LibDB(SeqName text PRIMARY KEY NOT NULL, Sequence text, SeqLen, SubType text, Form text, VFrom text, VTo text, Active text, Role text, Donor text, Mutations text, ID)")
+    cursor.execute('CREATE TABLE "LibDB" ('
+	' "SeqName"	text NOT NULL,'
+	' "Sequence"	text,'
+	' "SeqLen"	TEXT,'
+	' "SubType"	text,'
+	' "Form"	text,'
+	' "VFrom"	text,'
+	' "VTo"	text,'
+	' "Active"	text,'
+	' "Role"	text,'
+	' "Donor"	text,'
+	' "Mutations"	text,'
+	' "ID"	TEXT,'
+	' "Base"	TEXT,'
+	' PRIMARY KEY("SeqName"))')
     # ID PRIMARY KEY,
 
     conn.commit()
@@ -79,8 +93,6 @@ def UpdateField(ID, Value, Field, DBpathname):
     (dirname, filename) = os.path.split(DBpathname)
 
     os.chdir(dirname)
-    # print(dirname)
-
 
     conn = db.connect(DBpathname)
     cursor = conn.cursor()

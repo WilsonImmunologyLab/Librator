@@ -179,12 +179,18 @@
       <property name="text">
        <string>Genearate Sequences</string>
       </property>
+      <property name="default">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
     <item>
      <widget class="QPushButton" name="Cancel">
       <property name="text">
        <string>Cancel</string>
+      </property>
+      <property name="autoDefault">
+       <bool>true</bool>
       </property>
      </widget>
     </item>

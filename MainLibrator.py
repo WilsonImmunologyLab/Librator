@@ -67,7 +67,7 @@ class MutationDialog(QtWidgets.QDialog):
 
 		if seq_name in self.active_sequence:
 			QMessageBox.warning(self, 'Warning', 'The sequence name is already taken! Please make a unique name for '
-												 'your mutated sequence!', QMessageBox.Ok, QMessageBox.Ok)
+												 'your Generated sequence!', QMessageBox.Ok, QMessageBox.Ok)
 		else:
 			if active_tab == 0: 		# OriPos
 				if mutation == "":
@@ -2125,33 +2125,33 @@ class LibratorMain(QtWidgets.QMainWindow):
 		answer  = 'No'
 		CurName = self.ui.txtName.toPlainText()
 		CurrVal = self.ui.cboRole.currentText()
-		if CurrVal == 'Base':
-
+		if CurrVal == 'BaseSeq':
 			if BaseSeq != CurName and BaseSeq != '':
-
-				question = BaseSeq + ':\n\n is already denoted as the Base sequence and there can only be one.\n Reassign the Base sequence to:\n\n' + CurName + '?'
+				question = BaseSeq + ':\n\n is already denoted as the Base sequence and there can only be one.\n' \
+									 ' Reassign the Base sequence to:\n\n' + CurName + '?'
 				buttons = 'YN'
 				answer = questionMessage(self, question, buttons)
 				if answer == 'Yes':
 					self.UpdateSeq(BaseSeq, 'Unassigned', 'Role')
 					BaseSeq = CurName
+					self.UpdateSeq(BaseSeq, 'BaseSeq', 'Role')
 					self.ui.lblBaseName.setText(BaseSeq)
 				else:
 					NoChange = True
-
-
+			else:
+				BaseSeq = CurName
+				self.UpdateSeq(BaseSeq, 'BaseSeq', 'Role')
+				self.ui.lblBaseName.setText(BaseSeq)
 		# self.ui.cboRole.setEnabled(False)
-
-		if NoChange == False:
-			self.UpdateSeq(CurName, CurrVal,'Role')
+		else:
+			if NoChange == False:
+				self.UpdateSeq(CurName, CurrVal, 'Role')
 
 
 	@pyqtSlot()
 	def UpdateSeq(self, ID, ItemValue, FieldName):
 		global DBFilename
 		# ID = item[0]
-
-
 		UpdateField(ID, ItemValue, FieldName, DBFilename)
 
 
@@ -2700,11 +2700,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 				CurIndex = 0
 			if Role == 'Donor':
 				CurIndex = 1
-			if Role == 'Base':
+			if Role == 'BaseSeq':
 				CurIndex = 2
 				BaseSeq = item[0]
 			if Role == 'Reference':
 				CurIndex = 3
+			if Role == 'Generated':
+				CurIndex = 4
 
 			self.ui.cboRole.setCurrentIndex(CurIndex)
 
@@ -3246,16 +3248,19 @@ class LibratorMain(QtWidgets.QMainWindow):
 								   + "1" + "','" \
 								   + "5000" + "','" \
 								   + Active + "','" \
-								   + "Mutated" + "','" \
+								   + "Generated" + "','" \
 								   + "none" + "','" \
 								   + mutation1 + "','" \
 								   + "0" + "','" \
 								   + template_name + "')"
-					RunInsertion(DBFilename, SQLStatement)
-
-					# add new sequence information into listWidgetStrainsIn
-					self.ui.listWidgetStrainsIn.addItem(seq_name)
-					self.modalessMutationDialog.close()
+					response = RunInsertion(DBFilename, SQLStatement)
+					if(response == 1):
+						QMessageBox.warning(self, 'Warning', "Error happen when insert the new sequence!",
+											QMessageBox.Ok, QMessageBox.Ok)
+					else:
+						# add new sequence information into listWidgetStrainsIn
+						self.ui.listWidgetStrainsIn.addItem(seq_name)
+						self.modalessMutationDialog.close()
 			elif mode == "H1N3pos":
 				mutations = []
 				# convert H1/H3 numbering to original numbering
@@ -3339,14 +3344,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 								   + "1" + "','" \
 								   + "5000" + "','" \
 								   + Active + "','" \
-								   + "Mutated" + "','" \
+								   + "Generated" + "','" \
 								   + "none" + "','" \
 								   + mutation_text + "','" \
 								   + "0" + "','" \
 								   + template_name + "')"
 					response = RunInsertion(DBFilename, SQLStatement)
 					if response == 1:
-						QMessageBox.warning(self, 'Warning', "The new sequence name has been taken!",
+						QMessageBox.warning(self, 'Warning', "Error happen when insert the new sequence!",
 											QMessageBox.Ok, QMessageBox.Ok)
 					else:
 						# add new sequence information into listWidgetStrainsIn

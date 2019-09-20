@@ -1344,7 +1344,7 @@
                     </item>
                     <item>
                      <property name="text">
-                      <string>Base</string>
+                      <string>BaseSeq</string>
                      </property>
                     </item>
                     <item>
@@ -1355,11 +1355,6 @@
                     <item>
                      <property name="text">
                       <string>Generated</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Mutated</string>
                      </property>
                     </item>
                    </widget>
