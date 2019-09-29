@@ -44,6 +44,8 @@ global working_prefix
 working_prefix = os.path.abspath('..')
 global bin_prefix
 bin_prefix = '/usr/local/bin/'
+global temp_folder
+temp_folder = working_prefix + '/Librator/Temp'
 
 
 class MutationDialog(QtWidgets.QDialog):
@@ -3222,7 +3224,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 					if cur_oriAA == numbering[pos][1]:
 						contiune_run = 1
 					else:
-						QMessageBox.warning(self, 'Warning', "On the AA sequence, position " + str(pos) + " is "
+						QMessageBox.warning(self, 'Warning', "On the AA sequence, position " + str(pos) + " (count from M) is "
 											+ numbering[pos][1] + ", not " + cur_oriAA
 											+ ". Please check your numbering carefully!",
 											QMessageBox.Ok, QMessageBox.Ok)
@@ -3318,7 +3320,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 					if cur_oriAA == numbering[pos][1]:
 						contiune_run = 1
 					else:
-						QMessageBox.warning(self, 'Warning', "On the AA sequence, position " + str(pos) + " is "
+						QMessageBox.warning(self, 'Warning', "On the AA sequence, position " + str(pos) + " (count from M) is "
 											+ numbering[pos][1] + ", not " + cur_oriAA
 											+ ". Please check your numbering carefully!",
 											QMessageBox.Ok, QMessageBox.Ok)
