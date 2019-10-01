@@ -17,21 +17,34 @@ def creatnewDB(DBpathname):
     cursor.execute('drop table if exists LibDB')
 
     cursor.execute('CREATE TABLE "LibDB" ('
-	' "SeqName"	text NOT NULL,'
-	' "Sequence"	text,'
-	' "SeqLen"	TEXT,'
-	' "SubType"	text,'
-	' "Form"	text,'
-	' "VFrom"	text,'
-	' "VTo"	text,'
-	' "Active"	text,'
-	' "Role"	text,'
-	' "Donor"	text,'
-	' "Mutations"	text,'
-	' "ID"	TEXT,'
-	' "Base"	TEXT,'
-	' PRIMARY KEY("SeqName"))')
-    # ID PRIMARY KEY,
+                    ' "SeqName"	text NOT NULL,'
+                    ' "Sequence"	text,'
+                    ' "SeqLen"	TEXT,'
+                    ' "SubType"	text,'
+                    ' "Form"	text,'
+                    ' "VFrom"	text,'
+                    ' "VTo"	text,'
+                    ' "Active"	text,'
+                    ' "Role"	text,'
+                    ' "Donor"	text,'
+                    ' "Mutations"	text,'
+                    ' "ID"	TEXT,'
+                    ' "Base"	TEXT,'
+                    ' PRIMARY KEY("SeqName"))')
+
+    cursor.execute('drop table if exists Fragments')
+
+    cursor.execute('CREATE TABLE "Fragments" ('
+                   ' "Name"	TEXT NOT NULL,'
+                   ' "Segment"	TEXT,'
+                   ' "Fragment"	TEXT,'
+                   ' "Subtype"	TEXT,'
+                   ' "ID"	TEXT,'
+                   ' "Template"	TEXT,'
+                   ' "AAseq"	TEXT,'
+                   ' "NTseq"	TEXT,'
+                   ' "Instock"	TEXT,'
+                   ' PRIMARY KEY("Name"))')
 
     conn.commit()
     conn.close()

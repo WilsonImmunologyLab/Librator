@@ -1,10 +1,13 @@
 # Librator by Patrick Wilson
 from PyQt5.QtCore import pyqtSlot, QTimer, QDateTime, Qt, QSortFilterProxyModel, QModelIndex, QEventLoop, pyqtSignal,QEventLoop
 from PyQt5 import QtWidgets, QtPrintSupport
-from PyQt5.QtWidgets import QApplication, QMessageBox, QAbstractItemView
+from PyQt5.QtWidgets import *
+#from PyQt5.QtWidgets import QApplication, QMessageBox, QAbstractItemView, QFileDialog
 from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QTextCursor, QCursor
 from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion
 import os, sys, re
+import pandas as pd
+import numpy as np
 
 from MainLibrator_UI import Ui_MainLibrator
 from mutationdialog import Ui_MutationDialog
@@ -45,7 +48,7 @@ working_prefix = os.path.abspath('..')
 global bin_prefix
 bin_prefix = '/usr/local/bin/'
 global temp_folder
-temp_folder = working_prefix + '/Librator/Temp'
+temp_folder = working_prefix + '/Librator/Temp/'
 
 
 class MutationDialog(QtWidgets.QDialog):
@@ -585,14 +588,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		elif RepOption == 'New sequence with user specific mutations':
 			self.open_mutation_dialog()
 		self.ui.cboReportOptions.setCurrentIndex(0)
-
-	@pyqtSlot()
-	def GenerateGibson(self):
-		MutList = self.ui.txtInsert_Base.toPlainText()
-		Mutations = MutList.split(',')
-
-
-
 
 	@pyqtSlot()
 	def MakeProbe(self):
@@ -3152,17 +3147,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 		subtype = str(self.ui.cboSubtype.currentText())
 
 		if subtype == "H1N1":
-			pdb_path = working_prefix + "Librator/PDB/1ruz.pdb"
+			pdb_path = working_prefix + "/Librator/PDB/1ruz.pdb"
 		elif subtype == "H3N2":
-			pdb_path = working_prefix + "Librator/PDB/4hmg.pdb"
+			pdb_path = working_prefix + "/Librator/PDB/4hmg.pdb"
 		elif subtype == "B":
-			pdb_path = working_prefix + "Librator/PDB/3hto.pdb"
+			pdb_path = working_prefix + "/Librator/PDB/3hto.pdb"
 		elif subtype == "Group 1":
-			pdb_path = working_prefix + "Librator/PDB/3hto.pdb"
+			pdb_path = working_prefix + "/Librator/PDB/3hto.pdb"
 		elif subtype == "Group 2":
-			pdb_path = working_prefix + "Librator/PDB/3hto.pdb"
+			pdb_path = working_prefix + "/Librator/PDB/3hto.pdb"
 		else:
-			pdb_path = working_prefix + "Librator/PDB/3hto.pdb"
+			pdb_path = working_prefix + "/Librator/PDB/3hto.pdb"
 
 		self.show3Dstructure(mutation, pdb_path, pymol_path, subtype)
 
@@ -3360,10 +3355,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 						self.ui.listWidgetStrainsIn.addItem(seq_name)
 						self.modalessMutationDialog.close()
 
-
-
-
-
 	def open_mutation_dialog(self):
 		if self.ui.txtName.toPlainText() == "":
 			QMessageBox.warning(self, 'Warning', 'Please select a sequence first!', QMessageBox.Ok, QMessageBox.Ok)
@@ -3409,6 +3400,279 @@ class LibratorMain(QtWidgets.QMainWindow):
 		print(a)
 		print("Base Sequence Name: " + b)
 		print(c)
+
+	def GenerateGibson(self):
+		listItems = self.ui.listWidgetStrainsIn.selectedItems()
+		# if not listItems: return
+		WhereState = ''
+		NumSeqs = len(listItems)
+		if NumSeqs == 0:
+			QMessageBox.warning(self, 'Warning', 'Please select at least one sequence!', QMessageBox.Ok, QMessageBox.Ok)
+		else:
+			out_dir = QFileDialog.getExistingDirectory(self, "Please select a Folder for output GibsonClone fragments files!", temp_folder)
+			i = 1
+			for item in listItems:
+				eachItemIs = item.text()
+				WhereState += 'SeqName = "' + eachItemIs + '"'
+				if NumSeqs > i:
+					WhereState += ' OR '
+				i += 1
+
+			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo, SubType FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+
+			# initial data container
+			data_list = []
+			subtype = ""
+			error_code = 0
+			for item in DataIn:
+				SeqName = item[0]
+				Sequence = item[1]
+				VFrom = int(item[2]) - 1
+				if VFrom == -1: VFrom = 0
+				VTo = int(item[3])
+				Sequence = Sequence[VFrom:VTo]
+				SequenceNT = Sequence.upper()
+				SequenceAA = Translator(SequenceNT, 0)
+				cur_subtype = item[4]
+				if subtype == "":
+					subtype = cur_subtype
+				elif subtype != cur_subtype:
+					QMessageBox.warning(self, 'Warning', "All candidate sequences should be same subtype!", QMessageBox.Ok,
+										QMessageBox.Ok)
+					error_code = 1
+					break
+
+				if len(SequenceAA[1]) > 0:
+					separator = "\n"
+					errMsg = separator.join(SequenceAA[1])
+					QMessageBox.warning(self, 'Warning', errMsg, QMessageBox.Ok,
+										QMessageBox.Ok)
+					#error_code = 1
+					#break
+				EachIn = (SeqName, Sequence, SequenceAA[0])
+				data_list.append(EachIn)
+
+
+			if error_code == 0:
+				data = pd.DataFrame(data_list)
+				data.columns = ['Name', 'NTseq', 'AAseq']
+				subtype = subtype[0:2]
+				self.generate_gibson_fragments(data, subtype, temp_folder, out_dir)
+
+	def generate_gibson_fragments(self, data, subtype, temp_folder, out_dir):
+		# initial the temp file name
+		in_file = temp_folder + "in.fas"
+		out_file = temp_folder + "out.fas"
+
+		if (subtype == "H1") or (subtype == "Group1"):
+			# set template
+			template_name = H1template
+			template_seq = H1template_seq
+			aa_start = H1_start;
+			aa_end = H1_end;
+		elif (subtype == "H3") or (subtype == "Group2"):
+			# set template
+			template_name = H3template
+			template_seq = H3template_seq
+			aa_start = H3_start;
+			aa_end = H3_end;
+		else:
+			print("We don't support other subtypes for now! Please input Influenza A HA!")
+			return
+		# number of fragments
+		num_fragment = len(aa_start)
+
+		# write sequence into file for alignment
+		temp_file = open(in_file, "w")
+		temp_file.write(">" + template_name + "\n")
+		temp_file.write(template_seq + "\n")
+
+		for index in data.index:
+			temp_file.write(">" + data.loc[index, 'Name'] + "\n")
+			temp_file.write(data.loc[index, 'AAseq'] + "\n")
+		temp_file.close()
+
+		# run muscle to align query seuqnece to template sequence
+		cmd = "muscle -in " + in_file + " -out " + out_file
+		#print(cmd)
+		os.system(cmd)
+
+		# read alignment from muscle results
+		align_file = open(out_file, "r")
+		alignment = align_file.read()
+		sequences_block = alignment.split(">")
+
+		for cur_seq in sequences_block:
+			if template_name in cur_seq:
+				template = cur_seq
+				break
+
+		tmp = template.split("\n")
+		tmp = tmp[1:]
+		seperator = ""
+		template = seperator.join(tmp)
+
+		if "-" in template:
+			# new sequences have insertion, adjust the start and end position for all fragments based on current alignment
+			hyphen_pos = [i.start() for i in re.finditer('-', template)]
+			for pos_iter in hyphen_pos:
+				cur_pos = pos_iter + 1
+				for i in range(num_fragment):
+					if (aa_start[i] >= cur_pos):
+						aa_start[i] = aa_start[i] + 1
+					if (aa_end[i] >= cur_pos):
+						aa_end[i] = aa_end[i] + 1
+
+		# test the position update with template
+		#print("Sequence Name:\t" + template_name)
+		#for i in range(num_fragment):
+		#	fragment = template[aa_start[i] - 1: aa_end[i]]
+		#	print("F" + str(i + 1) + ":\t" + fragment)
+
+		# initial fragment data matrix
+		fragment_data = []
+		# get all the query alignments
+		sequences_block = sequences_block[1:]
+		for cur_seq_block in sequences_block:
+			cur_seq_fragment_data = []
+
+			if template_name in cur_seq_block:
+				continue
+			tmp = cur_seq_block.split("\n")
+			cur_name = tmp[0]
+			cur_seq_fragment_data.append(cur_name)
+			tmp = tmp[1:]
+			seperator = ""
+			cur_seq = seperator.join(tmp)
+			cur_index = np.where(data.Name == cur_name)[0][0]
+			cur_seq_nt = data.loc[cur_index, 'NTseq']
+
+			# remove the hyphen in AA sequences and modify nt start and end
+			nt_start = [0] * num_fragment
+			nt_end = [0] * num_fragment
+			diff = 0
+
+			for i in range(num_fragment):
+				fragment = cur_seq[aa_start[i] - 1: aa_end[i]]
+
+				hyphen_pos = [i.start() for i in re.finditer('-', fragment)]
+				nt_start[i] = (aa_start[i] - 1) * 3 + 1 - diff
+				diff = diff + len(hyphen_pos) * 3
+				nt_end[i] = aa_end[i] * 3 - diff
+				fragment1 = fragment.replace("-", "")
+
+				nt_fragment = cur_seq_nt[nt_start[i] - 1: nt_end[i]]
+
+				cur_seq_fragment_data.append(fragment)
+				cur_seq_fragment_data.append(fragment1)
+				cur_seq_fragment_data.append(nt_fragment)
+			fragment_data.append(cur_seq_fragment_data)
+
+		# make col name
+		col_name = ["Name"]
+		for i in range(num_fragment):
+			col_name.append("F_AA_" + str(i + 1) + "_origin")
+			col_name.append("F_AA_" + str(i + 1) + "_refine")
+			col_name.append("F_NT_" + str(i + 1))
+
+		fragment_data = pd.DataFrame(fragment_data)
+		fragment_data.columns = col_name
+
+		new_fragment_name_list = []
+		existing_fragment_name_list = []
+		#print("Seq_name\tFragment\tAAseq\tName\tInstock\tNTseq")
+		for index in fragment_data.index:
+			# for each virus, open a file for its all 4 fragments
+			seq_name = fragment_data.loc[index, "Name"]
+			seq_fragment_file_name = out_dir + "/" + seq_name.replace("/", "_") + ".fas"
+			temp_file = open(seq_fragment_file_name, "w")
+
+			for i in range(num_fragment):
+				aa_col_name = "F_AA_" + str(i + 1) + "_refine"
+				nt_col_name = "F_NT_" + str(i + 1)
+
+				aa_seq = fragment_data.loc[index, aa_col_name]
+				nt_seq = fragment_data.loc[index, nt_col_name]
+
+				# search from SQL DB
+				SQLCommand = "SELECT * FROM Fragments WHERE AAseq = '" + aa_seq + "'"
+
+				fetch_results = RunSQL(DBFilename, SQLCommand)
+				row = len(fetch_results)
+				if (row != 0):
+					fragment_name = fetch_results[0][0]
+					nt_seq = fetch_results[0][7]
+					in_stock = fetch_results[0][8]
+					if in_stock == "yes":
+						existing_fragment_name_list.append(fragment_name)
+					else:
+						new_fragment_name_list.append(fragment_name)
+				else:
+					SQLCommand = "SELECT Name FROM Fragments WHERE Fragment = '" + str(
+						i + 1) + "' AND Subtype = '" + subtype + "'"
+					fetch_results = RunSQL(DBFilename, SQLCommand)
+					row = len(fetch_results)
+					num_id = str(row + 1)
+					num_id_len = len(num_id)
+					num_id = "0" * (4 - num_id_len) + num_id
+
+					fragment_name = subtype + "-F" + str(i + 1) + "-" + num_id
+					in_stock = "no"
+					fragment = str(i + 1)
+					if ("H" in subtype):
+						segment = "HA"
+					else:
+						segment = "NA"
+
+					SQLCommand = 'INSERT INTO Fragments(`Name`, `Segment`, `Fragment`, `Subtype`, `ID`, `Template`, `AAseq`, `NTseq`, `Instock`) VALUES(' \
+								 + "'" + fragment_name + "'," \
+								 + "'" + segment + "'," \
+								 + "'" + fragment + "'," \
+								 + "'" + subtype + "'," \
+								 + "'" + num_id + "'," \
+								 + "'" + seq_name + "'," \
+								 + "'" + aa_seq + "'," \
+								 + "'" + nt_seq + "'," \
+								 + "'" + in_stock + "')"
+
+					response = RunInsertion(DBFilename, SQLCommand)
+					if response == 1:
+						QMessageBox.warning(self, 'Warning', "Error happen when insert the new fregment records!",
+											QMessageBox.Ok, QMessageBox.Ok)
+						return
+					else:
+						new_fragment_name_list.append(fragment_name)
+
+
+
+				# print(seq_name + "\t" + str(i + 1) + "\t" + aa_seq + "\t" + fragment_name + "\t" + in_stock + "\t" + nt_seq)
+				print(seq_name + "\t" + str(i + 1) + "\t" + fragment_name + "\t" + in_stock)
+				temp_file.write(">" + seq_name + "-Fragment" + str(i + 1) + "(" + fragment_name + ")" + "\n")
+				temp_file.write(nt_seq + "\n")
+
+				#SnapGene_file_name = "SnapGene/" + seq_name.replace("/", "_") + "-Fragment" + str(i + 1) + ".fas"
+				#snapgene_temp_file = open(SnapGene_file_name, "w")
+				#snapgene_temp_file.write(
+				#	">" + seq_name + "-Fragment" + str(i + 1) + "(" + fragment_name + ")" + "\n")
+				#snapgene_temp_file.write(nt_seq + "\n")
+				#snapgene_temp_file.close()
+
+			temp_file.close()
+
+		#print("\n")
+		# print fragments information
+		existing_fragment_name_list = np.unique(existing_fragment_name_list)
+		new_fragment_name_list = np.unique(new_fragment_name_list)
+		seperator = "\n"
+		successMsg = "The Gibson clone fragments are generated successfully!\n"
+		successMsg = "The files were generated under:\n" + out_dir + "\n"
+		successMsg += "Existing fragments used:\n" + seperator.join(existing_fragment_name_list) + "\n"
+		successMsg += "New fragments generated:\n" + seperator.join(new_fragment_name_list) + "\n"
+
+		QMessageBox.information(self, 'information', successMsg, QMessageBox.Ok,
+							QMessageBox.Ok)
+
 
 
 
@@ -3529,6 +3793,37 @@ def Translator(Sequence, frame):
 # 'K':146.19, 'M':149.21, 'F':165.19, 'P':115.13, 'S':105.09, 'T':119.12,
 # 'W':204.23, 'Y':181.19, 'V':117.15, 'X':0.0,    '-':0.0,    '*':0.0,
 # '?':0.0}
+
+
+global H3template
+global H3template_seq
+global H3_start
+global H3_end
+H3template = "A/Perth/16/2009|H3N2"
+H3template_seq = "MKTIIALSYILCLVFAQKLPGNDNSTATLCLGHHAVPNGTIVKTITNDQIEVTNATELVQSSSTGEICDSPHQILDGKNCT" \
+  "LIDALLGDPQCDGFQNKKWDLFVERSKAYSNCYPYDVPDYASLRSLVASSGTLEFNNESFNWTGVTQNGTSSACIRRSKNSFFSRLNWLTHLNFKY" \
+  "PALNVTMPNNEQFDKLYIWGVLHPGTDKDQIFLYAQASGRITVSTKRSQQTVSPNIGSRPRVRNIPSRISIYWTIVKPGDILLINSTGNLIAPRGY" \
+  "FKIRSGKSSIMRSDAPIGKCNSECITPNGSIPNDKPFQNVNRITYGACPRYVKQNTLKLATGMRNVPEKQTRGIFGAIAGFIENGWEGMVDGWYGF" \
+  "RHQNSEGRGQAADLKSTQAAIDQINGKLNRLIGKTNEKFHQIEKEFSEVEGRIQDLEKYVEDTKIDLWSYNAELLVALENQHTIDLTDSEMNKLFE" \
+  "KTKKQLRENAEDMGNGCFKIYHKCDNACIGSIRNGTYDHDVYRDEALNNRFQIKGVELKSGYKDWILWISFAISCFLLCVALLGFIMWACQKGNIR" \
+  "CNICI"
+H3_start = [1, 123, 264, 403];
+H3_end = [131, 272, 411, 520];
+
+global H1template
+global H1template_seq
+global H1_start
+global H1_end
+H1template = "A/California/04/2009|H1N1"
+H1template_seq = "MKAILVVLLYTFATANADTLCIGYHANNSTDTVDTVLEKNVTVTHSVNLLEDKHNGKLCKLRGVAPLHLGKCNIAGWILGN" \
+  "PECESLSTASSWSYIVETPSSDNGTCYPGDFIDYEELREQLSSVSSFERFEIFPKTSSWPNHDSNKGVTAACPHAGAKSFYKNLIWLVKKGNSYPK" \
+  "LSKSYINDKGKEVLVLWGIHHPSTSADQQSLYQNADTYVFVGSSRYSKKFKPEIAIRPKVRDQEGRMNYYWTLVEPGDKITFEATGNLVVPRYAFA" \
+  "MERNAGSGIIISDTPVHDCNTTCQTPKGAINTSLPFQNIHPITIGKCPKYVKSTKLRLATGLRNIPSIQSRGLFGAIAGFIEGGWTGMVDGWYGYH" \
+  "HQNEQGSGYAADLKSTQNAIDEITNKVNSVIEKMNTQFTAVGKEFNHLEKRIENLNKKVDDGFLDIWTYNAELLVLLENERTLDYHDSNVKNLYEK" \
+  "VRSQLKNNAKEIGNGCFEFYHKCDNTCMESVKNGTYDYPKYSEEAKLNREEIDGVKLESTRIYQILAIYSTVASSLVLVVSLGAISFWMCSNGSLQ" \
+  "CRICI"
+H1_start = [1, 123, 264, 403];
+H1_end = [131, 272, 411, 520];
 
 CodonDict={'ATT':'I',   'ATC':'I',  'ATA':'I',  'CTT':'L',  'CTC':'L',
 'CTA':'L',  'CTG':'L',  'TTA':'L',  'TTG':'L',  'GTT':'V',  'GTC':'V',

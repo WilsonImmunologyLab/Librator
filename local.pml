@@ -13,7 +13,7 @@ color yellow, ABS-Ca2
 color gray, ABS-Cb
 color chocolate, ABS-Sa
 color green, ABS-Sb
-sel mutation, resi 99
+sel mutation, resi 98
 color red, mutation
-label resi 99 and name C, "Y99A"
+label resi 98 and name C, "R98K"
 set label_size, 25

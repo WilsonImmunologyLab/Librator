@@ -38,10 +38,10 @@ H1_end = [131, 272, 411, 520];
 global DB_name
 DB_name = "AAATester.ldb"
 
-def generate_fragments(data,subtype):
+def generate_fragments(data,subtype, tmp_path):
 	# initial the temp file name
-	in_file = "in.fas"
-	out_file = "out.fas"
+	in_file = tmp_path + "in.fas"
+	out_file = tmp_path + "out.fas"
 
 	if(subtype == "H1"):
 		# set template
@@ -259,7 +259,97 @@ def generate_fragments(data,subtype):
 	# close DB connection
 	conn.close
 
+def Translator(Sequence, frame):
 
+        # Translate sequence into a list of codons
+    CodonList = [ ]
+    for x in range(frame, len(Sequence), 3):
+            CodonList.append(Sequence[x:x+3])
+    # For each codon, translate it into amino acid, and create a list
+    ProteinSeq = [ ]
+    for codon in CodonList:
+        if codon in CodonDict:
+            ProteinSeq.append(CodonDict[codon])
+        else:
+            ProteinSeq.append('~')
+
+    AASeq = ''.join(ProteinSeq)
+
+    # print("Translated in frame %d: %s (%.1f Da)" % ((frame+1), ''.join(ProteinSeq), sum(ProteinWeight)))
+    # Check position of stop codon, making sure it's at the end, and the only one
+    XCount = 0
+    UCount = 0
+    for acid in ProteinSeq:
+        if acid == "*":
+            XCount += 1
+    for acid in ProteinSeq:
+        if acid == "~":
+            UCount += 1
+    ErMessage = []
+    # ErMessage.append()
+    if XCount > 0:
+        if XCount == 1:
+            ErMes =  'WARNING: '+ str(XCount) + ' stop codon was found (marked as "*")!'
+        else:
+            ErMes =  'WARNING: '+ str(XCount) + ' stop codons found (marked as "*")!'
+        ErMessage.append(ErMes)
+    if UCount > 0:
+        # todo this doesn't label errors properly
+        AASeq2 = AASeq.replace ('.', '')
+        ErMes = 'Codon errors (marked as "~"): '
+        if len(Sequence) % 3 != 0 and UCount == 1:
+            ErMes += 'Incomplete codon at end.'
+            ErMessage.append(ErMes)
+            return AASeq, ErMessage
+
+        elif UCount == 1:
+
+            if AASeq2[0] == '~':
+                ErMes += 'The first codon is incomplete.'
+                ErMessage.append(ErMes)
+                return AASeq, ErMessage
+
+            else:
+                ErMes += '1 codon error internally.'
+                ErMessage.append(ErMes)
+                return AASeq, ErMessage
+
+        elif UCount > 1:
+
+
+            if AASeq2[0] == '~':
+                ErMes += 'The first codon is incomplete. '
+                ErMessage.append(ErMes)
+                UCount -= 1
+
+            if len(Sequence) % 3 != 0:
+                if UCount > 1:
+                    ErMes += '1 incomplete on end and '
+                    if UCount-1 > 1:
+                        ErMes += str(UCount-1) + ' others with errors internally.'
+                    elif UCount - 1 == 1:
+                        ErMes += '1 other with errors internally.'
+                else:
+                    ErMes += '1 incomplete on end.'
+
+            else:
+                ErMes += str(UCount) + ' errors within the sequence.'
+        ErMessage.append(ErMes)
+
+    return AASeq, ErMessage
+
+CodonDict={'ATT':'I',   'ATC':'I',  'ATA':'I',  'CTT':'L',  'CTC':'L',
+'CTA':'L',  'CTG':'L',  'TTA':'L',  'TTG':'L',  'GTT':'V',  'GTC':'V',
+'GTA':'V',  'GTG':'V',  'TTT':'F',  'TTC':'F',  'ATG':'M',  'TGT':'C',
+'TGC':'C',  'GCT':'A',  'GCC':'A',  'GCA':'A',  'GCG':'A',  'GGT':'G',
+'GGC':'G',  'GGA':'G',  'GGG':'G',  'CCT':'P',  'CCC':'P',  'CCA':'P',
+'CCG':'P',  'ACT':'T',  'ACC':'T',  'ACA':'T',  'ACG':'T',  'TCT':'S',
+'TCC':'S',  'TCA':'S',  'TCG':'S',  'AGT':'S',  'AGC':'S',  'TAT':'Y',
+'TAC':'Y',  'TGG':'W',  'CAA':'Q',  'CAG':'Q',  'AAT':'N',  'AAC':'N',
+'CAT':'H',  'CAC':'H',  'GAA':'E',  'GAG':'E',  'GAT':'D',  'GAC':'D',
+'AAA':'K',  'AAG':'K',  'CGT':'R',  'CGC':'R',  'CGA':'R',  'CGG':'R',
+'AGA':'R',  'AGG':'R',  'TAA':'*',  'TAG':'*',  'TGA':'*',  '...':'.',
+'NNN':'.'}
 
 # test data
 raw_file = open('H3_8.csv', "r")
@@ -276,7 +366,7 @@ for cur_raw_seq in raw_sequences:
 data=pd.DataFrame(data=data)
 data.columns=['Name', 'AAseq', 'NTseq']
 subtype = "H3"
-generate_fragments(data,subtype)
+generate_fragments(data,subtype, "./")
 
 
 
