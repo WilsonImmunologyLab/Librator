@@ -1345,7 +1345,7 @@
                     </item>
                     <item>
                      <property name="text">
-                      <string>Donor</string>
+                      <string>DonorSeq</string>
                      </property>
                     </item>
                     <item>

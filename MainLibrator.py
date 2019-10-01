@@ -12,6 +12,7 @@ import numpy as np
 from MainLibrator_UI import Ui_MainLibrator
 from mutationdialog import Ui_MutationDialog
 from sequenceedit import Ui_SequenceEditDialog
+from gibsonclone import Ui_gibsoncloneDialog
 
 from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText, openfastq
 from VgenesTextEdit import VGenesTextMain
@@ -50,6 +51,11 @@ bin_prefix = '/usr/local/bin/'
 global temp_folder
 temp_folder = working_prefix + '/Librator/Temp/'
 
+global joint_up
+joint_up = "TCCACTCCCAGGTCCAACTGCACCTCGGTTCTATCGATTGAATTC"
+global joint_down
+joint_down = "GGCTCTGGATACATACCTGAGGCACCACGAGATGGACAAGCAT"
+
 
 class MutationDialog(QtWidgets.QDialog):
 	applySignal = pyqtSignal(str, str, str, str, str)  # user define signal
@@ -87,6 +93,45 @@ class MutationDialog(QtWidgets.QDialog):
 				else:
 					self.applySignal.emit("H1N3pos", template_name, seq_name, mutation_ha1, mutation_ha2)
 		#self.hide()
+
+class gibsoncloneDialog(QtWidgets.QDialog):
+	gibsonSignal = pyqtSignal(str, str, str, str)  # user define signal
+	def __init__(self):
+		super(gibsoncloneDialog, self).__init__()
+		self.ui = Ui_gibsoncloneDialog()
+		self.ui.setupUi(self)
+
+		self.ui.yes.clicked.connect(self.accept)
+		self.ui.cancel.clicked.connect(self.reject)
+		self.ui.browse.clicked.connect(self.browse)
+
+	def browse(self):  # browse and select path
+		out_dir = QFileDialog.getExistingDirectory(self, "select files", temp_folder)
+		self.ui.outpath.setText(out_dir)
+
+	def accept(self):  # redo accept method
+		# send signal
+		selections = self.ui.selection.selectedItems()
+		joint_up = self.ui.jointUP.toPlainText()
+		joint_down = self.ui.jointDOWN.toPlainText()
+		out_path = self.ui.outpath.text()
+
+		if len(selections) == 0:
+			QMessageBox.warning(self, 'Warning', 'Please select at least one sequence!', QMessageBox.Ok,
+								QMessageBox.Ok)
+		else:
+			if joint_up == "" or joint_down == "": 		# OriPos
+				QMessageBox.warning(self, 'Warning',
+										'The joint region can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
+			else:
+				if out_path == "":
+					QMessageBox.warning(self, 'Warning',
+										'The output path can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
+				else:
+					text = [i.text() for i in list(selections)]
+					text = '\n'.join(text)
+					self.gibsonSignal.emit(text, joint_up, joint_down, out_path)
+
 
 class SequenceEditDialog(QtWidgets.QDialog):
 	seqEditSignal = pyqtSignal(int, str, str)  # user define signal
@@ -582,7 +627,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		if RepOption == 'Make Secreted Probe':
 			self.MakeProbe()
 		elif RepOption == 'Gibson fragments':
-			self.GenerateGibson()
+			self.open_gibson_dialog()
 		elif RepOption == 'Sequence Editing':
 			self.sequence_editing()
 		elif RepOption == 'New sequence with user specific mutations':
@@ -2142,7 +2187,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# self.ui.cboRole.setEnabled(False)
 		else:
 			if NoChange == False:
-				self.UpdateSeq(CurName, CurrVal, 'Role')
+				#self.UpdateSeq(CurName, CurrVal, 'Role')
+				self.UpdateSeq(CurName, "Donor", 'Role')
 
 
 	@pyqtSlot()
@@ -2649,18 +2695,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# self.ui.cboActive.clear()
 		listItems = self.ui.listWidgetStrainsIn.selectedItems()
 		# if not listItems: return
-
-
-
 		for item in listItems:
 			eachItemIs = item.text()
 
-
-
 		SQLStatement = 'SELECT * FROM LibDB WHERE SeqName = "' + eachItemIs +'"'
 		DataIs = RunSQL(DBFilename, SQLStatement)
-
-
 		# 	 SeqName , Sequence , SeqLen, SubType , Form , Placeholder, ID
 		self.UpdateFields()
 
@@ -2695,7 +2734,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			Role = item[8]
 			if Role == 'Unassigned':
 				CurIndex = 0
-			if Role == 'Donor':
+			if Role == 'DonorSeq':
 				CurIndex = 1
 			if Role == 'BaseSeq':
 				CurIndex = 2
@@ -3372,6 +3411,22 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessMutationDialog.applySignal.connect(self.generate_mutation_sequence)
 			self.modalessMutationDialog.show()
 
+	def open_gibson_dialog(self):
+		if self.ui.txtName.toPlainText() == "":
+			QMessageBox.warning(self, 'Warning', 'Please select a sequence first!', QMessageBox.Ok, QMessageBox.Ok)
+		else:
+			self.modalessGibsonDialog = gibsoncloneDialog()
+			# get active sequences from Qlist in main window
+			donor_num = self.ui.listWidgetStrainsIn.count()
+			donor_list = []
+			for i in range(donor_num):
+				donor_list.append(self.ui.listWidgetStrainsIn.item(i).text())
+			self.modalessGibsonDialog.ui.selection.addItems(donor_list)
+			self.modalessGibsonDialog.ui.jointUP.setText(joint_up)
+			self.modalessGibsonDialog.ui.jointDOWN.setText(joint_down)
+			self.modalessGibsonDialog.gibsonSignal.connect(self.GenerateGibson)
+			self.modalessGibsonDialog.show()
+
 	def sequence_editing(self):
 		if BaseSeq == "":
 			QMessageBox.warning(self, 'Warning', 'Please determine base sequence first!', QMessageBox.Ok, QMessageBox.Ok)
@@ -3401,64 +3456,58 @@ class LibratorMain(QtWidgets.QMainWindow):
 		print("Base Sequence Name: " + b)
 		print(c)
 
-	def GenerateGibson(self):
-		listItems = self.ui.listWidgetStrainsIn.selectedItems()
-		# if not listItems: return
+	def GenerateGibson(self, selections, joint_up_str, joint_down_str, out_dir):
+		listItems = selections.split("\n")
 		WhereState = ''
 		NumSeqs = len(listItems)
-		if NumSeqs == 0:
-			QMessageBox.warning(self, 'Warning', 'Please select at least one sequence!', QMessageBox.Ok, QMessageBox.Ok)
-		else:
-			out_dir = QFileDialog.getExistingDirectory(self, "Please select a Folder for output GibsonClone fragments files!", temp_folder)
-			i = 1
-			for item in listItems:
-				eachItemIs = item.text()
-				WhereState += 'SeqName = "' + eachItemIs + '"'
-				if NumSeqs > i:
-					WhereState += ' OR '
-				i += 1
+		i = 1
+		for item in listItems:
+			WhereState += 'SeqName = "' + item + '"'
+			if NumSeqs > i:
+				WhereState += ' OR '
+			i += 1
 
-			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo, SubType FROM LibDB WHERE ' + WhereState
-			DataIn = RunSQL(DBFilename, SQLStatement)
+		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo, SubType FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
 
-			# initial data container
-			data_list = []
-			subtype = ""
-			error_code = 0
-			for item in DataIn:
-				SeqName = item[0]
-				Sequence = item[1]
-				VFrom = int(item[2]) - 1
-				if VFrom == -1: VFrom = 0
-				VTo = int(item[3])
-				Sequence = Sequence[VFrom:VTo]
-				SequenceNT = Sequence.upper()
-				SequenceAA = Translator(SequenceNT, 0)
-				cur_subtype = item[4]
-				if subtype == "":
-					subtype = cur_subtype
-				elif subtype != cur_subtype:
-					QMessageBox.warning(self, 'Warning', "All candidate sequences should be same subtype!", QMessageBox.Ok,
-										QMessageBox.Ok)
-					error_code = 1
-					break
+		# initial data container
+		data_list = []
+		subtype = ""
+		error_code = 0
+		for item in DataIn:
+			SeqName = item[0]
+			Sequence = item[1]
+			VFrom = int(item[2]) - 1
+			if VFrom == -1: VFrom = 0
+			VTo = int(item[3])
+			Sequence = Sequence[VFrom:VTo]
+			SequenceNT = Sequence.upper()
+			SequenceAA = Translator(SequenceNT, 0)
+			cur_subtype = item[4]
+			if subtype == "":
+				subtype = cur_subtype
+			elif subtype != cur_subtype:
+				QMessageBox.warning(self, 'Warning', "All candidate sequences should be same subtype!", QMessageBox.Ok,
+									QMessageBox.Ok)
+				error_code = 1
+				break
 
-				if len(SequenceAA[1]) > 0:
-					separator = "\n"
-					errMsg = separator.join(SequenceAA[1])
-					QMessageBox.warning(self, 'Warning', errMsg, QMessageBox.Ok,
-										QMessageBox.Ok)
-					#error_code = 1
-					#break
-				EachIn = (SeqName, Sequence, SequenceAA[0])
-				data_list.append(EachIn)
+			if len(SequenceAA[1]) > 0:
+				separator = "\n"
+				errMsg = separator.join(SequenceAA[1])
+				QMessageBox.warning(self, 'Warning', errMsg, QMessageBox.Ok,
+									QMessageBox.Ok)
+				#error_code = 1
+				#break
+			EachIn = (SeqName, Sequence, SequenceAA[0])
+			data_list.append(EachIn)
 
 
-			if error_code == 0:
-				data = pd.DataFrame(data_list)
-				data.columns = ['Name', 'NTseq', 'AAseq']
-				subtype = subtype[0:2]
-				self.generate_gibson_fragments(data, subtype, temp_folder, out_dir)
+		if error_code == 0:
+			data = pd.DataFrame(data_list)
+			data.columns = ['Name', 'NTseq', 'AAseq']
+			subtype = subtype[0:2]
+			self.generate_gibson_fragments(data, subtype, temp_folder, out_dir)
 
 	def generate_gibson_fragments(self, data, subtype, temp_folder, out_dir):
 		# initial the temp file name
@@ -3673,7 +3722,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		QMessageBox.information(self, 'information', successMsg, QMessageBox.Ok,
 							QMessageBox.Ok)
 
-
+		self.modalessGibsonDialog.close()
 
 
 def ReadFASTA(outfilename):

@@ -1360,7 +1360,7 @@ class Ui_MainLibrator(object):
         self.cboForm.setItemText(3, _translate("MainLibrator", "Probe NA"))
         self.cboForm.setItemText(4, _translate("MainLibrator", "Other"))
         self.cboRole.setItemText(0, _translate("MainLibrator", "Unassigned"))
-        self.cboRole.setItemText(1, _translate("MainLibrator", "Donor"))
+        self.cboRole.setItemText(1, _translate("MainLibrator", "DonorSeq"))
         self.cboRole.setItemText(2, _translate("MainLibrator", "BaseSeq"))
         self.cboRole.setItemText(3, _translate("MainLibrator", "Reference"))
         self.cboRole.setItemText(4, _translate("MainLibrator", "Generated"))

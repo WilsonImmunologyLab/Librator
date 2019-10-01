@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>730</width>
-    <height>444</height>
+    <width>736</width>
+    <height>534</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>40</x>
      <y>100</y>
      <width>631</width>
-     <height>271</height>
+     <height>341</height>
     </rect>
    </property>
    <property name="currentIndex">
@@ -52,6 +52,65 @@
       <string>Please select donor sequences, multiple selection is allowed</string>
      </property>
     </widget>
+    <widget class="QLabel" name="label_tab1_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>240</y>
+       <width>581</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Please select donor region:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_tab1_3">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>270</y>
+       <width>71</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>From:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_tab1_4">
+     <property name="geometry">
+      <rect>
+       <x>340</x>
+       <y>270</y>
+       <width>71</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>To:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="DonorFrom">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>270</y>
+       <width>251</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="DonorTo">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>270</y>
+       <width>251</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="tab_2">
     <attribute name="title">
@@ -76,7 +135,7 @@
        <x>10</x>
        <y>40</y>
        <width>611</width>
-       <height>181</height>
+       <height>271</height>
       </rect>
      </property>
     </widget>
@@ -104,7 +163,7 @@
        <x>10</x>
        <y>40</y>
        <width>611</width>
-       <height>181</height>
+       <height>271</height>
       </rect>
      </property>
     </widget>
@@ -119,7 +178,7 @@
        <x>10</x>
        <y>40</y>
        <width>611</width>
-       <height>181</height>
+       <height>271</height>
       </rect>
      </property>
     </widget>
@@ -167,8 +226,8 @@
   <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>39</x>
-     <y>380</y>
+     <x>40</x>
+     <y>460</y>
      <width>631</width>
      <height>41</height>
     </rect>
