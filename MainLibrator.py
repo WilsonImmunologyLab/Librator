@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 #from PyQt5.QtWidgets import QApplication, QMessageBox, QAbstractItemView, QFileDialog
 from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QTextCursor, QCursor
 from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion
-import os, sys, re
+import os, sys, re, time
 import pandas as pd
 import numpy as np
 
@@ -166,7 +166,21 @@ class SequenceEditDialog(QtWidgets.QDialog):
 			else:
 				text = [i.text() for i in list(donor_list)]
 				text = '\t'.join(text)
-				self.seqEditSignal.emit(1, base_name, text)
+
+				WhereState = "SeqName = " + '"' + text + '"'
+				SQLStatement = 'SELECT Role, Donor FROM LibDB WHERE ' + WhereState
+				DataIn = RunSQL(DBFilename, SQLStatement)
+				select_role = DataIn[0][0]
+				select_donor = DataIn[0][1]
+				if select_donor == "none":
+					reply = QMessageBox.question(self, 'Information', 'Your selected sequence do not have a donor region, will use full HA as donor region, is it OK？',
+												 QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+					if reply == QMessageBox.Yes:
+						self.seqEditSignal.emit(1, base_name, text)
+
+				else:
+					self.seqEditSignal.emit(1, base_name, text)
+
 		elif active_tab == 2: 		# Biased Cocktail
 			donor_list = self.ui.DonorList_tab3.selectedItems()
 			if len(donor_list) == 0:
@@ -3507,9 +3521,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			data = pd.DataFrame(data_list)
 			data.columns = ['Name', 'NTseq', 'AAseq']
 			subtype = subtype[0:2]
-			self.generate_gibson_fragments(data, subtype, temp_folder, out_dir)
+			self.generate_gibson_fragments(data, subtype, temp_folder, out_dir, joint_up_str, joint_down_str)
 
-	def generate_gibson_fragments(self, data, subtype, temp_folder, out_dir):
+	def generate_gibson_fragments(self, data, subtype, temp_folder, out_dir, joint_up_str, joint_down_str):
 		# initial the temp file name
 		in_file = temp_folder + "in.fas"
 		out_file = temp_folder + "out.fas"
@@ -3583,6 +3597,29 @@ class LibratorMain(QtWidgets.QMainWindow):
 		fragment_data = []
 		# get all the query alignments
 		sequences_block = sequences_block[1:]
+
+		# get time stamp for current data
+		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+		# initial output file 1, summary EXCEL file
+		summary_out_file = out_dir + "/Summary_" + time_stamp + ".xlsx"
+		writer_summary = pd.ExcelWriter(summary_out_file)
+		summary_array = []
+		summary_index = 0
+
+		# initial output file 2, IDT 96 well order format
+		idt_out_file = out_dir + "/IDTorder_" + time_stamp + ".xlsx"
+		writer_idt = pd.ExcelWriter(idt_out_file)
+		idt_array = [["" for i in range(4)] for j in range(96)]
+		well_row = ['A','B','C','D','E','F','G','H']
+		well_col = range(1,13)
+
+		cur_idt_index = 0
+		for cur_row in well_row:
+			for cur_col in well_col:
+				idt_array[cur_idt_index][0] = str(cur_row) + str(cur_col)
+				cur_idt_index += 1
+		cur_idt_index = 0
+
 		for cur_seq_block in sequences_block:
 			cur_seq_fragment_data = []
 
@@ -3636,6 +3673,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			seq_name = fragment_data.loc[index, "Name"]
 			seq_fragment_file_name = out_dir + "/" + seq_name.replace("/", "_") + ".fas"
 			temp_file = open(seq_fragment_file_name, "w")
+			tmp_array = ["",seq_name]
 
 			for i in range(num_fragment):
 				aa_col_name = "F_AA_" + str(i + 1) + "_refine"
@@ -3657,6 +3695,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 						existing_fragment_name_list.append(fragment_name)
 					else:
 						new_fragment_name_list.append(fragment_name)
+						idt_array[cur_idt_index][1] = fragment_name
+						idt_array[cur_idt_index][2] = nt_seq
+						cur_idt_index += 1
 				else:
 					SQLCommand = "SELECT Name FROM Fragments WHERE Fragment = '" + str(
 						i + 1) + "' AND Subtype = '" + subtype + "'"
@@ -3692,13 +3733,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 						return
 					else:
 						new_fragment_name_list.append(fragment_name)
-
-
+						idt_array[cur_index][1] = fragment_name
+						idt_array[cur_index][2] = nt_seq
+						cur_index += 1
 
 				# print(seq_name + "\t" + str(i + 1) + "\t" + aa_seq + "\t" + fragment_name + "\t" + in_stock + "\t" + nt_seq)
-				print(seq_name + "\t" + str(i + 1) + "\t" + fragment_name + "\t" + in_stock)
+				# print(seq_name + "\t" + str(i + 1) + "\t" + fragment_name + "\t" + in_stock)
 				temp_file.write(">" + seq_name + "-Fragment" + str(i + 1) + "(" + fragment_name + ")" + "\n")
 				temp_file.write(nt_seq + "\n")
+
+				tmp_array.append(fragment_name)
 
 				#SnapGene_file_name = "SnapGene/" + seq_name.replace("/", "_") + "-Fragment" + str(i + 1) + ".fas"
 				#snapgene_temp_file = open(SnapGene_file_name, "w")
@@ -3707,6 +3751,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				#snapgene_temp_file.write(nt_seq + "\n")
 				#snapgene_temp_file.close()
 
+			summary_array.append(tmp_array)
 			temp_file.close()
 
 		#print("\n")
@@ -3721,6 +3766,23 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		QMessageBox.information(self, 'information', successMsg, QMessageBox.Ok,
 							QMessageBox.Ok)
+
+		# save IDT EXCEL file
+		idt_array = pd.DataFrame(data=idt_array)
+		idt_array.columns = ["Well Position","Name","Sequence","5' Phosphorylation (for blunt cloning only)"]
+		idt_array.to_excel(writer_idt, sheet_name='Sheet1', index=False)
+		writer_idt.save()
+
+		# save summary EXCEL file
+		new_fragment_name_list = new_fragment_name_list.tolist()
+		new_fragment_name_list.insert(0,"")
+		existing_fragment_name_list = existing_fragment_name_list.tolist()
+		existing_fragment_name_list.insert(0,"")
+		summary_array_a = [["To order:"],new_fragment_name_list, [""], ["In stock:"], existing_fragment_name_list, [""], ["Recipe:"]]
+		summary_array_a.extend(summary_array)
+		summary_array_a = pd.DataFrame(data=summary_array_a)
+		summary_array_a.to_excel(writer_summary, sheet_name='Sheet1', index=False)
+		writer_summary.save()
 
 		self.modalessGibsonDialog.close()
 

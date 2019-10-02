@@ -1,0 +1,3 @@
+
+Beginning execution of HA_numbering.py script.
+Reading input from In.txt

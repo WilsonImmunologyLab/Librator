@@ -2,16 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f472839-8a65-4dce-be83-d1c7511e6e93" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/gibsonclone.ui" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DB/AAATester.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/AAATester.ldb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fragments/A_PR_8_1934 (H1) -11111111.fas" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fragments/A_PR_8_1934 (H1) -22222.fas" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fragments/A_PR_8_1934 (H1) .fas" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.ui" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Temp/in.fas" beforeDir="false" afterPath="$PROJECT_DIR$/Temp/in.fas" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Temp/out.fas" beforeDir="false" afterPath="$PROJECT_DIR$/Temp/out.fas" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sequenceedit.py" beforeDir="false" afterPath="$PROJECT_DIR$/sequenceedit.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sequenceedit.ui" beforeDir="false" afterPath="$PROJECT_DIR$/sequenceedit.ui" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -43,7 +39,7 @@
     </option>
   </component>
   <component name="RunManager">
-    <configuration name="MainLibrator" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="MainLibrator" type="PythonConfigurationType" factoryName="Python">
       <module name="Librator Drop" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -85,11 +81,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Python.MainLibrator" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
