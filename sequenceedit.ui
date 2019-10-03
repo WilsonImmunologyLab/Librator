@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -35,7 +35,7 @@
        <x>10</x>
        <y>40</y>
        <width>611</width>
-       <height>181</height>
+       <height>271</height>
       </rect>
      </property>
     </widget>
@@ -50,65 +50,6 @@
      </property>
      <property name="text">
       <string>Please select donor sequences, multiple selection is allowed</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_tab1_2">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>240</y>
-       <width>581</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Please select donor region:</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_tab1_3">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>270</y>
-       <width>71</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>From:</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_tab1_4">
-     <property name="geometry">
-      <rect>
-       <x>340</x>
-       <y>270</y>
-       <width>71</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>To:</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="DonorFrom">
-     <property name="geometry">
-      <rect>
-       <x>70</x>
-       <y>270</y>
-       <width>251</width>
-       <height>31</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="DonorTo">
-     <property name="geometry">
-      <rect>
-       <x>370</x>
-       <y>270</y>
-       <width>251</width>
-       <height>31</height>
-      </rect>
      </property>
     </widget>
    </widget>
@@ -135,9 +76,38 @@
        <x>10</x>
        <y>40</y>
        <width>611</width>
-       <height>271</height>
+       <height>221</height>
       </rect>
      </property>
+    </widget>
+    <widget class="QWidget" name="horizontalLayoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>270</y>
+       <width>611</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QRadioButton" name="radioButton_all">
+        <property name="text">
+         <string>All possible combinations</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButton_single">
+        <property name="text">
+         <string>Only single muitations</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </widget>
    <widget class="QWidget" name="tab_3">

@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import *
 #from PyQt5.QtWidgets import QApplication, QMessageBox, QAbstractItemView, QFileDialog
 from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QTextCursor, QCursor
 from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion
+from itertools import combinations
 import os, sys, re, time
 import pandas as pd
 import numpy as np
@@ -134,7 +135,7 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 
 
 class SequenceEditDialog(QtWidgets.QDialog):
-	seqEditSignal = pyqtSignal(int, str, str)  # user define signal
+	seqEditSignal = pyqtSignal(int, str, str, str)  # user define signal
 
 	def __init__(self):
 		super(SequenceEditDialog, self).__init__()
@@ -157,9 +158,13 @@ class SequenceEditDialog(QtWidgets.QDialog):
 			else:
 				text = [i.text() for i in list(donor_list)]
 				text = '\t'.join(text)
-				self.seqEditSignal.emit(0, base_name, text)
+				self.seqEditSignal.emit(0, base_name, text, "")
 		elif active_tab == 1:		# Cocktail
 			donor_list = self.ui.DonorList_tab2.selectedItems()
+			if self.ui.radioButton_all.isChecked():
+				mutation_schema = "all"
+			else:
+				mutation_schema = "single"
 			if len(donor_list) == 0:
 				QMessageBox.warning(self, 'Warning', 'Please select at least one donor sequence!', QMessageBox.Ok,
 									QMessageBox.Ok)
@@ -176,10 +181,10 @@ class SequenceEditDialog(QtWidgets.QDialog):
 					reply = QMessageBox.question(self, 'Information', 'Your selected sequence do not have a donor region, will use full HA as donor region, is it OK？',
 												 QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 					if reply == QMessageBox.Yes:
-						self.seqEditSignal.emit(1, base_name, text)
+						self.seqEditSignal.emit(1, base_name, text, mutation_schema)
 
 				else:
-					self.seqEditSignal.emit(1, base_name, text)
+					self.seqEditSignal.emit(1, base_name, text, mutation_schema)
 
 		elif active_tab == 2: 		# Biased Cocktail
 			donor_list = self.ui.DonorList_tab3.selectedItems()
@@ -189,7 +194,7 @@ class SequenceEditDialog(QtWidgets.QDialog):
 			else:
 				text = [i.text() for i in list(donor_list)]
 				text = '\t'.join(text)
-				self.seqEditSignal.emit(2, base_name, text)
+				self.seqEditSignal.emit(2, base_name, text, "")
 		elif active_tab == 3:  		# Distinctions
 			donor_list = self.ui.DonorList_tab4.selectedItems()
 			if len(donor_list) == 0:
@@ -198,7 +203,7 @@ class SequenceEditDialog(QtWidgets.QDialog):
 			else:
 				text = [i.text() for i in list(donor_list)]
 				text = '\t'.join(text)
-				self.seqEditSignal.emit(3, base_name, text)
+				self.seqEditSignal.emit(3, base_name, text, "")
 		#self.hide()
 
 class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
@@ -3310,7 +3315,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 					else:
 						# add new sequence information into listWidgetStrainsIn
 						self.ui.listWidgetStrainsIn.addItem(seq_name)
-						self.modalessMutationDialog.close()
+						if self.modalessMutationDialog != None:
+							self.modalessMutationDialog.close()
 			elif mode == "H1N3pos":
 				mutations = []
 				# convert H1/H3 numbering to original numbering
@@ -3406,7 +3412,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 					else:
 						# add new sequence information into listWidgetStrainsIn
 						self.ui.listWidgetStrainsIn.addItem(seq_name)
-						self.modalessMutationDialog.close()
+						if self.modalessMutationDialog != None:
+							self.modalessMutationDialog.close()
 
 	def open_mutation_dialog(self):
 		if self.ui.txtName.toPlainText() == "":
@@ -3453,7 +3460,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			for i in range(donor_num):
 				donor_list.append(self.ui.listWidgetStrainsIn.item(i).text())
 			# remove the base seq from donor list
-			donor_list.remove(BaseSeq)
+			if BaseSeq in donor_list:
+				donor_list.remove(BaseSeq)
 			# set donor list for Qlists in pop up window
 			self.modalessSeqEditDialog.ui.DonorList_tab1.addItems(donor_list)
 			self.modalessSeqEditDialog.ui.DonorList_tab2.addItems(donor_list)
@@ -3465,10 +3473,171 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessSeqEditDialog.seqEditSignal.connect(self.get_sequence_edit_info)
 			self.modalessSeqEditDialog.show()
 
-	def get_sequence_edit_info(self, a,b,c):  # For modaless dialog
-		print(a)
-		print("Base Sequence Name: " + b)
-		print(c)
+	def get_sequence_edit_info(self, editing_mode, base_sequence, donor_sequences, mutation_schema):  # For modaless dialog
+		# this function only process sequence editing within same subtype
+		# base biased mode
+		if editing_mode == 0:
+			pass
+		# Cocktail mode
+		elif editing_mode == 1:
+			# get information for base sequence
+			WhereState = "SeqName = " + '"' + base_sequence + '"'
+			SQLStatement = 'SELECT * FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			base_nt_seq = DataIn[0][1]
+			base_subtype = DataIn[0][3]
+			base_from = int(DataIn[0][5]) - 1
+			base_to = int(DataIn[0][6])
+			if base_from == -1: base_from = 0
+			base_nt_seq = base_nt_seq[base_from:base_to]
+			base_nt_seq = base_nt_seq.upper()
+			base_aa_seq = Translator(base_nt_seq, 0)
+			base_aa_seq = base_aa_seq[0]
+			base_aa_seq = re.sub(r'\*.+', "", base_aa_seq)
+
+			# get information for donor sequence
+			WhereState = "SeqName = " + '"' + donor_sequences + '"'
+			SQLStatement = 'SELECT * FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			donor_nt_seq = DataIn[0][1]
+			donor_subtype = DataIn[0][3]
+			donor_from = int(DataIn[0][5]) - 1
+			donor_to = int(DataIn[0][6])
+			donor_donor = DataIn[0][9]
+			if donor_from == -1: donor_from = 0
+			donor_nt_seq = donor_nt_seq[donor_from:donor_to]
+			donor_nt_seq = donor_nt_seq.upper()
+			donor_aa_seq = Translator(donor_nt_seq, 0)
+			donor_aa_seq = donor_aa_seq[0]
+			donor_aa_seq = re.sub(r'\*.+', "", donor_aa_seq)
+			if donor_donor == "none":
+				donor_start = 0
+				donor_end = len(donor_aa_seq)
+			else:
+				tmp = donor_donor.split('-')
+				donor_start = tmp[0]
+				donor_end = tmp[1]
+
+			if base_subtype != donor_subtype:
+				QMessageBox.warning(self, 'Warning', 'This Function only works for same subtype!',
+									QMessageBox.Ok,
+									QMessageBox.Ok)
+				return
+
+			# get all mutation information in donor region
+			# write sequence into file for alignment
+			in_file = temp_folder + "in.fas"
+			out_file = temp_folder + "out.fas"
+			temp_file = open(in_file, "w")
+			temp_file.write(">" + base_sequence + "\n")
+			temp_file.write(base_aa_seq + "\n")
+			temp_file.write(">" + donor_sequences + "\n")
+			temp_file.write(donor_aa_seq + "\n")
+			temp_file.close()
+
+			# run muscle to align query seuqnece to template sequence
+			cmd = "muscle -in " + in_file + " -out " + out_file
+			# print(cmd)
+			os.system(cmd)
+
+			# read alignment from muscle results
+			align_file = open(out_file, "r")
+			alignment = align_file.read()
+			sequences_block = alignment.split(">")
+
+			for cur_seq in sequences_block:
+				if base_sequence in cur_seq:
+					tmp = cur_seq.split("\n")
+					tmp = tmp[1:]
+					seperator = ""
+					base_aa_seq = seperator.join(tmp)
+				else:
+					tmp = cur_seq.split("\n")
+					tmp = tmp[1:]
+					seperator = ""
+					donor_aa_seq = seperator.join(tmp)
+
+			if '-' in base_aa_seq:
+				QMessageBox.warning(self, 'Warning', 'Just let you know that there are insertions in donor!', QMessageBox.Ok,
+									QMessageBox.Ok)
+				# new sequences have insertion, adjust the start and end position for all fragments based on current alignment
+				hyphen_pos_base = [i.start() for i in re.finditer('-', base_aa_seq)]
+				hyphen_pos_donor = [i.start() for i in re.finditer('-', donor_aa_seq)]
+				for pos_iter in hyphen_pos_base:
+					donor_aa_seq = donor_aa_seq[:pos_iter] + '#' + donor_aa_seq[pos_iter + 1:]
+
+				remove_hyphen = str.maketrans('', '', '-')
+				base_aa_seq = base_aa_seq.translate(remove_hyphen)
+				remove_sharp = str.maketrans('', '', '#')
+				donor_aa_seq = donor_aa_seq.translate(remove_sharp)
+
+				# step 1: convert donor region from original numbering to alignment numbering
+				if len(hyphen_pos_donor) > 0:
+					for pos_iter in hyphen_pos_donor:
+						if donor_start >= pos_iter:
+							donor_start += 1
+							donor_end += 1
+						elif donor_end >= pos_iter:
+							donor_end += 1
+				# step 2: convert donor region from alignment numbering to base sequence numbering
+				alignment_donor_start = donor_start
+				alignment_donor_end = donor_end
+				for pos_iter in hyphen_pos_base:
+					if alignment_donor_start >= pos_iter:
+						donor_start -= 1
+						donor_end -= 1
+					elif alignment_donor_end >= pos_iter:
+						donor_end -= 1
+
+			else:
+				if '-' in donor_aa_seq:
+					hyphen_pos_donor = [i.start() for i in re.finditer('-', donor_aa_seq)]
+					# step 1: convert donor region from original numbering to alignment numbering
+					if len(hyphen_pos_donor) > 0:
+						for pos_iter in hyphen_pos_donor:
+							if donor_start >= pos_iter:
+								donor_start += 1
+								donor_end += 1
+							elif donor_end >= pos_iter:
+								donor_end += 1
+
+			base_donor_region_seq = base_aa_seq[donor_start:donor_end]
+			donor_donor_region_seq = donor_aa_seq[donor_start:donor_end]
+
+			# generate all single mutations
+			all_single_mutations = []
+			for num in range(len(base_donor_region_seq)):
+				cur_aa_base = base_donor_region_seq[num]
+				cur_aa_donor = donor_donor_region_seq[num]
+				cur_pos = donor_start + num + 1
+				if cur_aa_donor != "-" and cur_aa_donor != cur_aa_base:
+					cur_mutation = cur_aa_base + str(cur_pos) + cur_aa_donor
+					all_single_mutations.append(cur_mutation)
+
+			# generate mutated sequences
+			if mutation_schema == "all":
+				all_mutation_combination = []
+				for x in range(1,len(all_single_mutations)+1):
+					tmp = list(combinations(all_single_mutations, x))
+					all_mutation_combination.extend(tmp)
+
+				for mutation in all_mutation_combination:
+					mutation = ','.join(mutation)
+					new_seq_name = base_sequence + '-' + mutation + '(Cocktail)'
+					self.generate_mutation_sequence("OriPos", base_sequence, new_seq_name, mutation, "")
+			elif mutation_schema == "single":
+				for mutation in all_single_mutations:
+					new_seq_name = base_sequence + '-' + mutation + '(Cocktail)'
+					self.generate_mutation_sequence("OriPos", base_sequence, new_seq_name, mutation, "")
+			else:
+				return
+			self.modalessSeqEditDialog.close()
+
+		elif editing_mode == 2:
+			pass
+		elif editing_mode == 3:
+			pass
+
 
 	def GenerateGibson(self, selections, joint_up_str, joint_down_str, out_dir):
 		listItems = selections.split("\n")
@@ -3682,6 +3851,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 				aa_seq = fragment_data.loc[index, aa_col_name]
 				nt_seq = fragment_data.loc[index, nt_col_name]
 
+				if i == 0: # fragment 1, add upstream joint
+					aa_seq = joint_up_str + aa_seq
+					nt_seq = joint_up_str + nt_seq
+				elif i == num_fragment - 1:  # fragment 4 or last fragment, add 3' joint
+					aa_seq = aa_seq + joint_down_str
+					nt_seq = nt_seq + joint_down_str
+
 				# search from SQL DB
 				SQLCommand = "SELECT * FROM Fragments WHERE AAseq = '" + aa_seq + "'"
 
@@ -3694,10 +3870,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 					if in_stock == "yes":
 						existing_fragment_name_list.append(fragment_name)
 					else:
-						new_fragment_name_list.append(fragment_name)
-						idt_array[cur_idt_index][1] = fragment_name
-						idt_array[cur_idt_index][2] = nt_seq
-						cur_idt_index += 1
+						if fragment_name in new_fragment_name_list:
+							pass
+						else:
+							new_fragment_name_list.append(fragment_name)
+							idt_array[cur_idt_index][1] = fragment_name
+							idt_array[cur_idt_index][2] = nt_seq
+							cur_idt_index += 1
 				else:
 					SQLCommand = "SELECT Name FROM Fragments WHERE Fragment = '" + str(
 						i + 1) + "' AND Subtype = '" + subtype + "'"
@@ -3733,9 +3912,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 						return
 					else:
 						new_fragment_name_list.append(fragment_name)
-						idt_array[cur_index][1] = fragment_name
-						idt_array[cur_index][2] = nt_seq
-						cur_index += 1
+						idt_array[cur_idt_index][1] = fragment_name
+						idt_array[cur_idt_index][2] = nt_seq
+						cur_idt_index += 1
 
 				# print(seq_name + "\t" + str(i + 1) + "\t" + aa_seq + "\t" + fragment_name + "\t" + in_stock + "\t" + nt_seq)
 				# print(seq_name + "\t" + str(i + 1) + "\t" + fragment_name + "\t" + in_stock)
