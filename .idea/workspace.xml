@@ -4,16 +4,10 @@
     <list default="true" id="9f472839-8a65-4dce-be83-d1c7511e6e93" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DB/AAATester.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/AAATester.ldb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fragments/A_California_04_2009 (H1) .fas" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fragments/A_Denver_1_1957 (H1).fas" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fragments/IDTorder_2019-10-02-15_19_48.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fragments/Summary_2019-10-02-15_19_48.xlsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/In.txt" beforeDir="false" afterPath="$PROJECT_DIR$/In.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Temp/in.fas" beforeDir="false" afterPath="$PROJECT_DIR$/Temp/in.fas" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Temp/out.fas" beforeDir="false" afterPath="$PROJECT_DIR$/Temp/out.fas" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sequenceedit.py" beforeDir="false" afterPath="$PROJECT_DIR$/sequenceedit.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sequenceedit.ui" beforeDir="false" afterPath="$PROJECT_DIR$/sequenceedit.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.ui" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.ui" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -126,6 +120,11 @@
           <url>file://$PROJECT_DIR$/MainLibrator.py</url>
           <line>3937</line>
           <option name="timeStamp" value="29" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/MainLibrator.py</url>
+          <line>3603</line>
+          <option name="timeStamp" value="30" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

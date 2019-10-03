@@ -3515,8 +3515,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				donor_end = len(donor_aa_seq)
 			else:
 				tmp = donor_donor.split('-')
-				donor_start = tmp[0]
-				donor_end = tmp[1]
+				donor_start = int(tmp[0])
+				donor_end = int(tmp[1])
 
 			if base_subtype != donor_subtype:
 				QMessageBox.warning(self, 'Warning', 'This Function only works for same subtype!',
