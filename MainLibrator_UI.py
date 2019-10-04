@@ -1285,7 +1285,7 @@ class Ui_MainLibrator(object):
         self.toolBar.addAction(self.actionDelete_record)
 
         self.retranslateUi(MainLibrator)
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
         self.listWidgetStrains.doubleClicked['QModelIndex'].connect(self.btnSeqIn.click)
         self.listWidgetStrainsIn.doubleClicked['QModelIndex'].connect(self.btnClearStrain.click)
         self.rdoDistinctions.clicked['bool'].connect(self.lblDistinctMuts.setEnabled)

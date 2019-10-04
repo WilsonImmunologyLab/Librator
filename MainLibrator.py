@@ -6,7 +6,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QTextCursor, QCursor
 from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion
 from itertools import combinations
-import os, sys, re, time
+from collections import Counter
+import os, sys, re, time, string
 import pandas as pd
 import numpy as np
 
@@ -55,7 +56,7 @@ temp_folder = working_prefix + '/Librator/Temp/'
 global joint_up
 joint_up = "TCCACTCCCAGGTCCAACTGCACCTCGGTTCTATCGATTGAATTC"
 global joint_down
-joint_down = "GGCTCTGGATACATACCTGAGGCACCACGAGATGGACAAGCAT"
+joint_down = "GGGTCCGGATACATACCAGAGGCCCCGCGAGATGG"
 
 
 class MutationDialog(QtWidgets.QDialog):
@@ -3477,7 +3478,191 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# this function only process sequence editing within same subtype
 		# base biased mode
 		if editing_mode == 0:
-			pass
+			# get information for base sequence
+			WhereState = "SeqName = " + '"' + base_sequence + '"'
+			SQLStatement = 'SELECT * FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			base_nt_seq = DataIn[0][1]
+			base_subtype = DataIn[0][3]
+			base_from = int(DataIn[0][5]) - 1
+			base_to = int(DataIn[0][6])
+			if base_from == -1: base_from = 0
+			base_nt_seq = base_nt_seq[base_from:base_to]
+			base_nt_seq = base_nt_seq.upper()
+			base_aa_seq = Translator(base_nt_seq, 0)
+			base_aa_seq = base_aa_seq[0]
+			base_aa_seq = re.sub(r'\*.+', "", base_aa_seq)
+
+			# get information for donor sequences
+			donor_sequence_names = donor_sequences.split("\t")
+			donor_sequences_arr = []
+			for cur_seq in donor_sequence_names:
+				# get information for donor sequence
+				WhereState = "SeqName = " + '"' + cur_seq + '"'
+				SQLStatement = 'SELECT * FROM LibDB WHERE ' + WhereState
+				DataIn = RunSQL(DBFilename, SQLStatement)
+				donor_nt_seq = DataIn[0][1]
+				donor_subtype = DataIn[0][3]
+				donor_from = int(DataIn[0][5]) - 1
+				donor_to = int(DataIn[0][6])
+				donor_donor = DataIn[0][9]
+				if donor_from == -1: donor_from = 0
+				donor_nt_seq = donor_nt_seq[donor_from:donor_to]
+				donor_nt_seq = donor_nt_seq.upper()
+				donor_aa_seq = Translator(donor_nt_seq, 0)
+				donor_aa_seq = donor_aa_seq[0]
+				donor_aa_seq = re.sub(r'\*.+', "", donor_aa_seq)
+				if donor_donor == "none":
+					donor_start = 0
+					donor_end = len(donor_aa_seq)
+				else:
+					tmp = donor_donor.split('-')
+					donor_start = int(tmp[0])
+					donor_end = int(tmp[1])
+
+				if base_subtype != donor_subtype:
+					QMessageBox.warning(self, 'Warning', 'This Function only works for same subtype!',
+										QMessageBox.Ok,
+										QMessageBox.Ok)
+					return
+
+				cur_array = [cur_seq, donor_aa_seq, donor_start, donor_end, donor_subtype]
+				donor_sequences_arr.append(cur_array)
+
+			# align all sequences
+			# write sequence into file for alignment
+			time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+			in_file = temp_folder + "in" + time_stamp + ".fas"
+			out_file = temp_folder + "out" + time_stamp + ".fas"
+			temp_file = open(in_file, "w")
+			temp_file.write(">" + base_sequence + "\n")
+			temp_file.write(base_aa_seq + "\n")
+
+			for x in range(len(donor_sequences_arr)):
+				temp_file.write(">" + donor_sequences_arr[x][0] + "\n")
+				temp_file.write(donor_sequences_arr[x][1] + "\n")
+
+			temp_file.close()
+
+			# run muscle to align query seuqnece to template sequence
+			cmd = "muscle -in " + in_file + " -out " + out_file
+			# print(cmd)
+			os.system(cmd)
+
+			# read alignment from muscle results
+			align_file = open(out_file, "r")
+			alignment = align_file.read()
+			sequences_block = alignment.split(">")
+
+			for cur_block in sequences_block:
+				tmp = cur_block.split("\n")
+				cur_name = tmp[0]
+				cur_name = cur_name[1:]
+				tmp = tmp[1:]
+				seperator = ""
+				cur_seq = seperator.join(tmp)
+
+				if base_sequence == cur_name:
+					base_aa_seq = cur_seq
+				else:
+					for x in range(len(donor_sequences_arr)):
+						if donor_sequences_arr[x][0] in cur_name:
+							donor_sequences_arr[x][1] = cur_seq
+
+			# correct numbering according to alignment result
+			if '-' in base_aa_seq:
+				QMessageBox.warning(self, 'Warning', 'Just let you know that there are insertions in donor!', QMessageBox.Ok,
+									QMessageBox.Ok)
+				# new sequences have insertion, adjust the start and end position for all fragments based on current alignment
+				hyphen_pos_base = [i.start() for i in re.finditer('-', base_aa_seq)]
+
+				for x in range(len(donor_sequences_arr)):
+					donor_aa_seq = donor_sequences_arr[x][1]
+					donor_start = donor_sequences_arr[x][2]
+					donor_end = donor_sequences_arr[x][3]
+
+					hyphen_pos_donor = [i.start() for i in re.finditer('-', donor_aa_seq)]
+					for pos_iter in hyphen_pos_base:
+						donor_aa_seq = donor_aa_seq[:pos_iter] + '#' + donor_aa_seq[pos_iter + 1:]
+
+					remove_hyphen = str.maketrans('', '', '-')
+					base_aa_seq = base_aa_seq.translate(remove_hyphen)
+					remove_sharp = str.maketrans('', '', '#')
+					donor_aa_seq = donor_aa_seq.translate(remove_sharp)
+
+					# step 1: convert donor region from original numbering to alignment numbering
+					if len(hyphen_pos_donor) > 0:
+						for pos_iter in hyphen_pos_donor:
+							if donor_start >= pos_iter:
+								donor_start += 1
+								donor_end += 1
+							elif donor_end >= pos_iter:
+								donor_end += 1
+					# step 2: convert donor region from alignment numbering to base sequence numbering
+					alignment_donor_start = donor_start
+					alignment_donor_end = donor_end
+					for pos_iter in hyphen_pos_base:
+						if alignment_donor_start >= pos_iter:
+							donor_start -= 1
+							donor_end -= 1
+						elif alignment_donor_end >= pos_iter:
+							donor_end -= 1
+
+					donor_sequences_arr[x][1] = donor_aa_seq
+					donor_sequences_arr[x][2] = donor_start
+					donor_sequences_arr[x][3] = donor_end
+
+			else:
+				for x in range(len(donor_sequences_arr)):
+					donor_aa_seq = donor_sequences_arr[x][1]
+					donor_start = donor_sequences_arr[x][2]
+					donor_end = donor_sequences_arr[x][3]
+
+					hyphen_pos_donor = [i.start() for i in re.finditer('-', donor_aa_seq)]
+					# step 1: convert donor region from original numbering to alignment numbering
+					if len(hyphen_pos_donor) > 0:
+						for pos_iter in hyphen_pos_donor:
+							if donor_start >= pos_iter:
+								donor_start += 1
+								donor_end += 1
+							elif donor_end >= pos_iter:
+								donor_end += 1
+
+					donor_sequences_arr[x][1] = donor_aa_seq
+					donor_sequences_arr[x][2] = donor_start
+					donor_sequences_arr[x][3] = donor_end
+
+			# base biased sequence generate residue by residue
+			mutation = []
+			for x in range(len(base_aa_seq)):
+				cur_residue_base = base_aa_seq[x]
+
+				cur_residue_donor = []
+				for y in range(len(donor_sequences_arr)):
+					cur_donor_seq = donor_sequences_arr[y][1]
+					if x >= donor_sequences_arr[y][2] and x < donor_sequences_arr[y][3]:
+						cur_residue_donor.append(cur_donor_seq[x])
+				count = Counter(cur_residue_donor).most_common(2)
+				if len(count) > 1:
+					if count[0][1] > count[1][1]:
+						if cur_residue_base != count[0][0]:
+							cur_mutation = cur_residue_base + str(x + 1) + count[0][0]
+							mutation.append(cur_mutation)
+				else:
+					pass
+
+
+			if len(mutation) != 0:
+				mutation = ",".join(mutation)
+				# generate new base baised sequence
+				new_seq_name = base_sequence + "-" + mutation + "(Base Biased)"
+				self.generate_mutation_sequence("OriPos", base_sequence, new_seq_name, mutation, "")
+				self.modalessSeqEditDialog.close()
+			else:
+				QMessageBox.warning(self, 'Warning', 'The base biased sequence is identical to base sequence! Do nothing!',
+									QMessageBox.Ok,
+									QMessageBox.Ok)
+
 		# Cocktail mode
 		elif editing_mode == 1:
 			# get information for base sequence
@@ -3526,8 +3711,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			# get all mutation information in donor region
 			# write sequence into file for alignment
-			in_file = temp_folder + "in.fas"
-			out_file = temp_folder + "out.fas"
+			time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+			in_file = temp_folder + "in" + time_stamp + ".fas"
+			out_file = temp_folder + "out" + time_stamp + ".fas"
 			temp_file = open(in_file, "w")
 			temp_file.write(">" + base_sequence + "\n")
 			temp_file.write(base_aa_seq + "\n")
@@ -3545,17 +3731,19 @@ class LibratorMain(QtWidgets.QMainWindow):
 			alignment = align_file.read()
 			sequences_block = alignment.split(">")
 
-			for cur_seq in sequences_block:
-				if base_sequence in cur_seq:
-					tmp = cur_seq.split("\n")
-					tmp = tmp[1:]
-					seperator = ""
-					base_aa_seq = seperator.join(tmp)
+			for cur_block in sequences_block:
+				tmp = cur_block.split("\n")
+				cur_name = tmp[0]
+				cur_name = cur_name[1:]
+				tmp = tmp[1:]
+				seperator = ""
+				cur_seq = seperator.join(tmp)
+
+				if base_sequence == cur_name:
+					base_aa_seq = cur_seq
 				else:
-					tmp = cur_seq.split("\n")
-					tmp = tmp[1:]
-					seperator = ""
-					donor_aa_seq = seperator.join(tmp)
+					donor_aa_seq = cur_seq
+
 
 			if '-' in base_aa_seq:
 				QMessageBox.warning(self, 'Warning', 'Just let you know that there are insertions in donor!', QMessageBox.Ok,
