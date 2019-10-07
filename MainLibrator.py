@@ -2296,6 +2296,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		#need to simply get database name and populate list views
 		global DBFilename
 		global DataIs
+		global BaseSeq
 
 		DBFilename = openFile(self, 'ldb')
 		if isinstance(DBFilename, str):
@@ -2309,7 +2310,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# self.ui.listWidgetStrainsIn.setCurrentIndex(0)
 
 			ItemsList = self.ui.listWidgetStrainsIn.count()
-			if ItemsList >0:
+			if ItemsList > 0:
 				self.ui.listWidgetStrainsIn.setCurrentRow(0)
 				self.ListItemChanged()
 				for item in DataIs:
@@ -2323,6 +2324,24 @@ class LibratorMain(QtWidgets.QMainWindow):
 					AASeq = Translator(HASeq.upper(), 0)
 					AASeqIs = AASeq[0]
 				self.HANumbering(AASeqIs)
+
+			# check if the database have base sequence
+			SQLStatement = 'SELECT * FROM LibDB WHERE `Role` = "BaseSeq"'
+			DataIs = RunSQL(DBFilename, SQLStatement)
+
+			if len(DataIs) == 1:
+				CurName = DataIs[0][0]
+				BaseSeq = CurName
+				self.ui.lblBaseName.setText(BaseSeq)
+			elif len(DataIs) > 1:
+				QMessageBox.warning(self, 'Warning', 'Your database have multiple base sequences! Will choose the first one as current base sequence',
+									QMessageBox.Ok, QMessageBox.Ok)
+				CurName = DataIs[0][0]
+				BaseSeq = CurName
+				self.ui.lblBaseName.setText(BaseSeq)
+
+
+
 
 	@pyqtSlot()
 	def OpenRecent(self):  # how to activate menu and toolbar actions!!!
@@ -2755,7 +2774,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		SQLStatement = 'SELECT * FROM LibDB WHERE SeqName = "' + eachItemIs +'"'
 		DataIs = RunSQL(DBFilename, SQLStatement)
-		MY = DataIs
 		# 	 SeqName , Sequence , SeqLen, SubType , Form , Placeholder, ID
 		self.UpdateFields()
 
