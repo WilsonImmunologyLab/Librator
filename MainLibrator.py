@@ -2160,9 +2160,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 					text_start = '1'
 				if text_end == "":
 					text_end = "999"
-				CurrVal = text_start + "-" + text_end
-				self.UpdateSeq(CurName, CurrVal, 'Donor')
-				self.ui.txtDonorRegions.setText(CurrVal)
+				if int(text_start) >= int(text_end):
+					QMessageBox.warning(self, 'Warning', 'Region start position should be smaller than end position!', QMessageBox.Ok, 
+						QMessageBox.Ok)
+				else:
+					CurrVal = text_start + "-" + text_end
+					self.UpdateSeq(CurName, CurrVal, 'Donor')
+					self.ui.txtDonorRegions.setText(CurrVal)
 
 	@pyqtSlot()
 	def EditSeqName(self):
