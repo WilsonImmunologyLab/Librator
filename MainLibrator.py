@@ -242,9 +242,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.ui.spnAlignFont.valueChanged['int'].connect(self.AlignFont)
 
-		self.ui.txtDonorRegions.textChanged.connect(self.DonorRegions)
+		#self.ui.txtDonorRegions.textChanged.connect(self.DonorRegions)
 
-		self.ui.txtInsert_Base.textChanged.connect(self.Mutations)
+		self.ui.txtDonorRegions.selectionChanged.connect(self.DonorRegionsDialog)
+
+		#self.ui.txtInsert_Base.textChanged.connect(self.Mutations)
+
+		self.ui.txtInsert_Base.selectionChanged.connect(self.MutationsDialog)
 
 		self.ui.txtName.cursorPositionChanged.connect(self.EditSeqName)
 
@@ -2128,11 +2132,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.ui.textSeq.repaint()
 			self.ui.textAA.setPlainText(HAAA[0])
 
-
-
-
-
-
 	@pyqtSlot()
 	def DonorRegions(self):
 		global SeqMove
@@ -2142,6 +2141,28 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			self.UpdateSeq(CurName, CurrVal, 'Donor')
 		SeqMove = False
+
+	@pyqtSlot()
+	def DonorRegionsDialog(self):
+		if self.ui.txtName.toPlainText() == "":
+			QMessageBox.warning(self, 'Warning', 'Please select a sequence first!', QMessageBox.Ok, QMessageBox.Ok)
+		else:
+			CurName = self.ui.txtName.toPlainText()
+			#CurrVal = self.ui.txtDonorRegions.toPlainText()
+
+			text_start, ok1 = QInputDialog.getText(self, 'Input Dialog',
+											'Enter start of Donor region:')
+			if ok1:
+				text_end, ok2 = QInputDialog.getText(self, 'Input Dialog',
+											'Enter end of Donor region:')
+			if ok1 and ok2:
+				if text_start == "":
+					text_start = '1'
+				if text_end == "":
+					text_end = "999"
+				CurrVal = text_start + "-" + text_end
+				self.UpdateSeq(CurName, CurrVal, 'Donor')
+				self.ui.txtDonorRegions.setText(CurrVal)
 
 	@pyqtSlot()
 	def EditSeqName(self):
@@ -2180,6 +2201,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 		SeqMove = False
 
 	@pyqtSlot()
+	def MutationsDialog(self):
+		if self.ui.txtName.toPlainText() == "":
+			QMessageBox.warning(self, 'Warning', 'Please select a sequence first!', QMessageBox.Ok, QMessageBox.Ok)
+		else:
+			QMessageBox.warning(self, 'Warning', 'Modifying Mutation info is prohibited! \nIf you '
+											 'believe the information is wrong, \nplease re-generate'
+											 ' new sequence with correct mutation!', QMessageBox.Ok, QMessageBox.Ok)
+
+
+	@pyqtSlot()
 	def RoleChanged(self):
 		global BaseSeq
 		global DataIs
@@ -2207,8 +2238,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# self.ui.cboRole.setEnabled(False)
 		else:
 			if NoChange == False:
-				#self.UpdateSeq(CurName, CurrVal, 'Role')
-				self.UpdateSeq(CurName, "Donor", 'Role')
+				self.UpdateSeq(CurName, CurrVal, 'Role')
+				#self.UpdateSeq(CurName, "Donor", 'Role')
 
 
 	@pyqtSlot()
@@ -2720,6 +2751,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		SQLStatement = 'SELECT * FROM LibDB WHERE SeqName = "' + eachItemIs +'"'
 		DataIs = RunSQL(DBFilename, SQLStatement)
+		MY = DataIs
 		# 	 SeqName , Sequence , SeqLen, SubType , Form , Placeholder, ID
 		self.UpdateFields()
 
@@ -2754,15 +2786,15 @@ class LibratorMain(QtWidgets.QMainWindow):
 			Role = item[8]
 			if Role == 'Unassigned':
 				CurIndex = 0
-			if Role == 'DonorSeq':
-				CurIndex = 1
 			if Role == 'BaseSeq':
-				CurIndex = 2
+				CurIndex = 1
 				BaseSeq = item[0]
 			if Role == 'Reference':
-				CurIndex = 3
+				CurIndex = 2
 			if Role == 'Generated':
-				CurIndex = 4
+				CurIndex = 3
+			if Role == 'none':
+				CurIndex = 0
 
 			self.ui.cboRole.setCurrentIndex(CurIndex)
 
@@ -3294,8 +3326,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 						HASeq = HASeq[:condon_start] + cur_condon + HASeq[condon_end:]
 
 					# after generate nt sequence with all mutations, we can import the sequence into the DB
-					SQLStatement = "INSERT INTO LibDB(SeqName, Sequence, SeqLen, SubType, Form, VFrom, VTo, Active, Role, " \
-								   "Donor, Mutations, ID, Base) VALUES('" \
+					SQLStatement = "INSERT INTO LibDB(`SeqName`, `Sequence`, `SeqLen`, `SubType`, `Form`, `VFrom`, `VTo`, `Active`, `Role`, " \
+								   "`Donor`, `Mutations`, `ID`, `Base`) VALUES('" \
 								   + seq_name + "','" \
 								   + HASeq + "','" \
 								   + str(len(HASeq)) + "','" \
@@ -3476,8 +3508,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	def get_sequence_edit_info(self, editing_mode, base_sequence, donor_sequences, mutation_schema):  # For modaless dialog
 		# this function only process sequence editing within same subtype
-		# base biased mode
-		if editing_mode == 0:
+		if editing_mode == 0:   # base biased mode
 			# get information for base sequence
 			WhereState = "SeqName = " + '"' + base_sequence + '"'
 			SQLStatement = 'SELECT * FROM LibDB WHERE ' + WhereState
@@ -3651,7 +3682,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				else:
 					pass
 
-
+			# generate sequence
 			if len(mutation) != 0:
 				mutation = ",".join(mutation)
 				# generate new base baised sequence
@@ -3663,8 +3694,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 									QMessageBox.Ok,
 									QMessageBox.Ok)
 
-		# Cocktail mode
-		elif editing_mode == 1:
+		elif editing_mode == 1:     # Cocktail mode
 			# get information for base sequence
 			WhereState = "SeqName = " + '"' + base_sequence + '"'
 			SQLStatement = 'SELECT * FROM LibDB WHERE ' + WhereState

@@ -111,7 +111,7 @@ def UpdateField(ID, Value, Field, DBpathname):
     cursor = conn.cursor()
     # cursor.execute('drop table if exists LibDB')
     # nID = str(ID)
-    SQLCommand = 'UPDATE LibDB SET ' + Field + ' = "' + Value + '" WHERE SeqName = ' + '"' + ID + '"'
+    SQLCommand = 'UPDATE LibDB SET `' + Field + '` = "' + Value + '" WHERE SeqName = ' + '"' + ID + '"'
     # if Field == 'SeqAlignment':
     #     SQLCommand = 'UPDATE LibDB SET Isotype = "' + Value + '" WHERE ID = ' + ID
     try:
