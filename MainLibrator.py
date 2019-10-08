@@ -555,6 +555,15 @@ class LibratorMain(QtWidgets.QMainWindow):
 		WhereState = ''
 		NumSeqs = len(listItems)
 		i = 1
+
+		if len(listItems) == 0:
+			QMessageBox.warning(self, 'Warning', 'Please select sequence from active sequence panel!', QMessageBox.Ok,
+								QMessageBox.Ok)
+			return
+		elif len(listItems) == 1:
+			QMessageBox.warning(self, 'Warning', 'Please select multiple sequence from active sequence panel!',
+								QMessageBox.Ok, QMessageBox.Ok)
+			return
 		for item in listItems:
 
 			eachItemIs = item.text()
@@ -591,7 +600,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		if self.ui.tabWidget.currentIndex() == 2:
 			self.ui.actionAA.setChecked(True)
 			self.ui.actionDNA.setChecked(True)
-			self.ui.actionGL.setChecked(False)
+			self.ui.actionBA.setChecked(False)
 			self.ui.listWidgetStrainsIn.selectAll()
 			listItems = self.ui.listWidgetStrainsIn.selectedItems()
 			WhereState = ''
@@ -1570,11 +1579,412 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			CurPos += 1
 
-
-
-
 	@pyqtSlot()
 	def AlignSequences(self, DataIn, Notes):
+		# import tempfile
+		import os
+		TupData = ()
+		DataSet = []
+		QApplication.setOverrideCursor(Qt.WaitCursor)
+		global GLMsg
+
+		if DataIn == 'RF':  #can use this part for reading frames
+			fields = ['SeqName', 'Sequence']
+			# checkedProjects, checkedGroups, checkedSubGroups, checkedkids = getTreeChecked()
+			# SQLStatement = LibratorSQL.MakeSQLStatement(self, fields, data[0])
+			#
+			#
+			# DataIs = VGenesSQL.RunSQL(DBFilename, SQLStatement)  # returns list of tuples where seqname is first
+
+			# SeqName = self.ui.txtName.toPlainText()
+			SeqName = 'Current'
+			DNASeq = self.ui.textSeq.toPlainText()
+			# GermSeq = DNASeq
+			TupData  = (SeqName, DNASeq)
+			DataSet.append(TupData)
+
+			global GLMsg
+			if len(DataSet) == 1:
+				GLMsg = False
+				self.ui.actionBA.setChecked(True)
+				self.ui.actionAA.setChecked(True)
+				GLMsg = True
+				GermSeq = DNASeq
+				Germline = ('Germline', GermSeq)
+				DataSet.append(Germline)
+			else:
+				if self.ui.actionBA.isChecked() == True:
+					GLMsg = True
+					GermSeq = DNASeq
+					Germline = ('Germline', GermSeq)
+					DataSet.append(Germline)
+		elif DataIn == 'edit':
+			DataIn = 'none'
+			# DataIs = []
+
+			# SeqName = data[0]
+
+			# DNAseq = self.ui.txtDNASeq.toPlainText()
+			# Sequence = (SeqName, DNAseq)
+			# DataSet.append(Sequence)
+
+
+			if len(DataSet) == 1:
+				GLMsg = False
+				self.ui.actionBA.setChecked(True)
+				self.ui.actionAA.setChecked(True)
+				GLMsg = True
+				GermSeq = self.ui.textSeq.toPlainText()
+				Germline = ('Germline', GermSeq)
+				DataSet.append(Germline)
+		else:
+			DataSet = DataIn
+
+		# align selected sequences using ClustalOmega
+		outfilename = ''
+		try:
+			outfilename = LibratorSeq.ClustalO(DataSet, 80, True)
+
+			lenName = 0
+			longestName = 0
+			alignmentText = ''
+			germseq = ''
+			germpeptide = ''
+
+			each = ()
+			all = []
+			if self.ui.actionBA.isChecked() == False:
+				longestName = 11
+			else:
+				longestName = 10
+
+			peptide = ''
+			SeqName = ''
+			StartAll = False
+
+			# read alignment file, make alignment NT and AA sequences
+			if os.path.isfile(outfilename):
+				with open(outfilename, 'r') as currentfile:
+					for line in currentfile:
+						Readline = line.replace('\n', '').replace('\r', '').replace('-', '.')
+						Readline = Readline.strip()
+						if Readline[0] == '>':
+							if StartAll == True:
+								all.append(each)
+							StartAll = True
+							SeqName = Readline[1:] + ':'
+							lenName = len(SeqName)
+							if lenName > longestName:
+								longestName = lenName + 2
+						else:
+							if self.ui.actionAA.isChecked() == True:
+								AASeq, ErMessage = LibratorSeq.Translator(Readline, 0)
+								#Position, Amino Acid, H1-segment (HA1 or HA2), H1Number, A/California/4/2009-residue, H1-antigenic-region
+
+								if DataIn == 'RF':
+									AASeq2, ErMessage = LibratorSeq.Translator(Readline, 1)
+									AASeq3, ErMessage = LibratorSeq.Translator(Readline, 2)
+								peptide = ''
+								if DataIn == 'RF':
+									peptide2 = ''
+									peptide3 = ''
+
+								for res in AASeq:
+									peptide += (' ' + res + ' ')
+
+								if DataIn == 'RF':
+									for res in AASeq2:
+										peptide2 += (' ' + res + ' ')
+									for res in AASeq3:
+										peptide3 += (' ' + res + ' ')
+
+							peptide = peptide[0:len(Readline)]
+
+							if DataIn == 'RF':
+								peptide = peptide[1:]
+								peptide2 = peptide2[0:len(Readline)]
+
+							if DataIn == 'RF':
+								peptide3 = peptide3[0:len(Readline)]
+								peptide3 = ' ' + peptide3
+
+							if SeqName != 'Germline:':
+								if DataIn == 'RF':
+									each = (SeqName, Readline, peptide, peptide2, peptide3)
+								else:
+									each = (SeqName, Readline, peptide)
+							else:
+								germseq = Readline
+								germpeptide = peptide
+								StartAll = False
+				if StartAll == True:
+					all.append(each)
+			else:
+				return
+		# todo add header that says what germline based on
+		except:
+			print('no')
+
+		finally:
+			os.remove(outfilename)
+
+		# generate consnesus sequences (AA and NT)
+		firstOne = all[1]
+		seqlen = len(firstOne[1])
+		if self.ui.actionDNA.isChecked() == True:
+			consensusDNA = ''
+			tester = ''
+			# testl = []
+			for i in range(0, seqlen - 1):
+				tester = ''
+				Cnuc = ''
+				for item in all:
+					seq = item[1]
+					tester += seq[i]
+
+				frequencies = [(c, tester.count(c)) for c in set(tester)]
+				Cnuc = max(frequencies, key=lambda x: x[1])[0]
+				consensusDNA += Cnuc
+
+		if self.ui.actionAA.isChecked() == True:
+			consensusAA = ''
+			tester = ''
+			firstOne = all[1]
+			seqlen = len(firstOne[1])
+			# testl = []
+			for i in range(0, seqlen - 1):
+				tester = ''
+				Caa = ''
+				for item in all:
+					seq = item[2]
+					tester += seq[i]
+
+				frequencies = [(c, tester.count(c)) for c in set(tester)]
+				Caa = max(frequencies, key=lambda x: x[1])[0]
+				consensusAA += Caa
+
+			# need build numbering lines also
+			# first record is germline or consensus whatever used and empty seq and AA
+			# need to use ones produced above
+			# also longestName is longest and need code to ensure all that long with ': '
+			# build alignment with name and 50 per
+
+		header = 'VGenes multiple alignment using Clustal Omega. \n'
+		RFSeqName = self.ui.txtName.toPlainText()
+		ConName = 'Consensus: '
+
+		if DataIn == 'RF': ConName = 'Sequence: '
+
+		while len(ConName) < longestName:
+			ConName += ' '
+
+		AASpaces = ''
+		while len(AASpaces) < longestName:
+			AASpaces += ' '
+
+		if self.ui.actionDNA.isChecked() == False and self.ui.actionAA.isChecked() == False:
+			self.ui.actionDNA.setChecked(True)
+
+		alignmentText = header
+		i = 0
+		endSeg = 0
+		done = False
+		ConAdd = True
+
+		if self.ui.actionDNA.isChecked() == True:
+			maxLen = len(consensusDNA)
+		else:
+			NewConAA = consensusAA.replace(' ', '')
+			maxLen = len(NewConAA)
+
+		# canAA = True
+		while endSeg <= maxLen - 1:
+			if i + 60 < maxLen:
+				endSeg = i + 60
+			else:
+				endSeg = maxLen
+
+			aa_start = int(i/3 + 1)
+			aa_end = int(endSeg/3)
+
+			rulerAA = AASpaces + self.MakeRuler(aa_start, aa_end, 5, 'aa')
+			rulerNT = AASpaces + self.MakeRuler(i + 1, endSeg, 5, 'nt')
+
+			for seq in all:
+				SeqName = seq[0]
+				DNASeq = seq[1]
+				AASeq = seq[2]
+				if DataIn == 'RF':
+					AASeq2 = seq[3]
+					AASeq3 = seq[4]
+
+				NewAA = AASeq.replace(' ', '')
+				if DataIn == 'RF':
+					NewAA2 = AASeq2.replace(' ', '')
+					NewAA3 = AASeq3.replace(' ', '')
+
+				while len(SeqName) < longestName:
+					SeqName += ' '
+				# todo can build num line even add CDR if align relative to germline instead just number as end
+				toSpace = len(str(maxLen))
+				endLabel = str(endSeg)
+				while len(endLabel) < toSpace:
+					endLabel += ' '
+				endLabel = '  ' + endLabel
+
+				if self.ui.actionDNA.isChecked() == True:
+
+					ConSegDNA = consensusDNA[i:endSeg]
+					DNASeqSeg = DNASeq[i:endSeg]
+					ConSegDNA = ConSegDNA.upper()
+					DNASeqSeg = DNASeqSeg.upper()
+
+					DNAArt = ''
+					for n in range(0, len(ConSegDNA)):
+						if DNASeqSeg[n] == ConSegDNA[n]:
+							if DataIn == 'RF':
+								DNAArt += '-'
+							else:
+								char = DNASeqSeg[n]
+								char = char.upper()
+								# DNAArt += char
+								DNAArt += '-'
+						else:
+							if DataIn == 'RF':
+								DNAArt += DNASeqSeg[n]
+							else:
+								char = DNASeqSeg[n]
+								char = char.lower()
+								DNAArt += char
+
+
+					ConSegDNA = ConName + ConSegDNA + endLabel
+					DNASeqSeg = SeqName + DNAArt + endLabel
+					if self.ui.actionAA.isChecked() == True:
+						AArt = ''
+						ConSegAA = consensusAA[i:endSeg]
+						if DataIn == 'RF': ConSegAA2 = AASeq2[i:endSeg]
+						if DataIn == 'RF': ConSegAA3 = AASeq3[i:endSeg]
+
+						AASeqSeg = AASeq[i:endSeg]
+
+						for n in range(0, len(ConSegAA)):
+							if AASeqSeg[n] == ConSegAA[n]:
+								AArt += ' '
+							else:
+								AArt += AASeqSeg[n]
+
+						AASeqSeg = AASpaces + AArt  # + endLabel
+						if DataIn == 'RF':
+							ConSegAA = AASpaces + 'RF1: ' + ConSegAA
+						else:
+							ConSegAA = AASpaces + ConSegAA
+
+						if DataIn == 'RF':
+							ConSegAA2 = AASpaces + 'RF2: ' +  ConSegAA2
+							ConSegAA3 = AASpaces + 'RF3: ' + ConSegAA3
+
+						if ConAdd == True:
+							if self.ui.actionBA.isChecked() == True:
+								alignmentText += '\n' + rulerAA
+							alignmentText += '\n' + ConSegAA + '\n'
+							if DataIn == 'RF':
+								alignmentText += '\n' + ConSegAA2 + '\n'
+								alignmentText += '\n' + ConSegAA3 + '\n'
+								alignmentText += '     ' + ConSegDNA + '\n'
+							else:
+								if self.ui.actionBA.isChecked() == True:
+									alignmentText += rulerNT + '\n'
+								alignmentText += ConSegDNA + '\n'
+							ConAdd = False
+						if DataIn != 'RF':
+							alignmentText += AASeqSeg + '\n'
+							alignmentText += DNASeqSeg + '\n'
+					else:
+						if ConAdd == True:
+							if self.ui.actionBA.isChecked() == True:
+								alignmentText += '\n' + rulerNT
+							alignmentText += '\n' + ConSegDNA + '\n'
+							ConAdd = False
+						if DataIn != 'RF': alignmentText += DNASeqSeg + '\n'
+
+				else:
+					if self.ui.actionAA.isChecked() == True:
+						AArt = ''
+						ConSegAA = NewConAA[i:endSeg]
+						AASeqSeg = NewAA[i:endSeg]
+
+						for n in range(0, len(ConSegAA)):
+							if AASeqSeg[n] == ConSegAA[n]:
+								AArt += '-'
+							else:
+								AArt += AASeqSeg[n]
+
+						AASeqSeg = SeqName + AArt + endLabel
+						ConSegAA = ConName + ConSegAA
+						if ConAdd == True:
+							if self.ui.actionBA.isChecked() == True:
+								alignmentText += '\n' + rulerNT
+							alignmentText += '\n' + ConSegAA + '\n'
+							ConAdd = False
+						alignmentText += AASeqSeg + '\n'
+
+			i += 60
+			ConAdd = True
+			alignmentText += '\n'
+
+		Style = 'aligned'
+
+		if Notes != 'Tab':
+			self.ShowVGenesTextEdit(alignmentText, Style)
+		else:
+			self.ui.txtSeqAlignment.setText(alignmentText)
+
+		QApplication.restoreOverrideCursor()
+
+		# for item in Aligned:
+
+		# print('done')
+
+	# do lengthy process
+
+	def MakeRuler(self, pos1, pos2, step, mode):
+		ErrMsg = ""
+		if len(str(pos2)) > step - 1:
+			ErrMsg = "Please use larger step! Current step is too short!"
+
+		# start to make ruler
+		if mode == "aa":
+			step_count = int(pos2) - int(pos1) + 1
+			ruler = ' . ' * step_count
+
+			for x in range(100):
+				cur_pos = pos1 + x * step
+				if cur_pos <= pos2:
+					ruler = ruler[:x * 3 * step + 1] + str(cur_pos) + ruler[len(str(cur_pos)) + x * 3 * step + 1:]
+
+		else:
+			ruler = ''
+			cur_pos = pos1
+			step_count = 0
+			space_left = 0
+			while cur_pos <= pos2:
+				if cur_pos == pos1 + step_count * step:
+					ruler += str(cur_pos)
+					space_left = len(str(cur_pos)) - 1
+					cur_pos += 1
+					step_count += 1
+				else:
+					if space_left > 0:
+						space_left = space_left - 1
+						cur_pos += 1
+					else:
+						ruler += '.'
+						cur_pos += 1
+		return ruler
+
+	@pyqtSlot()
+	def AlignSequencesOld(self, DataIn, Notes):
 		# import tempfile
 		import os
 		TupData = ()
@@ -1603,14 +2013,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 			global GLMsg
 			if len(DataSet) == 1:
 				GLMsg = False
-				self.ui.actionGL.setChecked(True)
+				self.ui.actionBA.setChecked(True)
 				self.ui.actionAA.setChecked(True)
 				GLMsg = True
 				GermSeq = DNASeq
 				Germline = ('Germline', GermSeq)
 				DataSet.append(Germline)
 			else:
-				if self.ui.actionGL.isChecked() == True:
+				if self.ui.actionBA.isChecked() == True:
 					GLMsg = True
 					GermSeq = DNASeq
 					Germline = ('Germline', GermSeq)
@@ -1629,7 +2039,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			if len(DataSet) == 1:
 				GLMsg = False
-				self.ui.actionGL.setChecked(True)
+				self.ui.actionBA.setChecked(True)
 				self.ui.actionAA.setChecked(True)
 				GLMsg = True
 				GermSeq = self.ui.textSeq.toPlainText()
@@ -1637,7 +2047,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				DataSet.append(Germline)
 
 		else:
-			self.ui.actionGL.setChecked(False)
+			self.ui.actionBA.setChecked(False)
 			DataSet = DataIn
 
 		# import subprocess
@@ -1656,7 +2066,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			each = ()
 			all = []
-			if self.ui.actionGL.isChecked() == False:
+			if self.ui.actionBA.isChecked() == False:
 				# each.append('Consensus: ')
 				longestName = 11
 			else:
@@ -1746,7 +2156,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		finally:
 			os.remove(outfilename)
 
-		if self.ui.actionGL.isChecked() == True:
+		if self.ui.actionBA.isChecked() == True:
 			consensusDNA = germseq
 			consensusAA = germpeptide
 
@@ -1793,7 +2203,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		header = 'VGenes multiple alignment using Clustal Omega. \n'
 		RFSeqName = self.ui.txtName.toPlainText()
-		if self.ui.actionGL.isChecked() == False:
+		if self.ui.actionBA.isChecked() == False:
 			ConName = 'Consensus: '
 
 		else:

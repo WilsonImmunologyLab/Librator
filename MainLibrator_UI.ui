@@ -2584,7 +2584,7 @@
    <addaction name="actionMultiple_Alignement"/>
    <addaction name="actionDNA"/>
    <addaction name="actionAA"/>
-   <addaction name="actionGL"/>
+   <addaction name="actionBA"/>
    <addaction name="separator"/>
    <addaction name="actionPreferences"/>
    <addaction name="action_Help"/>
@@ -2980,12 +2980,12 @@
     <string>Show amino acids on multiple alignment</string>
    </property>
   </action>
-  <action name="actionGL">
+  <action name="actionBA">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>GL</string>
+    <string>BA</string>
    </property>
    <property name="toolTip">
     <string>Align relative to the germline sequence of currently selected</string>
