@@ -864,7 +864,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		if self.ui.btnH1Num.isChecked():
 			Decorations.append('H1Num')
 
-
 		if self.ui.btnMuts.isChecked():
 			Decorations.append('Muts')
 		if self.ui.btnDonReg.isChecked():
@@ -909,7 +908,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		for Decoration in Decorations:
 			if Decoration == 'None':
-
 				# Setup the desired format for matches
 				format = QTextCharFormat()
 				format.setForeground(QBrush(QColor("black")))
@@ -1449,6 +1447,67 @@ class LibratorMain(QtWidgets.QMainWindow):
 			DataIn = RunSQL(DBFilename, SQLStatement)
 			donor_info = DataIn[0][0]
 			mutation_info = DataIn[0][1]
+
+		if H1NumOn == False and H3NumOn == False:
+			for pos in range(1, len(H1Numbering)):
+				residue = H1Numbering[pos]
+				region = residue[0]
+
+				AA = residue[1]
+				AASeq += AA
+				resPos = str(pos)
+
+				tesResNP = pos / 5
+				if resPos == 1:
+					NumLine += str(pos)
+					AAPosColorMap += '0'
+
+				elif tesResNP.is_integer():  # is divisible by 5
+					ResTP = str(pos)
+					LenResP = len(ResTP)
+
+					if NumberingMap['H3HA1end'] > (pos + LenResP + 1):
+						ResDownP = LenResP
+						NumLine += ResTP[LenResP - ResDownP]
+						ResDownP -= 1
+						AAPosColorMap += '0'
+					else:
+						NumLine += '.'
+
+						AAPosColorMap += '0'
+
+				else:
+					if ResDownP != 0:
+						NumLine += ResTP[LenResP - ResDownP]
+						AAPosColorMap += '0'
+						# H3ColorMap += '0'
+						ResDownP -= 1
+					else:
+						NumLine += '.'
+						AAPosColorMap += '0'
+
+				if region == 'HA1':
+					NextC = '0'
+					InHA1 = True
+				elif region == 'HA2':
+					InHA2 = True
+					NextC = '9'
+					HA2K = True
+				elif region == 'TM':
+					NextC = '8'
+					TMK = True
+				elif region == 'Trimer-Avitag-H6':
+					NextC = 'B'
+					TrimK = True
+				else:
+					NextC = '0'
+
+				if AA == '*':
+					NextC = '1'
+					StopK = True
+
+				AAColorMap += NextC
+
 
 		Sequence = SeqName + '\n'
 		ColorMap = ''
