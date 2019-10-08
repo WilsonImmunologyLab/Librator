@@ -999,9 +999,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 				H1AgLine = ''
 				H1AgOn = True
 
-			if Decoration == 'DonRegs':
+			if Decoration == 'DonReg':
 				DomainsLine = ''
-				DomainsOn = True
+				DonRegOn = True
 
 			if Decoration == 'Muts':
 				MutsLine = ''
@@ -1044,19 +1044,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 			for pos in range(1, len(H3Numbering)):
 				residue = H3Numbering[pos]
 				AA = residue[1]
-
-
-
-
 				AASeq += AA
-
 				resPos = str(pos)
 
 				tesResNP = pos / 5
 				if resPos == 1:
 					NumLine += str(pos)
 					AAPosColorMap += '0'
-
 
 				elif tesResNP.is_integer():  # is divisible by 5
 					ResTP = str(pos)
@@ -1067,27 +1061,19 @@ class LibratorMain(QtWidgets.QMainWindow):
 						NumLine += ResTP[LenResP - ResDownP]
 
 						ResDownP -= 1
-
 						AAPosColorMap += '0'
-
 					else:
 						NumLine += '.'
-
 						AAPosColorMap += '0'
-
 				else:
 					if ResDownP != 0:
 						NumLine += ResTP[LenResP - ResDownP]
-
 						AAPosColorMap += '0'
-
 						# H3ColorMap += '0'
 						ResDownP -= 1
 					else:
 						NumLine += '.'
 						AAPosColorMap += '0'
-
-
 
 				region = residue[0]
 
@@ -1110,11 +1096,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				if AA == '*':
 					NextC = '1'
 					StopK = True
-
 				AAColorMap += NextC
-
-
-
 
 				res = residue[2]
 				Ag = residue[4]
@@ -1270,16 +1252,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 				if H3NumOn == False:
 					AA = residue[1]
-
 					AASeq += AA
-
 					resPos = str(pos)
 
 					tesResNP = pos / 5
 					if resPos == 1:
 						NumLine += str(pos)
 						AAPosColorMap += '0'
-
 
 					elif tesResNP.is_integer():  # is divisible by 5
 						ResTP = str(pos)
@@ -1288,11 +1267,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 						if NumberingMap['H3HA1end'] > (pos + LenResP + 1):
 							ResDownP = LenResP
 							NumLine += ResTP[LenResP - ResDownP]
-
 							ResDownP -= 1
-
 							AAPosColorMap += '0'
-
 						else:
 							NumLine += '.'
 
@@ -1301,9 +1277,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 					else:
 						if ResDownP != 0:
 							NumLine += ResTP[LenResP - ResDownP]
-
 							AAPosColorMap += '0'
-
 							# H3ColorMap += '0'
 							ResDownP -= 1
 						else:
@@ -1463,12 +1437,18 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 					H1NumLine += res
 					H1ColorMap += '0'
-
 			H1Key = 'H1 Antigenic Sites:  Ca1    Ca2    Cb    Sa    Sb   Stalk-MN \n'
 			H1KeyCMap = '000000000000000000022222224444444777777333333666666AAAAAAAAAA\n'
 
 		SeqName = self.ui.txtSeqName2.toPlainText() + '\n'
 		LenSeqName = len(SeqName)
+
+		if DonRegOn == True or MutsOn == True:
+			WhereState = "SeqName = " + '"' + self.ui.txtSeqName2.toPlainText() + '"'
+			SQLStatement = 'SELECT `Donor`, `Mutations` FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			donor_info = DataIn[0][0]
+			mutation_info = DataIn[0][1]
 
 		Sequence = SeqName + '\n'
 		ColorMap = ''
@@ -1476,14 +1456,64 @@ class LibratorMain(QtWidgets.QMainWindow):
 			ColorMap += '0'
 		ColorMap += '\n'
 
+		if MutsOn == True:
+			if mutation_info == "none":
+				QMessageBox.warning(self, 'Warning',
+				                    'No mutation information for this sequence!', QMessageBox.Ok, QMessageBox.Ok)
+			else:
+				mutation_info = mutation_info.rstrip(',')
+				mutation_info = mutation_info.split(',')
+
+		if DonRegOn == True:
+			if donor_info == 'none':
+				QMessageBox.warning(self, 'Warning',
+				                    'No donor information for this sequence!', QMessageBox.Ok, QMessageBox.Ok)
+
 		# NumLine += '.'
 		# AAPosColorMap += '0'
 		for i in range(0, len(AASeq), 60):
+			AASeqSeg = AASeq[i:i + 60]
+			AAColorSeg = AAColorMap[i:i + 60]
+			NumLineSeg = NumLine[i:i + 60]
+			AAPosColorSeg = AAPosColorMap[i:i + 60]
 
-			AASeqSeg = '    Sequence: ' + AASeq[i:i+60] + '\n\n'
-			AAColorSeg = '00000000000000' + AAColorMap[i:i + 60] + '\n\n'
-			NumLineSeg = '    Position: ' + NumLine[i:i+60] + '\n'
-			AAPosColorSeg = '00000000000000' + AAPosColorMap[i:i + 60] + '\n'
+			if DonRegOn == True:
+				if donor_info != 'none':
+					donor_start, donor_end = donor_info.split('-')
+					donor_start = int(donor_start) - 1
+					donor_end = int(donor_end)
+
+					cur_start = i
+					cur_end = i + 60
+					# case 1
+					if cur_start > donor_end:
+						pass
+					# case 2
+					if cur_start <= donor_end and cur_start >= donor_start and donor_end <= cur_end:
+						cur_donor_start = 0
+						cur_donor_end = donor_end - cur_start
+						AAPosColorSeg = 'D'*cur_donor_end + AAPosColorSeg[cur_donor_end:]
+					# case 3
+					if cur_start <= donor_start and cur_end >= donor_end:
+						cur_donor_start = donor_start - cur_start
+						cur_donor_end = donor_end - cur_start
+						AAPosColorSeg = AAPosColorSeg[:cur_donor_start] + 'D' * (cur_donor_end - cur_donor_start) +\
+						                AAPosColorSeg[cur_donor_end:]
+					# case 4
+					if cur_end <= donor_end and cur_end >= donor_start and donor_start >= cur_start:
+						cur_donor_start = donor_start - cur_start
+						cur_donor_end = cur_end
+						AAPosColorSeg = AAPosColorSeg[:cur_donor_start] + 'D' * \
+						                (cur_donor_end - cur_donor_start)
+					# case 5
+					if cur_start >= donor_start and cur_end <= donor_end:
+						AAPosColorSeg = 'D' * 60
+					# case 6
+					if donor_start > cur_end:
+						pass
+
+			NumLineSeg = '    Position: ' + NumLineSeg + '\n'
+			AAPosColorSeg = '00000000000000' + AAPosColorSeg + '\n'
 
 			Sequence += NumLineSeg
 			ColorMap += AAPosColorSeg
@@ -1494,19 +1524,31 @@ class LibratorMain(QtWidgets.QMainWindow):
 				Sequence += H3NumSeg
 				ColorMap += H3ColorSeg
 
-				# Sequence += AASeqSeg
-				# ColorMap += AAColorSeg
-
 			if H1NumOn == True:
 				H1NumSeg = 'H1-Numbering: ' + H1NumLine[i:i + 60] + '\n'
 				H1ColorSeg = '00000000000000' + H1ColorMap[i:i + 60] + '\n'
 				Sequence += H1NumSeg
 				ColorMap += H1ColorSeg
 
+			if MutsOn == True:
+				cur_start = i
+				cur_end = i + 60
+
+				if mutation_info != "none":
+					for x in mutation_info:
+						mutation_pos = re.findall(r"\d+",x)
+						mutation_pos = int(mutation_pos[0]) - 1
+
+						if mutation_pos in range(cur_start, cur_end):
+							AAColorSeg = list(AAColorSeg)
+							AAColorSeg[mutation_pos - cur_start] = 'E'
+							AAColorSeg = ''.join(AAColorSeg)
+
+			AASeqSeg = '    Sequence: ' + AASeqSeg + '\n\n'
+			AAColorSeg = '00000000000000' + AAColorSeg + '\n\n'
+
 			Sequence += AASeqSeg
 			ColorMap += AAColorSeg
-			# NumberLine += NumLineSeg
-			# AAPositionColor += AAPosColorSeg
 
 		Sequence += ' \n'
 		ColorMap += '0\n'
@@ -1589,6 +1631,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 			elif valueIs == 'C':
 				format.setBackground(QBrush(QColor("blue")))
 				format.setForeground(QBrush(QColor("yellow")))
+			elif valueIs == 'D':
+				format.setBackground(QBrush(QColor("Gray")))
+				format.setForeground(QBrush(QColor("black")))
+			elif valueIs == 'E':
+				format.setBackground(QBrush(QColor("lightGray")))
+				format.setForeground(QBrush(QColor("red")))
 
 
 			cursor.setPosition(CurPos)
