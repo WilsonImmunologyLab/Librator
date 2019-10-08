@@ -1588,6 +1588,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 		QApplication.setOverrideCursor(Qt.WaitCursor)
 		global GLMsg
 
+		if self.ui.actionDNA.isChecked() == False and self.ui.actionAA.isChecked() == False:
+			QMessageBox.warning(self, 'Warning', 'Neither DNA nor AA has been selected! Will generate DNA alignment!',
+								QMessageBox.Ok, QMessageBox.Ok)
+			self.ui.actionDNA.setChecked(True)
+
 		if DataIn == 'RF':  #can use this part for reading frames
 			fields = ['SeqName', 'Sequence']
 			# checkedProjects, checkedGroups, checkedSubGroups, checkedkids = getTreeChecked()
@@ -1781,9 +1786,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		AASpaces = ''
 		while len(AASpaces) < longestName:
 			AASpaces += ' '
-
-		if self.ui.actionDNA.isChecked() == False and self.ui.actionAA.isChecked() == False:
-			self.ui.actionDNA.setChecked(True)
 
 		alignmentText = header
 		i = 0

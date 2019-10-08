@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f472839-8a65-4dce-be83-d1c7511e6e93" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DB/AAATester.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/AAATester.ldb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/In.txt" beforeDir="false" afterPath="$PROJECT_DIR$/In.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.ui" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.ui.autosave" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/d8072a74e8194a3c8724519b7fbcff2cOut.txt" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -24,7 +24,7 @@
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -94,6 +94,16 @@
       <updated>1567624931457</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
