@@ -31,7 +31,17 @@ def creatnewDB(DBpathname):
                     ' "ID"	TEXT,'
                     ' "Base"	TEXT,'
                     ' PRIMARY KEY("SeqName"))')
+    conn.commit()
+    conn.close()
 
+def creatnewFragmentDB(DBpathname):
+
+    (dirname, filename) = os.path.split(DBpathname)
+
+    os.chdir(dirname)
+
+    conn = db.connect(DBpathname)
+    cursor = conn.cursor()
     cursor.execute('drop table if exists Fragments')
 
     cursor.execute('CREATE TABLE "Fragments" ('

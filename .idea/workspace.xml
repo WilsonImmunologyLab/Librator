@@ -2,12 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f472839-8a65-4dce-be83-d1c7511e6e93" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DB/AAATester.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/AAATester.ldb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/In.txt" beforeDir="false" afterPath="$PROJECT_DIR$/In.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LibratorSQL.py" beforeDir="false" afterPath="$PROJECT_DIR$/LibratorSQL.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/d8072a74e8194a3c8724519b7fbcff2cOut.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gibsonclone.py" beforeDir="false" afterPath="$PROJECT_DIR$/gibsonclone.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gibsonclone.ui" beforeDir="false" afterPath="$PROJECT_DIR$/gibsonclone.ui" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

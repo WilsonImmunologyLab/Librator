@@ -4,7 +4,7 @@ from PyQt5 import QtWidgets, QtPrintSupport
 from PyQt5.QtWidgets import *
 #from PyQt5.QtWidgets import QApplication, QMessageBox, QAbstractItemView, QFileDialog
 from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QTextCursor, QCursor
-from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion
+from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion, creatnewFragmentDB
 from itertools import combinations
 from collections import Counter
 import os, sys, re, time, string
@@ -97,7 +97,7 @@ class MutationDialog(QtWidgets.QDialog):
 		#self.hide()
 
 class gibsoncloneDialog(QtWidgets.QDialog):
-	gibsonSignal = pyqtSignal(str, str, str, str)  # user define signal
+	gibsonSignal = pyqtSignal(str, str, str, str, str)  # user define signal
 	def __init__(self):
 		super(gibsoncloneDialog, self).__init__()
 		self.ui = Ui_gibsoncloneDialog()
@@ -106,16 +106,34 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 		self.ui.yes.clicked.connect(self.accept)
 		self.ui.cancel.clicked.connect(self.reject)
 		self.ui.browse.clicked.connect(self.browse)
+		self.ui.createDB.clicked.connect(self.new_db)
+		self.ui.browseDB.clicked.connect(self.browse_db)
 
 	def browse(self):  # browse and select path
 		out_dir = QFileDialog.getExistingDirectory(self, "select files", temp_folder)
 		self.ui.outpath.setText(out_dir)
+
+	def browse_db(self):  # browse and select path
+		out_dir = QFileDialog.getExistingDirectory(self, "select existing fragment DB", temp_folder)
+		self.ui.dbpath.setText(out_dir)
+
+	def new_db(self):
+		options = QtWidgets.QFileDialog.Options()
+		DBFilename, _ = QtWidgets.QFileDialog.getSaveFileName(self,
+		                                                      "New Fragment Database",
+		                                                      "New Fragment database",
+		                                                      "Librator database Files (*.ldb);;All Files (*)",
+		                                                      options=options)
+		creatnewFragmentDB(DBFilename)
+		self.ui.dbpath.setText(DBFilename)
+
 
 	def accept(self):  # redo accept method
 		# send signal
 		selections = self.ui.selection.selectedItems()
 		joint_up = self.ui.jointUP.toPlainText()
 		joint_down = self.ui.jointDOWN.toPlainText()
+		db_psth = self.ui.dbpath.text()
 		out_path = self.ui.outpath.text()
 
 		if len(selections) == 0:
@@ -132,7 +150,7 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 				else:
 					text = [i.text() for i in list(selections)]
 					text = '\n'.join(text)
-					self.gibsonSignal.emit(text, joint_up, joint_down, out_path)
+					self.gibsonSignal.emit(text, joint_up, joint_down, out_path, db_psth)
 
 
 class SequenceEditDialog(QtWidgets.QDialog):
@@ -4291,7 +4309,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			pass
 
 
-	def GenerateGibson(self, selections, joint_up_str, joint_down_str, out_dir):
+	def GenerateGibson(self, selections, joint_up_str, joint_down_str, out_dir, db_file):
 		listItems = selections.split("\n")
 		WhereState = ''
 		NumSeqs = len(listItems)
@@ -4342,9 +4360,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			data = pd.DataFrame(data_list)
 			data.columns = ['Name', 'NTseq', 'AAseq']
 			subtype = subtype[0:2]
-			self.generate_gibson_fragments(data, subtype, temp_folder, out_dir, joint_up_str, joint_down_str)
+			self.generate_gibson_fragments(data, subtype, temp_folder, out_dir, joint_up_str, joint_down_str, db_file)
 
-	def generate_gibson_fragments(self, data, subtype, temp_folder, out_dir, joint_up_str, joint_down_str):
+	def generate_gibson_fragments(self, data, subtype, temp_folder, out_dir, joint_up_str, joint_down_str, db_file):
 		# initial the temp file name
 		in_file = temp_folder + "in.fas"
 		out_file = temp_folder + "out.fas"
@@ -4513,7 +4531,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				# search from SQL DB
 				SQLCommand = "SELECT * FROM Fragments WHERE AAseq = '" + aa_seq + "'"
 
-				fetch_results = RunSQL(DBFilename, SQLCommand)
+				fetch_results = RunSQL(db_file, SQLCommand)
 				row = len(fetch_results)
 				if (row != 0):
 					fragment_name = fetch_results[0][0]
@@ -4532,7 +4550,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				else:
 					SQLCommand = "SELECT Name FROM Fragments WHERE Fragment = '" + str(
 						i + 1) + "' AND Subtype = '" + subtype + "'"
-					fetch_results = RunSQL(DBFilename, SQLCommand)
+					fetch_results = RunSQL(db_file, SQLCommand)
 					row = len(fetch_results)
 					num_id = str(row + 1)
 					num_id_len = len(num_id)
@@ -4557,7 +4575,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 								 + "'" + nt_seq + "'," \
 								 + "'" + in_stock + "')"
 
-					response = RunInsertion(DBFilename, SQLCommand)
+					response = RunInsertion(db_file, SQLCommand)
 					if response == 1:
 						QMessageBox.warning(self, 'Warning', "Error happen when insert the new fregment records!",
 											QMessageBox.Ok, QMessageBox.Ok)
