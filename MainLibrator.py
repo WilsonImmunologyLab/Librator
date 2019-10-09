@@ -114,7 +114,7 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 		self.ui.outpath.setText(out_dir)
 
 	def browse_db(self):  # browse and select path
-		out_dir = QFileDialog.getExistingDirectory(self, "select existing fragment DB", temp_folder)
+		out_dir, _ = QFileDialog.getOpenFileName(self, "select existing fragment DB", temp_folder,"Librator database Files (*.ldb);;All Files (*)")
 		self.ui.dbpath.setText(out_dir)
 
 	def new_db(self):
@@ -4502,8 +4502,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	def generate_gibson_fragments(self, data, subtype, temp_folder, out_dir, joint_up_str, joint_down_str, db_file):
 		# initial the temp file name
-		in_file = temp_folder + "in.fas"
-		out_file = temp_folder + "out.fas"
+		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+		in_file = temp_folder + "in" + time_stamp + ".fas"
+		out_file = temp_folder + "out" + time_stamp + ".fas"
 
 		if (subtype == "H1") or (subtype == "Group1"):
 			# set template
