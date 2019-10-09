@@ -3810,6 +3810,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				labels = mutation.split(",")
 				for label in labels:
 					number = re.sub('[A-Za-z]', '', label)
+					position = str(numbering[int(number)][2])
 					text = "label chain A+C+E+G+I+K and resi " + number + " and name C, \"" + label + "\"\n"
 					pml.write(text)
 
