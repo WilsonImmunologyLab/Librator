@@ -1035,8 +1035,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		H1Key = ''
 		H1KeyCMap = ''
-		AAKey = 'Sequence elements:  HA1    HA2   stop   Transmembrane  Trimerization-Avitag-H6 \n'
-		AAKeyC = '000000000000000000000000099999991111111888888888888888BBBBBBBBBBBBBBBBBBBBBBBBB\n'
+		AAKey = 'Sequence elements:  HA1    HA2   stop   Transmembrane  Trimerization-Avitag-H6  Mutations \n'
+		AAKeyC = '000000000000000000000000099999991111111888888888888888BBBBBBBBBBBBBBBBBBBBBBBBBEEEEEEEEEEE\n'
+
+		PosKey =  'Position:           Donor Region \n'
+		PosKeyC = '0000000000000000000DDDDDDDDDDDDDD\n'
 
 		if H3NumOn == True:
 			for pos in range(1, len(H3Numbering)):
@@ -1613,8 +1616,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		ColorMap += '0\n'
 
 
-		Sequence += AAKey + H3Key + H1Key
-		ColorMap += AAKeyC + H3KeyCMap + H1KeyCMap
+		Sequence += AAKey + H3Key + H1Key + PosKey
+		ColorMap += AAKeyC + H3KeyCMap + H1KeyCMap + PosKeyC
 		# Add note at begining that HA1 is black andHA2 is grey or
 		self.ui.txtAASeq.setText(Sequence)
 		self.DecorateText(ColorMap, cursor)
