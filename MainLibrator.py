@@ -3747,11 +3747,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			# highlight antigentic sites for H3N2 (A,B,C,D,E) and H1N1 (Ca1, Ca2, Cb, Sa, Sb)
 			if subtype == "H1N1":
-				text = "sel ABS-Ca1, resi 171+173+175+176+178+179+180\n" \
-						+ "sel ABS-Ca2, resi 169+172+205+206+209+211\n" \
-						+ "sel ABS-Cb, resi 182+186+220+253\n" \
-						+ "sel ABS-Sa, resi 153+156+158+237+238\n" \
-						+ "sel ABS-Sb, resi 87+88+90+91+92+135\n" \
+				text = "sel ABS-Ca1, chain A+C+E+G+I+K and (resi 142+143+144+145+146+147+172+173+174+175+176+209+210+211)\n" \
+						+ "sel ABS-Ca2, chain A+C+E+G+I+K and (resi 227+228+229)\n" \
+						+ "sel ABS-Cb, chain A+C+E+G+I+K and (resi 76+77+78+79+80+81)\n" \
+						+ "sel ABS-Sa, chain A+C+E+G+I+K and (resi 130+131+159+160+161+162+163+165+166+167+168+169+170)\n" \
+						+ "sel ABS-Sb, chain A+C+E+G+I+K and (resi 190+191+192+193+194+195+196+197+198+199+200)\n" \
 						+ "color purple, ABS-Ca1\n" \
 						+ "color yellow, ABS-Ca2\n" \
 						+ "color gray, ABS-Cb\n" \
@@ -3759,11 +3759,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 						+ "color green, ABS-Sb\n"
 				pml.write(text)
 			elif subtype == "H3N2":
-				text = "sel ABS-A, resi 122+126+127+128+129+130+131+132+133+137+141+142+143+144\n" \
-						+ "sel ABS-B, resi 155+156+157+158+159+160+164+186+188+189+190+191+192+193+194+195+196+197+198+201\n" \
-						+ "sel ABS-C, resi 52+53+54+275+276\n" \
-						+ "sel ABS-D, resi 174+182+207+220+226+229+230+242+244\n" \
-						+ "sel ABS-E, resi 62+63+77+81+83\n" \
+				text = "sel ABS-A, chain A+C+E+G+I+K and (resi 122+126+127+128+129+130+131+132+133+137+141+142+143+144)\n" \
+						+ "sel ABS-B, chain A+C+E+G+I+K and (resi 155+156+157+158+159+160+164+186+188+189+190+191+192+193+194+195+196+197+198+201)\n" \
+						+ "sel ABS-C, chain A+C+E+G+I+K and (resi 52+53+54+275+276)\n" \
+						+ "sel ABS-D, chain A+C+E+G+I+K and (resi 174+182+207+220+226+229+230+242+244)\n" \
+						+ "sel ABS-E, chain A+C+E+G+I+K and (resi 62+63+78+81+83)\n" \
 						+ "color purple, ABS-A\n" \
 						+ "color yellow, ABS-B\n" \
 						+ "color gray, ABS-C\n" \
@@ -3774,8 +3774,35 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# highlight mutations in red on the 3D structure
 			if mutation != "none":
 				position = re.sub('[A-Za-z]', '', mutation)
-				position = position.replace(",", "+")
-				text = "sel mutation, resi " + position + "\n"
+				position = position.strip(',')
+				real_pos_arr = position.split(',')
+				# convert original position numbering to H1 or H3 numbering
+				seq_name = self.ui.txtName.toPlainText()
+				WhereState = "SeqName = " + '"' + seq_name + '"'
+				SQLStatement = 'SELECT * FROM LibDB WHERE ' + WhereState
+				DataIn = RunSQL(DBFilename, SQLStatement)
+				HASeq = DataIn[0][1]
+				FromV = int(DataIn[0][5]) - 1
+				if FromV == -1: FromV = 0
+				ToV = int(DataIn[0][6]) - 1
+
+				HASeq = HASeq[FromV:ToV]
+				# translate nt to aa
+				HAAA = Translator(HASeq.upper(), 0)
+				HAAA = HAAA[0]
+				# HA numbering
+				self.HANumbering(HAAA)
+
+				if subtype == "H1N1":
+					numbering = H1Numbering
+				elif subtype == "H3N2":
+					numbering = H3Numbering
+				position = ''
+				for x in real_pos_arr:
+					position += str(numbering[int(x)][2]) + '+'
+
+				position = position.strip('+')
+				text = "sel mutation, chain A+C+E+G+I+K and (resi " + position + ")\n"
 				pml.write(text)
 				text = "color red, mutation\n"
 				pml.write(text)
@@ -3783,7 +3810,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				labels = mutation.split(",")
 				for label in labels:
 					number = re.sub('[A-Za-z]', '', label)
-					text = "label resi " + number + " and name C, \"" + label + "\"\n"
+					text = "label chain A+C+E+G+I+K and resi " + number + " and name C, \"" + label + "\"\n"
 					pml.write(text)
 
 			text = "set label_size, 25\n"
@@ -3800,7 +3827,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		subtype = str(self.ui.cboSubtype.currentText())
 
 		if subtype == "H1N1":
-			pdb_path = working_prefix + "/Librator/PDB/1ruz.pdb"
+			pdb_path = working_prefix + "/Librator/PDB/4jtv.pdb"
 		elif subtype == "H3N2":
 			pdb_path = working_prefix + "/Librator/PDB/4hmg.pdb"
 		elif subtype == "B":
