@@ -15,6 +15,6 @@ color chocolate, ABS-Sa
 color green, ABS-Sb
 sel mutation, chain A+C+E+G+I+K and (resi 146+159)
 color red, mutation
-label chain A+C+E+G+I+K and resi 156 and name C, "G156R"
-label chain A+C+E+G+I+K and resi 169 and name C, "G169E"
+label chain A+C+E+G+I+K and resi 146 and name C, "G156R"
+label chain A+C+E+G+I+K and resi 159 and name C, "G169E"
 set label_size, 25
