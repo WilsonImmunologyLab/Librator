@@ -668,11 +668,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 			Subtype = self.ui.cboSubtype.currentText()
 			self.ui.cboSubtype_2.setCurrentText(Subtype)
 			if Subtype == 'H3N2' or Subtype == 'Group 2' or Subtype == 'Other':
-				self.ui.btnH1Num.setChecked(False)
+				self.ui.btnH1Num.setChecked(True)
 				self.ui.btnH3Num.setChecked(True)
 			elif Subtype == 'H1N1' or Subtype == 'Group 1':
 				self.ui.btnH1Num.setChecked(True)
-				self.ui.btnH3Num.setChecked(False)
+				self.ui.btnH3Num.setChecked(True)
 
 			self.CheckDecorations()
 
@@ -686,7 +686,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.open_gibson_dialog()
 		elif RepOption == 'Sequence Editing':
 			self.sequence_editing()
-		elif RepOption == 'New sequence with user specific mutations':
+		elif RepOption == 'Mutate Sequences':
 			self.open_mutation_dialog()
 		self.ui.cboReportOptions.setCurrentIndex(0)
 
@@ -3915,6 +3915,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			Active = DataIn[0][7]
 			Role = DataIn[0][8]
 			Donor = DataIn[0][9]
+			existing_mutation = DataIn[0][10]
+			Base_seq = DataIs[0][12]
 
 			HASeq = HASeq[FromV:ToV]
 			# translate nt to aa
@@ -3963,6 +3965,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 						condon_start = (pos - 1) * 3
 						condon_end = pos * 3
 						HASeq = HASeq[:condon_start] + cur_condon + HASeq[condon_end:]
+
+					if BaseSeq != '' and existing_mutation != 'none':
+						template_name = BaseSeq
+						existing_mutation = existing_mutation.strip(',')
+						mutation1 = existing_mutation + ',' + mutation1
 
 					# after generate nt sequence with all mutations, we can import the sequence into the DB
 					SQLStatement = "INSERT INTO LibDB(`SeqName`, `Sequence`, `SeqLen`, `SubType`, `Form`, `VFrom`, `VTo`, `Active`, `Role`, " \
@@ -4060,6 +4067,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 						condon_start = (pos - 1) * 3
 						condon_end = pos * 3
 						HASeq = HASeq[:condon_start] + cur_condon + HASeq[condon_end:]
+
+					if BaseSeq != '' and existing_mutation != 'none':
+						template_name = BaseSeq
+						existing_mutation = existing_mutation.strip(',')
+						mutation_text = existing_mutation + ',' + mutation_text
 
 					# after generate nt sequence with all mutations, we can import the sequence into the DB
 					SQLStatement = "INSERT INTO LibDB(SeqName, Sequence, SeqLen, SubType, Form, VFrom, VTo, Active, Role, " \
