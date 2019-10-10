@@ -60,7 +60,7 @@ joint_down = "GGGTCCGGATACATACCAGAGGCCCCGCGAGATGG"
 
 
 class MutationDialog(QtWidgets.QDialog):
-	applySignal = pyqtSignal(str, str, str, str, str)  # user define signal
+	applySignal = pyqtSignal(str, str, str, str, str, str)  # user define signal
 	def __init__(self):
 		super(MutationDialog, self).__init__()
 		self.ui = Ui_MutationDialog()
@@ -77,6 +77,10 @@ class MutationDialog(QtWidgets.QDialog):
 		mutation_ha1 = self.ui.HA1mutation.text()
 		mutation_ha2 = self.ui.HA2mutation.text()
 		template_name = self.ui.CurSeq.text()
+		if self.ui.radioSingle.isChecked():
+			mode = 'single'
+		else:
+			mode = 'screen'
 
 		if seq_name in self.active_sequence:
 			QMessageBox.warning(self, 'Warning', 'The sequence name is already taken! Please make a unique name for '
@@ -87,13 +91,13 @@ class MutationDialog(QtWidgets.QDialog):
 					QMessageBox.warning(self, 'Warning',
 										'The mutation can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
 				else:
-					self.applySignal.emit("OriPos", template_name, seq_name, mutation, "Nothing")
+					self.applySignal.emit("OriPos", template_name, seq_name, mutation, "Nothing", mode)
 			elif active_tab == 1:		# H1H3pos
 				if (mutation_ha1 == "" and mutation_ha2 == ""):
 					QMessageBox.warning(self, 'Warning',
 										'The mutation can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
 				else:
-					self.applySignal.emit("H1N3pos", template_name, seq_name, mutation_ha1, mutation_ha2)
+					self.applySignal.emit("H1N3pos", template_name, seq_name, mutation_ha1, mutation_ha2, mode)
 		#self.hide()
 
 class gibsoncloneDialog(QtWidgets.QDialog):
@@ -124,8 +128,9 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 		                                                      "New Fragment database",
 		                                                      "Librator database Files (*.ldb);;All Files (*)",
 		                                                      options=options)
-		creatnewFragmentDB(DBFilename)
-		self.ui.dbpath.setText(DBFilename)
+		if DBFilename != '':
+			creatnewFragmentDB(DBFilename)
+			self.ui.dbpath.setText(DBFilename)
 
 
 	def accept(self):  # redo accept method
@@ -3652,6 +3657,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		SeqInfoPacket = []
 		filename = openFile(self, 'FASTA')
+		if filename is None:
+			return
 		HA_Read = ReadFASTA(filename)
 		StopAsking = 'No'
 		AlreadyAsked = 'No'
@@ -4037,6 +4044,33 @@ class LibratorMain(QtWidgets.QMainWindow):
 						self.ui.listWidgetStrainsIn.addItem(seq_name)
 						if self.modalessMutationDialog != None:
 							self.modalessMutationDialog.close()
+	def generate_mutation_sequence_pre(self, numbering, template_name, seq_name, mutation1, mutation2, mode):
+		if mode == 'single':
+			self.generate_mutation_sequence(numbering, template_name, seq_name, mutation1, mutation2)
+		else:
+			if numbering == "OriPos":
+				mutation1 = mutation1.strip(',')
+				mutations = mutation1.split(',')
+				for x in mutations:
+					if x != '':
+						seq_name1 = template_name + '-' + x + ' ' + seq_name
+						self.generate_mutation_sequence(numbering, template_name, seq_name1, x, mutation2)
+			else:
+				mutation1 = mutation1.strip(',')
+				mutations = mutation1.split(',')
+				for x in mutations:
+					if x != '':
+						seq_name1 = template_name + '-' + x + '(HA1)' + ' ' + seq_name
+						self.generate_mutation_sequence(numbering, template_name, seq_name1, x, '')
+
+				mutation2 = mutation2.strip(',')
+				mutations = mutation2.split(',')
+				for x in mutations:
+					if x != '':
+						seq_name1 = template_name + '-' + x + '(HA2)' + ' ' + seq_name
+						self.generate_mutation_sequence(numbering, template_name, seq_name1, '', x)
+
+
 
 	def open_mutation_dialog(self):
 		if self.ui.txtName.toPlainText() == "":
@@ -4050,9 +4084,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 			donor_list = []
 			for i in range(donor_num):
 				donor_list.append(self.ui.listWidgetStrainsIn.item(i).text())
+			for i in range(self.ui.listWidgetStrains.count()):
+				donor_list.append(self.ui.listWidgetStrains.item(i).text())
+
 			self.modalessMutationDialog.active_sequence = donor_list
 			self.modalessMutationDialog.ui.SeqName.setText(self.ui.txtName.toPlainText())
-			self.modalessMutationDialog.applySignal.connect(self.generate_mutation_sequence)
+			self.modalessMutationDialog.applySignal.connect(self.generate_mutation_sequence_pre)
 			self.modalessMutationDialog.show()
 
 	def open_gibson_dialog(self):
@@ -4781,31 +4818,34 @@ def ReadFASTA(outfilename):
 	# SeqRead = []
 	Readline = ''
 	currentFile2 = ''
-	with open(outfilename, 'r') as currentFile2:  # using with for this automatically closes the file even if you crash
-		# currentFile.write(FASTAfile)
-		Seq = ''
-		SeqName = ''
-		Readline = ''
-		for line in currentFile2:
-			Readline = line.replace('\n', '').replace('\r', '')
+	if outfilename is None:
+		pass
+	else:
+		with open(outfilename, 'r') as currentFile2:  # using with for this automatically closes the file even if you crash
+			# currentFile.write(FASTAfile)
+			Seq = ''
+			SeqName = ''
+			Readline = ''
+			for line in currentFile2:
+				Readline = line.replace('\n', '').replace('\r', '')
 
-			if Readline[0] == '>':
-				if Seq != '':  # saves the previous except on first round
-					SeqRead = (SeqName, Seq)
-					ReadFile.append(SeqRead)
-					Seq = ''
-				SeqName = Readline[1:]
+				if Readline[0] == '>':
+					if Seq != '':  # saves the previous except on first round
+						SeqRead = (SeqName, Seq)
+						ReadFile.append(SeqRead)
+						Seq = ''
+					SeqName = Readline[1:]
 
-			else:
-				Seq += Readline
-		SeqRead = (SeqName, Seq)  # must save last one at end
-		ReadFile.append(SeqRead)
+				else:
+					Seq += Readline
+			SeqRead = (SeqName, Seq)  # must save last one at end
+			ReadFile.append(SeqRead)
 
-	# os.remove(workingfilename)
-	# os.chdir(CurDir)
+		# os.remove(workingfilename)
+		# os.chdir(CurDir)
 
-	# Returns a list of seqname and sequences, but now aligned
-	return ReadFile
+		# Returns a list of seqname and sequences, but now aligned
+		return ReadFile
 
 
 

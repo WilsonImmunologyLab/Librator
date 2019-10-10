@@ -6,10 +6,11 @@
       <change beforePath="$PROJECT_DIR$/DB/AAATester.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/AAATester.ldb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/In.txt" beforeDir="false" afterPath="$PROJECT_DIR$/In.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Temp/in.fas" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Temp/in2019-10-08-13_41_50.fas" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Temp/out.fas" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Temp/out2019-10-08-13_41_50.fas" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.ui" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.ui.autosave" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mutationdialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/mutationdialog.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mutationdialog.ui" beforeDir="false" afterPath="$PROJECT_DIR$/mutationdialog.ui" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
