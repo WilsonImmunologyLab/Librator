@@ -3421,10 +3421,18 @@ class LibratorMain(QtWidgets.QMainWindow):
 	def AddActive(self):
 		listItems = self.ui.listWidgetStrains.selectedItems()
 		if not listItems: return
+		activeItems = []
+		count = self.ui.listWidgetStrainsIn.count()
+		for i in range(count):
+			activeItems.append(self.ui.listWidgetStrainsIn.item(i).text())
 		for item in listItems:
 			eachItemIs = item.text()
-			self.ui.listWidgetStrainsIn.addItem(eachItemIs)
-			self.UpdateSeq(eachItemIs, 'True', 'Active')
+			if eachItemIs in activeItems:
+				Msg = 'The selected sequence: ' + eachItemIs + ' is already in the active list!'
+				QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			else:
+				self.ui.listWidgetStrainsIn.addItem(eachItemIs)
+				self.UpdateSeq(eachItemIs, 'True', 'Active')
 
 			# self.FillAlignmentTab()
 
