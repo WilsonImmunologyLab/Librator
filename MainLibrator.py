@@ -52,6 +52,8 @@ global bin_prefix
 bin_prefix = '/usr/local/bin/'
 global temp_folder
 temp_folder = working_prefix + '/Librator/Temp/'
+global db_folder
+db_folder = working_prefix + '/Librator/DB/'
 
 global joint_up
 joint_up = "TCCACTCCCAGGTCCAACTGCACCTCGGTTCTATCGATTGAATTC"
@@ -289,27 +291,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 
 
-	@pyqtSlot()
 	def UpdateRecent(self):
-		filename = os.path.join(working_prefix, 'Librator', 'RecentFiles')
-		# filename = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', 'RecentFiles')
-		# filename = 'RecentFiles'
-		workingdir, filename = os.path.split(filename)
-		os.chdir(workingdir)
-
-		DBdir, DBfile = os.path.split(DBFilename)
-
-		if os.path.isfile(filename):
-			with open(filename, 'r') as currentFile:
+		record_file = db_folder + 'db_record.txt'
+		if os.path.isfile(record_file):
+			with open(record_file, 'r') as currentFile:
 				RecentFiles = currentFile.readlines()
-
-			i = 0
+			RecentFiles = RecentFiles[0]
+			RecentFiles = RecentFiles.split(',')
 			for file in RecentFiles:
-				file.strip()
-				workingdir, fileIs = os.path.split(file)
-				fileIs.replace('\n', '')
-				if len(fileIs) > 1:
-					self.ui.cboRecent.addItem(fileIs)
+				if file != '':
+					self.ui.cboRecent.addItem(file)
 
 	@pyqtSlot()
 	def on_actionIncrease_font_size_triggered(self):
@@ -2851,7 +2842,53 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# self.ui.listWidgetStrainsIn.setCurrentRow(0)
 
 			self.PopulateCombos()
-			# self.UpdateRecentFilelist()
+			self.UpdateRecentFilelist(DBFilename)
+			# self.ui.listWidgetStrainsIn.setCurrentIndex(0)
+
+			ItemsList = self.ui.listWidgetStrainsIn.count()
+			if ItemsList > 0:
+				self.ui.listWidgetStrainsIn.setCurrentRow(0)
+				self.ListItemChanged()
+				for item in DataIs:
+					FromV = int(item[5])-1
+					if FromV == -1: FromV = 0
+					ToV = int(item[6])-1
+
+					HASeq = item[1]
+					HASeq = HASeq[FromV:ToV]
+
+					AASeq = Translator(HASeq.upper(), 0)
+					AASeqIs = AASeq[0]
+				self.HANumbering(AASeqIs)
+
+			# check if the database have base sequence
+			SQLStatement = 'SELECT * FROM LibDB WHERE `Role` = "BaseSeq"'
+			DataIs = RunSQL(DBFilename, SQLStatement)
+
+			if len(DataIs) == 1:
+				CurName = DataIs[0][0]
+				BaseSeq = CurName
+				self.ui.lblBaseName.setText(BaseSeq)
+			elif len(DataIs) > 1:
+				QMessageBox.warning(self, 'Warning', 'Your database have multiple base sequences! Will choose the first one as current base sequence',
+									QMessageBox.Ok, QMessageBox.Ok)
+				CurName = DataIs[0][0]
+				BaseSeq = CurName
+				self.ui.lblBaseName.setText(BaseSeq)
+
+	def open_db(self, infile):  # how to activate menu and toolbar actions!!!
+		#need to simply get database name and populate list views
+		global DBFilename
+		global DataIs
+		global BaseSeq
+
+		if isinstance(infile, str):
+			titletext = 'Librator - ' + infile
+			self.setWindowTitle(titletext)
+			# self.ui.listWidgetStrainsIn.setCurrentRow(0)
+			DBFilename = infile
+			self.PopulateCombos()
+			self.UpdateRecentFilelist(infile)
 			# self.ui.listWidgetStrainsIn.setCurrentIndex(0)
 
 			ItemsList = self.ui.listWidgetStrainsIn.count()
@@ -2886,82 +2923,37 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.lblBaseName.setText(BaseSeq)
 
 
-
-
 	@pyqtSlot()
 	def OpenRecent(self):  # how to activate menu and toolbar actions!!!
 		#need to simply get database name and populate list views
-		global DBFilename
-
-		filename = os.path.join(working_prefix, 'Librator', 'RecentFiles')
-		#filename = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', 'RecentFiles')
-		# filename = 'RecentFiles'
-		workingdir, filename = os.path.split(filename)
-		os.chdir(workingdir)
-
 		if self.ui.cboRecent.currentText() == 'Open previous':
-			self.ui.cboRecent.setCurrentIndex(1)
-			filename = self.ui.cboRecent.currentText()
-			# filename = 'RecentFiles'
-			workingdir, filename = os.path.split(filename)
-			os.chdir(workingdir)
-			DBFilename = filename
-
-		titletext = 'Librator - ' + DBFilename
-		self.setWindowTitle(titletext)
-
-		self.PopulateCombos()
-
-		self.ui.listWidgetStrainsIn.setCurrentRow(0)
-		self.UpdateRecentFilelist()
+			pass
+		else:
+			self.open_db(self.ui.cboRecent.currentText())
 
 	@pyqtSlot()
-	def UpdateRecentFilelist(self):
-		# todo make recent files an SQL file then can use all SQL tools to clean
+	def UpdateRecentFilelist(self, DBFilename):
+		record_file = db_folder + 'db_record.txt'
 
-		filename = os.path.join(working_prefix, 'Librator', 'RecentFiles')
-		#filename = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', 'RecentFiles')
-		# filename = 'RecentFiles'
-		# workingdir, filename = os.path.split(filename)
-		# os.chdir(workingdir)
-		#
-		# DBdir, DBfile = os.path.split(DBFilename)
-		#
-		# NewRecentFile = ''
-		# if os.path.isfile(filename):
-		# 	with open(filename, 'r') as currentFile:
-		# 		RecentFiles = currentFile.readlines()
-		#
-		# 	i = 0
-		# 	for file in RecentFiles:
-		# 		file.strip()
-		# 		workingdir, fileIs = os.path.split(file)
-		# 		if fileIs == DBfile:
-		#
-		#
-		# 			RecentFiles.remove(i)
-		#
-		# 		i += 1
-		#
-		# 	# if len(RecentFiles) > 10:  #limits length of recents to 10
-		# 	# 	RecentFiles.remove(0)
-		#
-		# 	RecentFiles.append(DBFilename)
-		# 	for item in RecentFiles:
-		# 		item.replace('\n', '')
-		# 		NewRecentFile += item + '\n'
-		#
-		#
-		# 	with open(filename, 'w') as currentFile:
-		# 		currentFile.write(NewRecentFile)
-		#
-		# else:
-		# 	NewRecentFile = DBFilename + '\n'
-		# 	with open(filename, 'w') as currentFile:
-		# 		currentFile.write(NewRecentFile)
-
-	# 	todo Add code to populate list cobo
-
+		if os.path.exists(record_file):
+			my_open = open(record_file, 'r')
+			my_infor = my_open.readlines()
+			my_open.close()
+			my_infor = my_infor[0]
+			my_infor = my_infor.split(',')
+			if DBFilename in my_infor:
+				pass
+			else:
+				file_handle = open(record_file, 'a')
+				str = ',' + DBFilename
+				file_handle.write(str)
+				file_handle.close()
+				self.ui.cboRecent.addItem(DBFilename)
+		else:
+			file_handle = open(record_file, 'w')
+			file_handle.write(DBFilename)
+			file_handle.close()
+			self.ui.cboRecent.addItem(DBFilename)
 
 	# actionHANumbering
 
@@ -3608,7 +3600,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			answer = questionMessage(self, question, buttons)
 			if answer == 'Yes':
 				self.ImportSeqs()
-		self.UpdateRecentFilelist()
+		self.UpdateRecentFilelist(DBFilename)
 			# if os.path.isfile(DBFilename):
 			# 	self.LoadDB(DBFilename)
 
@@ -3663,6 +3655,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 	def on_btnDelete_clicked(self):
 		# delete all selected elements
 		delete = self.ui.listWidgetStrains.selectedItems()
+
 		for element in delete:
 			delete_element = element.text()
 			msg = 'Delete sequence: ' + delete_element + ' ?'
@@ -3945,57 +3938,56 @@ class LibratorMain(QtWidgets.QMainWindow):
 						mutations_dic_oriAA[int(match_obj.group(2))] = match_obj.group(1)
 						mutations_dic_mutAA[int(match_obj.group(2))] = match_obj.group(3)
 				# foreach by sort the mutation position, check if all the mutation are correct
-				contiune_run = 0
 				for pos in sorted(mutations_dic_oriAA.keys()):
 					cur_oriAA = mutations_dic_oriAA[pos]
 					if cur_oriAA == numbering[pos][1]:
-						contiune_run = 1
+						pass
 					else:
 						QMessageBox.warning(self, 'Warning', "On the AA sequence, position " + str(pos) + " (count from M) is "
 											+ numbering[pos][1] + ", not " + cur_oriAA
 											+ ". Please check your numbering carefully!",
 											QMessageBox.Ok, QMessageBox.Ok)
-						contiune_run = 0
+						return
 
 				# after all the mutations passed the check, we can start to add mutation into template sequence
-				if contiune_run == 1:
-					for pos in sorted(mutations_dic_oriAA.keys()):
-						cur_mutAA = mutations_dic_mutAA[pos]
-						cur_condon = AACodonDict[cur_mutAA]
-						condon_start = (pos - 1) * 3
-						condon_end = pos * 3
-						HASeq = HASeq[:condon_start] + cur_condon + HASeq[condon_end:]
+				for pos in sorted(mutations_dic_oriAA.keys()):
+					cur_mutAA = mutations_dic_mutAA[pos]
+					cur_condon = AACodonDict[cur_mutAA]
+					condon_start = (pos - 1) * 3
+					condon_end = pos * 3
+					HASeq = HASeq[:condon_start] + cur_condon + HASeq[condon_end:]
 
-					if BaseSeq != '' and existing_mutation != 'none':
-						template_name = BaseSeq
-						existing_mutation = existing_mutation.strip(',')
-						mutation1 = existing_mutation + ',' + mutation1
+				if BaseSeq != '' and existing_mutation != 'none':
+					template_name = BaseSeq
+					existing_mutation = existing_mutation.strip(',')
+					mutation1 = existing_mutation + ',' + mutation1
 
-					# after generate nt sequence with all mutations, we can import the sequence into the DB
-					SQLStatement = "INSERT INTO LibDB(`SeqName`, `Sequence`, `SeqLen`, `SubType`, `Form`, `VFrom`, `VTo`, `Active`, `Role`, " \
-								   "`Donor`, `Mutations`, `ID`, `Base`) VALUES('" \
-								   + seq_name + "','" \
-								   + HASeq + "','" \
-								   + str(len(HASeq)) + "','" \
-								   + subtype + "','" \
-								   + Form + "','" \
-								   + "1" + "','" \
-								   + "5000" + "','" \
-								   + Active + "','" \
-								   + "Generated" + "','" \
-								   + "none" + "','" \
-								   + mutation1 + "','" \
-								   + "0" + "','" \
-								   + template_name + "')"
-					response = RunInsertion(DBFilename, SQLStatement)
-					if(response == 1):
-						QMessageBox.warning(self, 'Warning', "Error happen when insert the new sequence!",
-											QMessageBox.Ok, QMessageBox.Ok)
-					else:
-						# add new sequence information into listWidgetStrainsIn
-						self.ui.listWidgetStrainsIn.addItem(seq_name)
-						if self.modalessMutationDialog != None:
-							self.modalessMutationDialog.close()
+				# after generate nt sequence with all mutations, we can import the sequence into the DB
+				SQLStatement = "INSERT INTO LibDB(`SeqName`, `Sequence`, `SeqLen`, `SubType`, `Form`, `VFrom`, `VTo`, `Active`, `Role`, " \
+							   "`Donor`, `Mutations`, `ID`, `Base`) VALUES('" \
+							   + seq_name + "','" \
+							   + HASeq + "','" \
+							   + str(len(HASeq)) + "','" \
+							   + subtype + "','" \
+							   + Form + "','" \
+							   + "1" + "','" \
+							   + "5000" + "','" \
+							   + Active + "','" \
+							   + "Generated" + "','" \
+							   + "none" + "','" \
+							   + mutation1 + "','" \
+							   + "0" + "','" \
+							   + template_name + "')"
+				response = RunInsertion(DBFilename, SQLStatement)
+				if(response == 1):
+					QMessageBox.warning(self, 'Warning', "Error happen when insert the new sequence!",
+										QMessageBox.Ok, QMessageBox.Ok)
+				else:
+					# add new sequence information into listWidgetStrainsIn
+					self.ui.listWidgetStrainsIn.addItem(seq_name)
+					self.ui.listWidgetStrains.addItem(seq_name)
+					if self.modalessMutationDialog != None:
+						self.modalessMutationDialog.close()
 			elif mode == "H1N3pos":
 				mutations = []
 				# convert H1/H3 numbering to original numbering
@@ -5016,7 +5008,7 @@ H1template_seq = "MKAILVVLLYTFATANADTLCIGYHANNSTDTVDTVLEKNVTVTHSVNLLEDKHNGKLCKLR
   "VRSQLKNNAKEIGNGCFEFYHKCDNTCMESVKNGTYDYPKYSEEAKLNREEIDGVKLESTRIYQILAIYSTVASSLVLVVSLGAISFWMCSNGSLQ" \
   "CRICI"
 H1_start = [1, 123, 264, 403];
-H1_end = [131, 272, 411, 520];
+H1_end = [131, 272, 411, 518];
 
 CodonDict={'ATT':'I',   'ATC':'I',  'ATA':'I',  'CTT':'L',  'CTC':'L',
 'CTA':'L',  'CTG':'L',  'TTA':'L',  'TTG':'L',  'GTT':'V',  'GTC':'V',
