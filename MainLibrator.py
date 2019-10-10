@@ -3652,6 +3652,40 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ImportSeqs()
 
 	@pyqtSlot()
+	def on_btnDelete_clicked(self):
+		# delete all selected elements
+		delete = self.ui.listWidgetStrains.selectedItems()
+		for element in delete:
+			delete_element = element.text()
+			msg = 'Delete sequence: ' + delete_element + ' ?'
+
+			reply = QMessageBox.question(self, 'Information', msg ,
+			                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+			if reply == QMessageBox.Yes:
+				SQLStatement = 'DELETE FROM LibDB WHERE `SeqName` = "' + delete_element + '"'
+				deleterecords(DBFilename, SQLStatement)
+
+		# refresh the list - all sequence list
+		self.ui.listWidgetStrains.clear()
+		SQLStatement = 'SELECT `SeqName` FROM LibDB WHERE Active = "False"'
+		records = RunSQL(DBFilename, SQLStatement)
+		new_records = []
+		for x in records:
+			new_records.append(x[0])
+		self.ui.listWidgetStrains.addItems(new_records)
+
+		# refresh the list - active sequence list
+		self.ui.listWidgetStrainsIn.clear()
+		SQLStatement = 'SELECT `SeqName` FROM LibDB WHERE Active = "True"'
+		records = RunSQL(DBFilename, SQLStatement)
+		new_records = []
+		for x in records:
+			new_records.append(x[0])
+		self.ui.listWidgetStrainsIn.addItems(new_records)
+
+
+
+	@pyqtSlot()
 	def ImportSeqs(self):
 
 
