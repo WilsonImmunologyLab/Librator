@@ -2863,18 +2863,23 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			# check if the database have base sequence
 			SQLStatement = 'SELECT * FROM LibDB WHERE `Role` = "BaseSeq"'
-			DataIs = RunSQL(DBFilename, SQLStatement)
+			data_fetch = RunSQL(DBFilename, SQLStatement)
 
-			if len(DataIs) == 1:
-				CurName = DataIs[0][0]
+			if len(data_fetch) == 1:
+				CurName = data_fetch[0][0]
 				BaseSeq = CurName
-				self.ui.lblBaseName.setText(BaseSeq)
-			elif len(DataIs) > 1:
+				self.ui.lblBaseName.setText(CurName)
+			elif len(data_fetch) > 1:
 				QMessageBox.warning(self, 'Warning', 'Your database have multiple base sequences! Will choose the first one as current base sequence',
 									QMessageBox.Ok, QMessageBox.Ok)
-				CurName = DataIs[0][0]
+				CurName = data_fetch[0][0]
 				BaseSeq = CurName
-				self.ui.lblBaseName.setText(BaseSeq)
+				self.ui.lblBaseName.setText(CurName)
+			else:
+				BaseSeq = ''
+				self.ui.lblBaseName.setText('Sequence Name')
+		self.ui.cboRecent.setCurrentIndex(0)
+
 
 	def open_db(self, infile):  # how to activate menu and toolbar actions!!!
 		#need to simply get database name and populate list views
@@ -2882,13 +2887,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global DataIs
 		global BaseSeq
 
-		if isinstance(infile, str):
-			titletext = 'Librator - ' + infile
+		DBFilename = infile
+		if isinstance(DBFilename, str):
+			titletext = 'Librator - ' + DBFilename
 			self.setWindowTitle(titletext)
 			# self.ui.listWidgetStrainsIn.setCurrentRow(0)
-			DBFilename = infile
 			self.PopulateCombos()
-			self.UpdateRecentFilelist(infile)
+			self.UpdateRecentFilelist(DBFilename)
 			# self.ui.listWidgetStrainsIn.setCurrentIndex(0)
 
 			ItemsList = self.ui.listWidgetStrainsIn.count()
@@ -2907,20 +2912,42 @@ class LibratorMain(QtWidgets.QMainWindow):
 					AASeqIs = AASeq[0]
 				self.HANumbering(AASeqIs)
 
+			# refresh the list - all sequence list
+			self.ui.listWidgetStrains.clear()
+			SQLStatement = 'SELECT `SeqName` FROM LibDB'
+			records = RunSQL(DBFilename, SQLStatement)
+			new_records = []
+			for x in records:
+				new_records.append(x[0])
+			self.ui.listWidgetStrains.addItems(new_records)
+
+			# refresh the list - active sequence list
+			self.ui.listWidgetStrainsIn.clear()
+			SQLStatement = 'SELECT `SeqName` FROM LibDB WHERE Active = "True"'
+			records = RunSQL(DBFilename, SQLStatement)
+			new_records = []
+			for x in records:
+				new_records.append(x[0])
+			self.ui.listWidgetStrainsIn.addItems(new_records)
+
+
 			# check if the database have base sequence
 			SQLStatement = 'SELECT * FROM LibDB WHERE `Role` = "BaseSeq"'
-			DataIs = RunSQL(DBFilename, SQLStatement)
+			data_fetch = RunSQL(DBFilename, SQLStatement)
 
-			if len(DataIs) == 1:
-				CurName = DataIs[0][0]
+			if len(data_fetch) == 1:
+				CurName = data_fetch[0][0]
 				BaseSeq = CurName
-				self.ui.lblBaseName.setText(BaseSeq)
-			elif len(DataIs) > 1:
+				self.ui.lblBaseName.setText(CurName)
+			elif len(data_fetch) > 1:
 				QMessageBox.warning(self, 'Warning', 'Your database have multiple base sequences! Will choose the first one as current base sequence',
 									QMessageBox.Ok, QMessageBox.Ok)
-				CurName = DataIs[0][0]
+				CurName = data_fetch[0][0]
 				BaseSeq = CurName
-				self.ui.lblBaseName.setText(BaseSeq)
+				self.ui.lblBaseName.setText(CurName)
+			else:
+				BaseSeq = ''
+				self.ui.lblBaseName.setText('Sequence Name')
 
 
 	@pyqtSlot()
@@ -3603,7 +3630,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.UpdateRecentFilelist(DBFilename)
 			# if os.path.isfile(DBFilename):
 			# 	self.LoadDB(DBFilename)
-
+		self.ui.cboRecent.setCurrentIndex(0)
 		# else:
 		# 	self.hide()
 		# 	self.ApplicationStarted()
@@ -3668,7 +3695,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# refresh the list - all sequence list
 		self.ui.listWidgetStrains.clear()
-		SQLStatement = 'SELECT `SeqName` FROM LibDB WHERE Active = "False"'
+		SQLStatement = 'SELECT `SeqName` FROM LibDB'
 		records = RunSQL(DBFilename, SQLStatement)
 		new_records = []
 		for x in records:
