@@ -3,12 +3,19 @@
   <component name="ChangeListManager">
     <list default="true" id="9f472839-8a65-4dce-be83-d1c7511e6e93" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/1706795052634e9d92e7076a4b3bc506In.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/1706795052634e9d92e7076a4b3bc506Out.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/53cdce782c2d455cbf23515625616ba0In.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/53cdce782c2d455cbf23515625616ba0Out.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/55c4074b2f7f4b3491212fef55eab64bIn.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/55c4074b2f7f4b3491212fef55eab64bOut.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/66da37351e07427ba4fe448122e9c388In.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/66da37351e07427ba4fe448122e9c388Out.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/b8c8f7ecb13c41ee97b6ea154da0cde8In.fa" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ClustalOmega/b8c8f7ecb13c41ee97b6ea154da0cde8Out.fa" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/DB/AAATester.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/AAATester.ldb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DB/test.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/test.ldb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/In.txt" beforeDir="false" afterPath="$PROJECT_DIR$/In.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.ui" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.ui" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -129,13 +136,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/MainLibrator.py</url>
-          <line>2599</line>
+          <line>2724</line>
           <option name="timeStamp" value="82" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/MainLibrator.py</url>
-          <line>2167</line>
-          <option name="timeStamp" value="84" />
+          <line>2290</line>
+          <option name="timeStamp" value="92" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

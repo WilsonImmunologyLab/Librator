@@ -578,9 +578,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 								QMessageBox.Ok)
 			return
 		elif len(listItems) == 1:
-			QMessageBox.warning(self, 'Warning', 'Please select multiple sequence from active sequence panel!',
-								QMessageBox.Ok, QMessageBox.Ok)
-			return
+			#QMessageBox.warning(self, 'Warning', 'Please select multiple sequence from active sequence panel!',
+			#					QMessageBox.Ok, QMessageBox.Ok)
+			#return
+			pass
 		for item in listItems:
 
 			eachItemIs = item.text()
@@ -1775,7 +1776,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# align selected sequences using ClustalOmega
 		outfilename = ''
 		try:
-			outfilename = LibratorSeq.ClustalO(DataSet, 80, True)
+			if len(DataSet) == 1:
+				outfilename = temp_folder + 'tmp.fas'
+				file_handle = open(outfilename, 'w')
+				file_handle.write(DataSet[0][0])
+				file_handle.write(DataSet[0][1])
+				file_handle.close()
+			else:
+				outfilename = LibratorSeq.ClustalO(DataSet, 80, True)
 
 			lenName = 0
 			longestName = 0
@@ -1810,26 +1818,25 @@ class LibratorMain(QtWidgets.QMainWindow):
 							if lenName > longestName:
 								longestName = lenName + 2
 						else:
-							if self.ui.actionAA.isChecked() == True:
-								AASeq, ErMessage = LibratorSeq.Translator(Readline, 0)
-								#Position, Amino Acid, H1-segment (HA1 or HA2), H1Number, A/California/4/2009-residue, H1-antigenic-region
+							AASeq, ErMessage = LibratorSeq.Translator(Readline, 0)
+							#Position, Amino Acid, H1-segment (HA1 or HA2), H1Number, A/California/4/2009-residue, H1-antigenic-region
 
-								if DataIn == 'RF':
-									AASeq2, ErMessage = LibratorSeq.Translator(Readline, 1)
-									AASeq3, ErMessage = LibratorSeq.Translator(Readline, 2)
-								peptide = ''
-								if DataIn == 'RF':
-									peptide2 = ''
-									peptide3 = ''
+							if DataIn == 'RF':
+								AASeq2, ErMessage = LibratorSeq.Translator(Readline, 1)
+								AASeq3, ErMessage = LibratorSeq.Translator(Readline, 2)
+							peptide = ''
+							if DataIn == 'RF':
+								peptide2 = ''
+								peptide3 = ''
 
-								for res in AASeq:
-									peptide += (' ' + res + ' ')
+							for res in AASeq:
+								peptide += (' ' + res + ' ')
 
-								if DataIn == 'RF':
-									for res in AASeq2:
-										peptide2 += (' ' + res + ' ')
-									for res in AASeq3:
-										peptide3 += (' ' + res + ' ')
+							if DataIn == 'RF':
+								for res in AASeq2:
+									peptide2 += (' ' + res + ' ')
+								for res in AASeq3:
+									peptide3 += (' ' + res + ' ')
 
 							peptide = peptide[0:len(Readline)]
 
@@ -1941,84 +1948,199 @@ class LibratorMain(QtWidgets.QMainWindow):
 			if self.ui.actionBA.isChecked() == True:
 				rulerAA = 'Position(AA)' + AASpaces[12:] + self.MakeRuler(aa_start, aa_end, 5, 'aa')
 				rulerNT = 'Position(NT)' + AASpaces[12:] + self.MakeRuler(i + 1, endSeg, 5, 'nt')
-				rulerH1 = 'H1numbering' + AASpaces[11:]
-				rulerH1Color = '0' * len(rulerH1)
-				rulerH3 = 'H3numbering' + AASpaces[11:]
-				rulerH3Color = '0' * len(rulerH3)
+				if self.ui.actionAA.isChecked() == True and self.ui.actionDNA.isChecked() == True:
+					rulerH1 = 'H1numbering' + AASpaces[11:]
+					rulerH1Color = '0' * len(rulerH1)
+					rulerH3 = 'H3numbering' + AASpaces[11:]
+					rulerH3Color = '0' * len(rulerH3)
 
-				# make H1 numbering
-				space_from_last_pos = 0
-				for x in range(aa_start,aa_end + 1):
-					if H1Numbering[x][2] == '-':
-						rulerH1 += ' - '
-						rulerH1Color += '000'
-					else:
-						if int(H1Numbering[x][2])%5 == 0:
-							if len(str(H1Numbering[x][2])) == 1:
-								rulerH1 += ' ' * (1 - space_from_last_pos) + str(H1Numbering[x][2]) + ' '
-								space_from_last_pos = 0
-							elif len(str(H1Numbering[x][2])) == 2:
-								rulerH1 += ' ' * (1 - space_from_last_pos) + str(H1Numbering[x][2])
-								space_from_last_pos = 0
-							else:
-								rulerH1 += ' ' * (1 - space_from_last_pos) + str(H1Numbering[x][2])
-								space_from_last_pos = 1
-						else:
-							rulerH1 += ' ' * (1 - space_from_last_pos) + '. '
-							space_from_last_pos = 0
-						if H1Numbering[x][4] == "Cb":
-							rulerH1Color += '777'
-						elif H1Numbering[x][4] == "Ca1":
-							rulerH1Color += '222'
-						elif H1Numbering[x][4] == "Ca2":
-							rulerH1Color += '444'
-						elif H1Numbering[x][4] == "Sa":
-							rulerH1Color += '333'
-						elif H1Numbering[x][4] == "Sb":
-							rulerH1Color += '666'
-						elif H1Numbering[x][4] == "Stalk-MN":
-							rulerH1Color += 'AAA'
-						else:
+					# make H1 numbering
+					space_from_last_pos = 0
+					for x in range(aa_start,aa_end + 1):
+						if H1Numbering[x][2] == '-':
+							rulerH1 += ' - '
 							rulerH1Color += '000'
-				if space_from_last_pos == 1:
-					rulerH1Color += rulerH1Color[-1]
-
-				# make H3 numbering
-				space_from_last_pos = 0
-				for x in range(aa_start,aa_end + 1):
-					if H3Numbering[x][2] == '-':
-						rulerH3 += ' - '
-						rulerH3Color += '000'
-					else:
-						if int(H3Numbering[x][2])%5 == 0:
-							if len(str(H3Numbering[x][2])) == 1:
-								rulerH3 += ' ' * (1 - space_from_last_pos) + str(H3Numbering[x][2]) + ' '
-								space_from_last_pos = 0
-							elif len(str(H3Numbering[x][2])) == 2:
-								rulerH3 += ' ' * (1 - space_from_last_pos) + str(H3Numbering[x][2])
-								space_from_last_pos = 0
+						else:
+							if int(H1Numbering[x][2])%5 == 0:
+								if len(str(H1Numbering[x][2])) == 1:
+									rulerH1 += ' ' * (1 - space_from_last_pos) + str(H1Numbering[x][2]) + ' '
+									space_from_last_pos = 0
+								elif len(str(H1Numbering[x][2])) == 2:
+									rulerH1 += ' ' * (1 - space_from_last_pos) + str(H1Numbering[x][2])
+									space_from_last_pos = 0
+								else:
+									rulerH1 += ' ' * (1 - space_from_last_pos) + str(H1Numbering[x][2])
+									space_from_last_pos = 1
 							else:
-								rulerH3 += ' ' * (1 - space_from_last_pos) + str(H3Numbering[x][2])
-								space_from_last_pos = 1
-						else:
-							rulerH3 += ' ' * (1 - space_from_last_pos) + '. '
-							space_from_last_pos = 0
-						if H3Numbering[x][4] == "A":
-							rulerH3Color += '666'
-						elif H3Numbering[x][4] == "B":
-							rulerH3Color += '222'
-						elif H3Numbering[x][4] == "C":
-							rulerH3Color += '777'
-						elif H3Numbering[x][4] == "D":
-							rulerH3Color += '333'
-						elif H3Numbering[x][4] == "E":
-							rulerH3Color += 'CCC'
-						elif H3Numbering[x][4] == "Stalk-MN":
-							rulerH3Color += 'AAA'
-						else:
+								rulerH1 += ' ' * (1 - space_from_last_pos) + '. '
+								space_from_last_pos = 0
+							if H1Numbering[x][4] == "Cb":
+								rulerH1Color += '777'
+							elif H1Numbering[x][4] == "Ca1":
+								rulerH1Color += '222'
+							elif H1Numbering[x][4] == "Ca2":
+								rulerH1Color += '444'
+							elif H1Numbering[x][4] == "Sa":
+								rulerH1Color += '333'
+							elif H1Numbering[x][4] == "Sb":
+								rulerH1Color += '666'
+							elif H1Numbering[x][4] == "Stalk-MN":
+								rulerH1Color += 'AAA'
+							else:
+								rulerH1Color += '000'
+					if space_from_last_pos == 1:
+						rulerH1Color += rulerH1Color[-1]
+
+					# make H3 numbering
+					space_from_last_pos = 0
+					for x in range(aa_start,aa_end + 1):
+						if H3Numbering[x][2] == '-':
+							rulerH3 += ' - '
 							rulerH3Color += '000'
-				if space_from_last_pos == 1:
-					rulerH3Color += rulerH3Color[-1]
+						else:
+							if int(H3Numbering[x][2])%5 == 0:
+								if len(str(H3Numbering[x][2])) == 1:
+									rulerH3 += ' ' * (1 - space_from_last_pos) + str(H3Numbering[x][2]) + ' '
+									space_from_last_pos = 0
+								elif len(str(H3Numbering[x][2])) == 2:
+									rulerH3 += ' ' * (1 - space_from_last_pos) + str(H3Numbering[x][2])
+									space_from_last_pos = 0
+								else:
+									rulerH3 += ' ' * (1 - space_from_last_pos) + str(H3Numbering[x][2])
+									space_from_last_pos = 1
+							else:
+								rulerH3 += ' ' * (1 - space_from_last_pos) + '. '
+								space_from_last_pos = 0
+							if H3Numbering[x][4] == "A":
+								rulerH3Color += '666'
+							elif H3Numbering[x][4] == "B":
+								rulerH3Color += '222'
+							elif H3Numbering[x][4] == "C":
+								rulerH3Color += '777'
+							elif H3Numbering[x][4] == "D":
+								rulerH3Color += '333'
+							elif H3Numbering[x][4] == "E":
+								rulerH3Color += 'CCC'
+							elif H3Numbering[x][4] == "Stalk-MN":
+								rulerH3Color += 'AAA'
+							else:
+								rulerH3Color += '000'
+					if space_from_last_pos == 1:
+						rulerH3Color += rulerH3Color[-1]
+				elif self.ui.actionAA.isChecked() == True and self.ui.actionDNA.isChecked() == False:
+					aa_start = i + 1
+					aa_end = endSeg
+
+					rulerH1 = 'H1numbering' + AASpaces[11:]
+					rulerH1Color = '0' * len(rulerH1)
+					rulerH3 = 'H3numbering' + AASpaces[11:]
+					rulerH3Color = '0' * len(rulerH3)
+
+					# make H1 numbering
+					space_from_last_pos = 0
+					for x in range(aa_start, aa_end + 1):
+						if H1Numbering[x][2] == '-':
+							if space_from_last_pos == 2:
+								rulerH1Color += '0'
+								space_from_last_pos = space_from_last_pos - 1
+							elif space_from_last_pos == 1:
+								rulerH1Color += '0'
+								space_from_last_pos = space_from_last_pos - 1
+							else:
+								rulerH1 += '-'
+								rulerH1Color += '0'
+						else:
+							if int(H1Numbering[x][2]) % 5 == 0:
+								if len(str(H1Numbering[x][2])) == 1:
+									rulerH1 += str(H1Numbering[x][2])
+									space_from_last_pos = 0
+								elif len(str(H1Numbering[x][2])) == 2:
+									rulerH1 += str(H1Numbering[x][2])
+									space_from_last_pos = 1
+								else:
+									rulerH1 += str(H1Numbering[x][2])
+									space_from_last_pos = 2
+							else:
+								if space_from_last_pos == 2:
+									space_from_last_pos = space_from_last_pos - 1
+								elif space_from_last_pos == 1:
+									space_from_last_pos = space_from_last_pos - 1
+								else:
+									rulerH1 += '.'
+
+							if H1Numbering[x][4] == "Cb":
+								rulerH1Color += '7'
+							elif H1Numbering[x][4] == "Ca1":
+								rulerH1Color += '2'
+							elif H1Numbering[x][4] == "Ca2":
+								rulerH1Color += '4'
+							elif H1Numbering[x][4] == "Sa":
+								rulerH1Color += '3'
+							elif H1Numbering[x][4] == "Sb":
+								rulerH1Color += '6'
+							elif H1Numbering[x][4] == "Stalk-MN":
+								rulerH1Color += 'A'
+							else:
+								rulerH1Color += '0'
+					if space_from_last_pos == 2:
+						#rulerH1Color += rulerH1Color[-1] * 2
+						rulerH1Color += '00'
+					elif space_from_last_pos == 1:
+						#rulerH1Color += rulerH1Color[-1]
+						rulerH1Color += '0'
+
+					# make H3 numbering
+					space_from_last_pos = 0
+					for x in range(aa_start, aa_end + 1):
+						if H3Numbering[x][2] == '-':
+							if space_from_last_pos == 2:
+								space_from_last_pos = space_from_last_pos - 1
+								rulerH3Color += '0'
+							elif space_from_last_pos == 1:
+								space_from_last_pos = space_from_last_pos - 1
+								rulerH3Color += '0'
+							else:
+								rulerH3 += '-'
+								rulerH3Color += '0'
+						else:
+							if int(H3Numbering[x][2]) % 5 == 0:
+								if len(str(H3Numbering[x][2])) == 1:
+									rulerH3 += str(H3Numbering[x][2])
+									space_from_last_pos = 0
+								elif len(str(H3Numbering[x][2])) == 2:
+									rulerH3 += str(H3Numbering[x][2])
+									space_from_last_pos = 1
+								else:
+									rulerH3 += str(H3Numbering[x][2])
+									space_from_last_pos = 2
+							else:
+								if space_from_last_pos == 2:
+									space_from_last_pos = space_from_last_pos - 1
+								elif space_from_last_pos == 1:
+									space_from_last_pos = space_from_last_pos - 1
+								else:
+									rulerH3 += '.'
+
+							if H3Numbering[x][4] == "A":
+								rulerH3Color += '6'
+							elif H3Numbering[x][4] == "B":
+								rulerH3Color += '2'
+							elif H3Numbering[x][4] == "C":
+								rulerH3Color += '7'
+							elif H3Numbering[x][4] == "D":
+								rulerH3Color += '3'
+							elif H3Numbering[x][4] == "E":
+								rulerH3Color += 'C'
+							elif H3Numbering[x][4] == "Stalk-MN":
+								rulerH3Color += 'A'
+							else:
+								rulerH3Color += '0'
+					if space_from_last_pos == 2:
+						#rulerH3Color += rulerH1Color[-1] * 2
+						rulerH3Color += '00'
+					elif space_from_last_pos == 1:
+						#rulerH3Color += rulerH1Color[-1]
+						rulerH3Color += '0'
 
 			for seq in all:
 				SeqName = seq[0]
@@ -2133,7 +2255,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 						if DataIn != 'RF':
 							alignmentText += DNASeqSeg + '\n'
 							ColorMap += '0' * len(DNASeqSeg) + '\n'
-
 				else:
 					if self.ui.actionAA.isChecked() == True:
 						AArt = ''
@@ -2150,13 +2271,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 						ConSegAA = ConName + ConSegAA
 						if ConAdd == True:
 							if self.ui.actionBA.isChecked() == True:
-								alignmentText += '\n' + rulerNT
+								alignmentText += '\n' + 'Position(AA)' + rulerNT[12:]
 								ColorMap += '\n' + '0' * len(rulerNT)
+								alignmentText += '\n' + rulerH1
+								ColorMap += '\n' + rulerH1Color
+								alignmentText += '\n' + rulerH3
+								ColorMap += '\n' + rulerH3Color
 							alignmentText += '\n' + ConSegAA + '\n'
 							ColorMap += '\n' + '0' * len(ConSegAA) + '\n'
 							ConAdd = False
 						alignmentText += AASeqSeg + '\n'
-						ColorMap += '0' * len(AASeqSeg)
+						ColorMap += '0' * len(AASeqSeg) + '\n'
 
 			i += 60
 			ConAdd = True
