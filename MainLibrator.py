@@ -1958,7 +1958,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 					space_from_last_pos = 0
 					for x in range(aa_start,aa_end + 1):
 						if H1Numbering[x][2] == '-':
-							rulerH1 += ' - '
+							rulerH1 += ' ' * (1 - space_from_last_pos) + '- '
+							space_from_last_pos = 0
 							rulerH1Color += '000'
 						else:
 							if int(H1Numbering[x][2])%5 == 0:
@@ -1995,7 +1996,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 					space_from_last_pos = 0
 					for x in range(aa_start,aa_end + 1):
 						if H3Numbering[x][2] == '-':
-							rulerH3 += ' - '
+							rulerH3 += ' ' * (1 - space_from_last_pos) + '- '
+							space_from_last_pos = 0
 							rulerH3Color += '000'
 						else:
 							if int(H3Numbering[x][2])%5 == 0:
@@ -2290,8 +2292,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		Style = 'aligned'
 
+		# legend text and color
+		legend_text = 'H1 Antigenic Sites:  Ca1    Ca2    Cb    Sa    Sb   Stalk-MN \n' + \
+		              'H3 Antigenic Sites:  A    B    C    D    E   Stalk-MN \n'
+		legend_color = '000000000000000000022222224444444777777333333666666AAAAAAAAAA\n' + \
+		               '000000000000000000066666222227777733333CCCCCAAAAAAAAAA\n'
 		if Notes != 'Tab':
 			self.ShowVGenesTextEdit(alignmentText, Style, ColorMap)
+			self.ShowVGenesTextEditLegend(legend_text, legend_color)
 		else:
 			self.ui.txtSeqAlignment.setText(alignmentText)
 
@@ -3059,8 +3067,24 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.TextEdit.textEdit.setText(textToShow)
 		cursor = self.TextEdit.textEdit.textCursor()
 		self.DecorateText(ColorMap, cursor)
-		
 
+	@pyqtSlot()
+	def ShowVGenesTextEditLegend(self, textToShow, ColorMap):
+
+		FontIs = self.TextEdit.textEdit_legend.currentFont()
+		font = QFont(FontIs)
+
+		# FontSize = int(font.pointSize())
+		font.setPointSize(20)
+		font.setFamily('Courier New')
+
+		self.TextEdit.textEdit_legend.setFont(font)
+
+		self.TextEdit.show()
+
+		self.TextEdit.textEdit_legend.setText(textToShow)
+		cursor = self.TextEdit.textEdit_legend.textCursor()
+		self.DecorateText(ColorMap, cursor)
 
 
 	@pyqtSlot()

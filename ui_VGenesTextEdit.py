@@ -2,7 +2,7 @@ __author__ = 'PCW-MacBookProRet'
 from PyQt5 import QtCore
 from PyQt5.QtGui import QIcon, QKeySequence, QFont
 from PyQt5.QtWidgets import (QAction, QApplication, QFileDialog, QMainWindow,
-        QMessageBox, QTextEdit, QDialog, QMenuBar, QMenu)
+        QMessageBox, QTextEdit, QDialog, QMenuBar, QMenu, QGridLayout, QWidget)
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 
 
@@ -11,8 +11,21 @@ class ui_TextEditor(object):
 
         self.curFile = ''
 
+        #self.textEdit = QTextEdit()
+        #self.textEdit_legend = QTextEdit()
+        #self.setCentralWidget(self.textEdit)
+
+        widget = QWidget()
+        self.setCentralWidget(widget)
+
         self.textEdit = QTextEdit()
-        self.setCentralWidget(self.textEdit)
+        self.textEdit_legend = QTextEdit()
+
+        grid = QGridLayout(widget)
+        grid.setSpacing(10)
+        grid.addWidget(self.textEdit, 1, 0, 8, 1)
+        grid.addWidget(self.textEdit_legend, 9, 0, 2, 1)
+        self.setLayout(grid)
 
         self.createActions()
         self.createMenus()

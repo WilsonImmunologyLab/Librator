@@ -46,10 +46,8 @@ from PyQt5.QtCore import (QFile, QFileInfo, QPoint, QRect, QSettings, QSize,
         Qt, QTextStream)
 from PyQt5.QtGui import QIcon, QKeySequence, QFont
 from PyQt5.QtWidgets import (QAction, QApplication, QFileDialog, QMainWindow,
-        QMessageBox, QTextEdit, QDialog, QMenuBar, QMenu)
+        QMessageBox, QTextEdit, QDialog, QMenuBar, QMenu, QGridLayout,QVBoxLayout)
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
-# from PyQt5.QtGui import QTextCursor, QPixmap, QTextCharFormat, QBrush, QColor, QTextCursor, QCursor
-import VgenesResources_rc
 
 
 class VGenesTextMain(QMainWindow):
@@ -64,6 +62,21 @@ class VGenesTextMain(QMainWindow):
         self.textEdit = QTextEdit()
         self.textEdit.setTextInteractionFlags(Qt.TextEditorInteraction)
         self.setCentralWidget(self.textEdit)
+
+        #self.textEdit_legend = QTextEdit()
+
+        #grid = QGridLayout()
+        #grid.setSpacing(10)
+        #grid.addWidget(self.textEdit, 1, 0)
+        #grid.addWidget(self.textEdit_legend, 1, 1)
+
+        #self.setLayout(grid)
+
+        #vbox = QVBoxLayout()
+        #vbox.addStretch(1)
+        #vbox.addLayout(self.textEdit)
+        #vbox.addLayout(self.textEdit_legend)
+        #self.setLayout(vbox)
 
         self.createActions()
         self.createMenus()
@@ -145,6 +158,9 @@ class VGenesTextMain(QMainWindow):
 
         self.textEdit.setFont(font)
 
+    def legend_act(self):
+        pass
+
     def about(self):
         QMessageBox.about(self, "About VGenes Text Editor",
                 "The <b>VGenes Text Editor</b> allows "
@@ -178,8 +194,6 @@ class VGenesTextMain(QMainWindow):
         self.exitAct = QAction("E&xit", self, shortcut="Ctrl+Q",
                 statusTip="Exit VGenes Text Editor", triggered=self.close)
 
-
-
         self.cutAct = QAction(QIcon(':/PNG-Icons/scissor.png'), "Cu&t", self,
                 shortcut=QKeySequence.Cut,
                 statusTip="Cut the current selection's contents to the clipboard",
@@ -211,6 +225,10 @@ class VGenesTextMain(QMainWindow):
         self.aboutAct = QAction("&About", self,
                 statusTip="Show the application's About box",
                 triggered=self.about)
+
+        self.Legend = QAction(QIcon(':/PNG-Icons/ScalePic.png'), "&Legend", self,
+                                   statusTip="Legend",
+                                   triggered=self.legend_act)
 
         # self.aboutQtAct = QAction("About &Qt", self,
         #         statusTip="Show the Qt library's About box",
@@ -270,9 +288,12 @@ class VGenesTextMain(QMainWindow):
         self.editToolBar.addAction(self.copyAct)
         self.editToolBar.addAction(self.pasteAct)
 
-        self.FontSizeToolBar = self.addToolBar("FontSize")
-        self.FontSizeToolBar.addAction(self.IncreaseAct)
-        self.FontSizeToolBar.addAction(self.DecreaseAct)
+        #self.FontSizeToolBar = self.addToolBar("FontSize")
+        #self.FontSizeToolBar.addAction(self.IncreaseAct)
+        #self.FontSizeToolBar.addAction(self.DecreaseAct)
+
+        self.LegendToolBar = self.addToolBar("Legend")
+        self.LegendToolBar.addAction(self.Legend)
 
 
     def createStatusBar(self):
