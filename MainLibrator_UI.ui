@@ -2585,6 +2585,9 @@
    <property name="text">
     <string>&amp;Open</string>
    </property>
+   <property name="toolTip">
+    <string>Open existing Librator database</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
    </property>
@@ -2599,7 +2602,7 @@
     <string>&amp;New</string>
    </property>
    <property name="toolTip">
-    <string>New VGenes database</string>
+    <string>Create new Librator database</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>

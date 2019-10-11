@@ -3,7 +3,7 @@ from PyQt5.QtCore import pyqtSlot, QTimer, QDateTime, Qt, QSortFilterProxyModel,
 from PyQt5 import QtWidgets, QtPrintSupport
 from PyQt5.QtWidgets import *
 #from PyQt5.QtWidgets import QApplication, QMessageBox, QAbstractItemView, QFileDialog
-from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QTextCursor, QCursor
+from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QCursor
 from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion, creatnewFragmentDB
 from itertools import combinations
 from collections import Counter
@@ -170,6 +170,9 @@ class SequenceEditDialog(QtWidgets.QDialog):
 
 		self.ui.GenerateSeq.clicked.connect(self.accept)
 		self.ui.Cancel.clicked.connect(self.reject)
+
+		self.ui.GenerateSeq.setToolTip('Generate Sequences!')
+		self.ui.Cancel.setToolTip('Cancel!')
 
 	def accept(self):  # redo accept method
 		# send signal
@@ -1777,6 +1780,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			lenName = 0
 			longestName = 0
 			alignmentText = ''
+			ColorMap = ''
 			germseq = ''
 			germpeptide = ''
 
@@ -1860,43 +1864,44 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# generate consnesus sequences (AA and NT)
 		firstOne = all[1]
 		seqlen = len(firstOne[1])
-		if self.ui.actionDNA.isChecked() == True:
-			consensusDNA = ''
+
+		consensusDNA = ''
+		tester = ''
+		for i in range(0, seqlen - 1):
 			tester = ''
-			# testl = []
-			for i in range(0, seqlen - 1):
-				tester = ''
-				Cnuc = ''
-				for item in all:
-					seq = item[1]
-					tester += seq[i]
+			Cnuc = ''
+			for item in all:
+				seq = item[1]
+				tester += seq[i]
 
-				frequencies = [(c, tester.count(c)) for c in set(tester)]
-				Cnuc = max(frequencies, key=lambda x: x[1])[0]
-				consensusDNA += Cnuc
+			frequencies = [(c, tester.count(c)) for c in set(tester)]
+			Cnuc = max(frequencies, key=lambda x: x[1])[0]
+			consensusDNA += Cnuc
 
-		if self.ui.actionAA.isChecked() == True:
-			consensusAA = ''
+		consensusAA = ''
+		firstOne = all[1]
+		seqlen = len(firstOne[1])
+		for i in range(0, seqlen - 1):
 			tester = ''
-			firstOne = all[1]
-			seqlen = len(firstOne[1])
-			# testl = []
-			for i in range(0, seqlen - 1):
-				tester = ''
-				Caa = ''
-				for item in all:
-					seq = item[2]
-					tester += seq[i]
+			Caa = ''
+			for item in all:
+				seq = item[2]
+				tester += seq[i]
 
-				frequencies = [(c, tester.count(c)) for c in set(tester)]
-				Caa = max(frequencies, key=lambda x: x[1])[0]
-				consensusAA += Caa
+			frequencies = [(c, tester.count(c)) for c in set(tester)]
+			Caa = max(frequencies, key=lambda x: x[1])[0]
+			consensusAA += Caa
 
 			# need build numbering lines also
 			# first record is germline or consensus whatever used and empty seq and AA
 			# need to use ones produced above
 			# also longestName is longest and need code to ensure all that long with ': '
 			# build alignment with name and 50 per
+
+		# align consensus AA sequence with template to generate H1 and H3 numbering
+		if self.ui.actionBA.isChecked() == True:
+			compact_consensusAA = consensusAA.replace(' ', '')
+			self.HANumbering(compact_consensusAA)
 
 		header = 'VGenes multiple alignment using Clustal Omega. \n'
 		RFSeqName = self.ui.txtName.toPlainText()
@@ -1912,6 +1917,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			AASpaces += ' '
 
 		alignmentText = header
+		ColorMap += '0' * (len(header) - 1) + '\n'
 		i = 0
 		endSeg = 0
 		done = False
@@ -1932,9 +1938,87 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			aa_start = int(i/3 + 1)
 			aa_end = int(endSeg/3)
+			if self.ui.actionBA.isChecked() == True:
+				rulerAA = 'Position(AA)' + AASpaces[12:] + self.MakeRuler(aa_start, aa_end, 5, 'aa')
+				rulerNT = 'Position(NT)' + AASpaces[12:] + self.MakeRuler(i + 1, endSeg, 5, 'nt')
+				rulerH1 = 'H1numbering' + AASpaces[11:]
+				rulerH1Color = '0' * len(rulerH1)
+				rulerH3 = 'H3numbering' + AASpaces[11:]
+				rulerH3Color = '0' * len(rulerH3)
 
-			rulerAA = AASpaces + self.MakeRuler(aa_start, aa_end, 5, 'aa')
-			rulerNT = AASpaces + self.MakeRuler(i + 1, endSeg, 5, 'nt')
+				# make H1 numbering
+				space_from_last_pos = 0
+				for x in range(aa_start,aa_end + 1):
+					if H1Numbering[x][2] == '-':
+						rulerH1 += ' - '
+						rulerH1Color += '000'
+					else:
+						if int(H1Numbering[x][2])%5 == 0:
+							if len(str(H1Numbering[x][2])) == 1:
+								rulerH1 += ' ' * (1 - space_from_last_pos) + str(H1Numbering[x][2]) + ' '
+								space_from_last_pos = 0
+							elif len(str(H1Numbering[x][2])) == 2:
+								rulerH1 += ' ' * (1 - space_from_last_pos) + str(H1Numbering[x][2])
+								space_from_last_pos = 0
+							else:
+								rulerH1 += ' ' * (1 - space_from_last_pos) + str(H1Numbering[x][2])
+								space_from_last_pos = 1
+						else:
+							rulerH1 += ' ' * (1 - space_from_last_pos) + '. '
+							space_from_last_pos = 0
+						if H1Numbering[x][4] == "Cb":
+							rulerH1Color += '777'
+						elif H1Numbering[x][4] == "Ca1":
+							rulerH1Color += '222'
+						elif H1Numbering[x][4] == "Ca2":
+							rulerH1Color += '444'
+						elif H1Numbering[x][4] == "Sa":
+							rulerH1Color += '333'
+						elif H1Numbering[x][4] == "Sb":
+							rulerH1Color += '666'
+						elif H1Numbering[x][4] == "Stalk-MN":
+							rulerH1Color += 'AAA'
+						else:
+							rulerH1Color += '000'
+				if space_from_last_pos == 1:
+					rulerH1Color += rulerH1Color[-1]
+
+				# make H3 numbering
+				space_from_last_pos = 0
+				for x in range(aa_start,aa_end + 1):
+					if H3Numbering[x][2] == '-':
+						rulerH3 += ' - '
+						rulerH3Color += '000'
+					else:
+						if int(H3Numbering[x][2])%5 == 0:
+							if len(str(H3Numbering[x][2])) == 1:
+								rulerH3 += ' ' * (1 - space_from_last_pos) + str(H3Numbering[x][2]) + ' '
+								space_from_last_pos = 0
+							elif len(str(H3Numbering[x][2])) == 2:
+								rulerH3 += ' ' * (1 - space_from_last_pos) + str(H3Numbering[x][2])
+								space_from_last_pos = 0
+							else:
+								rulerH3 += ' ' * (1 - space_from_last_pos) + str(H3Numbering[x][2])
+								space_from_last_pos = 1
+						else:
+							rulerH3 += ' ' * (1 - space_from_last_pos) + '. '
+							space_from_last_pos = 0
+						if H3Numbering[x][4] == "A":
+							rulerH3Color += '666'
+						elif H3Numbering[x][4] == "B":
+							rulerH3Color += '222'
+						elif H3Numbering[x][4] == "C":
+							rulerH3Color += '777'
+						elif H3Numbering[x][4] == "D":
+							rulerH3Color += '333'
+						elif H3Numbering[x][4] == "E":
+							rulerH3Color += 'CCC'
+						elif H3Numbering[x][4] == "Stalk-MN":
+							rulerH3Color += 'AAA'
+						else:
+							rulerH3Color += '000'
+				if space_from_last_pos == 1:
+					rulerH3Color += rulerH3Color[-1]
 
 			for seq in all:
 				SeqName = seq[0]
@@ -2013,7 +2097,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 						if ConAdd == True:
 							if self.ui.actionBA.isChecked() == True:
 								alignmentText += '\n' + rulerAA
+								ColorMap += '\n' + '0' * len(rulerAA)
+								alignmentText += '\n' + rulerH1
+								ColorMap += '\n' + rulerH1Color
+								alignmentText += '\n' + rulerH3
+								ColorMap += '\n' + rulerH3Color
+
 							alignmentText += '\n' + ConSegAA + '\n'
+							ColorMap += '\n' + '0' * len(ConSegAA) + '\n'
 							if DataIn == 'RF':
 								alignmentText += '\n' + ConSegAA2 + '\n'
 								alignmentText += '\n' + ConSegAA3 + '\n'
@@ -2021,18 +2112,27 @@ class LibratorMain(QtWidgets.QMainWindow):
 							else:
 								if self.ui.actionBA.isChecked() == True:
 									alignmentText += rulerNT + '\n'
+									ColorMap += '0' * len(rulerNT) + '\n'
+
 								alignmentText += ConSegDNA + '\n'
+								ColorMap += '0' * len(ConSegDNA) + '\n'
 							ConAdd = False
 						if DataIn != 'RF':
 							alignmentText += AASeqSeg + '\n'
+							ColorMap += '0' * len(AASeqSeg) + '\n'
 							alignmentText += DNASeqSeg + '\n'
+							ColorMap += '0' * len(DNASeqSeg) + '\n'
 					else:
 						if ConAdd == True:
 							if self.ui.actionBA.isChecked() == True:
 								alignmentText += '\n' + rulerNT
+								ColorMap += '0' * len(rulerNT)
 							alignmentText += '\n' + ConSegDNA + '\n'
+							ColorMap += '\n' + '0' * len(ConSegDNA) + '\n'
 							ConAdd = False
-						if DataIn != 'RF': alignmentText += DNASeqSeg + '\n'
+						if DataIn != 'RF':
+							alignmentText += DNASeqSeg + '\n'
+							ColorMap += '0' * len(DNASeqSeg) + '\n'
 
 				else:
 					if self.ui.actionAA.isChecked() == True:
@@ -2051,18 +2151,22 @@ class LibratorMain(QtWidgets.QMainWindow):
 						if ConAdd == True:
 							if self.ui.actionBA.isChecked() == True:
 								alignmentText += '\n' + rulerNT
+								ColorMap += '\n' + '0' * len(rulerNT)
 							alignmentText += '\n' + ConSegAA + '\n'
+							ColorMap += '\n' + '0' * len(ConSegAA) + '\n'
 							ConAdd = False
 						alignmentText += AASeqSeg + '\n'
+						ColorMap += '0' * len(AASeqSeg)
 
 			i += 60
 			ConAdd = True
 			alignmentText += '\n'
+			ColorMap += '\n'
 
 		Style = 'aligned'
 
 		if Notes != 'Tab':
-			self.ShowVGenesTextEdit(alignmentText, Style)
+			self.ShowVGenesTextEdit(alignmentText, Style, ColorMap)
 		else:
 			self.ui.txtSeqAlignment.setText(alignmentText)
 
@@ -2509,6 +2613,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 	@pyqtSlot()
 	def on_action_Save_triggered(self):
 		# SeqName, Sequence, SeqLen, SubType, Form, VFrom, VTo, Active, Role, Donor, Mutations, ID
+		if DBFilename == 'none':
+			QMessageBox.warning(self, 'Warning', 'No Librator database determined!', QMessageBox.Ok, QMessageBox.Ok)
+			return
 		listSaves = []
 
 		SeqName = self.ui.txtName.toPlainText()
@@ -2790,7 +2897,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 
 	@pyqtSlot()
-	def ShowVGenesTextEdit(self, textToShow, style):
+	def ShowVGenesTextEdit(self, textToShow, style, ColorMap):
 
 		if style == 'aligned':
 			FontIs = self.TextEdit.textEdit.currentFont()
@@ -2825,6 +2932,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.TextEdit.show()
 
 		self.TextEdit.textEdit.setText(textToShow)
+		cursor = self.TextEdit.textEdit.textCursor()
+		self.DecorateText(ColorMap, cursor)
+		
+
 
 
 	@pyqtSlot()
@@ -3457,6 +3568,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_actionPrint_triggered(self):
+		if DBFilename == 'none':
+			QMessageBox.warning(self, 'Warning', 'No Librator database determined!', QMessageBox.Ok, QMessageBox.Ok)
+			return
 		global DataIs
 
 		FontIs = self.TextEdit.textEdit.currentFont()
