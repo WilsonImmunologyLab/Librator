@@ -2,18 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f472839-8a65-4dce-be83-d1c7511e6e93" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/base_path_dialog.ui" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin_path_dialog.ui" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hook-openpyxl.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/HA_numbering_function.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DB/AAATester.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/AAATester.ldb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DB/tes.ldb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DB/test.ldb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/In.txt" beforeDir="false" afterPath="$PROJECT_DIR$/In.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LibratorSeq.py" beforeDir="false" afterPath="$PROJECT_DIR$/LibratorSeq.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/In.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.ui" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainLibrator.spec" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.spec" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import *
 #from PyQt5.QtWidgets import QApplication, QMessageBox, QAbstractItemView, QFileDialog
 from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QCursor
 from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion, creatnewFragmentDB
+from HA_numbering_function import HA_numbering_Jesse
 from itertools import combinations
 from collections import Counter
 import os, sys, re, time, string
@@ -3312,6 +3313,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		H1Numbering.clear()
 		H3Numbering.clear()
 		global NumberingMap
+		global temp_folder
+		global bin_prefix
 		NumberingMap.clear()
 
 
@@ -3324,21 +3327,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 		MyInFiles = NameBase + 'In.txt'
 		MyOutFiles = NameBase + 'Out.txt'
 
-		workingfilename = os.path.join(working_prefix, MyInFiles)
-		# workingfilename = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', MyInFiles)
+		workingfilename = os.path.join(temp_folder, MyInFiles)
 		musclepath = os.path.join(bin_prefix)
-		# musclepath = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', 'muscle')
-		savefilename = os.path.join(working_prefix,  MyOutFiles)
-		# savefilename = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', MyOutFiles)
-		# 	probconspath /Users/jbloom/probcons/
+		savefilename = os.path.join(temp_folder,  MyOutFiles)
 
 		workingdir, filename = os.path.split(workingfilename)
 		os.chdir(workingdir)
-
-		# NumberingCommandLine = 'python3 HA_Numbering.py ' + workingfilename + ' > ' + savefilename #workingfilename #+ '\n'
-
-		NumberingCommandLine = 'python3 HA_Numbering.py In.txt > '+ MyOutFiles #Out.txt'  # workingfilename #+ '\n'
-
 
 		NumberingQuery = 'musclepath '
 		NumberingQuery += musclepath + '\n' + 'ha_sequence '
@@ -3352,18 +3346,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		NumberingQuery += Sites + '\n'
 
-		workingfilename = 'In.txt'
-		SavedFile = MyOutFiles#'Out.txt'
+		SavedFile = savefilename#'Out.txt'
 
+		# write input sequence into input file
 		with open(workingfilename, 'w') as currentFile:
 			currentFile.write(NumberingQuery)
 
-		# NumberingOut = os.popen(NumberingCommandLine)
-		try:
-			NumberingOut = os.popen(NumberingCommandLine)
-		except:
-			print('end')
-
+		# run HA numbering code
+		HA_numbering_Jesse(workingfilename, savefilename)
 
 		MoveOn = False
 		tester = ''
@@ -3390,9 +3380,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			elif tester == 'HA2':
 				Starts = 'HA2'
 				break
-
-
-
 
 		AASeq = []
 		HAIn = ()
@@ -3624,6 +3611,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 
 		os.remove(SavedFile)
+		os.remove(workingfilename)
 
 
 		#
@@ -3966,7 +3954,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			try:
 				for row in currentfile:  # imports data from file
 					Rawentry = row.strip('\n')
-
 					entryFields = Rawentry.split(',')
 
 
