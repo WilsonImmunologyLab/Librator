@@ -6,9 +6,7 @@ import LibratorSQL
 from PyQt5.QtWidgets import QApplication
 
 global working_prefix
-working_prefix = os.path.abspath('..')
-global bin_prefix
-bin_prefix = '/usr/local/bin/'
+working_prefix = os.path.abspath('./')
 
 
 def Translator(Sequence, frame):
@@ -457,7 +455,7 @@ def flexibility(subsequence):
 
 
 
-def ClustalO(SeqDict, wrapLength, ordered):
+def ClustalO(SeqDict, wrapLength, ordered,working_prefix):
     # input is a list of lists containing filename and sequence: ((fielname1, seq1),(fielname2, seq2))
     # import time
     # clustalo -i my-in-seqs.fa -o my-out-seqs.fa -v
@@ -482,8 +480,8 @@ def ClustalO(SeqDict, wrapLength, ordered):
     MyInFiles = NameBase + 'In.fa'
     MyOutFiles = NameBase + 'Out.fa'
 
-    workingfilename = os.path.join(working_prefix, 'Librator', 'ClustalOmega', MyInFiles)
-    savefilename = os.path.join(working_prefix, 'Librator','ClustalOmega', MyOutFiles)
+    workingfilename = os.path.join(working_prefix, 'ClustalOmega', MyInFiles)
+    savefilename = os.path.join(working_prefix, 'ClustalOmega', MyOutFiles)
 
     # workingfilename = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', 'ClustalOmega', MyInFiles)
     # savefilename = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', 'ClustalOmega', MyOutFiles)

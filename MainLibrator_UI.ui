@@ -2506,6 +2506,13 @@
     <addaction name="actionRename10x"/>
     <addaction name="actionFixNames"/>
    </widget>
+   <widget class="QMenu" name="menuSetting">
+    <property name="title">
+     <string>Setting</string>
+    </property>
+    <addaction name="actionCheck_Update_base_folder"/>
+    <addaction name="actionCheck_Update_bin_folder"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuSequences"/>
@@ -2514,6 +2521,7 @@
    <addaction name="menuView"/>
    <addaction name="menuHelp"/>
    <addaction name="menuHighThroughput"/>
+   <addaction name="menuSetting"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -3076,6 +3084,16 @@
   <action name="actionOpen_last">
    <property name="text">
     <string>Open Last</string>
+   </property>
+  </action>
+  <action name="actionCheck_Update_base_folder">
+   <property name="text">
+    <string>Check/Update base folder </string>
+   </property>
+  </action>
+  <action name="actionCheck_Update_bin_folder">
+   <property name="text">
+    <string>Check/Update bin folder</string>
    </property>
   </action>
  </widget>

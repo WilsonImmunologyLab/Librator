@@ -15,6 +15,8 @@ from MainLibrator_UI import Ui_MainLibrator
 from mutationdialog import Ui_MutationDialog
 from sequenceedit import Ui_SequenceEditDialog
 from gibsonclone import Ui_gibsoncloneDialog
+from bin_path_dialog import Ui_binPathDialog
+from base_path_dialog import Ui_basePathDialog
 
 from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText, openfastq
 from VgenesTextEdit import VGenesTextMain
@@ -47,19 +49,63 @@ global DBFilename
 DBFilename = 'none'
 
 global working_prefix
-working_prefix = os.path.abspath('..')
+working_prefix = os.path.abspath('./')
 global bin_prefix
 bin_prefix = '/usr/local/bin/'
 global temp_folder
-temp_folder = working_prefix + '/Librator/Temp/'
+temp_folder = working_prefix + '/Temp/'
 global db_folder
-db_folder = working_prefix + '/Librator/DB/'
+db_folder = working_prefix + '/DB/'
 
 global joint_up
 joint_up = "TCCACTCCCAGGTCCAACTGCACCTCGGTTCTATCGATTGAATTC"
 global joint_down
 joint_down = "GGGTCCGGATACATACCAGAGGCCCCGCGAGATGG"
 
+
+class binPathDialog(QtWidgets.QDialog):
+	def __init__(self):
+		super(binPathDialog, self).__init__()
+		self.ui = Ui_binPathDialog()
+		self.ui.setupUi(self)
+
+		self.ui.pushButton.clicked.connect(self.browse)
+		self.ui.yes.clicked.connect(self.accept)
+		self.ui.no.clicked.connect(self.reject)
+
+	def browse(self):  # browse and select path
+		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
+		self.ui.binPath.setText(out_dir)
+
+	def accept(self):  # redo accept method
+		global bin_prefix
+		bin_prefix = self.ui.binPath.text()
+		bin_prefix = bin_prefix.rstrip('/') + '/'
+		self.close()
+
+class basePathDialog(QtWidgets.QDialog):
+	def __init__(self):
+		super(basePathDialog, self).__init__()
+		self.ui = Ui_basePathDialog()
+		self.ui.setupUi(self)
+
+		self.ui.pushButton.clicked.connect(self.browse)
+		self.ui.yes.clicked.connect(self.accept)
+		self.ui.no.clicked.connect(self.reject)
+
+	def browse(self):  # browse and select path
+		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
+		self.ui.basePath.setText(out_dir)
+
+	def accept(self):  # redo accept method
+		global working_prefix
+		global temp_folder
+		global db_folder
+		working_prefix = self.ui.basePath.text()
+		working_prefix = working_prefix.rstrip('/') + '/'
+		temp_folder = working_prefix + 'Temp/'
+		db_folder = working_prefix + 'DB/'
+		self.close()
 
 class MutationDialog(QtWidgets.QDialog):
 	applySignal = pyqtSignal(str, str, str, str, str, str)  # user define signal
@@ -578,9 +624,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 								QMessageBox.Ok)
 			return
 		elif len(listItems) == 1:
-			#QMessageBox.warning(self, 'Warning', 'Please select multiple sequence from active sequence panel!',
-			#					QMessageBox.Ok, QMessageBox.Ok)
-			#return
+			QMessageBox.warning(self, 'Warning', 'Please select multiple sequence from active sequence panel!',
+								QMessageBox.Ok, QMessageBox.Ok)
+			return
 			pass
 		for item in listItems:
 
@@ -1715,6 +1761,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		DataSet = []
 		QApplication.setOverrideCursor(Qt.WaitCursor)
 		global GLMsg
+		global working_prefix
 
 		if self.ui.actionDNA.isChecked() == False and self.ui.actionAA.isChecked() == False:
 			QMessageBox.warning(self, 'Warning', 'Neither DNA nor AA has been selected! Will generate DNA alignment!',
@@ -1783,7 +1830,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				file_handle.write(DataSet[0][1])
 				file_handle.close()
 			else:
-				outfilename = LibratorSeq.ClustalO(DataSet, 80, True)
+				outfilename = LibratorSeq.ClustalO(DataSet, 80, True,working_prefix)
 
 			lenName = 0
 			longestName = 0
@@ -3277,11 +3324,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 		MyInFiles = NameBase + 'In.txt'
 		MyOutFiles = NameBase + 'Out.txt'
 
-		workingfilename = os.path.join(working_prefix, 'Librator', MyInFiles)
+		workingfilename = os.path.join(working_prefix, MyInFiles)
 		# workingfilename = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', MyInFiles)
 		musclepath = os.path.join(bin_prefix)
 		# musclepath = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', 'muscle')
-		savefilename = os.path.join(working_prefix, 'Librator', MyOutFiles)
+		savefilename = os.path.join(working_prefix,  MyOutFiles)
 		# savefilename = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', MyOutFiles)
 		# 	probconspath /Users/jbloom/probcons/
 
@@ -3862,6 +3909,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 	def on_listWidgetStrainsIn_changeEvent(self):
 		self.PopulateCboActiveCbo()
 
+	@pyqtSlot()
+	def on_actionCheck_Update_bin_folder_triggered(self):
+		self.open_binpath_dialog()
+
+	@pyqtSlot()
+	def on_actionCheck_Update_base_folder_triggered(self):
+		self.open_basepath_dialog()
 
 	@pyqtSlot()
 	def on_action_New_triggered(self):  # how to activate menu and toolbar actions!!!
@@ -4066,7 +4120,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.lblBaseName.setText(BaseSeq)
 
 	def show3Dstructure(self, mutation, pdbPath, pymolPath, subtype):
-		pml_path = os.path.join(working_prefix, "Librator/local.pml")
+		pml_path = os.path.join(working_prefix, "local.pml")
 		with open(pml_path , "w") as pml:
 			# write pml script
 			text = "load " + pdbPath + "\n"
@@ -4443,6 +4497,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessGibsonDialog.ui.jointDOWN.setText(joint_down)
 			self.modalessGibsonDialog.gibsonSignal.connect(self.GenerateGibson)
 			self.modalessGibsonDialog.show()
+
+	def open_binpath_dialog(self):
+		self.modalessbinDialog = binPathDialog()
+		self.modalessbinDialog.ui.binPath.setText(bin_prefix)
+		self.modalessbinDialog.show()
+
+	def open_basepath_dialog(self):
+		self.modalessbaseDialog = basePathDialog()
+		self.modalessbaseDialog.ui.basePath.setText(working_prefix)
+		self.modalessbaseDialog.show()
 
 	def sequence_editing(self):
 		if BaseSeq == "":
