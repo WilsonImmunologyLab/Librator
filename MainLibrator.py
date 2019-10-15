@@ -4201,17 +4201,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 		subtype = str(self.ui.cboSubtype.currentText())
 
 		if subtype == "H1N1":
-			pdb_path = working_prefix + "/Librator/PDB/4jtv.pdb"
+			pdb_path = working_prefix + "PDB/4jtv.pdb"
 		elif subtype == "H3N2":
-			pdb_path = working_prefix + "/Librator/PDB/4hmg.pdb"
+			pdb_path = working_prefix + "PDB/4hmg.pdb"
 		elif subtype == "B":
-			pdb_path = working_prefix + "/Librator/PDB/3hto.pdb"
+			pdb_path = working_prefix + "PDB/3hto.pdb"
 		elif subtype == "Group 1":
-			pdb_path = working_prefix + "/Librator/PDB/3hto.pdb"
+			pdb_path = working_prefix + "PDB/3hto.pdb"
 		elif subtype == "Group 2":
-			pdb_path = working_prefix + "/Librator/PDB/3hto.pdb"
+			pdb_path = working_prefix + "PDB/3hto.pdb"
 		else:
-			pdb_path = working_prefix + "/Librator/PDB/3hto.pdb"
+			pdb_path = working_prefix + "PDB/3hto.pdb"
 
 		self.show3Dstructure(mutation, pdb_path, pymol_path, subtype)
 
