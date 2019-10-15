@@ -5,10 +5,6 @@ import sqlite3 as db
 import LibratorSQL
 from PyQt5.QtWidgets import QApplication
 
-global working_prefix
-working_prefix = os.path.abspath('./')
-
-
 def Translator(Sequence, frame):
 
         # Translate sequence into a list of codons
@@ -756,7 +752,7 @@ def readClustalOutput(outfilename):
 #         # EditedSeq = 'a'
 #     return MutList, TestSeq, IDLength, AlignedSeq
 
-def RScaller(MutList, Vgene, species, DBpathname):
+def RScaller(MutList, Vgene, species, DBpathname, working_prefix):
     #     code to determine if mutations are replacements or silent
     from math import ceil
     GVseq = []
