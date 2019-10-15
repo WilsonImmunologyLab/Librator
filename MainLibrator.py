@@ -339,18 +339,28 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.modalessSeqEditDialog = None
 
-
-
+	@pyqtSlot()
 	def UpdateRecent(self):
+		global db_folder
+		self.ui.cboRecent.clear()
+		self.ui.cboRecent.addItem('Open previous')
 		record_file = db_folder + 'db_record.txt'
 		if os.path.isfile(record_file):
 			with open(record_file, 'r') as currentFile:
 				RecentFiles = currentFile.readlines()
+			currentFile.close()
 			RecentFiles = RecentFiles[0]
 			RecentFiles = RecentFiles.split(',')
 			for file in RecentFiles:
 				if file != '':
-					self.ui.cboRecent.addItem(file)
+					if os.path.isfile(file):
+						self.ui.cboRecent.addItem(file)
+					else:
+						RecentFiles.remove(file)
+			RecentFiles_str = ','.join(RecentFiles)
+			with open(record_file, 'w') as currentFile:
+				currentFile.write(RecentFiles_str)
+			currentFile.close()
 
 	@pyqtSlot()
 	def on_actionIncrease_font_size_triggered(self):
@@ -3261,13 +3271,21 @@ class LibratorMain(QtWidgets.QMainWindow):
 	@pyqtSlot()
 	def OpenRecent(self):  # how to activate menu and toolbar actions!!!
 		#need to simply get database name and populate list views
-		if self.ui.cboRecent.currentText() == 'Open previous':
+		if self.ui.cboRecent.currentText() == 'Open previous' or self.ui.cboRecent.currentText() == '':
 			pass
 		else:
-			self.open_db(self.ui.cboRecent.currentText())
+			cur_file = self.ui.cboRecent.currentText()
+			if os.path.exists(cur_file):
+				self.open_db(self.ui.cboRecent.currentText())
+			else:
+				self.UpdateRecent()
+				QMessageBox.warning(self, 'Warning', 'This DB file does not exist!',
+				                    QMessageBox.Ok, QMessageBox.Ok)
+
 
 	@pyqtSlot()
 	def UpdateRecentFilelist(self, DBFilename):
+		global db_folder
 		record_file = db_folder + 'db_record.txt'
 
 		if os.path.exists(record_file):
@@ -3294,8 +3312,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_actionHANumbering_triggered(self):
-
-
 		# answer = informationMessage(self, 'Would you like to generate a numbering report?' 'YN')
 		AASeq = self.ui.textAA.toPlainText()
 		Numbering = self.HANumbering(AASeq)
