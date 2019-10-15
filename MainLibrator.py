@@ -4042,6 +4042,26 @@ class LibratorMain(QtWidgets.QMainWindow):
 		if filename is None:
 			return
 		HA_Read = ReadFASTA(filename)
+		SequenceFiltered = []
+		# check if any sequence have strange nt
+		ErrMsg = 'The following sequences will not be imported due to unlawful nucleotide:\n'
+		ErrSign = False
+		pattern = re.compile(r'[^ATCGUatcgu]')
+		for element in HA_Read:
+			cur_name = element[0]
+			cur_seq = element[1]
+			cur_strange = pattern.findall(cur_seq)
+			if len(cur_strange) > 0:
+				cur_strange = list(set(cur_strange))
+				ErrMsg += cur_name + ': ' + ','.join(cur_strange) + '\n'
+				ErrSign = True
+			else:
+				SequenceFiltered.append(element)
+		if ErrSign:
+			QMessageBox.warning(self, 'Warning', ErrMsg, QMessageBox.Ok, QMessageBox.Ok)
+
+		HA_Read = SequenceFiltered
+
 		StopAsking = 'No'
 		AlreadyAsked = 'No'
 		StopAskingForm = 'No'
@@ -4755,6 +4775,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			donor_aa_seq = Translator(donor_nt_seq, 0)
 			donor_aa_seq = donor_aa_seq[0]
 			donor_aa_seq = re.sub(r'\*.+', "", donor_aa_seq)
+			donor_aa_seq = re.sub(r'\*.?', "", donor_aa_seq)
+			donor_aa_seq = re.sub(r'\~', "", donor_aa_seq)
+
 			if donor_donor == "none":
 				donor_start = 0
 				donor_end = len(donor_aa_seq)
@@ -5231,14 +5254,12 @@ def ReadFASTA(outfilename):
 			Readline = ''
 			for line in currentFile2:
 				Readline = line.replace('\n', '').replace('\r', '')
-
 				if Readline[0] == '>':
 					if Seq != '':  # saves the previous except on first round
 						SeqRead = (SeqName, Seq)
 						ReadFile.append(SeqRead)
 						Seq = ''
 					SeqName = Readline[1:]
-
 				else:
 					Seq += Readline
 			SeqRead = (SeqName, Seq)  # must save last one at end
