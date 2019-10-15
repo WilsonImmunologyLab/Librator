@@ -50,7 +50,7 @@ global DBFilename
 DBFilename = 'none'
 
 global working_prefix
-working_prefix = os.path.abspath('./')
+working_prefix = os.path.dirname(os.path.realpath(sys.argv[0]))
 global bin_prefix
 bin_prefix = '/usr/local/bin/'
 global temp_folder
@@ -5539,6 +5539,15 @@ if __name__ == '__main__':
 
 	app = QtWidgets.QApplication(sys.argv)
 	Librator = LibratorMain()
+
+	# test path
+	#print(__file__)
+	#print(os.path.realpath(__file__))
+	#print('using sys.executable:', repr(os.path.dirname(os.path.realpath(sys.executable))))
+	#print('using sys.argv[0]:', repr(os.path.dirname(os.path.realpath(sys.argv[0]))))
+	#print(sys.argv[0])
+	#print(sys.path[0])
+
 
 	# Librator.exec_()
 	Librator.show()
