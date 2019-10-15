@@ -1773,6 +1773,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		QApplication.setOverrideCursor(Qt.WaitCursor)
 		global GLMsg
 		global working_prefix
+		global bin_prefix
 
 		if self.ui.actionDNA.isChecked() == False and self.ui.actionAA.isChecked() == False:
 			QMessageBox.warning(self, 'Warning', 'Neither DNA nor AA has been selected! Will generate DNA alignment!',
@@ -1841,7 +1842,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				file_handle.write(DataSet[0][1])
 				file_handle.close()
 			else:
-				outfilename = LibratorSeq.ClustalO(DataSet, 80, True,working_prefix)
+				outfilename = LibratorSeq.ClustalO(DataSet, 80, True, working_prefix, bin_prefix)
 
 			lenName = 0
 			longestName = 0

@@ -5,6 +5,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DB/AAATester.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/AAATester.ldb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LibratorSeq.py" beforeDir="false" afterPath="$PROJECT_DIR$/LibratorSeq.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainLibrator.spec" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.spec" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -132,7 +134,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/MainLibrator.py</url>
-          <line>4879</line>
+          <line>4880</line>
           <option name="timeStamp" value="101" />
         </line-breakpoint>
       </breakpoints>

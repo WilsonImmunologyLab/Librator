@@ -451,11 +451,10 @@ def flexibility(subsequence):
 
 
 
-def ClustalO(SeqDict, wrapLength, ordered,working_prefix):
+def ClustalO(SeqDict, wrapLength, ordered, working_prefix, bin_prefix):
     # input is a list of lists containing filename and sequence: ((fielname1, seq1),(fielname2, seq2))
     # import time
     # clustalo -i my-in-seqs.fa -o my-out-seqs.fa -v
-    CurDir = os.getcwdb()
     # workingfilename = os.path.join(os.path.expanduser('~'), 'Applications', 'ClustalOmega', 'my-in-seqs.fa')
     # workingfilename = '/Applications/ClustalOmega/my-in-seqs.fa'
     # workingdir, NameBase = os.path.split(DBname)
@@ -479,14 +478,7 @@ def ClustalO(SeqDict, wrapLength, ordered,working_prefix):
     workingfilename = os.path.join(working_prefix, 'ClustalOmega', MyInFiles)
     savefilename = os.path.join(working_prefix, 'ClustalOmega', MyOutFiles)
 
-    # workingfilename = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', 'ClustalOmega', MyInFiles)
-    # savefilename = os.path.join(os.path.expanduser('~'), 'Applications', 'Librator', 'ClustalOmega', MyOutFiles)
-
-
     workingdir, filename = os.path.split(workingfilename)
-
-
-
 
     os.chdir(workingdir)
     i = 1
@@ -505,8 +497,7 @@ def ClustalO(SeqDict, wrapLength, ordered,working_prefix):
                 FASTAfile += item + '\n'
             i += 1
 
-    with open(workingfilename,
-              'w') as currentFile:  # using with for this automatically closes the file even if you crash
+    with open(workingfilename, 'w') as currentFile:  # using with for this automatically closes the file even if you crash
         currentFile.write(FASTAfile)
     # todo with the ./ in front of clustalO all I need is the 'stand alone MAC binary' from http://www.clustal.org/omega/ no other installation
     # Mac users should rename the downloaded file to clustalo and
@@ -518,11 +509,10 @@ def ClustalO(SeqDict, wrapLength, ordered,working_prefix):
         currentFile.write('The clustal output is not done yet')
 
     if ordered == True:
-        ClustalOCommandLine = 'clustalo -i '+ MyInFiles + ' -o '+ MyOutFiles + ' -v --force --output-order=tree-order --outfmt=vie --resno --wrap=' + str(
-            wrapLength)  #
+        ClustalOCommandLine = bin_prefix + 'clustalo -i '+ MyInFiles + ' -o '+ MyOutFiles + ' -v --force --output-order=tree-order --outfmt=vie --resno --wrap=' \
+                              + str(wrapLength)  #
     else:
-
-        ClustalOCommandLine = 'clustalo -i '+ MyInFiles + ' -o '+ MyOutFiles + ' -v --force --output-order=tree-order --outfmt=vie --resno --wrap=1000'
+        ClustalOCommandLine = bin_prefix + 'clustalo -i '+ MyInFiles + ' -o '+ MyOutFiles + ' -v --force --output-order=tree-order --outfmt=vie --resno --wrap=1000'
     ClustalOut = os.popen(ClustalOCommandLine)
 
     # if ordered == True:
