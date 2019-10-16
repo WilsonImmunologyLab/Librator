@@ -50,11 +50,11 @@ global DBFilename
 DBFilename = 'none'
 
 global working_prefix
-working_prefix = os.path.dirname(os.path.realpath(sys.argv[0]))
+working_prefix = os.path.dirname(os.path.realpath(sys.argv[0])) + '/'
 global bin_prefix
 bin_prefix = '/usr/local/bin/'
 global temp_folder
-temp_folder = working_prefix + '/Temp/'
+temp_folder = working_prefix + 'Temp/'
 
 global joint_up
 joint_up = "TCCACTCCCAGGTCCAACTGCACCTCGGTTCTATCGATTGAATTC"
@@ -4557,6 +4557,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessSeqEditDialog.show()
 
 	def get_sequence_edit_info(self, editing_mode, base_sequence, donor_sequences, mutation_schema):  # For modaless dialog
+		global bin_prefix
 		# this function only process sequence editing within same subtype
 		if editing_mode == 0:   # base biased mode
 			# get information for base sequence
@@ -4626,7 +4627,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			temp_file.close()
 
 			# run muscle to align query seuqnece to template sequence
-			cmd = "muscle -in " + in_file + " -out " + out_file
+			cmd = os.path.join(bin_prefix, 'muscle')
+			cmd += " -in " + in_file + " -out " + out_file
 			# print(cmd)
 			os.system(cmd)
 
@@ -4808,7 +4810,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			temp_file.close()
 
 			# run muscle to align query seuqnece to template sequence
-			cmd = "muscle -in " + in_file + " -out " + out_file
+			cmd = os.path.join(bin_prefix, 'muscle')
+			cmd += " -in " + in_file + " -out " + out_file
 			# print(cmd)
 			os.system(cmd)
 
@@ -4969,6 +4972,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.generate_gibson_fragments(data, subtype, temp_folder, out_dir, joint_up_str, joint_down_str, db_file)
 
 	def generate_gibson_fragments(self, data, subtype, temp_folder, out_dir, joint_up_str, joint_down_str, db_file):
+		global bin_prefix
 		# initial the temp file name
 		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
 		in_file = temp_folder + "in" + time_stamp + ".fas"
@@ -5003,7 +5007,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		temp_file.close()
 
 		# run muscle to align query seuqnece to template sequence
-		cmd = "muscle -in " + in_file + " -out " + out_file
+		cmd = os.path.join(bin_prefix,'muscle')
+		cmd += " -in " + in_file + " -out " + out_file
 		#print(cmd)
 		os.system(cmd)
 
