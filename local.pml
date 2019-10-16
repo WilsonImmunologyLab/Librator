@@ -13,7 +13,4 @@ color yellow, ABS-Ca2
 color gray, ABS-Cb
 color chocolate, ABS-Sa
 color green, ABS-Sb
-sel mutation, chain A+C+E+G+I+K and (resi 88)
-color red, mutation
-label chain A+C+E+G+I+K and resi 88 and name C, "Y99A"
 set label_size, 25

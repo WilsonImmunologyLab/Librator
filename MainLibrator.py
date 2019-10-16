@@ -4295,8 +4295,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_btnFieldSearch_clicked(self):
-		pymol_path = "pymol"
-		#AASeq = self.ui.textAA.toPlainText()
+		global bin_prefix
+		pymol_path = os.path.join(bin_prefix,'pymol')
+		seq = self.ui.txtName.toPlainText()
+		if seq == '':
+			QMessageBox.warning(self, 'Warning',
+			                    'Please select a sequence first!', QMessageBox.Ok, QMessageBox.Ok)
+			return
 		mutation = self.ui.txtInsert_Base.toPlainText().strip(",")
 		subtype = str(self.ui.cboSubtype.currentText())
 
