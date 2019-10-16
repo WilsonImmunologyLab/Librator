@@ -1628,16 +1628,18 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		if MutsOn == True:
 			if mutation_info == "none":
-				QMessageBox.warning(self, 'Warning',
-				                    'No mutation information for this sequence!', QMessageBox.Ok, QMessageBox.Ok)
+				# QMessageBox.warning(self, 'Warning',
+				#                     'No mutation information for this sequence!', QMessageBox.Ok, QMessageBox.Ok)
+				pass
 			else:
 				mutation_info = mutation_info.rstrip(',')
 				mutation_info = mutation_info.split(',')
 
 		if DonRegOn == True:
 			if donor_info == 'none':
-				QMessageBox.warning(self, 'Warning',
-				                    'No donor information for this sequence!', QMessageBox.Ok, QMessageBox.Ok)
+				# QMessageBox.warning(self, 'Warning',
+				#                     'No donor information for this sequence!', QMessageBox.Ok, QMessageBox.Ok)
+				pass
 
 		# NumLine += '.'
 		# AAPosColorMap += '0'
@@ -5019,8 +5021,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			if len(SequenceAA[1]) > 0:
 				separator = "\n"
 				errMsg = separator.join(SequenceAA[1])
-				QMessageBox.warning(self, 'Warning', errMsg, QMessageBox.Ok,
-									QMessageBox.Ok)
+				# QMessageBox.warning(self, 'Warning', errMsg, QMessageBox.Ok,
+				# 					QMessageBox.Ok)
+				pass
 				#error_code = 1
 				#break
 			EachIn = (SeqName, Sequence, SequenceAA[0])
