@@ -347,8 +347,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			with open(record_file, 'r') as currentFile:
 				RecentFiles = currentFile.readlines()
 			currentFile.close()
-			RecentFiles = RecentFiles[0]
-			if RecentFiles != '':
+			if len(RecentFiles) != 0:
+				RecentFiles = RecentFiles[0]
 				RecentFiles = RecentFiles.split(',')
 				for file in RecentFiles:
 					if file != '':
@@ -503,7 +503,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_btnReadingFrames_clicked(self):
-		self.AlignSequences('RF', 'none')
+		self.AlignSequencesRF('RF', 'none')
 
 	@pyqtSlot()
 	def on_textSeq_cursorPositionChanged(self):
@@ -2406,13 +2406,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 		return ruler
 
 	@pyqtSlot()
-	def AlignSequencesOld(self, DataIn, Notes):
+	def AlignSequencesRF(self, DataIn, Notes):
 		# import tempfile
 		import os
 		TupData = ()
 		DataSet = []
 		QApplication.setOverrideCursor(Qt.WaitCursor)
 		global GLMsg
+		global working_prefix
+		global bin_prefix
+		global temp_folder
 
 
 		if DataIn == 'RF':  #can use this part for reading frames
@@ -2478,7 +2481,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		outfilename = ''
 		try:
 
-			outfilename = LibratorSeq.ClustalO(DataSet, 80, True)
+			outfilename = LibratorSeq.ClustalO(DataSet, 80, True, working_prefix, bin_prefix)
 
 			lenName = 0
 			longestName = 0
@@ -2790,7 +2793,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		Style = 'aligned'
 
 		if Notes != 'Tab':
-			self.ShowVGenesTextEdit(alignmentText, Style)
+			ColorMap = 'none'
+			self.ShowVGenesTextEdit(alignmentText, Style, ColorMap)
 		else:
 			self.ui.txtSeqAlignment.setText(alignmentText)
 
@@ -3124,8 +3128,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.TextEdit.show()
 
 		self.TextEdit.textEdit.setText(textToShow)
-		cursor = self.TextEdit.textEdit.textCursor()
-		self.DecorateText(ColorMap, cursor)
+		if ColorMap != 'none':
+			cursor = self.TextEdit.textEdit.textCursor()
+			self.DecorateText(ColorMap, cursor)
 
 	@pyqtSlot()
 	def ShowVGenesTextEditLegend(self, textToShow, ColorMap):
@@ -3293,8 +3298,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			my_open = open(record_file, 'r')
 			my_infor = my_open.readlines()
 			my_open.close()
-			my_infor = my_infor[0]
-			if my_infor != '':
+			if len(my_infor) != 0:
+				my_infor = my_infor[0]
 				my_infor = my_infor.split(',')
 				if DBFilename in my_infor:
 					pass
@@ -3304,6 +3309,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 					file_handle.write(str)
 					file_handle.close()
 					self.ui.cboRecent.addItem(DBFilename)
+			else:
+				file_handle = open(record_file, 'w')
+				file_handle.write(DBFilename)
+				file_handle.close()
+				self.ui.cboRecent.addItem(DBFilename)
 		else:
 			file_handle = open(record_file, 'w')
 			file_handle.write(DBFilename)
