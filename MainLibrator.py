@@ -55,8 +55,6 @@ global bin_prefix
 bin_prefix = '/usr/local/bin/'
 global temp_folder
 temp_folder = working_prefix + '/Temp/'
-global db_folder
-db_folder = working_prefix + '/DB/'
 
 global joint_up
 joint_up = "TCCACTCCCAGGTCCAACTGCACCTCGGTTCTATCGATTGAATTC"
@@ -101,11 +99,9 @@ class basePathDialog(QtWidgets.QDialog):
 	def accept(self):  # redo accept method
 		global working_prefix
 		global temp_folder
-		global db_folder
 		working_prefix = self.ui.basePath.text()
 		working_prefix = working_prefix.rstrip('/') + '/'
 		temp_folder = working_prefix + 'Temp/'
-		db_folder = working_prefix + 'DB/'
 		self.close()
 
 class MutationDialog(QtWidgets.QDialog):
@@ -163,10 +159,12 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 		self.ui.browseDB.clicked.connect(self.browse_db)
 
 	def browse(self):  # browse and select path
+		global temp_folder
 		out_dir = QFileDialog.getExistingDirectory(self, "select files", temp_folder)
 		self.ui.outpath.setText(out_dir)
 
 	def browse_db(self):  # browse and select path
+		global temp_folder
 		out_dir, _ = QFileDialog.getOpenFileName(self, "select existing fragment DB", temp_folder,"Librator database Files (*.ldb);;All Files (*)")
 		self.ui.dbpath.setText(out_dir)
 
@@ -341,26 +339,27 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def UpdateRecent(self):
-		global db_folder
+		global working_prefix
 		self.ui.cboRecent.clear()
 		self.ui.cboRecent.addItem('Open previous')
-		record_file = db_folder + 'db_record.txt'
+		record_file = working_prefix + 'db_record.txt'
 		if os.path.isfile(record_file):
 			with open(record_file, 'r') as currentFile:
 				RecentFiles = currentFile.readlines()
 			currentFile.close()
 			RecentFiles = RecentFiles[0]
-			RecentFiles = RecentFiles.split(',')
-			for file in RecentFiles:
-				if file != '':
-					if os.path.isfile(file):
-						self.ui.cboRecent.addItem(file)
-					else:
-						RecentFiles.remove(file)
-			RecentFiles_str = ','.join(RecentFiles)
-			with open(record_file, 'w') as currentFile:
-				currentFile.write(RecentFiles_str)
-			currentFile.close()
+			if RecentFiles != '':
+				RecentFiles = RecentFiles.split(',')
+				for file in RecentFiles:
+					if file != '':
+						if os.path.isfile(file):
+							self.ui.cboRecent.addItem(file)
+						else:
+							RecentFiles.remove(file)
+				RecentFiles_str = ','.join(RecentFiles)
+				with open(record_file, 'w') as currentFile:
+					currentFile.write(RecentFiles_str)
+				currentFile.close()
 
 	@pyqtSlot()
 	def on_actionIncrease_font_size_triggered(self):
@@ -1774,6 +1773,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global GLMsg
 		global working_prefix
 		global bin_prefix
+		global temp_folder
 
 		if self.ui.actionDNA.isChecked() == False and self.ui.actionAA.isChecked() == False:
 			QMessageBox.warning(self, 'Warning', 'Neither DNA nor AA has been selected! Will generate DNA alignment!',
@@ -3286,23 +3286,24 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def UpdateRecentFilelist(self, DBFilename):
-		global db_folder
-		record_file = db_folder + 'db_record.txt'
+		global working_prefix
+		record_file = working_prefix + 'db_record.txt'
 
 		if os.path.exists(record_file):
 			my_open = open(record_file, 'r')
 			my_infor = my_open.readlines()
 			my_open.close()
 			my_infor = my_infor[0]
-			my_infor = my_infor.split(',')
-			if DBFilename in my_infor:
-				pass
-			else:
-				file_handle = open(record_file, 'a')
-				str = ',' + DBFilename
-				file_handle.write(str)
-				file_handle.close()
-				self.ui.cboRecent.addItem(DBFilename)
+			if my_infor != '':
+				my_infor = my_infor.split(',')
+				if DBFilename in my_infor:
+					pass
+				else:
+					file_handle = open(record_file, 'a')
+					str = ',' + DBFilename
+					file_handle.write(str)
+					file_handle.close()
+					self.ui.cboRecent.addItem(DBFilename)
 		else:
 			file_handle = open(record_file, 'w')
 			file_handle.write(DBFilename)
@@ -3629,8 +3630,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		os.remove(SavedFile)
 		os.remove(workingfilename)
-
-
 		#
 		# * **4HMG** is H3N2 strain A/Aichi/2/1968 (or X-31 HA). This is the numbering scheme that is often referred to as the "H3 numbering system." The HA1 and HA2 polypeptides are numbered as different sequences in this numbering scheme.
 		#
@@ -4745,6 +4744,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 									QMessageBox.Ok,
 									QMessageBox.Ok)
 
+			os.remove(in_file)
+			os.remove(out_file)
+
 		elif editing_mode == 1:     # Cocktail mode
 			# get information for base sequence
 			WhereState = "SeqName = " + '"' + base_sequence + '"'
@@ -4904,6 +4906,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			else:
 				return
 			self.modalessSeqEditDialog.close()
+			os.remove(in_file)
+			os.remove(out_file)
 
 		elif editing_mode == 2:
 			pass
@@ -5237,6 +5241,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		writer_summary.save()
 
 		self.modalessGibsonDialog.close()
+		os.remove(in_file)
+		os.remove(out_file)
 
 
 def ReadFASTA(outfilename):

@@ -3,6 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="9f472839-8a65-4dce-be83-d1c7511e6e93" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DB/AAATester.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/AAATester.ldb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LibratorSeq.py" beforeDir="false" afterPath="$PROJECT_DIR$/LibratorSeq.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -127,11 +130,6 @@
           <url>file://$PROJECT_DIR$/../HumanHA/test.py</url>
           <line>197</line>
           <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/MainLibrator.py</url>
-          <line>4880</line>
-          <option name="timeStamp" value="101" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
