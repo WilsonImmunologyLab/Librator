@@ -392,6 +392,58 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# 	font.setFamily('Lucida Grande')
 		#
 		# 	self.ui.tableView.setFont(font)
+	@pyqtSlot()
+	def on_actionExport_triggered(self):
+		global DataIs
+
+		# read sequences from database
+		AlignIn = []
+		listItems = self.ui.listWidgetStrainsIn.selectedItems()
+
+		WhereState = ''
+		NumSeqs = len(listItems)
+		i = 1
+
+		if len(listItems) == 0:
+			QMessageBox.warning(self, 'Warning', 'Please select sequence from active sequence panel!', QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+		for item in listItems:
+			eachItemIs = item.text()
+			WhereState += 'SeqName = "' + eachItemIs + '"'
+			if NumSeqs > i:
+				WhereState += ' OR '
+
+			i += 1
+
+		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+
+		for item in DataIn:
+			SeqName = item[0]
+			Sequence = item[1]
+			VFrom = int(item[2]) - 1
+			if VFrom == -1: VFrom = 0
+
+			VTo = int(item[3])
+			Sequence = Sequence[VFrom:VTo]
+			Sequence = Sequence.upper()
+			EachIn = (SeqName, Sequence)
+			AlignIn.append(EachIn)
+
+		# get output file
+		options = QtWidgets.QFileDialog.Options()
+		OUTFilename, _ = QtWidgets.QFileDialog.getSaveFileName(self,
+		                                                      "output file",
+		                                                      "output file",
+		                                                      "Fasta Files (*.fasta);;All Files (*)",
+		                                                      options=options)
+		if OUTFilename != '':
+			out_handle = open(OUTFilename, 'w')
+			for element in AlignIn:
+				out_handle.write('>' + element[0] + '\n')
+				out_handle.write(element[1] + '\n')
+
 
 	@pyqtSlot()
 	def on_actionDecrease_font_size_triggered(self):
