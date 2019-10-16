@@ -34,4 +34,8 @@ exe = EXE(pyz,
 app = BUNDLE(exe,
              name='MainLibrator.app',
              icon='Flu.icns',
-             bundle_identifier=None)
+             bundle_identifier=None,
+             info_plist={
+              'NSHumanReadableCopyright':"Copyright @ 2019, Wilson Lab, All Rights Reserved",
+              'NSHighResolutionCapable': 'True'
+             })
