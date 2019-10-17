@@ -1,7 +1,7 @@
 # Librator by Patrick Wilson
 from PyQt5.QtCore import pyqtSlot, QTimer, QDateTime, Qt, QSortFilterProxyModel, QModelIndex, QEventLoop, pyqtSignal,QEventLoop
 from PyQt5 import QtWidgets, QtPrintSupport
-from PyQt5.QtWidgets import QApplication, QFileDialog, QMessageBox
+from PyQt5.QtWidgets import *
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QCursor
 from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion, creatnewFragmentDB
@@ -27,7 +27,6 @@ import LibratorSeq
 global BaseSeq
 BaseSeq = ''
 
-# from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 
 global MoveNotChange
 MoveNotChange = False
