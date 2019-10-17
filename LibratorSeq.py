@@ -487,9 +487,11 @@ def ClustalO(SeqDict, wrapLength, ordered, working_prefix, bin_prefix):
         for item in seq:
             if i % 2 != 0:
                 FASTAfile += '>' + item + '\n'
-                if i == 1: SeqName = FASTAfile
+                if i == 1:
+                    SeqName = FASTAfile
             else:
-                if item == '': item = 'N'
+                if item == '':
+                    item = 'N'
                 if SeqName == "Germline":
                     if len(item) < 50:
                         return False
