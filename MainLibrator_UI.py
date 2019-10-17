@@ -1242,7 +1242,6 @@ class Ui_MainLibrator(object):
         self.menuHighThroughput.addAction(self.actionRename10x)
         self.menuHighThroughput.addAction(self.actionFixNames)
         self.menuSetting.addAction(self.actionCheck_Update_base_folder)
-        self.menuSetting.addAction(self.actionCheck_Update_bin_folder)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
         self.menubar.addAction(self.menuSequences.menuAction())

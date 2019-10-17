@@ -16,7 +16,6 @@ from MainLibrator_UI import Ui_MainLibrator
 from mutationdialog import Ui_MutationDialog
 from sequenceedit import Ui_SequenceEditDialog
 from gibsonclone import Ui_gibsoncloneDialog
-from bin_path_dialog import Ui_binPathDialog
 from base_path_dialog import Ui_basePathDialog
 
 from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText, openfastq
@@ -53,10 +52,15 @@ DBFilename = 'none'
 
 global working_prefix
 working_prefix = os.path.dirname(os.path.realpath(sys.argv[0])) + '/'
-global bin_prefix
-bin_prefix = '/usr/local/bin/'
 global temp_folder
 temp_folder = working_prefix + 'Temp/'
+
+global muscle_path
+muscle_path = '/usr/local/bin/muscle'
+global clustal_path
+clustal_path = '/usr/local/bin/clustalo'
+global pymol_path
+pymol_path = '/usr/local/bin/pymol'
 
 global joint_up
 joint_up = "TCCACTCCCAGGTCCAACTGCACCTCGGTTCTATCGATTGAATTC"
@@ -64,46 +68,47 @@ global joint_down
 joint_down = "GGGTCCGGATACATACCAGAGGCCCCGCGAGATGG"
 
 
-class binPathDialog(QtWidgets.QDialog):
-	def __init__(self):
-		super(binPathDialog, self).__init__()
-		self.ui = Ui_binPathDialog()
-		self.ui.setupUi(self)
-
-		self.ui.pushButton.clicked.connect(self.browse)
-		self.ui.yes.clicked.connect(self.accept)
-		self.ui.no.clicked.connect(self.reject)
-
-	def browse(self):  # browse and select path
-		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
-		self.ui.binPath.setText(out_dir)
-
-	def accept(self):  # redo accept method
-		global bin_prefix
-		bin_prefix = self.ui.binPath.text()
-		bin_prefix = bin_prefix.rstrip('/') + '/'
-		self.close()
-
 class basePathDialog(QtWidgets.QDialog):
 	def __init__(self):
 		super(basePathDialog, self).__init__()
 		self.ui = Ui_basePathDialog()
 		self.ui.setupUi(self)
 
-		self.ui.pushButton.clicked.connect(self.browse)
+		self.ui.browseBase.clicked.connect(self.browsebasedir)
+		self.ui.browseMuscle.clicked.connect(self.browsemuscledir)
+		self.ui.browseClustal.clicked.connect(self.browseclustaldir)
+		self.ui.browsePymol.clicked.connect(self.browsepymoldir)
+
 		self.ui.yes.clicked.connect(self.accept)
 		self.ui.no.clicked.connect(self.reject)
 
-	def browse(self):  # browse and select path
+	def browsebasedir(self):  # browse and select path
 		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
 		self.ui.basePath.setText(out_dir)
+	def browsemuscledir(self):  # browse and select path
+		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
+		self.ui.musclePath.setText(out_dir)
+	def browseclustaldir(self):  # browse and select path
+		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
+		self.ui.clustaloPath.setText(out_dir)
+	def browsepymoldir(self):  # browse and select path
+		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
+		self.ui.pymolPath.setText(out_dir)
 
 	def accept(self):  # redo accept method
 		global working_prefix
 		global temp_folder
+		global pymol_path
+		global muscle_path
+		global clustal_path
+
 		working_prefix = self.ui.basePath.text()
 		working_prefix = working_prefix.rstrip('/') + '/'
 		temp_folder = working_prefix + 'Temp/'
+
+		muscle_path = self.ui.musclePath.text()
+		clustal_path = self.ui.clustaloPath.text()
+		pymol_path = self.ui.pymolPath.text()
 		self.close()
 
 class MutationDialog(QtWidgets.QDialog):
@@ -2476,7 +2481,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		QApplication.setOverrideCursor(Qt.WaitCursor)
 		global GLMsg
 		global working_prefix
-		global bin_prefix
+		global clustal_path
 		global temp_folder
 		global VGenesTextWindows
 
@@ -2548,7 +2553,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 				out_handle.write(DataSet[0][1])
 				out_handle.close()
 			else:
-				outfilename = LibratorSeq.ClustalO(DataSet, 80, True, working_prefix, bin_prefix)
+				if os.path.exists(clustal_path):
+					outfilename = LibratorSeq.ClustalO(DataSet, 80, True, working_prefix, clustal_path)
+				else:
+					QMessageBox.warning(self, 'Warning',
+					                    'The Clustal Omega does not exist! Check your path!', QMessageBox.Ok, QMessageBox.Ok)
+					return
 
 			lenName = 0
 			longestName = 0
@@ -2631,7 +2641,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			print('no')
 
 		finally:
-			os.remove(outfilename)
+			if os.path.exists(outfilename):
+				os.remove(outfilename)
 
 		# generate consnesus sequences (AA and NT)
 		if len(all) == 1:
@@ -3123,7 +3134,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		QApplication.setOverrideCursor(Qt.WaitCursor)
 		global GLMsg
 		global working_prefix
-		global bin_prefix
+		global clustal_path
 		global temp_folder
 		global VGenesTextWindows
 
@@ -3190,8 +3201,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 		#(fd, outfilename) = tempfile.mkstemp()
 		outfilename = ''
 		try:
-
-			outfilename = LibratorSeq.ClustalO(DataSet, 80, True, working_prefix, bin_prefix)
+			if os.path.exists(clustal_path):
+				outfilename = LibratorSeq.ClustalO(DataSet, 80, True, working_prefix, clustal_path)
+			else:
+				QMessageBox.warning(self, 'Warning',
+				                    'The Clustal Omega does not exist! Check your path!', QMessageBox.Ok,
+				                    QMessageBox.Ok)
+				return
 
 			lenName = 0
 			longestName = 0
@@ -4071,7 +4087,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		H3Numbering.clear()
 		global NumberingMap
 		global temp_folder
-		global bin_prefix
+		global muscle_path
 		NumberingMap.clear()
 
 
@@ -4085,7 +4101,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		MyOutFiles = NameBase + 'Out.txt'
 
 		workingfilename = os.path.join(temp_folder, MyInFiles)
-		musclepath = os.path.join(bin_prefix)
+		musclepath = re.sub(r'[^\/]+$','',muscle_path)
 		savefilename = os.path.join(temp_folder,  MyOutFiles)
 
 		workingdir, filename = os.path.split(workingfilename)
@@ -4970,8 +4986,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_btnFieldSearch_clicked(self):
-		global bin_prefix
-		pymol_path = os.path.join(bin_prefix,'pymol')
+		global pymol_path
+
 		seq = self.ui.txtName.toPlainText()
 		if seq == '':
 			QMessageBox.warning(self, 'Warning',
@@ -5265,14 +5281,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessGibsonDialog.gibsonSignal.connect(self.GenerateGibson)
 			self.modalessGibsonDialog.show()
 
-	def open_binpath_dialog(self):
-		self.modalessbinDialog = binPathDialog()
-		self.modalessbinDialog.ui.binPath.setText(bin_prefix)
-		self.modalessbinDialog.show()
-
 	def open_basepath_dialog(self):
+		global working_prefix
+		global muscle_path
+		global clustal_path
+		global pymol_path
+
 		self.modalessbaseDialog = basePathDialog()
 		self.modalessbaseDialog.ui.basePath.setText(working_prefix)
+		self.modalessbaseDialog.ui.musclePath.setText(muscle_path)
+		self.modalessbaseDialog.ui.clustaloPath.setText(clustal_path)
+		self.modalessbaseDialog.ui.pymolPath.setText(pymol_path)
 		self.modalessbaseDialog.show()
 
 	def sequence_editing(self):
@@ -5301,7 +5320,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessSeqEditDialog.show()
 
 	def get_sequence_edit_info(self, editing_mode, base_sequence, donor_sequences, mutation_schema):  # For modaless dialog
-		global bin_prefix
+		global muscle_path
 		# this function only process sequence editing within same subtype
 		if editing_mode == 0:   # base biased mode
 			# get information for base sequence
@@ -5370,8 +5389,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			temp_file.close()
 
+			# check if muscle exist or not
+			if os.path.exists(muscle_path):
+				pass
+			else:
+				QMessageBox.warning(self,'Warning','The muscle file does not exist!',QMessageBox.Ok, QMessageBox.Ok)
+				return
 			# run muscle to align query seuqnece to template sequence
-			cmd = os.path.join(bin_prefix, 'muscle')
+			cmd = muscle_path
 			cmd += " -in " + in_file + " -out " + out_file
 			# print(cmd)
 			os.system(cmd)
@@ -5553,8 +5578,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 			temp_file.write(donor_aa_seq + "\n")
 			temp_file.close()
 
+			# check if muscle exist or not
+			if os.path.exists(muscle_path):
+				pass
+			else:
+				QMessageBox.warning(self, 'Warning', 'The muscle file does not exist!', QMessageBox.Ok, QMessageBox.Ok)
+				return
 			# run muscle to align query seuqnece to template sequence
-			cmd = os.path.join(bin_prefix, 'muscle')
+			cmd = muscle_path
 			cmd += " -in " + in_file + " -out " + out_file
 			# print(cmd)
 			os.system(cmd)
@@ -5717,7 +5748,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.generate_gibson_fragments(data, subtype, temp_folder, out_dir, joint_up_str, joint_down_str, db_file)
 
 	def generate_gibson_fragments(self, data, subtype, temp_folder, out_dir, joint_up_str, joint_down_str, db_file):
-		global bin_prefix
+		global muscle_path
 		# initial the temp file name
 		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
 		in_file = temp_folder + "in" + time_stamp + ".fas"
@@ -5751,10 +5782,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 			temp_file.write(data.loc[index, 'AAseq'] + "\n")
 		temp_file.close()
 
+		# check if muscle exist or not
+		if os.path.exists(muscle_path):
+			pass
+		else:
+			QMessageBox.warning(self, 'Warning', 'The muscle file does not exist!', QMessageBox.Ok, QMessageBox.Ok)
+			return
 		# run muscle to align query seuqnece to template sequence
-		cmd = os.path.join(bin_prefix,'muscle')
+		cmd = muscle_path
 		cmd += " -in " + in_file + " -out " + out_file
-		#print(cmd)
+		# print(cmd)
 		os.system(cmd)
 
 		# read alignment from muscle results

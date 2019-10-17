@@ -451,7 +451,7 @@ def flexibility(subsequence):
 
 
 
-def ClustalO(SeqDict, wrapLength, ordered, working_prefix, bin_prefix):
+def ClustalO(SeqDict, wrapLength, ordered, working_prefix, bin):
     # input is a list of lists containing filename and sequence: ((fielname1, seq1),(fielname2, seq2))
     # import time
     # clustalo -i my-in-seqs.fa -o my-out-seqs.fa -v
@@ -511,10 +511,10 @@ def ClustalO(SeqDict, wrapLength, ordered, working_prefix, bin_prefix):
         currentFile.write('The clustal output is not done yet')
 
     if ordered == True:
-        ClustalOCommandLine = bin_prefix + 'clustalo -i '+ MyInFiles + ' -o '+ MyOutFiles + ' -v --force --output-order=tree-order --outfmt=vie --resno --wrap=' \
+        ClustalOCommandLine = bin + ' -i '+ MyInFiles + ' -o '+ MyOutFiles + ' -v --force --output-order=tree-order --outfmt=vie --resno --wrap=' \
                               + str(wrapLength)  #
     else:
-        ClustalOCommandLine = bin_prefix + 'clustalo -i '+ MyInFiles + ' -o '+ MyOutFiles + ' -v --force --output-order=tree-order --outfmt=vie --resno --wrap=1000'
+        ClustalOCommandLine = bin + ' -i '+ MyInFiles + ' -o '+ MyOutFiles + ' -v --force --output-order=tree-order --outfmt=vie --resno --wrap=1000'
     ClustalOut = os.popen(ClustalOCommandLine)
 
     # if ordered == True:
