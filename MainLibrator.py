@@ -1,7 +1,7 @@
 # Librator by Patrick Wilson
 from PyQt5.QtCore import pyqtSlot, QTimer, QDateTime, Qt, QSortFilterProxyModel, QModelIndex, QEventLoop, pyqtSignal,QEventLoop
 from PyQt5 import QtWidgets, QtPrintSupport
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QApplication, QFileDialog, QMessageBox
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QCursor
 from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion, creatnewFragmentDB
@@ -39,6 +39,9 @@ global NumberingMap
 H1Numbering = {}
 H3Numbering = {}
 NumberingMap = {}
+
+global VGenesTextWindows
+VGenesTextWindows = {}
 
 global GLMsg
 GLMsg = False
@@ -286,8 +289,10 @@ class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 		# super(VGenesTextMain, self).__init__()
 		self.setupUi()
 
+
 class LibratorMain(QtWidgets.QMainWindow):
 	def __init__(self):  # , parent=None):
+		global VGenesTextWindows
 	# def __init__(self, master=None):
 		super(LibratorMain, self).__init__()  # parent)
 
@@ -329,7 +334,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.ui.textSeq.textChanged.connect(self.SeqChanged)
 
-		self.TextEdit = VGenesTextMain()
+		# TextEdit = VGenesTextMain()
+		# TextEdit.id = 1
+		# VGenesTextWindows[1] = TextEdit
 
 		self.UpdateRecent()
 
@@ -1625,9 +1632,18 @@ class LibratorMain(QtWidgets.QMainWindow):
 		legend_color = AAKeyC + H3KeyCMap + H1KeyCMap + PosKeyC
 		# Add note at begining that HA1 is black andHA2 is grey or
 
+		# create new window object
+		window_id = int(time.time() * 100)
+		text_edit = VGenesTextMain()
+		text_edit.id = window_id
+		VGenesTextWindows[window_id] = text_edit
+
+		# delete closed window object
+		showevent(self, event)
+
 		Style = 'aligned'
-		self.ShowVGenesTextEdit(Sequence, Style, ColorMap)
-		self.ShowVGenesTextEditLegend(legend_text, legend_color)
+		self.ShowVGenesTextEdit(Sequence, Style, ColorMap, window_id)
+		self.ShowVGenesTextEditLegend(legend_text, legend_color,window_id)
 
 	@pyqtSlot()
 	def Decorate(self, Decorations):
@@ -2463,6 +2479,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global working_prefix
 		global bin_prefix
 		global temp_folder
+		global VGenesTextWindows
 
 		if self.ui.actionDNA.isChecked() == False and self.ui.actionAA.isChecked() == False:
 			QMessageBox.warning(self, 'Warning', 'Neither DNA nor AA has been selected! Will generate DNA alignment!',
@@ -3045,8 +3062,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 		legend_color = '000000000000000000022222224444444777777333333666666AAAAAAAAAA\n' + \
 		               '000000000000000000066666222227777733333CCCCCAAAAAAAAAA\n'
 		if Notes != 'Tab':
-			self.ShowVGenesTextEdit(alignmentText, Style, ColorMap)
-			self.ShowVGenesTextEditLegend(legend_text, legend_color)
+			window_id = int(time.time() * 100)
+			text_edit = VGenesTextMain()
+			text_edit.id = window_id
+			VGenesTextWindows[window_id] = text_edit
+
+			self.ShowVGenesTextEdit(alignmentText, Style, ColorMap, window_id)
+			self.ShowVGenesTextEditLegend(legend_text, legend_color, window_id)
 		else:
 			self.ui.txtSeqAlignment.setText(alignmentText)
 
@@ -3104,6 +3126,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global working_prefix
 		global bin_prefix
 		global temp_folder
+		global VGenesTextWindows
 
 
 		if DataIn == 'RF':  #can use this part for reading frames
@@ -3482,7 +3505,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		if Notes != 'Tab':
 			ColorMap = 'none'
-			self.ShowVGenesTextEdit(alignmentText, Style, ColorMap)
+
+			window_id = int(time.time() * 100)
+			text_edit = VGenesTextMain()
+			text_edit.id = window_id
+			VGenesTextWindows[window_id] = text_edit
+
+			self.ShowVGenesTextEdit(alignmentText, Style, ColorMap, window_id)
 		else:
 			self.ui.txtSeqAlignment.setText(alignmentText)
 
@@ -3781,61 +3810,74 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 
 	@pyqtSlot()
-	def ShowVGenesTextEdit(self, textToShow, style, ColorMap):
+	def ShowVGenesTextEdit(self, textToShow, style, ColorMap, window_id):
+		global VGenesTextWindows
+
+		# delete close window objects
+		del_list = []
+		for id, obj in VGenesTextWindows.items():
+			if id != window_id:
+				if obj.isVisible() == False:
+					del_list.append(id)
+
+		for id in del_list:
+			del_obj = VGenesTextWindows.pop(id)
+
+		a = VGenesTextWindows
 
 		if style == 'aligned':
-			FontIs = self.TextEdit.textEdit.currentFont()
+			FontIs = VGenesTextWindows[window_id].textEdit.currentFont()
 			font = QFont(FontIs)
 
 			# FontSize = int(font.pointSize())
 			font.setPointSize(10)
 			font.setFamily('Courier New')
 
-			self.TextEdit.textEdit.setFont(font)
+			VGenesTextWindows[window_id].textEdit.setFont(font)
 
 		elif style == 'standard':
-			FontIs = self.TextEdit.textEdit.currentFont()
+			FontIs = VGenesTextWindows[window_id].textEdit.currentFont()
 			font = QFont(FontIs)
 
 			# FontSize = int(font.pointSize())
 			font.setPointSize(10)
 			font.setFamily('Lucida Grande')
 
-			self.TextEdit.textEdit.setFont(font)
+			VGenesTextWindows[window_id].textEdit.setFont(font)
 
 		elif style == 'ProteinReport':
-			FontIs = self.TextEdit.textEdit.currentFont()
+			FontIs = VGenesTextWindows[window_id].textEdit.currentFont()
 			font = QFont(FontIs)
 
 			# FontSize = int(font.pointSize())
 			font.setPointSize(6)
 			font.setFamily('Courier New')
 
-			self.TextEdit.textEdit.setFont(font)
+			VGenesTextWindows[window_id].textEdit.setFont(font)
 
-		self.TextEdit.show()
+		VGenesTextWindows[window_id].show()
 
-		self.TextEdit.textEdit.setText(textToShow)
+		VGenesTextWindows[window_id].textEdit.setText(textToShow)
 		if ColorMap != 'none':
-			cursor = self.TextEdit.textEdit.textCursor()
+			cursor = VGenesTextWindows[window_id].textEdit.textCursor()
 			self.DecorateText(ColorMap, cursor)
 
 	@pyqtSlot()
-	def ShowVGenesTextEditLegend(self, textToShow, ColorMap):
-
-		FontIs = self.TextEdit.textEdit_legend.currentFont()
+	def ShowVGenesTextEditLegend(self, textToShow, ColorMap, window_id):
+		global VGenesTextWindows
+		FontIs = VGenesTextWindows[window_id].textEdit_legend.currentFont()
 		font = QFont(FontIs)
 
 		# FontSize = int(font.pointSize())
 		font.setPointSize(20)
 		font.setFamily('Courier New')
 
-		self.TextEdit.textEdit_legend.setFont(font)
+		VGenesTextWindows[window_id].textEdit_legend.setFont(font)
 
-		self.TextEdit.show()
+		VGenesTextWindows[window_id].show()
 
-		self.TextEdit.textEdit_legend.setText(textToShow)
-		cursor = self.TextEdit.textEdit_legend.textCursor()
+		VGenesTextWindows[window_id].textEdit_legend.setText(textToShow)
+		cursor = VGenesTextWindows[window_id].textEdit_legend.textCursor()
 		self.DecorateText(ColorMap, cursor)
 
 
