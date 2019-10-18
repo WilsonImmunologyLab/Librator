@@ -8,6 +8,7 @@ from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecord
 from HA_numbering_function import HA_numbering_Jesse
 from itertools import combinations
 from collections import Counter
+from subprocess import call, Popen, PIPE
 import os, sys, re, time, string
 import pandas as pd
 import numpy as np
@@ -105,7 +106,6 @@ class basePathDialog(QtWidgets.QDialog):
 		tmp_working_prefix = self.ui.basePath.text()
 		tmp_working_prefix = tmp_working_prefix.rstrip('/') + '/'
 
-
 		# check if those path exist or not
 		if os.path.exists(tmp_working_prefix):
 			if os.path.exists(tmp_working_prefix + 'Temp/') and os.path.exists(tmp_working_prefix + 'PDB/'):
@@ -141,12 +141,13 @@ class basePathDialog(QtWidgets.QDialog):
 			                    'The path for clustal omega does not exist! Check your input!', QMessageBox.Ok, QMessageBox.Ok)
 			return
 
-		if os.path.exists(self.ui.pymolPath.text()):
-			pymol_path = self.ui.pymolPath.text()
-		else:
-			QMessageBox.warning(self, 'Warning',
-			                    'The path for PyMOL does not exist! Check your input!', QMessageBox.Ok, QMessageBox.Ok)
-			return
+		#if os.path.exists(self.ui.pymolPath.text()):
+		#	pymol_path = self.ui.pymolPath.text()
+		#else:
+		#	QMessageBox.warning(self, 'Warning',
+		#	                    'The path for PyMOL does not exist! Check your input!', QMessageBox.Ok, QMessageBox.Ok)
+		#	return
+		pymol_path = self.ui.pymolPath.text()
 
 		self.close()
 
@@ -5023,12 +5024,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			text = "set label_size, 25\n"
 			pml.write(text)
 
-		if os.path.exists(pymolPath):
-			cmd = pymolPath + " " + pml_path
-			os.popen(cmd)
-		else:
-			QMessageBox.warning(self, 'Warning',
-			                    'PyMOL does not exist!', QMessageBox.Ok, QMessageBox.Ok)
+		cmd = pymolPath + " " + pml_path
+		print(cmd)
+		bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 
 
 	@pyqtSlot()
