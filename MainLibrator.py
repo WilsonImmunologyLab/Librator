@@ -102,13 +102,52 @@ class basePathDialog(QtWidgets.QDialog):
 		global muscle_path
 		global clustal_path
 
-		working_prefix = self.ui.basePath.text()
-		working_prefix = working_prefix.rstrip('/') + '/'
-		temp_folder = working_prefix + 'Temp/'
+		tmp_working_prefix = self.ui.basePath.text()
+		tmp_working_prefix = tmp_working_prefix.rstrip('/') + '/'
 
-		muscle_path = self.ui.musclePath.text()
-		clustal_path = self.ui.clustaloPath.text()
-		pymol_path = self.ui.pymolPath.text()
+
+		# check if those path exist or not
+		if os.path.exists(tmp_working_prefix):
+			if os.path.exists(tmp_working_prefix + 'Temp/') and os.path.exists(tmp_working_prefix + 'PDB/'):
+				temp_folder = tmp_working_prefix + 'Temp/'
+				pdb_folder = tmp_working_prefix + 'PDB/'
+				working_prefix = tmp_working_prefix
+			elif os.path.exists(tmp_working_prefix + 'Temp/') == False:
+				QMessageBox.warning(self, 'Warning',
+				                    'There is no TEMP folder under your base folder! Please create a TEMP folder under '
+				                    'your working folder first!', QMessageBox.Ok, QMessageBox.Ok)
+				return
+			else:
+				QMessageBox.warning(self, 'Warning',
+				                    'There is no PDB folder under your base folder! Please create a PDB folder under '
+				                    'your working folder and put all PDB files in it!', QMessageBox.Ok, QMessageBox.Ok)
+				return
+		else:
+			QMessageBox.warning(self, 'Warning',
+			                    'Your base folder does not exist! Check your input!', QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		if os.path.exists(self.ui.musclePath.text()):
+			muscle_path = self.ui.musclePath.text()
+		else:
+			QMessageBox.warning(self, 'Warning',
+			                    'The path for muscle does not exist! Check your input!', QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		if os.path.exists(self.ui.clustaloPath.text()):
+			clustal_path = self.ui.clustaloPath.text()
+		else:
+			QMessageBox.warning(self, 'Warning',
+			                    'The path for clustal omega does not exist! Check your input!', QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		if os.path.exists(self.ui.pymolPath.text()):
+			pymol_path = self.ui.pymolPath.text()
+		else:
+			QMessageBox.warning(self, 'Warning',
+			                    'The path for PyMOL does not exist! Check your input!', QMessageBox.Ok, QMessageBox.Ok)
+			return
+
 		self.close()
 
 class MutationDialog(QtWidgets.QDialog):
@@ -4898,7 +4937,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.lblBaseName.setText(BaseSeq)
 
 	def show3Dstructure(self, mutation, pdbPath, pymolPath, subtype):
-		pml_path = os.path.join(working_prefix, "local.pml")
+		global temp_folder
+
+		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime()) + '.pml'
+		pml_path = os.path.join(temp_folder, time_stamp)
 		with open(pml_path , "w") as pml:
 			# write pml script
 			text = "load " + pdbPath + "\n"
@@ -4981,8 +5023,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 			text = "set label_size, 25\n"
 			pml.write(text)
 
-		cmd = pymolPath + " " + pml_path
-		os.popen(cmd)
+		if os.path.exists(pymolPath):
+			cmd = pymolPath + " " + pml_path
+			os.popen(cmd)
+		else:
+			QMessageBox.warning(self, 'Warning',
+			                    'PyMOL does not exist!', QMessageBox.Ok, QMessageBox.Ok)
+
 
 	@pyqtSlot()
 	def on_btnFieldSearch_clicked(self):
