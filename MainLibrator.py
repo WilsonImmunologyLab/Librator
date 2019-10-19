@@ -5004,25 +5004,49 @@ class LibratorMain(QtWidgets.QMainWindow):
 					numbering = H1Numbering
 				elif subtype == "H3N2":
 					numbering = H3Numbering
+
+				# for HA1 mutations:
 				position = ''
 				for x in real_pos_arr:
-					position += str(numbering[int(x)][2]) + '+'
+					if numbering[int(x)][0] == 'HA1' and numbering[int(x)][2] != '-':
+						position += str(numbering[int(x)][2]) + '+'
 
 				position = position.strip('+')
-				text = "sel mutation, chain A+C+E+G+I+K and (resi " + position + ")\n"
+				text = "sel ha1mutation, chain A+C+E+G+I+K and (resi " + position + ")\n"
 				pml.write(text)
-				text = "color red, mutation\n"
+				text = "color red, ha1mutation\n"
 				pml.write(text)
 
 				labels = mutation.split(",")
 				for label in labels:
-					number = re.sub('[A-Za-z]', '', label)
-					position = str(numbering[int(number)][2])
-					text = "label chain A+C+E+G+I+K and resi " + position + " and name C, \"" + label + "\"\n"
-					pml.write(text)
+					number = int(re.sub('[A-Za-z]', '', label))
+					if numbering[number][0] == 'HA1' and numbering[number][2] != '-':
+						position = str(numbering[number][2])
+						text = "label chain A+C+E+G+I+K and resi " + position + " and name C, \"" + label + "\"\n"
+						pml.write(text)
 
-			text = "set label_size, 25\n"
-			pml.write(text)
+				# for HA2 mutations:
+				position = ''
+				for x in real_pos_arr:
+					if numbering[int(x)][0] == 'HA2' and numbering[int(x)][2] != '-':
+						position += str(numbering[int(x)][2]) + '+'
+
+				position = position.strip('+')
+				text = "sel ha2mutation, chain B+D+F+H+J+L and (resi " + position + ")\n"
+				pml.write(text)
+				text = "color red, ha2mutation\n"
+				pml.write(text)
+
+				labels = mutation.split(",")
+				for label in labels:
+					number = int(re.sub('[A-Za-z]', '', label))
+					if numbering[number][0] == 'HA2' and numbering[number][2] != '-':
+						position = str(numbering[number][2])
+						text = "label chain B+D+F+H+J+L and resi " + position + " and name C, \"" + label + "\"\n"
+						pml.write(text)
+
+				text = "set label_size, 25\n"
+				pml.write(text)
 
 		cmd = pymolPath + " " + pml_path
 		print(cmd)
@@ -5041,6 +5065,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		mutation = self.ui.txtInsert_Base.toPlainText().strip(",")
 		subtype = str(self.ui.cboSubtype.currentText())
 
+		# set 3D templates for different subtypes
 		if subtype == "H1N1":
 			pdb_path = working_prefix + "PDB/4jtv.pdb"
 		elif subtype == "H3N2":
@@ -5048,9 +5073,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		elif subtype == "B":
 			pdb_path = working_prefix + "PDB/3hto.pdb"
 		elif subtype == "Group 1":
-			pdb_path = working_prefix + "PDB/3hto.pdb"
+			pdb_path = working_prefix + "PDB/4jtv.pdb"
 		elif subtype == "Group 2":
-			pdb_path = working_prefix + "PDB/3hto.pdb"
+			pdb_path = working_prefix + "PDB/4hmg.pdb"
 		else:
 			pdb_path = working_prefix + "PDB/3hto.pdb"
 
