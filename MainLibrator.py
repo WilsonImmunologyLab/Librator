@@ -4953,7 +4953,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			pml.write(text)
 
 			# highlight antigentic sites for H3N2 (A,B,C,D,E) and H1N1 (Ca1, Ca2, Cb, Sa, Sb)
-			if subtype == "H1N1":
+			if subtype == "H1N1" or subtype == "Group1":
 				text = "sel ABS-Ca1, chain A+C+E+G+I+K and (resi 142+143+144+145+146+147+172+173+174+175+176+209+210+211)\n" \
 						+ "sel ABS-Ca2, chain A+C+E+G+I+K and (resi 227+228+229)\n" \
 						+ "sel ABS-Cb, chain A+C+E+G+I+K and (resi 76+77+78+79+80+81)\n" \
@@ -4965,7 +4965,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 						+ "color chocolate, ABS-Sa\n" \
 						+ "color green, ABS-Sb\n"
 				pml.write(text)
-			elif subtype == "H3N2":
+			elif subtype == "H3N2" or subtype == "Group2":
 				text = "sel ABS-A, chain A+C+E+G+I+K and (resi 122+126+127+128+129+130+131+132+133+137+141+142+143+144)\n" \
 						+ "sel ABS-B, chain A+C+E+G+I+K and (resi 155+156+157+158+159+160+164+186+188+189+190+191+192+193+194+195+196+197+198+201)\n" \
 						+ "sel ABS-C, chain A+C+E+G+I+K and (resi 52+53+54+275+276)\n" \
@@ -5000,9 +5000,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 				# HA numbering
 				self.HANumbering(HAAA)
 
-				if subtype == "H1N1":
+				if subtype == "H1N1" or subtype == "Group1":
 					numbering = H1Numbering
-				elif subtype == "H3N2":
+				elif subtype == "H3N2" or subtype == "Group2":
 					numbering = H3Numbering
 
 				# for HA1 mutations:
