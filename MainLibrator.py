@@ -18,6 +18,7 @@ from mutationdialog import Ui_MutationDialog
 from sequenceedit import Ui_SequenceEditDialog
 from gibsonclone import Ui_gibsoncloneDialog
 from base_path_dialog import Ui_basePathDialog
+from fusiondialog import Ui_fusionDialog
 
 from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText, openfastq
 from VgenesTextEdit import VGenesTextMain
@@ -67,6 +68,105 @@ global joint_up
 joint_up = "TCCACTCCCAGGTCCAACTGCACCTCGGTTCTATCGATTGAATTC"
 global joint_down
 joint_down = "GGGTCCGGATACATACCAGAGGCCCCGCGAGATGG"
+
+
+class fusionDialog(QtWidgets.QDialog):
+	fusionSignal = pyqtSignal(list, str, bool, bool, bool)
+	fusionSeqSignal = pyqtSignal(str, str, int, int, int, int)
+	def __init__(self):
+		super(fusionDialog, self).__init__()
+		self.ui = Ui_fusionDialog()
+		self.ui.setupUi(self)
+
+		self.ui.confirmButton.clicked.connect(self.accept)
+		self.ui.cancelButton.clicked.connect(self.reject)
+		self.ui.showButton.clicked.connect(self.showalignment)
+
+	def accept(self):
+		# get sequence editing information
+		del_start = self.ui.startBase.text()
+		del_end = self.ui.endBase.text()
+		add_start = self.ui.startDonor.text()
+		add_end = self.ui.endDonor.text()
+
+		# input check
+		try:
+			del_start = int(del_start)
+			del_end = int(del_end)
+			add_start = int(add_start)
+			add_end = int(add_end)
+
+		except ValueError:
+			QMessageBox.warning(self, 'Warning', 'Please type integer numbers in all four inputs! Check your input!', QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+		else:
+			if del_start >= del_end or add_start >= add_end:
+				QMessageBox.warning(self, 'Warning',
+				                    'start position should be smaller than end position!', QMessageBox.Ok,
+				                    QMessageBox.Ok)
+				return
+
+		listItems = self.ui.selection.selectedItems()
+		donor_seq = ''
+		if len(listItems) == 0:
+			QMessageBox.warning(self, 'Warning', 'Please select sequence from active sequence panel!', QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+		for item in listItems:
+			eachItemIs = item.text()
+			donor_seq = eachItemIs
+
+		base_seq = self.ui.basename.text()
+
+		self.fusionSeqSignal.emit(base_seq, donor_seq, del_start, del_end, add_start, add_end)
+
+
+	def showalignment(self):
+		global DBFilename
+		# global DataIs
+		# self.ui.cboActive.clear()
+		AlignIn = []
+		listItems = self.ui.selection.selectedItems()
+		# if not listItems: return
+		WhereState = ''
+		NumSeqs = len(listItems)
+		i = 1
+
+		if len(listItems) == 0:
+			QMessageBox.warning(self, 'Warning', 'Please select sequence from active sequence panel!', QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+
+		# search selected sequence name
+		for item in listItems:
+			eachItemIs = item.text()
+			WhereState += 'SeqName = "' + eachItemIs + '"'
+			if NumSeqs > i:
+				WhereState += ' OR '
+			i += 1
+
+		# search base sequence name
+		basename = self.ui.basename.text()
+		WhereState += ' OR ' + 'SeqName = "' + basename + '"'
+
+		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+
+		for item in DataIn:
+			SeqName = item[0]
+			Sequence = item[1]
+			VFrom = int(item[2]) - 1
+			if VFrom == -1: VFrom = 0
+
+			VTo = int(item[3])
+			Sequence = Sequence[VFrom:VTo]
+			Sequence = Sequence.upper()
+			EachIn = (SeqName, Sequence)
+			AlignIn.append(EachIn)
+
+		Notes = ''
+		self.fusionSignal.emit(AlignIn,Notes, self.ui.dna.isChecked(), self.ui.aa.isChecked(), self.ui.ba.isChecked())
 
 
 class basePathDialog(QtWidgets.QDialog):
@@ -723,6 +823,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 	def on_actionMultiple_Alignement_triggered(self):
 
 		global DataIs
+		global DBFilename
 		# global DataIs
 		# self.ui.cboActive.clear()
 		AlignIn = []
@@ -846,6 +947,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.sequence_editing()
 		elif RepOption == 'Mutate Sequences':
 			self.open_mutation_dialog()
+		elif RepOption == 'Fusion Sequences':
+			self.open_fusion_dialog()
 		self.ui.cboReportOptions.setCurrentIndex(0)
 
 	@pyqtSlot()
@@ -2512,6 +2615,560 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			CurPos += 1
 
+	def AlignSequencesFusion(self, DataIn, Notes, dnaCheck, aaCheck, posCheck):
+		# import tempfile
+		import os
+		TupData = ()
+		DataSet = []
+		QApplication.setOverrideCursor(Qt.WaitCursor)
+		global GLMsg
+		global working_prefix
+		global clustal_path
+		global temp_folder
+		global VGenesTextWindows
+
+		DataSet = DataIn
+
+		# align selected sequences using ClustalOmega
+		outfilename = ''
+		try:
+			if len(DataSet) == 1:
+				time_stamp = str(int(time.time() * 100))
+				outfilename = temp_folder + "out-" + time_stamp + ".fas"
+				out_handle = open(outfilename, 'w')
+				out_handle.write('>' + DataSet[0][0] + '\n')
+				out_handle.write(DataSet[0][1])
+				out_handle.close()
+			else:
+				if os.path.exists(clustal_path):
+					outfilename = LibratorSeq.ClustalO(DataSet, 80, True, working_prefix, clustal_path)
+				else:
+					QMessageBox.warning(self, 'Warning',
+					                    'The Clustal Omega does not exist! Check your path!', QMessageBox.Ok,
+					                    QMessageBox.Ok)
+					return
+
+			lenName = 0
+			longestName = 0
+			alignmentText = ''
+			ColorMap = ''
+			germseq = ''
+			germpeptide = ''
+
+			each = ()
+			all = []
+			longestName = 10
+
+			peptide = ''
+			SeqName = ''
+			StartAll = False
+
+			# read alignment file, make alignment NT and AA sequences
+			if os.path.isfile(outfilename):
+				with open(outfilename, 'r') as currentfile:
+					for line in currentfile:
+						Readline = line.replace('\n', '').replace('\r', '').replace('-', '.')
+						Readline = Readline.strip()
+						if Readline[0] == '>':
+							if StartAll == True:
+								all.append(each)
+							StartAll = True
+							SeqName = Readline[1:] + ':'
+							lenName = len(SeqName)
+							if lenName > longestName:
+								longestName = lenName + 2
+						else:
+							AASeq, ErMessage = LibratorSeq.Translator(Readline, 0)
+							# Position, Amino Acid, H1-segment (HA1 or HA2), H1Number, A/California/4/2009-residue, H1-antigenic-region
+
+							if DataIn == 'RF':
+								AASeq2, ErMessage = LibratorSeq.Translator(Readline, 1)
+								AASeq3, ErMessage = LibratorSeq.Translator(Readline, 2)
+							peptide = ''
+							if DataIn == 'RF':
+								peptide2 = ''
+								peptide3 = ''
+
+							for res in AASeq:
+								peptide += (' ' + res + ' ')
+
+							if DataIn == 'RF':
+								for res in AASeq2:
+									peptide2 += (' ' + res + ' ')
+								for res in AASeq3:
+									peptide3 += (' ' + res + ' ')
+
+							peptide = peptide[0:len(Readline)]
+
+							if DataIn == 'RF':
+								peptide = peptide[1:]
+								peptide2 = peptide2[0:len(Readline)]
+
+							if DataIn == 'RF':
+								peptide3 = peptide3[0:len(Readline)]
+								peptide3 = ' ' + peptide3
+
+							if SeqName != 'Germline:':
+								if DataIn == 'RF':
+									each = (SeqName, Readline, peptide, peptide2, peptide3)
+								else:
+									each = (SeqName, Readline, peptide)
+							else:
+								germseq = Readline
+								germpeptide = peptide
+								StartAll = False
+				if StartAll == True:
+					all.append(each)
+			else:
+				return
+		# todo add header that says what germline based on
+		except:
+			print('no')
+
+		finally:
+			if os.path.exists(outfilename):
+				os.remove(outfilename)
+
+		# generate consnesus sequences (AA and NT)
+		if len(all) == 1:
+			consensusDNA = all[0][1]
+			consensusAA = all[0][2]
+		else:
+			firstOne = all[1]
+			seqlen = len(firstOne[1])
+
+			consensusDNA = ''
+			tester = ''
+			for i in range(0, seqlen - 1):
+				tester = ''
+				Cnuc = ''
+				for item in all:
+					seq = item[1]
+					tester += seq[i]
+
+				frequencies = [(c, tester.count(c)) for c in set(tester)]
+				Cnuc = max(frequencies, key=lambda x: x[1])[0]
+				consensusDNA += Cnuc
+
+			consensusAA = ''
+			firstOne = all[1]
+			seqlen = len(firstOne[1])
+			for i in range(0, seqlen - 1):
+				tester = ''
+				Caa = ''
+				for item in all:
+					seq = item[2]
+					tester += seq[i]
+
+				frequencies = [(c, tester.count(c)) for c in set(tester)]
+				Caa = max(frequencies, key=lambda x: x[1])[0]
+				consensusAA += Caa
+
+		# align consensus AA sequence with template to generate H1 and H3 numbering
+		if posCheck == True:
+			compact_consensusAA = consensusAA.replace(' ', '')
+			self.HANumbering(compact_consensusAA)
+
+		header = 'VGenes multiple alignment using Clustal Omega. \n'
+		RFSeqName = self.ui.txtName.toPlainText()
+		ConName = 'Consensus: '
+
+		if DataIn == 'RF': ConName = 'Sequence: '
+
+		while len(ConName) < longestName:
+			ConName += ' '
+
+		AASpaces = ''
+		while len(AASpaces) < longestName:
+			AASpaces += ' '
+
+		alignmentText = header
+		ColorMap += '0' * (len(header) - 1) + '\n'
+		i = 0
+		endSeg = 0
+		done = False
+		ConAdd = True
+
+		if dnaCheck == True:
+			maxLen = len(consensusDNA)
+		else:
+			NewConAA = consensusAA.replace(' ', '')
+			maxLen = len(NewConAA)
+
+		# canAA = True
+		while endSeg <= maxLen - 1:
+			if i + 60 < maxLen:
+				endSeg = i + 60
+			else:
+				endSeg = maxLen
+
+			aa_start = int(i / 3 + 1)
+			aa_end = int(endSeg / 3)
+			if posCheck == True:
+				rulerAA = 'Position(AA)' + AASpaces[12:] + self.MakeRuler(aa_start, aa_end, 5, 'aa')
+				rulerNT = 'Position(NT)' + AASpaces[12:] + self.MakeRuler(i + 1, endSeg, 5, 'nt')
+				if aaCheck == True and dnaCheck == True:
+					rulerH1 = 'H1numbering' + AASpaces[11:]
+					rulerH1Color = '0' * len(rulerH1)
+					rulerH3 = 'H3numbering' + AASpaces[11:]
+					rulerH3Color = '0' * len(rulerH3)
+
+					# make H1 numbering
+					space_from_last_pos = 0
+					for x in range(aa_start, aa_end + 1):
+						if H1Numbering[x][2] == '-':
+							rulerH1 += ' ' * (1 - space_from_last_pos) + '- '
+							space_from_last_pos = 0
+							rulerH1Color += '000'
+						else:
+							if int(H1Numbering[x][2]) % 5 == 0:
+								if len(str(H1Numbering[x][2])) == 1:
+									rulerH1 += ' ' * (1 - space_from_last_pos) + str(H1Numbering[x][2]) + ' '
+									space_from_last_pos = 0
+								elif len(str(H1Numbering[x][2])) == 2:
+									rulerH1 += ' ' * (1 - space_from_last_pos) + str(H1Numbering[x][2])
+									space_from_last_pos = 0
+								else:
+									rulerH1 += ' ' * (1 - space_from_last_pos) + str(H1Numbering[x][2])
+									space_from_last_pos = 1
+							else:
+								rulerH1 += ' ' * (1 - space_from_last_pos) + '. '
+								space_from_last_pos = 0
+							if H1Numbering[x][4] == "Cb":
+								rulerH1Color += '777'
+							elif H1Numbering[x][4] == "Ca1":
+								rulerH1Color += '222'
+							elif H1Numbering[x][4] == "Ca2":
+								rulerH1Color += '444'
+							elif H1Numbering[x][4] == "Sa":
+								rulerH1Color += '333'
+							elif H1Numbering[x][4] == "Sb":
+								rulerH1Color += '666'
+							elif H1Numbering[x][4] == "Stalk-MN":
+								rulerH1Color += 'AAA'
+							else:
+								rulerH1Color += '000'
+					if space_from_last_pos == 1:
+						rulerH1Color += rulerH1Color[-1]
+
+					# make H3 numbering
+					space_from_last_pos = 0
+					for x in range(aa_start, aa_end + 1):
+						if H3Numbering[x][2] == '-':
+							rulerH3 += ' ' * (1 - space_from_last_pos) + '- '
+							space_from_last_pos = 0
+							rulerH3Color += '000'
+						else:
+							if int(H3Numbering[x][2]) % 5 == 0:
+								if len(str(H3Numbering[x][2])) == 1:
+									rulerH3 += ' ' * (1 - space_from_last_pos) + str(H3Numbering[x][2]) + ' '
+									space_from_last_pos = 0
+								elif len(str(H3Numbering[x][2])) == 2:
+									rulerH3 += ' ' * (1 - space_from_last_pos) + str(H3Numbering[x][2])
+									space_from_last_pos = 0
+								else:
+									rulerH3 += ' ' * (1 - space_from_last_pos) + str(H3Numbering[x][2])
+									space_from_last_pos = 1
+							else:
+								rulerH3 += ' ' * (1 - space_from_last_pos) + '. '
+								space_from_last_pos = 0
+							if H3Numbering[x][4] == "A":
+								rulerH3Color += '666'
+							elif H3Numbering[x][4] == "B":
+								rulerH3Color += '222'
+							elif H3Numbering[x][4] == "C":
+								rulerH3Color += '777'
+							elif H3Numbering[x][4] == "D":
+								rulerH3Color += '333'
+							elif H3Numbering[x][4] == "E":
+								rulerH3Color += 'CCC'
+							elif H3Numbering[x][4] == "Stalk-MN":
+								rulerH3Color += 'AAA'
+							else:
+								rulerH3Color += '000'
+					if space_from_last_pos == 1:
+						rulerH3Color += rulerH3Color[-1]
+				elif aaCheck == True and dnaCheck == False:
+					aa_start = i + 1
+					aa_end = endSeg
+
+					rulerH1 = 'H1numbering' + AASpaces[11:]
+					rulerH1Color = '0' * len(rulerH1)
+					rulerH3 = 'H3numbering' + AASpaces[11:]
+					rulerH3Color = '0' * len(rulerH3)
+
+					# make H1 numbering
+					space_from_last_pos = 0
+					for x in range(aa_start, aa_end + 1):
+						if H1Numbering[x][2] == '-':
+							if space_from_last_pos == 2:
+								rulerH1Color += '0'
+								space_from_last_pos = space_from_last_pos - 1
+							elif space_from_last_pos == 1:
+								rulerH1Color += '0'
+								space_from_last_pos = space_from_last_pos - 1
+							else:
+								rulerH1 += '-'
+								rulerH1Color += '0'
+						else:
+							if int(H1Numbering[x][2]) % 5 == 0:
+								if len(str(H1Numbering[x][2])) == 1:
+									rulerH1 += str(H1Numbering[x][2])
+									space_from_last_pos = 0
+								elif len(str(H1Numbering[x][2])) == 2:
+									rulerH1 += str(H1Numbering[x][2])
+									space_from_last_pos = 1
+								else:
+									rulerH1 += str(H1Numbering[x][2])
+									space_from_last_pos = 2
+							else:
+								if space_from_last_pos == 2:
+									space_from_last_pos = space_from_last_pos - 1
+								elif space_from_last_pos == 1:
+									space_from_last_pos = space_from_last_pos - 1
+								else:
+									rulerH1 += '.'
+
+							if H1Numbering[x][4] == "Cb":
+								rulerH1Color += '7'
+							elif H1Numbering[x][4] == "Ca1":
+								rulerH1Color += '2'
+							elif H1Numbering[x][4] == "Ca2":
+								rulerH1Color += '4'
+							elif H1Numbering[x][4] == "Sa":
+								rulerH1Color += '3'
+							elif H1Numbering[x][4] == "Sb":
+								rulerH1Color += '6'
+							elif H1Numbering[x][4] == "Stalk-MN":
+								rulerH1Color += 'A'
+							else:
+								rulerH1Color += '0'
+					if space_from_last_pos == 2:
+						# rulerH1Color += rulerH1Color[-1] * 2
+						rulerH1Color += '00'
+					elif space_from_last_pos == 1:
+						# rulerH1Color += rulerH1Color[-1]
+						rulerH1Color += '0'
+
+					# make H3 numbering
+					space_from_last_pos = 0
+					for x in range(aa_start, aa_end + 1):
+						if H3Numbering[x][2] == '-':
+							if space_from_last_pos == 2:
+								space_from_last_pos = space_from_last_pos - 1
+								rulerH3Color += '0'
+							elif space_from_last_pos == 1:
+								space_from_last_pos = space_from_last_pos - 1
+								rulerH3Color += '0'
+							else:
+								rulerH3 += '-'
+								rulerH3Color += '0'
+						else:
+							if int(H3Numbering[x][2]) % 5 == 0:
+								if len(str(H3Numbering[x][2])) == 1:
+									rulerH3 += str(H3Numbering[x][2])
+									space_from_last_pos = 0
+								elif len(str(H3Numbering[x][2])) == 2:
+									rulerH3 += str(H3Numbering[x][2])
+									space_from_last_pos = 1
+								else:
+									rulerH3 += str(H3Numbering[x][2])
+									space_from_last_pos = 2
+							else:
+								if space_from_last_pos == 2:
+									space_from_last_pos = space_from_last_pos - 1
+								elif space_from_last_pos == 1:
+									space_from_last_pos = space_from_last_pos - 1
+								else:
+									rulerH3 += '.'
+
+							if H3Numbering[x][4] == "A":
+								rulerH3Color += '6'
+							elif H3Numbering[x][4] == "B":
+								rulerH3Color += '2'
+							elif H3Numbering[x][4] == "C":
+								rulerH3Color += '7'
+							elif H3Numbering[x][4] == "D":
+								rulerH3Color += '3'
+							elif H3Numbering[x][4] == "E":
+								rulerH3Color += 'C'
+							elif H3Numbering[x][4] == "Stalk-MN":
+								rulerH3Color += 'A'
+							else:
+								rulerH3Color += '0'
+					if space_from_last_pos == 2:
+						# rulerH3Color += rulerH1Color[-1] * 2
+						rulerH3Color += '00'
+					elif space_from_last_pos == 1:
+						# rulerH3Color += rulerH1Color[-1]
+						rulerH3Color += '0'
+
+			for seq in all:
+				SeqName = seq[0]
+				DNASeq = seq[1]
+				AASeq = seq[2]
+				if DataIn == 'RF':
+					AASeq2 = seq[3]
+					AASeq3 = seq[4]
+
+				NewAA = AASeq.replace(' ', '')
+				if DataIn == 'RF':
+					NewAA2 = AASeq2.replace(' ', '')
+					NewAA3 = AASeq3.replace(' ', '')
+
+				while len(SeqName) < longestName:
+					SeqName += ' '
+				# todo can build num line even add CDR if align relative to germline instead just number as end
+				toSpace = len(str(maxLen))
+				endLabel = str(endSeg)
+				while len(endLabel) < toSpace:
+					endLabel += ' '
+				endLabel = '  ' + endLabel
+
+				if dnaCheck == True:
+
+					ConSegDNA = consensusDNA[i:endSeg]
+					DNASeqSeg = DNASeq[i:endSeg]
+					ConSegDNA = ConSegDNA.upper()
+					DNASeqSeg = DNASeqSeg.upper()
+
+					DNAArt = ''
+					for n in range(0, len(ConSegDNA)):
+						if DNASeqSeg[n] == ConSegDNA[n]:
+							if DataIn == 'RF':
+								DNAArt += '-'
+							else:
+								char = DNASeqSeg[n]
+								char = char.upper()
+								# DNAArt += char
+								DNAArt += '-'
+						else:
+							if DataIn == 'RF':
+								DNAArt += DNASeqSeg[n]
+							else:
+								char = DNASeqSeg[n]
+								char = char.lower()
+								DNAArt += char
+
+					ConSegDNA = ConName + ConSegDNA + endLabel
+					DNASeqSeg = SeqName + DNAArt + endLabel
+					if aaCheck == True:
+						AArt = ''
+						ConSegAA = consensusAA[i:endSeg]
+						if DataIn == 'RF': ConSegAA2 = AASeq2[i:endSeg]
+						if DataIn == 'RF': ConSegAA3 = AASeq3[i:endSeg]
+
+						AASeqSeg = AASeq[i:endSeg]
+
+						for n in range(0, len(ConSegAA)):
+							if AASeqSeg[n] == ConSegAA[n]:
+								AArt += ' '
+							else:
+								AArt += AASeqSeg[n]
+
+						AASeqSeg = AASpaces + AArt  # + endLabel
+						if DataIn == 'RF':
+							ConSegAA = AASpaces + 'RF1: ' + ConSegAA
+						else:
+							ConSegAA = AASpaces + ConSegAA
+
+						if DataIn == 'RF':
+							ConSegAA2 = AASpaces + 'RF2: ' + ConSegAA2
+							ConSegAA3 = AASpaces + 'RF3: ' + ConSegAA3
+
+						if ConAdd == True:
+							if posCheck == True:
+								alignmentText += '\n' + rulerAA
+								ColorMap += '\n' + '0' * len(rulerAA)
+								alignmentText += '\n' + rulerH1
+								ColorMap += '\n' + rulerH1Color
+								alignmentText += '\n' + rulerH3
+								ColorMap += '\n' + rulerH3Color
+
+							alignmentText += '\n' + ConSegAA + '\n'
+							ColorMap += '\n' + '0' * len(ConSegAA) + '\n'
+							if DataIn == 'RF':
+								alignmentText += '\n' + ConSegAA2 + '\n'
+								alignmentText += '\n' + ConSegAA3 + '\n'
+								alignmentText += '     ' + ConSegDNA + '\n'
+							else:
+								if posCheck == True:
+									alignmentText += rulerNT + '\n'
+									ColorMap += '0' * len(rulerNT) + '\n'
+
+								alignmentText += ConSegDNA + '\n'
+								ColorMap += '0' * len(ConSegDNA) + '\n'
+							ConAdd = False
+						if DataIn != 'RF':
+							alignmentText += AASeqSeg + '\n'
+							ColorMap += '0' * len(AASeqSeg) + '\n'
+							alignmentText += DNASeqSeg + '\n'
+							ColorMap += '0' * len(DNASeqSeg) + '\n'
+					else:
+						if ConAdd == True:
+							if posCheck == True:
+								alignmentText += '\n' + rulerNT
+								ColorMap += '0' * len(rulerNT)
+							alignmentText += '\n' + ConSegDNA + '\n'
+							ColorMap += '\n' + '0' * len(ConSegDNA) + '\n'
+							ConAdd = False
+						if DataIn != 'RF':
+							alignmentText += DNASeqSeg + '\n'
+							ColorMap += '0' * len(DNASeqSeg) + '\n'
+				else:
+					if aaCheck == True:
+						AArt = ''
+						ConSegAA = NewConAA[i:endSeg]
+						AASeqSeg = NewAA[i:endSeg]
+
+						for n in range(0, len(ConSegAA)):
+							if AASeqSeg[n] == ConSegAA[n]:
+								AArt += '-'
+							else:
+								AArt += AASeqSeg[n]
+
+						AASeqSeg = SeqName + AArt + endLabel
+						ConSegAA = ConName + ConSegAA
+						if ConAdd == True:
+							if posCheck == True:
+								alignmentText += '\n' + 'Position(AA)' + rulerNT[12:]
+								ColorMap += '\n' + '0' * len(rulerNT)
+								alignmentText += '\n' + rulerH1
+								ColorMap += '\n' + rulerH1Color
+								alignmentText += '\n' + rulerH3
+								ColorMap += '\n' + rulerH3Color
+							alignmentText += '\n' + ConSegAA + '\n'
+							ColorMap += '\n' + '0' * len(ConSegAA) + '\n'
+							ConAdd = False
+						alignmentText += AASeqSeg + '\n'
+						ColorMap += '0' * len(AASeqSeg) + '\n'
+
+			i += 60
+			ConAdd = True
+			alignmentText += '\n'
+			ColorMap += '\n'
+
+		Style = 'aligned'
+
+		# legend text and color
+		legend_text = 'H1 Antigenic Sites:  Ca1    Ca2    Cb    Sa    Sb   Stalk-MN \n' + \
+		              'H3 Antigenic Sites:  A    B    C    D    E   Stalk-MN \n'
+		legend_color = '000000000000000000022222224444444777777333333666666AAAAAAAAAA\n' + \
+		               '000000000000000000066666222227777733333CCCCCAAAAAAAAAA\n'
+		if Notes != 'Tab':
+			window_id = int(time.time() * 100)
+			text_edit = VGenesTextMain()
+			text_edit.id = window_id
+			VGenesTextWindows[window_id] = text_edit
+
+			self.ShowVGenesTextEdit(alignmentText, Style, ColorMap, window_id)
+			self.ShowVGenesTextEditLegend(legend_text, legend_color, window_id)
+		else:
+			self.ui.txtSeqAlignment.setText(alignmentText)
+
+		QApplication.restoreOverrideCursor()
+
+
 	@pyqtSlot()
 	def AlignSequences(self, DataIn, Notes):
 		# import tempfile
@@ -3572,6 +4229,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		QApplication.restoreOverrideCursor()
 
+
+
 		# for item in Aligned:
 
 		# print('done')
@@ -3885,7 +4544,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			font = QFont(FontIs)
 
 			# FontSize = int(font.pointSize())
-			font.setPointSize(10)
+			font.setPointSize(16)
 			font.setFamily('Courier New')
 
 			VGenesTextWindows[window_id].textEdit.setFont(font)
@@ -3895,7 +4554,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			font = QFont(FontIs)
 
 			# FontSize = int(font.pointSize())
-			font.setPointSize(10)
+			font.setPointSize(16)
 			font.setFamily('Lucida Grande')
 
 			VGenesTextWindows[window_id].textEdit.setFont(font)
@@ -5336,6 +5995,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessMutationDialog.show()
 
 	def open_gibson_dialog(self):
+		global joint_down
+		global joint_up
 		if self.ui.txtName.toPlainText() == "":
 			QMessageBox.warning(self, 'Warning', 'Please select a sequence first!', QMessageBox.Ok, QMessageBox.Ok)
 		else:
@@ -5351,6 +6012,27 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessGibsonDialog.gibsonSignal.connect(self.GenerateGibson)
 			self.modalessGibsonDialog.show()
 
+	def open_fusion_dialog(self):
+		global BaseSeq
+		if self.ui.lblBaseName.toPlainText() == "":
+			QMessageBox.warning(self, 'Warning', 'Please determine a base sequence first!', QMessageBox.Ok, QMessageBox.Ok)
+		else:
+			self.modalessFusionDialog = fusionDialog()
+			# get active sequences from Qlist in main window
+			donor_num = self.ui.listWidgetStrainsIn.count()
+			donor_list = []
+			for i in range(donor_num):
+				donor_list.append(self.ui.listWidgetStrainsIn.item(i).text())
+
+			# remove the base seq from donor list
+			if BaseSeq in donor_list:
+				donor_list.remove(BaseSeq)
+			self.modalessFusionDialog.ui.selection.addItems(donor_list)
+			self.modalessFusionDialog.ui.basename.setText(BaseSeq)
+			self.modalessFusionDialog.fusionSignal.connect(self.showhumbering)
+			self.modalessFusionDialog.fusionSeqSignal.connect(self.fusionseq)
+			self.modalessFusionDialog.show()
+
 	def open_basepath_dialog(self):
 		global working_prefix
 		global muscle_path
@@ -5363,6 +6045,94 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessbaseDialog.ui.clustaloPath.setText(clustal_path)
 		self.modalessbaseDialog.ui.pymolPath.setText(pymol_path)
 		self.modalessbaseDialog.show()
+
+	def showhumbering(self, Data, Note, dnaCheck, aaCheck, posCheck):
+		for item in Data:
+			DataIn = []
+			DataIn.append(item)
+			self.AlignSequencesFusion(DataIn, Note, dnaCheck, aaCheck, posCheck)
+			time.sleep(0.1)
+
+	def fusionseq(self, base_seq, donor_seq, del_start, del_end, add_start, add_end):
+		global DBFilename
+		# donor sequence
+		WhereState = 'SeqName = "' + donor_seq + '"'
+		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+		Sequence = DataIn[0][1]
+		VFrom = int(DataIn[0][2]) - 1
+		if VFrom == -1: VFrom = 0
+		VTo = int(DataIn[0][3])
+		Sequence = Sequence[VFrom:VTo]
+		Sequence = Sequence.upper()
+
+		add_start_nt = int((add_start - 1) * 3)
+		add_end_nt = int(add_end * 3)
+		if add_end_nt > len(Sequence):
+			QMessageBox.warning(self, 'Warning', 'Donor end position larger than donor sequence!', QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+		else:
+			add_sequence = Sequence[add_start_nt:add_end_nt]
+
+		# base sequence
+		WhereState = 'SeqName = "' + base_seq + '"'
+		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+		Sequence = DataIn[0][1]
+		VFrom = int(DataIn[0][2]) - 1
+		if VFrom == -1: VFrom = 0
+		VTo = int(DataIn[0][3])
+		Sequence = Sequence[VFrom:VTo]
+		Sequence = Sequence.upper()
+
+		del_start_nt = (del_start - 1) * 3
+		del_end_nt = del_end * 3
+		del_sequence = Sequence[del_start_nt:del_end_nt]
+
+		Sequence = Sequence[:del_start_nt] + add_sequence + Sequence[del_end_nt:]
+
+		# insert into DB
+		SQLStatement = 'SELECT * FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+
+		seq_name = base_seq + '(' + str(del_start) + '-' + str(del_end) + ')' + '+' + donor_seq + '(' + str(
+			add_start) + '-' + str(add_end) + ')'
+		AA_seq = Translator(add_sequence, 0)
+		i = 0
+		mutations = []
+		for aa in AA_seq[0]:
+			cur_pos = del_start + i
+			cur = 'X' + str(cur_pos) + aa
+			mutations.append(cur)
+			i += 1
+		mutations = ','.join(mutations)
+
+		SQLStatement = "INSERT INTO LibDB(`SeqName`, `Sequence`, `SeqLen`, `SubType`, `Form`, `VFrom`, `VTo`, `Active`, `Role`, " \
+		               "`Donor`, `Mutations`, `ID`, `Base`) VALUES('" \
+		               + seq_name + "','" \
+		               + Sequence + "','" \
+		               + str(len(Sequence)) + "','" \
+		               + DataIn[0][3] + "','" \
+		               + DataIn[0][4] + "','" \
+		               + "1" + "','" \
+		               + "5000" + "','" \
+		               + DataIn[0][7] + "','" \
+		               + "Generated" + "','" \
+		               + "none" + "','" \
+		               + mutations + "','" \
+		               + "0" + "','" \
+		               + base_seq + "')"
+		response = RunInsertion(DBFilename, SQLStatement)
+		if (response == 1):
+			QMessageBox.warning(self, 'Warning', "Error happen when insert the new sequence!",
+			                    QMessageBox.Ok, QMessageBox.Ok)
+		else:
+			# add new sequence information into listWidgetStrainsIn
+			self.ui.listWidgetStrainsIn.addItem(seq_name)
+			self.ui.listWidgetStrains.addItem(seq_name)
+			if self.modalessFusionDialog != None:
+				self.modalessFusionDialog.close()
 
 	def sequence_editing(self):
 		if BaseSeq == "":

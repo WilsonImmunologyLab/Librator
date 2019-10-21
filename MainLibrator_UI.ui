@@ -646,6 +646,11 @@
              </item>
              <item>
               <property name="text">
+               <string>Fusion Sequences</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
                <string>Make Secreted Probe</string>
               </property>
              </item>
