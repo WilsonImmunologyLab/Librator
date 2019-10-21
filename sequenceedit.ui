@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -108,62 +108,6 @@
        </widget>
       </item>
      </layout>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="tab_3">
-    <attribute name="title">
-     <string>Biased Cocktail</string>
-    </attribute>
-    <widget class="QLabel" name="label_5">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>581</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Please select donor sequence, only single selection allowed</string>
-     </property>
-    </widget>
-    <widget class="QListWidget" name="DonorList_tab3">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>40</y>
-       <width>611</width>
-       <height>271</height>
-      </rect>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="tab_4">
-    <attribute name="title">
-     <string>Distinctions</string>
-    </attribute>
-    <widget class="QListWidget" name="DonorList_tab4">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>40</y>
-       <width>611</width>
-       <height>271</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_6">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>581</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Please select donor sequence, only single selection allowed</string>
-     </property>
     </widget>
    </widget>
   </widget>

@@ -406,25 +406,6 @@ class SequenceEditDialog(QtWidgets.QDialog):
 
 				else:
 					self.seqEditSignal.emit(1, base_name, text, mutation_schema)
-
-		elif active_tab == 2: 		# Biased Cocktail
-			donor_list = self.ui.DonorList_tab3.selectedItems()
-			if len(donor_list) == 0:
-				QMessageBox.warning(self, 'Warning', 'Please select at least one donor sequence!', QMessageBox.Ok,
-									QMessageBox.Ok)
-			else:
-				text = [i.text() for i in list(donor_list)]
-				text = '\t'.join(text)
-				self.seqEditSignal.emit(2, base_name, text, "")
-		elif active_tab == 3:  		# Distinctions
-			donor_list = self.ui.DonorList_tab4.selectedItems()
-			if len(donor_list) == 0:
-				QMessageBox.warning(self, 'Warning', 'Please select at least one donor sequence!', QMessageBox.Ok,
-									QMessageBox.Ok)
-			else:
-				text = [i.text() for i in list(donor_list)]
-				text = '\t'.join(text)
-				self.seqEditSignal.emit(3, base_name, text, "")
 		#self.hide()
 
 class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
@@ -5084,12 +5065,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		os.remove(SavedFile)
 		os.remove(workingfilename)
-		#
-		# * **4HMG** is H3N2 strain A/Aichi/2/1968 (or X-31 HA). This is the numbering scheme that is often referred to as the "H3 numbering system." The HA1 and HA2 polypeptides are numbered as different sequences in this numbering scheme.
-		#
-		# * **4JTV**  human 2009 pandemic H1N1 strain A/California/4/2009. The HA1 and HA2 polypeptides are numbered as different sequences in this numbering scheme.
-
-
 
 	@pyqtSlot()
 	def ListItemChanged(self):
@@ -5185,9 +5160,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.ui.txtInsert_Base.setText(item[10])
 
 		MoveNotChange = False
-
-
-
 
 	@pyqtSlot()
 	def on_btnClearStrain_clicked(self):
@@ -6151,8 +6123,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# set donor list for Qlists in pop up window
 			self.modalessSeqEditDialog.ui.DonorList_tab1.addItems(donor_list)
 			self.modalessSeqEditDialog.ui.DonorList_tab2.addItems(donor_list)
-			self.modalessSeqEditDialog.ui.DonorList_tab3.addItems(donor_list)
-			self.modalessSeqEditDialog.ui.DonorList_tab4.addItems(donor_list)
 			# set multiple selection mode for Qlist in tab1
 			self.modalessSeqEditDialog.ui.DonorList_tab1.setSelectionMode(QAbstractItemView.ExtendedSelection)
 			# connect the signal with a handle function
