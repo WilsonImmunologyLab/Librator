@@ -21,6 +21,27 @@ class ui_TextEditor(object):
         self.textEdit = QTextEdit()
         self.textEdit_legend = QTextEdit()
 
+        self.dnaAct = QAction(self)
+        self.dnaAct.setCheckable(True)
+        self.dnaAct.setChecked(True)
+        self.dnaAct.setObjectName("actionDNA")
+        self.dnaAct.setText('DNA')
+        self.dnaAct.setFont(QFont("Lucida Grande", 16, QFont.Bold))
+
+        self.aaAct = QAction(self)
+        self.aaAct.setCheckable(True)
+        self.aaAct.setChecked(True)
+        self.aaAct.setObjectName("actionAA")
+        self.aaAct.setText('AA')
+        self.aaAct.setFont(QFont("Lucida Grande", 16, QFont.Bold))
+
+        self.baAct = QAction(self)
+        self.baAct.setCheckable(True)
+        self.baAct.setChecked(True)
+        self.baAct.setObjectName("actionBA")
+        self.baAct.setText('BA')
+        self.baAct.setFont(QFont("Lucida Grande", 16, QFont.Bold))
+
         grid = QGridLayout(widget)
         grid.setSpacing(10)
         grid.addWidget(self.textEdit, 1, 0, 8, 1)
@@ -236,6 +257,11 @@ class ui_TextEditor(object):
         self.FontSizeToolBar = self.addToolBar("FontSize")
         self.FontSizeToolBar.addAction(self.IncreaseAct)
         self.FontSizeToolBar.addAction(self.DecreaseAct)
+
+        self.DisplayToolBar = self.addToolBar("Display")
+        self.DisplayToolBar.addAction(self.dnaAct)
+        self.DisplayToolBar.addAction(self.aaAct)
+        self.DisplayToolBar.addAction(self.baAct)
 
     def createStatusBar(self):
         self.statusBar().showMessage("Ready")
