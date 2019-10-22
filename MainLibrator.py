@@ -332,6 +332,7 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 
 		if len(selections) == 0:
 			QMessageBox.warning(self, 'Warning', 'Please select at least one sequence!', QMessageBox.Ok,
+								QMessageBox.Ok)
 		else:
 			if joint_up == "" or joint_down == "": 		# OriPos
 				QMessageBox.warning(self, 'Warning',
