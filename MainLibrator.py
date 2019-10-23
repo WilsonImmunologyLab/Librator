@@ -577,7 +577,7 @@ class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 		# align consensus AA sequence with template to generate H1 and H3 numbering
 		if posCheck == True:
 			compact_consensusAA = consensusAA.replace(' ', '')
-			self.HANumbering(compact_consensusAA)
+			HANumbering(compact_consensusAA)
 
 		header = 'VGenes multiple alignment using Clustal Omega. \n'
 		ConName = 'Consensus: '
@@ -614,8 +614,8 @@ class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 			aa_start = int(i / 3 + 1)
 			aa_end = int(endSeg / 3)
 			if posCheck == True:
-				rulerAA = 'Position(AA)' + AASpaces[12:] + self.MakeRuler(aa_start, aa_end, 5, 'aa')
-				rulerNT = 'Position(NT)' + AASpaces[12:] + self.MakeRuler(i + 1, endSeg, 5, 'nt')
+				rulerAA = 'Position(AA)' + AASpaces[12:] + MakeRuler(aa_start, aa_end, 5, 'aa')
+				rulerNT = 'Position(NT)' + AASpaces[12:] + MakeRuler(i + 1, endSeg, 5, 'nt')
 				if aaCheck == True and dnaCheck == True:
 					rulerH1 = 'H1numbering' + AASpaces[11:]
 					rulerH1Color = '0' * len(rulerH1)
@@ -1035,339 +1035,6 @@ class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 			cursor.mergeCharFormat(format)
 
 			CurPos += 1
-
-	def HANumbering(self, AASeq):
-
-		import uuid
-		global H1Numbering
-		global H3Numbering
-		H1Numbering.clear()
-		H3Numbering.clear()
-		global NumberingMap
-		global temp_folder
-		global muscle_path
-		NumberingMap.clear()
-
-		NameBase = str(uuid.uuid4())
-		# NameBase = NameBase[:12]
-		NameBase = NameBase.replace('-', '')
-
-		NameBase = NameBase.replace(' ', '')
-
-		MyInFiles = NameBase + 'In.txt'
-		MyOutFiles = NameBase + 'Out.txt'
-
-		workingfilename = os.path.join(temp_folder, MyInFiles)
-		musclepath = re.sub(r'[^\/]+$', '', muscle_path)
-		savefilename = os.path.join(temp_folder, MyOutFiles)
-
-		workingdir, filename = os.path.split(workingfilename)
-		os.chdir(workingdir)
-
-		NumberingQuery = 'musclepath '
-		NumberingQuery += musclepath + '\n' + 'ha_sequence '
-
-		NumberingQuery += AASeq + '\n'
-
-		Sites = 'sites '
-		for Res in range(0, len(AASeq)):
-			Sites += str(Res + 1)
-			Sites += ' '
-
-		NumberingQuery += Sites + '\n'
-
-		SavedFile = savefilename  # 'Out.txt'
-
-		# write input sequence into input file
-		with open(workingfilename, 'w') as currentFile:
-			currentFile.write(NumberingQuery)
-
-		# run HA numbering code
-		HA_numbering_Jesse(workingfilename, savefilename)
-
-		MoveOn = False
-		tester = ''
-		while MoveOn is False:  # function to delay progression until numbering script completes
-			if os.path.isfile(SavedFile):
-
-				with open(SavedFile, 'r') as currentFile:
-					TheLines = currentFile.readlines()
-
-					LenLines = len(TheLines)
-					if LenLines > 0:
-						tester = TheLines[LenLines - 1]
-
-					if tester == "Script complete.\n":
-						MoveOn = True
-			else:
-				MoveOn = False
-		Starts = ''
-		for line in TheLines:
-			tester = line[10:13]
-			if tester == 'HA1':
-				Starts = 'HA1'
-				break
-			elif tester == 'HA2':
-				Starts = 'HA2'
-				break
-
-		AASeq = []
-		HAIn = ()
-		# H3In = ()
-		Position = 0
-		PositionT = ''
-		PositionN = ''
-		HASegment = ''
-		HANumber = ''
-		HAbase = ''
-		TriOn = False
-		MapEnds = 'none'
-
-		for line in TheLines:
-			line = line.strip()
-
-			words = line.split(' ')
-			if words[0] == 'Residue':
-				PositionT = words[1]
-				AA = PositionT[0]
-				PositionN = PositionT[1:]
-				Position = int(PositionN)
-
-			# AASeq.append(words[1]) #from sequence line
-
-			# Format: List of tuples with each tuple containing:
-			# Tuple 1: Position: H1-segment (HA1 or HA2),  Amino Acid, H1Number, A/California/4/2009-residue, H1-antigenic-region
-			# Tuple 2: Position: H3-segment (HA1 or HA2), Amino Acid, H3Number, A/Aichi/2/1968-residue, H3-antigenic-region
-			if len(words) > 5:
-				if words[5] == '4HMG':
-					if words[3] == 'gap':
-						HASegment = Starts
-						HANumber = '-'
-						HAbase = '-'
-
-
-					elif words[3] == 'HA1':
-
-						HASegment = 'HA1'
-						ResidueIs = words[1]
-						HANumber = int(ResidueIs[1:])
-						HAbase = ResidueIs[0]
-						if MapEnds == 'none':
-							MapEnds = 'HA1'
-
-					elif words[3] == 'HA2':
-
-						HASegment = 'HA2'
-						ResidueIs = words[1]
-						HANumber = int(ResidueIs[1:])
-						HAbase = ResidueIs[0]
-
-					if HASegment == 'HA1':
-						if str(HANumber) in H3HA1Regions.keys():
-							HAAg = H3HA1Regions[str(HANumber)]
-						else:
-							HAAg = '-'
-
-					elif HASegment == 'HA2':
-						if str(HANumber) in H3HA2Regions.keys():
-							HAAg = H3HA2Regions[str(HANumber)]
-						else:
-							HAAg = '-'
-
-					HAIn = (HASegment, AA, HANumber, HAbase, HAAg, MapEnds)
-					H3Numbering[Position] = HAIn
-
-				# todo add probe components including trimer domain, avitag, his-tag
-
-				if words[5] == '4JTV':
-					if words[3] == 'gap':
-						HASegment = Starts
-						HANumber = '-'
-						HAbase = '-'
-
-
-					elif words[3] == 'HA1':
-
-						HASegment = 'HA1'
-						ResidueIs = words[1]
-						HANumber = int(ResidueIs[1:])
-						HAbase = ResidueIs[0]
-
-
-
-					elif words[3] == 'HA2':
-
-						HASegment = 'HA2'
-						ResidueIs = words[1]
-						HANumber = int(ResidueIs[1:])
-						HAbase = ResidueIs[0]
-
-					if HASegment == 'HA1':
-						if str(HANumber) in H1HA1Regions.keys():
-							HAAg = H1HA1Regions[str(HANumber)]
-						else:
-							HAAg = '-'
-
-					elif HASegment == 'HA2':
-						if str(HANumber) in H1HA2Regions.keys():
-							HAAg = H1HA2Regions[str(HANumber)]
-						else:
-							HAAg = '-'
-
-					HAIn = (HASegment, AA, HANumber, HAbase, HAAg)
-					H1Numbering[Position] = HAIn
-
-		# if len(H3Numbering) > 425:
-		testString = ''
-		TMOn = False
-		# StartTest = False
-		for i in range(1, len(H3Numbering)):
-			CurRes = H3Numbering[i]
-			HASegment = CurRes[0]
-			AA = CurRes[1]
-			HANumber = CurRes[2]
-			HAbase = CurRes[3]
-			HAAg = CurRes[4]
-			if HASegment == 'HA1':
-				if MapEnds == 'none':
-					NumberingMap['H3HA1beg'] = i
-					MapEnds = 'HA1'
-				NumberingMap['H3HA1end'] = i
-
-			elif HASegment == 'HA2':
-				if MapEnds == 'HA1' or MapEnds == 'none':
-					NumberingMap['H3HA2beg'] = i
-					MapEnds = 'HA2'
-
-				NumberingMap['H3HA2end'] = i
-
-			try:
-				testString = ''
-				if AA == 'V':
-
-					for j in range(i, i + 6):
-						testRes = H3Numbering[j]
-						AATest = testRes[1]
-						testString += AATest
-					if testString == 'VELKSG' or testString == 'VQLKSG' or testString == 'VKLESM' or testString == 'VKLEST' or testString == 'VKLDS':
-						TMOn = True
-				elif AA == 'G':
-					for j in range(i, i + 6):
-						testRes = H3Numbering[j]
-						AATest = testRes[1]
-						testString += AATest
-					if testString == 'GSGYIP':
-						TriOn = True
-			except:
-				print('tried')
-
-			if AA == '*':
-				TMOn = False
-				TriOn = False
-			if TMOn == True:
-				HASegment = 'TM'
-				HAIn = (HASegment, AA, HANumber, HAbase, HAAg)
-				H3Numbering[i] = HAIn
-				StartTest = False
-			if TriOn == True:
-				HASegment = 'Trimer-Avitag-H6'
-				HAIn = (HASegment, AA, HANumber, HAbase, HAAg)
-				H3Numbering[i] = HAIn
-				StartTest = False
-
-		TMOn = False
-		# StartTest = False
-		for i in range(1, len(H1Numbering)):
-			CurRes = H1Numbering[i]
-			HASegment = CurRes[0]
-			AA = CurRes[1]
-			HANumber = CurRes[2]
-			HAbase = CurRes[3]
-			HAAg = CurRes[4]
-			if HASegment == 'HA1':
-				if MapEnds == 'none':
-					NumberingMap['H1HA1beg'] = i
-					MapEnds = 'HA1'
-				NumberingMap['H1HA1end'] = i
-
-			elif HASegment == 'HA2':
-				if MapEnds == 'HA1' or MapEnds == 'none':
-					NumberingMap['H1HA2beg'] = i
-					MapEnds = 'HA2'
-
-				NumberingMap['H1HA2end'] = i
-
-			try:
-				testString = ''
-				if AA == 'V':
-
-					for j in range(i, i + 6):
-						testRes = H1Numbering[j]
-						AATest = testRes[1]
-						testString += AATest
-					if testString == 'VELKSG' or testString == 'VQLKSG' or testString == 'VKLESM' or testString == 'VKLEST' or testString == 'VKLDS':
-						TMOn = True
-				elif AA == 'G':
-					for j in range(i, i + 6):
-						testRes = H1Numbering[j]
-						AATest = testRes[1]
-						testString += AATest
-					if testString == 'GSGYIP':
-						TriOn = True
-			except:
-				print('tried')
-
-			if AA == '*':
-				TMOn = False
-				TriOn = False
-			if TMOn == True:
-				HASegment = 'TM'
-				HAIn = (HASegment, AA, HANumber, HAbase, HAAg)
-				H1Numbering[i] = HAIn
-				StartTest = False
-			if TriOn == True:
-				HASegment = 'Trimer-Avitag-H6'
-				HAIn = (HASegment, AA, HANumber, HAbase, HAAg)
-				H1Numbering[i] = HAIn
-				StartTest = False
-
-		os.remove(SavedFile)
-		os.remove(workingfilename)
-
-	def MakeRuler(self, pos1, pos2, step, mode):
-		ErrMsg = ""
-		if len(str(pos2)) > step - 1:
-			ErrMsg = "Please use larger step! Current step is too short!"
-
-		# start to make ruler
-		if mode == "aa":
-			step_count = int(pos2) - int(pos1) + 1
-			ruler = ' . ' * step_count
-
-			for x in range(100):
-				cur_pos = pos1 + x * step
-				if cur_pos <= pos2:
-					ruler = ruler[:x * 3 * step + 1] + str(cur_pos) + ruler[len(str(cur_pos)) + x * 3 * step + 1:]
-
-		else:
-			ruler = ''
-			cur_pos = pos1
-			step_count = 0
-			space_left = 0
-			while cur_pos <= pos2:
-				if cur_pos == pos1 + step_count * step:
-					ruler += str(cur_pos)
-					space_left = len(str(cur_pos)) - 1
-					cur_pos += 1
-					step_count += 1
-				else:
-					if space_left > 0:
-						space_left = space_left - 1
-						cur_pos += 1
-					else:
-						ruler += '.'
-						cur_pos += 1
-		return ruler
 
 
 class LibratorMain(QtWidgets.QMainWindow):
@@ -1928,7 +1595,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				Sequence = Sequence[VFrom:VTo]
 				Sequence = Sequence.upper()
 				AASeq, ErMessage = LibratorSeq.Translator(Sequence, 0)
-				self.HANumbering(AASeq)
+				HANumbering(AASeq)
 				NewAASeq = ''
 				NewSeqName = ''
 				SeqInfoPacket = []
@@ -2079,7 +1746,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		if ItemsList > 0:
 			AASeqIs = self.ui.textAA.toPlainText()
-			self.HANumbering(AASeqIs)
+			HANumbering(AASeqIs)
 
 		else:
 			return
@@ -2092,7 +1759,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global H3Numbering
 
 		AASeqIs = self.ui.textAA.toPlainText()
-		self.HANumbering(AASeqIs)
+		HANumbering(AASeqIs)
 
 		cursor = self.ui.txtAASeq.textCursor()
 		H3NumOn = True
@@ -3706,7 +3373,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# align consensus AA sequence with template to generate H1 and H3 numbering
 		if posCheck == True:
 			compact_consensusAA = consensusAA.replace(' ', '')
-			self.HANumbering(compact_consensusAA)
+			HANumbering(compact_consensusAA)
 
 		header = 'VGenes multiple alignment using Clustal Omega. \n'
 		RFSeqName = self.ui.txtName.toPlainText()
@@ -4323,7 +3990,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# align consensus AA sequence with template to generate H1 and H3 numbering
 		if self.ui.actionBA.isChecked() == True:
 			compact_consensusAA = consensusAA.replace(' ', '')
-			self.HANumbering(compact_consensusAA)
+			HANumbering(compact_consensusAA)
 
 		header = 'VGenes multiple alignment using Clustal Omega. \n'
 		RFSeqName = self.ui.txtName.toPlainText()
@@ -4361,8 +4028,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			aa_start = int(i/3 + 1)
 			aa_end = int(endSeg/3)
 			if self.ui.actionBA.isChecked() == True:
-				rulerAA = 'Position(AA)' + AASpaces[12:] + self.MakeRuler(aa_start, aa_end, 5, 'aa')
-				rulerNT = 'Position(NT)' + AASpaces[12:] + self.MakeRuler(i + 1, endSeg, 5, 'nt')
+				rulerAA = 'Position(AA)' + AASpaces[12:] + MakeRuler(aa_start, aa_end, 5, 'aa')
+				rulerNT = 'Position(NT)' + AASpaces[12:] + MakeRuler(i + 1, endSeg, 5, 'nt')
 				if self.ui.actionAA.isChecked() == True and self.ui.actionDNA.isChecked() == True:
 					rulerH1 = 'H1numbering' + AASpaces[11:]
 					rulerH1Color = '0' * len(rulerH1)
@@ -5587,7 +5254,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 					AASeq = Translator(HASeq.upper(), 0)
 					AASeqIs = AASeq[0]
-				self.HANumbering(AASeqIs)
+				HANumbering(AASeqIs)
 
 			# check if the database have base sequence
 			SQLStatement = 'SELECT * FROM LibDB WHERE `Role` = "BaseSeq"'
@@ -5638,7 +5305,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 					AASeq = Translator(HASeq.upper(), 0)
 					AASeqIs = AASeq[0]
-				self.HANumbering(AASeqIs)
+				HANumbering(AASeqIs)
 
 			# refresh the list - all sequence list
 			self.ui.listWidgetStrains.clear()
@@ -5730,320 +5397,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 	def on_actionHANumbering_triggered(self):
 		# answer = informationMessage(self, 'Would you like to generate a numbering report?' 'YN')
 		AASeq = self.ui.textAA.toPlainText()
-		Numbering = self.HANumbering(AASeq)
+		Numbering = HANumbering(AASeq)
 		self.ui.tabWidget.setCurrentIndex(1)
-
-
-
-
-	@pyqtSlot()
-	def HANumbering(self, AASeq):
-
-		import uuid
-		global H1Numbering
-		global H3Numbering
-		H1Numbering.clear()
-		H3Numbering.clear()
-		global NumberingMap
-		global temp_folder
-		global muscle_path
-		NumberingMap.clear()
-
-
-		NameBase = str(uuid.uuid4())
-		# NameBase = NameBase[:12]
-		NameBase = NameBase.replace('-', '')
-
-		NameBase = NameBase.replace(' ', '')
-
-		MyInFiles = NameBase + 'In.txt'
-		MyOutFiles = NameBase + 'Out.txt'
-
-		workingfilename = os.path.join(temp_folder, MyInFiles)
-		musclepath = re.sub(r'[^\/]+$','',muscle_path)
-		savefilename = os.path.join(temp_folder,  MyOutFiles)
-
-		workingdir, filename = os.path.split(workingfilename)
-		os.chdir(workingdir)
-
-		NumberingQuery = 'musclepath '
-		NumberingQuery += musclepath + '\n' + 'ha_sequence '
-
-		NumberingQuery += AASeq + '\n'
-
-		Sites = 'sites '
-		for Res in range(0, len(AASeq)):
-			Sites += str(Res+1)
-			Sites += ' '
-
-		NumberingQuery += Sites + '\n'
-
-		SavedFile = savefilename#'Out.txt'
-
-		# write input sequence into input file
-		with open(workingfilename, 'w') as currentFile:
-			currentFile.write(NumberingQuery)
-
-		# run HA numbering code
-		HA_numbering_Jesse(workingfilename, savefilename)
-
-		MoveOn = False
-		tester = ''
-		while MoveOn is False:  #function to delay progression until numbering script completes
-			if os.path.isfile(SavedFile):
-
-				with open(SavedFile, 'r') as currentFile:
-					TheLines = currentFile.readlines()
-
-					LenLines = len(TheLines)
-					if LenLines > 0:
-						tester = TheLines[LenLines-1]
-
-					if tester == "Script complete.\n":
-						MoveOn = True
-			else:
-				MoveOn = False
-		Starts = ''
-		for line in TheLines:
-			tester = line[10:13]
-			if tester == 'HA1':
-				Starts = 'HA1'
-				break
-			elif tester == 'HA2':
-				Starts = 'HA2'
-				break
-
-		AASeq = []
-		HAIn = ()
-		# H3In = ()
-		Position = 0
-		PositionT = ''
-		PositionN = ''
-		HASegment = ''
-		HANumber = ''
-		HAbase = ''
-		TriOn = False
-		MapEnds = 'none'
-
-
-		for line in TheLines:
-			line = line.strip()
-
-			words = line.split(' ')
-			if words[0] == 'Residue':
-				PositionT = words[1]
-				AA = PositionT[0]
-				PositionN = PositionT[1:]
-				Position = int(PositionN)
-
-
-				# AASeq.append(words[1]) #from sequence line
-
-			# Format: List of tuples with each tuple containing:
-			# Tuple 1: Position: H1-segment (HA1 or HA2),  Amino Acid, H1Number, A/California/4/2009-residue, H1-antigenic-region
-			# Tuple 2: Position: H3-segment (HA1 or HA2), Amino Acid, H3Number, A/Aichi/2/1968-residue, H3-antigenic-region
-			if len(words) > 5:
-				if words[5] == '4HMG':
-					if words[3] == 'gap':
-						HASegment = Starts
-						HANumber = '-'
-						HAbase = '-'
-
-
-					elif words[3] == 'HA1':
-
-						HASegment = 'HA1'
-						ResidueIs = words[1]
-						HANumber = int(ResidueIs[1:])
-						HAbase = ResidueIs[0]
-						if MapEnds == 'none':
-							MapEnds = 'HA1'
-
-					elif words[3] == 'HA2':
-
-						HASegment = 'HA2'
-						ResidueIs = words[1]
-						HANumber = int(ResidueIs[1:])
-						HAbase = ResidueIs[0]
-
-					if HASegment == 'HA1':
-						if str(HANumber) in H3HA1Regions.keys():
-							HAAg = H3HA1Regions[str(HANumber)]
-						else:
-							HAAg = '-'
-
-					elif HASegment == 'HA2':
-						if str(HANumber) in H3HA2Regions.keys():
-							HAAg = H3HA2Regions[str(HANumber)]
-						else:
-							HAAg = '-'
-
-					HAIn = (HASegment, AA, HANumber, HAbase, HAAg, MapEnds)
-					H3Numbering[Position] = HAIn
-
-
-
-# todo add probe components including trimer domain, avitag, his-tag
-
-
-				if words[5] == '4JTV':
-					if words[3] == 'gap':
-						HASegment = Starts
-						HANumber = '-'
-						HAbase = '-'
-
-
-					elif words[3] == 'HA1':
-
-						HASegment = 'HA1'
-						ResidueIs = words[1]
-						HANumber = int(ResidueIs[1:])
-						HAbase = ResidueIs[0]
-
-
-
-					elif words[3] == 'HA2':
-
-						HASegment = 'HA2'
-						ResidueIs = words[1]
-						HANumber = int(ResidueIs[1:])
-						HAbase = ResidueIs[0]
-
-
-					if HASegment == 'HA1':
-						if str(HANumber) in H1HA1Regions.keys():
-							HAAg = H1HA1Regions[str(HANumber)]
-						else:
-							HAAg = '-'
-
-					elif HASegment == 'HA2':
-						if str(HANumber) in H1HA2Regions.keys():
-							HAAg = H1HA2Regions[str(HANumber)]
-						else:
-							HAAg = '-'
-
-					HAIn = (HASegment, AA, HANumber, HAbase, HAAg)
-					H1Numbering[Position] = HAIn
-
-		# if len(H3Numbering) > 425:
-		testString = ''
-		TMOn = False
-		# StartTest = False
-		for i in range(1,len(H3Numbering)):
-			CurRes = H3Numbering[i]
-			HASegment = CurRes[0]
-			AA = CurRes[1]
-			HANumber = CurRes[2]
-			HAbase = CurRes[3]
-			HAAg = CurRes[4]
-			if HASegment == 'HA1':
-				if MapEnds == 'none':
-					NumberingMap['H3HA1beg'] = i
-					MapEnds = 'HA1'
-				NumberingMap['H3HA1end'] = i
-
-			elif HASegment == 'HA2':
-				if MapEnds == 'HA1' or MapEnds == 'none':
-					NumberingMap['H3HA2beg'] = i
-					MapEnds = 'HA2'
-
-				NumberingMap['H3HA2end'] = i
-
-
-			try:
-				testString = ''
-				if AA == 'V':
-
-					for j in range(i,i+6):
-						testRes = H3Numbering[j]
-						AATest = testRes[1]
-						testString += AATest
-					if testString == 'VELKSG' or testString == 'VQLKSG' or testString == 'VKLESM' or testString == 'VKLEST' or testString == 'VKLDS':
-						TMOn = True
-				elif AA == 'G':
-					for j in range(i,i+6):
-						testRes = H3Numbering[j]
-						AATest = testRes[1]
-						testString += AATest
-					if testString == 'GSGYIP':
-						TriOn = True
-			except:
-				print('tried')
-
-			if AA == '*':
-				TMOn = False
-				TriOn = False
-			if TMOn == True:
-				HASegment = 'TM'
-				HAIn = (HASegment, AA, HANumber, HAbase, HAAg)
-				H3Numbering[i] = HAIn
-				StartTest = False
-			if TriOn == True:
-				HASegment = 'Trimer-Avitag-H6'
-				HAIn = (HASegment, AA, HANumber, HAbase, HAAg)
-				H3Numbering[i] = HAIn
-				StartTest = False
-
-		TMOn = False
-		# StartTest = False
-		for i in range(1,len(H1Numbering)):
-			CurRes = H1Numbering[i]
-			HASegment = CurRes[0]
-			AA = CurRes[1]
-			HANumber = CurRes[2]
-			HAbase = CurRes[3]
-			HAAg = CurRes[4]
-			if HASegment == 'HA1':
-				if MapEnds == 'none':
-					NumberingMap['H1HA1beg'] = i
-					MapEnds = 'HA1'
-				NumberingMap['H1HA1end'] = i
-
-			elif HASegment == 'HA2':
-				if MapEnds == 'HA1' or MapEnds == 'none':
-					NumberingMap['H1HA2beg'] = i
-					MapEnds = 'HA2'
-
-				NumberingMap['H1HA2end'] = i
-
-
-			try:
-				testString = ''
-				if AA == 'V':
-
-					for j in range(i,i+6):
-						testRes = H1Numbering[j]
-						AATest = testRes[1]
-						testString += AATest
-					if testString == 'VELKSG' or testString == 'VQLKSG' or testString == 'VKLESM' or testString == 'VKLEST' or testString == 'VKLDS':
-						TMOn = True
-				elif AA == 'G':
-					for j in range(i,i+6):
-						testRes = H1Numbering[j]
-						AATest = testRes[1]
-						testString += AATest
-					if testString == 'GSGYIP':
-						TriOn = True
-			except:
-				print('tried')
-
-			if AA == '*':
-				TMOn = False
-				TriOn = False
-			if TMOn == True:
-				HASegment = 'TM'
-				HAIn = (HASegment, AA, HANumber, HAbase, HAAg)
-				H1Numbering[i] = HAIn
-				StartTest = False
-			if TriOn == True:
-				HASegment = 'Trimer-Avitag-H6'
-				HAIn = (HASegment, AA, HANumber, HAbase, HAAg)
-				H1Numbering[i] = HAIn
-				StartTest = False
-
-
-		os.remove(SavedFile)
-		os.remove(workingfilename)
 
 	@pyqtSlot()
 	def ListItemChanged(self):
@@ -6608,7 +5963,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				HAAA = Translator(HASeq.upper(), 0)
 				HAAA = HAAA[0]
 				# HA numbering
-				self.HANumbering(HAAA)
+				HANumbering(HAAA)
 
 				if subtype == "H1N1" or subtype == "Group1":
 					numbering = H1Numbering
@@ -6723,7 +6078,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			HAAA = Translator(HASeq.upper(), 0)
 			HAAA = HAAA[0]
 			# HA numbering
-			self.HANumbering(HAAA)
+			HANumbering(HAAA)
 			if subtype == "H1N1" or subtype == "Group 1":
 				numbering = H1Numbering
 			else:
@@ -7820,6 +7175,343 @@ class LibratorMain(QtWidgets.QMainWindow):
 		os.remove(in_file)
 		os.remove(out_file)
 
+def MakeRuler(pos1, pos2, step, mode):
+	ErrMsg = ""
+	if len(str(pos2)) > step - 1:
+		ErrMsg = "Please use larger step! Current step is too short!"
+
+	# start to make ruler
+	if mode == "aa":
+		step_count = int(pos2) - int(pos1) + 1
+		ruler = ' . ' * step_count
+
+		for x in range(100):
+			cur_pos = pos1 + x * step
+			if cur_pos <= pos2:
+				ruler = ruler[:x * 3 * step + 1] + str(cur_pos) + ruler[len(str(cur_pos)) + x * 3 * step + 1:]
+
+	else:
+		ruler = ''
+		cur_pos = pos1
+		step_count = 0
+		space_left = 0
+		while cur_pos <= pos2:
+			if cur_pos == pos1 + step_count * step:
+				ruler += str(cur_pos)
+				space_left = len(str(cur_pos)) - 1
+				cur_pos += 1
+				step_count += 1
+			else:
+				if space_left > 0:
+					space_left = space_left - 1
+					cur_pos += 1
+				else:
+					ruler += '.'
+					cur_pos += 1
+	return ruler
+
+def HANumbering(AASeq):
+	import uuid
+	global H1Numbering
+	global H3Numbering
+	H1Numbering.clear()
+	H3Numbering.clear()
+	global NumberingMap
+	global temp_folder
+	global muscle_path
+	NumberingMap.clear()
+
+
+	NameBase = str(uuid.uuid4())
+	# NameBase = NameBase[:12]
+	NameBase = NameBase.replace('-', '')
+
+	NameBase = NameBase.replace(' ', '')
+
+	MyInFiles = NameBase + 'In.txt'
+	MyOutFiles = NameBase + 'Out.txt'
+
+	workingfilename = os.path.join(temp_folder, MyInFiles)
+	musclepath = re.sub(r'[^\/]+$','',muscle_path)
+	savefilename = os.path.join(temp_folder,  MyOutFiles)
+
+	workingdir, filename = os.path.split(workingfilename)
+	os.chdir(workingdir)
+
+	NumberingQuery = 'musclepath '
+	NumberingQuery += musclepath + '\n' + 'ha_sequence '
+
+	NumberingQuery += AASeq + '\n'
+
+	Sites = 'sites '
+	for Res in range(0, len(AASeq)):
+		Sites += str(Res+1)
+		Sites += ' '
+
+	NumberingQuery += Sites + '\n'
+
+	SavedFile = savefilename#'Out.txt'
+
+	# write input sequence into input file
+	with open(workingfilename, 'w') as currentFile:
+		currentFile.write(NumberingQuery)
+
+	# run HA numbering code
+	HA_numbering_Jesse(workingfilename, savefilename)
+
+	MoveOn = False
+	tester = ''
+	while MoveOn is False:  #function to delay progression until numbering script completes
+		if os.path.isfile(SavedFile):
+
+			with open(SavedFile, 'r') as currentFile:
+				TheLines = currentFile.readlines()
+
+				LenLines = len(TheLines)
+				if LenLines > 0:
+					tester = TheLines[LenLines-1]
+
+				if tester == "Script complete.\n":
+					MoveOn = True
+		else:
+			MoveOn = False
+	Starts = ''
+	for line in TheLines:
+		tester = line[10:13]
+		if tester == 'HA1':
+			Starts = 'HA1'
+			break
+		elif tester == 'HA2':
+			Starts = 'HA2'
+			break
+
+	AASeq = []
+	HAIn = ()
+	# H3In = ()
+	Position = 0
+	PositionT = ''
+	PositionN = ''
+	HASegment = ''
+	HANumber = ''
+	HAbase = ''
+	TriOn = False
+	MapEnds = 'none'
+
+
+	for line in TheLines:
+		line = line.strip()
+
+		words = line.split(' ')
+		if words[0] == 'Residue':
+			PositionT = words[1]
+			AA = PositionT[0]
+			PositionN = PositionT[1:]
+			Position = int(PositionN)
+
+
+			# AASeq.append(words[1]) #from sequence line
+
+		# Format: List of tuples with each tuple containing:
+		# Tuple 1: Position: H1-segment (HA1 or HA2),  Amino Acid, H1Number, A/California/4/2009-residue, H1-antigenic-region
+		# Tuple 2: Position: H3-segment (HA1 or HA2), Amino Acid, H3Number, A/Aichi/2/1968-residue, H3-antigenic-region
+		if len(words) > 5:
+			if words[5] == '4HMG':
+				if words[3] == 'gap':
+					HASegment = Starts
+					HANumber = '-'
+					HAbase = '-'
+
+
+				elif words[3] == 'HA1':
+
+					HASegment = 'HA1'
+					ResidueIs = words[1]
+					HANumber = int(ResidueIs[1:])
+					HAbase = ResidueIs[0]
+					if MapEnds == 'none':
+						MapEnds = 'HA1'
+
+				elif words[3] == 'HA2':
+
+					HASegment = 'HA2'
+					ResidueIs = words[1]
+					HANumber = int(ResidueIs[1:])
+					HAbase = ResidueIs[0]
+
+				if HASegment == 'HA1':
+					if str(HANumber) in H3HA1Regions.keys():
+						HAAg = H3HA1Regions[str(HANumber)]
+					else:
+						HAAg = '-'
+
+				elif HASegment == 'HA2':
+					if str(HANumber) in H3HA2Regions.keys():
+						HAAg = H3HA2Regions[str(HANumber)]
+					else:
+						HAAg = '-'
+
+				HAIn = (HASegment, AA, HANumber, HAbase, HAAg, MapEnds)
+				H3Numbering[Position] = HAIn
+	# todo add probe components including trimer domain, avitag, his-tag
+			if words[5] == '4JTV':
+				if words[3] == 'gap':
+					HASegment = Starts
+					HANumber = '-'
+					HAbase = '-'
+
+
+				elif words[3] == 'HA1':
+
+					HASegment = 'HA1'
+					ResidueIs = words[1]
+					HANumber = int(ResidueIs[1:])
+					HAbase = ResidueIs[0]
+
+
+
+				elif words[3] == 'HA2':
+
+					HASegment = 'HA2'
+					ResidueIs = words[1]
+					HANumber = int(ResidueIs[1:])
+					HAbase = ResidueIs[0]
+
+
+				if HASegment == 'HA1':
+					if str(HANumber) in H1HA1Regions.keys():
+						HAAg = H1HA1Regions[str(HANumber)]
+					else:
+						HAAg = '-'
+
+				elif HASegment == 'HA2':
+					if str(HANumber) in H1HA2Regions.keys():
+						HAAg = H1HA2Regions[str(HANumber)]
+					else:
+						HAAg = '-'
+
+				HAIn = (HASegment, AA, HANumber, HAbase, HAAg)
+				H1Numbering[Position] = HAIn
+
+	# if len(H3Numbering) > 425:
+	testString = ''
+	TMOn = False
+	# StartTest = False
+	for i in range(1,len(H3Numbering)):
+		CurRes = H3Numbering[i]
+		HASegment = CurRes[0]
+		AA = CurRes[1]
+		HANumber = CurRes[2]
+		HAbase = CurRes[3]
+		HAAg = CurRes[4]
+		if HASegment == 'HA1':
+			if MapEnds == 'none':
+				NumberingMap['H3HA1beg'] = i
+				MapEnds = 'HA1'
+			NumberingMap['H3HA1end'] = i
+
+		elif HASegment == 'HA2':
+			if MapEnds == 'HA1' or MapEnds == 'none':
+				NumberingMap['H3HA2beg'] = i
+				MapEnds = 'HA2'
+
+			NumberingMap['H3HA2end'] = i
+
+
+		try:
+			testString = ''
+			if AA == 'V':
+
+				for j in range(i,i+6):
+					testRes = H3Numbering[j]
+					AATest = testRes[1]
+					testString += AATest
+				if testString == 'VELKSG' or testString == 'VQLKSG' or testString == 'VKLESM' or testString == 'VKLEST' or testString == 'VKLDS':
+					TMOn = True
+			elif AA == 'G':
+				for j in range(i,i+6):
+					testRes = H3Numbering[j]
+					AATest = testRes[1]
+					testString += AATest
+				if testString == 'GSGYIP':
+					TriOn = True
+		except:
+			print('tried')
+
+		if AA == '*':
+			TMOn = False
+			TriOn = False
+		if TMOn == True:
+			HASegment = 'TM'
+			HAIn = (HASegment, AA, HANumber, HAbase, HAAg)
+			H3Numbering[i] = HAIn
+			StartTest = False
+		if TriOn == True:
+			HASegment = 'Trimer-Avitag-H6'
+			HAIn = (HASegment, AA, HANumber, HAbase, HAAg)
+			H3Numbering[i] = HAIn
+			StartTest = False
+
+	TMOn = False
+	# StartTest = False
+	for i in range(1,len(H1Numbering)):
+		CurRes = H1Numbering[i]
+		HASegment = CurRes[0]
+		AA = CurRes[1]
+		HANumber = CurRes[2]
+		HAbase = CurRes[3]
+		HAAg = CurRes[4]
+		if HASegment == 'HA1':
+			if MapEnds == 'none':
+				NumberingMap['H1HA1beg'] = i
+				MapEnds = 'HA1'
+			NumberingMap['H1HA1end'] = i
+
+		elif HASegment == 'HA2':
+			if MapEnds == 'HA1' or MapEnds == 'none':
+				NumberingMap['H1HA2beg'] = i
+				MapEnds = 'HA2'
+
+			NumberingMap['H1HA2end'] = i
+
+
+		try:
+			testString = ''
+			if AA == 'V':
+
+				for j in range(i,i+6):
+					testRes = H1Numbering[j]
+					AATest = testRes[1]
+					testString += AATest
+				if testString == 'VELKSG' or testString == 'VQLKSG' or testString == 'VKLESM' or testString == 'VKLEST' or testString == 'VKLDS':
+					TMOn = True
+			elif AA == 'G':
+				for j in range(i,i+6):
+					testRes = H1Numbering[j]
+					AATest = testRes[1]
+					testString += AATest
+				if testString == 'GSGYIP':
+					TriOn = True
+		except:
+			print('tried')
+
+		if AA == '*':
+			TMOn = False
+			TriOn = False
+		if TMOn == True:
+			HASegment = 'TM'
+			HAIn = (HASegment, AA, HANumber, HAbase, HAAg)
+			H1Numbering[i] = HAIn
+			StartTest = False
+		if TriOn == True:
+			HASegment = 'Trimer-Avitag-H6'
+			HAIn = (HASegment, AA, HANumber, HAbase, HAAg)
+			H1Numbering[i] = HAIn
+			StartTest = False
+
+
+	os.remove(SavedFile)
+	os.remove(workingfilename)
+
 
 def ReadFASTA(outfilename):
 	ReadFile = []
@@ -7857,7 +7549,6 @@ def ReadFASTA(outfilename):
 
 
 def Translator(Sequence, frame):
-
         # Translate sequence into a list of codons
     CodonList = [ ]
     for x in range(frame, len(Sequence), 3):
