@@ -283,7 +283,7 @@ class MutationDialog(QtWidgets.QDialog):
 					QMessageBox.warning(self, 'Warning',
 										'The mutation can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
 				else:
-					self.applySignal.emit("H1N3pos", template_name, seq_name, mutation_ha1, mutation_ha2, mode)
+					self.applySignal.emit("H1H3pos", template_name, seq_name, mutation_ha1, mutation_ha2, mode)
 		#self.hide()
 
 class gibsoncloneDialog(QtWidgets.QDialog):
@@ -6014,7 +6014,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				pml.write(text)
 
 		cmd = pymolPath + " " + pml_path
-		print(cmd)
+		#print(cmd)
 		bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 
 
@@ -6150,7 +6150,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 					self.ui.listWidgetStrains.addItem(seq_name)
 					if self.modalessMutationDialog != None:
 						self.modalessMutationDialog.close()
-			elif mode == "H1N3pos":
+			elif mode == "H1H3pos":
 				mutations = []
 				# convert H1/H3 numbering to original numbering
 				# start with HA1
