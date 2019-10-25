@@ -309,6 +309,14 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 	def browse_db(self):  # browse and select path
 		global temp_folder
 		out_dir, _ = QFileDialog.getOpenFileName(self, "select existing fragment DB", temp_folder,"Librator database Files (*.ldb);;All Files (*)")
+		# check if this is the right DB
+		SQLStatement = 'SELECT * FROM Fragments ORDER BY Name DESC LIMIT 1 '
+		try:
+			DataIn = RunSQL(out_dir, SQLStatement)
+		except:
+			QMessageBox.warning(self, 'Warning', 'There is no Fragments table in the selected database!', QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
 		self.ui.dbpath.setText(out_dir)
 
 	def new_db(self):
@@ -5229,6 +5237,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global BaseSeq
 
 		DBFilename = openFile(self, 'ldb')
+		# check if this is the right DB
+		SQLStatement = 'SELECT * FROM LibDB ORDER BY SeqName DESC LIMIT 1 '
+		try:
+			DataIn = RunSQL(DBFilename, SQLStatement)
+		except:
+			QMessageBox.warning(self, 'Warning', 'There is no LibDB table in the selected database!',
+			                    QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+
 		if isinstance(DBFilename, str):
 			titletext = 'Librator - ' + DBFilename
 			self.setWindowTitle(titletext)
@@ -5282,6 +5300,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global BaseSeq
 
 		DBFilename = infile
+
+		# check if this is the right DB
+		SQLStatement = 'SELECT * FROM LibDB ORDER BY SeqName DESC LIMIT 1 '
+		try:
+			DataIn = RunSQL(DBFilename, SQLStatement)
+		except:
+			QMessageBox.warning(self, 'Warning', 'There is no LibDB table in the selected database!',
+			                    QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+
 		if isinstance(DBFilename, str):
 			titletext = 'Librator - ' + DBFilename
 			self.setWindowTitle(titletext)
@@ -5352,6 +5381,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		else:
 			cur_file = self.ui.cboRecent.currentText()
 			if os.path.exists(cur_file):
+
+
+
 				self.open_db(self.ui.cboRecent.currentText())
 			else:
 				self.UpdateRecent()
