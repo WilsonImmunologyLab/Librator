@@ -9,6 +9,7 @@ from HA_numbering_function import HA_numbering_Jesse
 from itertools import combinations
 from collections import Counter
 from subprocess import call, Popen, PIPE
+from platform import system
 import os, sys, re, time, string
 import pandas as pd
 import numpy as np
@@ -1544,8 +1545,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		RepOption = self.ui.cboReportOptions.currentText()
 		if RepOption == 'Make Secreted Probe':
 			self.MakeProbe()
-		elif RepOption == 'Gibson fragments':
-			self.open_gibson_dialog()
 		elif RepOption == 'Sequence Editing':
 			self.sequence_editing()
 		elif RepOption == 'Mutate Sequences':
@@ -5406,6 +5405,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global DataIs
 		# self.ui.cboActive.clear()
 		listItems = self.ui.listWidgetStrainsIn.selectedItems()
+		if len(listItems) == 0:
+			QMessageBox.warning(self, 'Warning', 'Please select at least one sequence first!',
+			                    QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
 		# if not listItems: return
 		for item in listItems:
 			eachItemIs = item.text()
@@ -6017,9 +6021,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 		#print(cmd)
 		bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 
+	@pyqtSlot()
+	def on_gibsonBTN_clicked(self):
+		self.open_gibson_dialog()
 
 	@pyqtSlot()
-	def on_btnFieldSearch_clicked(self):
+	def on_pymolBTN_clicked(self):
 		global pymol_path
 
 		seq = self.ui.txtName.toPlainText()
@@ -7174,6 +7181,22 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessGibsonDialog.close()
 		os.remove(in_file)
 		os.remove(out_file)
+
+		# open Fragments file folder
+		my_cur_os = system()
+		if my_cur_os == 'Windows':
+			cmd = 'explorer ' + path     # Windows
+		elif my_cur_os == 'Darwin':
+			cmd = 'open ' + out_dir      # mac
+		elif my_cur_os == 'Linux':
+			cmd = 'nautilus' + out_dir   # Linux
+		else:
+			cmd = ''
+		if cmd != '':
+			try:
+				os.system(cmd)
+			except ValueError:
+				pass
 
 def MakeRuler(pos1, pos2, step, mode):
 	ErrMsg = ""
