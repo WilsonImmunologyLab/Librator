@@ -11,14 +11,14 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Path Setting</string>
   </property>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
      <x>40</x>
      <y>60</y>
-     <width>441</width>
+     <width>531</width>
      <height>16</height>
     </rect>
    </property>
@@ -28,7 +28,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Your current base path is:</string>
+    <string>Your current base path is: (Only change this when you know what you're doning)</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">

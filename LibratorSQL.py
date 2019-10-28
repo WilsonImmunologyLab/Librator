@@ -74,16 +74,21 @@ def CopyDatatoDB2(SQLSELECT, DBpathname, DB2path):
 
     # INSERT INTO blog_posts
     # SELECT * FROM BlogProduction.dbo.blog_posts
-    SQLStatement = 'ATTACH DATABASE "'+ DB2path + '" AS "DB2"'
-    SQLStatement2 = 'INSERT INTO DB2.LibDB '+ SQLSELECT #SELECT * FROM LibDB WHERE ...' #'INSERT INTO + ' "' + LibDB.DB2 ' + '" '+ SQLSELECT #SELECT * FROM LibDB WHERE ...'
+    SQLStatement = 'ATTACH DATABASE "'+ DB2path + '" AS DB2'
+    SQLStatement2 = 'INSERT INTO DB2.LibDB '+ SQLSELECT
     SQLStatement3 = 'DETACH DATABASE DB2'
     try:
         cursor.execute(SQLStatement)
-        cursor.execute(SQLStatement2)
-        cursor.execute(SQLStatement3)
     except:
+        print(SQLStatement)
+        return
 
-        print(SQLStatement + ', '+ SQLStatement2 + ', '+ SQLStatement3)
+    try:
+        cursor.execute(SQLStatement2)
+    except:
+        print(SQLStatement2)
+        return
+    conn.commit()
 
 
 def UpdateMulti(SQLCommand, DBpathname):

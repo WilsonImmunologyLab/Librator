@@ -4,7 +4,7 @@ from PyQt5 import QtWidgets, QtPrintSupport
 from PyQt5.QtWidgets import *
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QCursor
-from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion, creatnewFragmentDB
+from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion, creatnewFragmentDB, CopyDatatoDB2
 from HA_numbering_function import HA_numbering_Jesse
 from itertools import combinations
 from collections import Counter
@@ -207,7 +207,7 @@ class basePathDialog(QtWidgets.QDialog):
 		tmp_working_prefix = self.ui.basePath.text()
 		tmp_working_prefix = tmp_working_prefix.rstrip('/') + '/'
 
-		# check if those path exist or not
+		# check if base path exist or not
 		if os.path.exists(tmp_working_prefix):
 			if os.path.exists(tmp_working_prefix + 'Temp/') and os.path.exists(tmp_working_prefix + 'PDB/'):
 				temp_folder = tmp_working_prefix + 'Temp/'
@@ -228,6 +228,7 @@ class basePathDialog(QtWidgets.QDialog):
 			                    'Your base folder does not exist! Check your input!', QMessageBox.Ok, QMessageBox.Ok)
 			return
 
+		# check if muscle path exist or not
 		if os.path.exists(self.ui.musclePath.text()):
 			muscle_path = self.ui.musclePath.text()
 		else:
@@ -235,6 +236,7 @@ class basePathDialog(QtWidgets.QDialog):
 			                    'The path for muscle does not exist! Check your input!', QMessageBox.Ok, QMessageBox.Ok)
 			return
 
+		# check if clustal omega path exist or not
 		if os.path.exists(self.ui.clustaloPath.text()):
 			clustal_path = self.ui.clustaloPath.text()
 		else:
@@ -242,7 +244,13 @@ class basePathDialog(QtWidgets.QDialog):
 			                    'The path for clustal omega does not exist! Check your input!', QMessageBox.Ok, QMessageBox.Ok)
 			return
 
-		pymol_path = self.ui.pymolPath.text()
+		# check if PyMOL path exist or not
+		if os.path.exists(self.ui.pymolPath.text()):
+			pymol_path = self.ui.pymolPath.text()
+		else:
+			QMessageBox.warning(self, 'Warning',
+			                    'The path for PyMOL does not exist! Check your input!', QMessageBox.Ok, QMessageBox.Ok)
+			return
 
 		self.close()
 
@@ -3775,9 +3783,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			VGenesTextWindows[window_id].data = DataIn
 			VGenesTextWindows[window_id].note = Notes
 			VGenesTextWindows[window_id].type = 'Alignment'
-			VGenesTextWindows[window_id].dnaAct.setChecked(self.ui.actionDNA.isChecked())
-			VGenesTextWindows[window_id].aaAct.setChecked(self.ui.actionAA.isChecked())
-			VGenesTextWindows[window_id].baAct.setChecked(self.ui.actionBA.isChecked())
+			VGenesTextWindows[window_id].dnaAct.setChecked(dnaCheck)
+			VGenesTextWindows[window_id].aaAct.setChecked(aaCheck)
+			VGenesTextWindows[window_id].baAct.setChecked(posCheck)
 
 			self.ShowVGenesTextEdit(alignmentText, Style, ColorMap, window_id)
 			self.ShowVGenesTextEditLegend(legend_text, legend_color, window_id)
@@ -5430,13 +5438,60 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.ui.cboRecent.addItem(DBFilename)
 
 	# actionHANumbering
+	@pyqtSlot()
+	def on_btnExtractRecords_clicked(self):
+		# selected records
+		listItems = self.ui.listWidgetStrainsIn.selectedItems()
+		if len(listItems) == 0:
+			QMessageBox.warning(self, 'Warning', 'Please select at least one record!',
+			                    QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+		else:
+			SQLStatement = 'SELECT * FROM LibDB WHERE '
+			WhereState = ''
+			NumSeqs = len(listItems)
+			i = 1
+			# search selected sequence name
+			for item in listItems:
+				eachItemIs = item.text()
+				WhereState += 'SeqName = "' + eachItemIs + '"'
+				if NumSeqs > i:
+					WhereState += ' OR '
+				i += 1
+			SQLStatement = SQLStatement + WhereState
+		# create DB
+		options = QtWidgets.QFileDialog.Options()
+		global DBFilename
+		# options |= QtWidgets.QFileDialog.DontUseNativeDialog
+		new_db, _ = QtWidgets.QFileDialog.getSaveFileName(self,
+		                                                      "New Database",
+		                                                      "New database",
+		                                                      "Librator database Files (*.ldb);;All Files (*)",
+		                                                      options=options)
+
+		if new_db != None and new_db != '':
+			(dirname, filename) = os.path.split(new_db)
+			(shortname, extension) = os.path.splitext(filename)
+
+			if extension != '.ldb':
+				new_db = shortname + '.ldb'
+			creatnewDB(new_db)
+
+		# import data
+		CopyDatatoDB2(SQLStatement, DBFilename, new_db)
+
+		# open new DB
+		DBFilename = new_db
+		self.open_db(DBFilename)
 
 	@pyqtSlot()
 	def on_actionHANumbering_triggered(self):
 		# answer = informationMessage(self, 'Would you like to generate a numbering report?' 'YN')
 		AASeq = self.ui.textAA.toPlainText()
-		Numbering = HANumbering(AASeq)
-		self.ui.tabWidget.setCurrentIndex(1)
+		if AASeq != '':
+			Numbering = HANumbering(AASeq)
+			self.ui.tabWidget.setCurrentIndex(1)
 
 	@pyqtSlot()
 	def ListItemChanged(self):

@@ -14,7 +14,7 @@ class Ui_basePathDialog(object):
         basePathDialog.setObjectName("basePathDialog")
         basePathDialog.resize(739, 396)
         self.label = QtWidgets.QLabel(basePathDialog)
-        self.label.setGeometry(QtCore.QRect(40, 60, 441, 16))
+        self.label.setGeometry(QtCore.QRect(40, 60, 531, 16))
         font = QtGui.QFont()
         font.setPointSize(14)
         self.label.setFont(font)
@@ -86,8 +86,8 @@ class Ui_basePathDialog(object):
 
     def retranslateUi(self, basePathDialog):
         _translate = QtCore.QCoreApplication.translate
-        basePathDialog.setWindowTitle(_translate("basePathDialog", "Dialog"))
-        self.label.setText(_translate("basePathDialog", "Your current base path is:"))
+        basePathDialog.setWindowTitle(_translate("basePathDialog", "Path Setting"))
+        self.label.setText(_translate("basePathDialog", "Your current base path is: (Only change this when you know what you\'re doning)"))
         self.label_2.setText(_translate("basePathDialog", "You can set your path by typing or click button to browse:"))
         self.browseBase.setText(_translate("basePathDialog", "Browse"))
         self.yes.setText(_translate("basePathDialog", "Confirm"))

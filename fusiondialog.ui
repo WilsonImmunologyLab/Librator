@@ -7,17 +7,17 @@
     <x>0</x>
     <y>0</y>
     <width>708</width>
-    <height>533</height>
+    <height>586</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Sequence Fusion across subtypes</string>
   </property>
   <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>479</y>
+     <y>539</y>
      <width>651</width>
      <height>32</height>
     </rect>
@@ -46,7 +46,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>50</y>
+     <y>110</y>
      <width>651</width>
      <height>181</height>
     </rect>
@@ -59,7 +59,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>20</y>
+     <y>80</y>
      <width>391</width>
      <height>21</height>
     </rect>
@@ -72,7 +72,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>250</y>
+     <y>310</y>
      <width>391</width>
      <height>21</height>
     </rect>
@@ -85,7 +85,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>280</y>
+     <y>340</y>
      <width>651</width>
      <height>31</height>
     </rect>
@@ -98,7 +98,7 @@
    <property name="geometry">
     <rect>
      <x>432</x>
-     <y>350</y>
+     <y>410</y>
      <width>251</width>
      <height>71</height>
     </rect>
@@ -111,7 +111,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>330</y>
+     <y>390</y>
      <width>391</width>
      <height>21</height>
     </rect>
@@ -124,7 +124,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>360</y>
+     <y>420</y>
      <width>161</width>
      <height>31</height>
     </rect>
@@ -134,7 +134,7 @@
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>360</y>
+     <y>420</y>
      <width>161</width>
      <height>31</height>
     </rect>
@@ -144,7 +144,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>430</y>
+     <y>490</y>
      <width>161</width>
      <height>31</height>
     </rect>
@@ -154,7 +154,7 @@
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>430</y>
+     <y>490</y>
      <width>161</width>
      <height>31</height>
     </rect>
@@ -164,7 +164,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>400</y>
+     <y>460</y>
      <width>391</width>
      <height>21</height>
     </rect>
@@ -177,7 +177,7 @@
    <property name="geometry">
     <rect>
      <x>210</x>
-     <y>360</y>
+     <y>420</y>
      <width>31</width>
      <height>21</height>
     </rect>
@@ -190,7 +190,7 @@
    <property name="geometry">
     <rect>
      <x>210</x>
-     <y>430</y>
+     <y>490</y>
      <width>31</width>
      <height>21</height>
     </rect>
@@ -203,7 +203,7 @@
    <property name="geometry">
     <rect>
      <x>440</x>
-     <y>430</y>
+     <y>490</y>
      <width>241</width>
      <height>41</height>
     </rect>
@@ -249,6 +249,24 @@
      </widget>
     </item>
    </layout>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>20</y>
+     <width>651</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>18</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Design your HA sequence across subtypes using SequenceFusion function</string>
+   </property>
   </widget>
  </widget>
  <resources/>
