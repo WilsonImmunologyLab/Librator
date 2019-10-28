@@ -5910,6 +5910,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# delete all selected elements
 		delete = self.ui.listWidgetStrains.selectedItems()
 
+		WhereState = ''
+		NumSeqs = len(delete)
+		i = 1
+
 		for element in delete:
 			delete_element = element.text()
 			msg = 'Delete sequence: ' + delete_element + ' ?'
@@ -5917,8 +5921,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 			reply = QMessageBox.question(self, 'Information', msg ,
 			                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 			if reply == QMessageBox.Yes:
-				SQLStatement = 'DELETE FROM LibDB WHERE `SeqName` = "' + delete_element + '"'
-				deleterecords(DBFilename, SQLStatement)
+				WhereState += 'SeqName = "' + delete_element + '"'
+				if NumSeqs > i:
+					WhereState += ' OR '
+			i += 1
+
+		SQLStatement = 'DELETE FROM LibDB WHERE ' + WhereState
+		deleterecords(DBFilename, SQLStatement)
 
 		# refresh the list - all sequence list
 		self.ui.listWidgetStrains.clear()
