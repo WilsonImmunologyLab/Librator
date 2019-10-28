@@ -5381,8 +5381,15 @@ class LibratorMain(QtWidgets.QMainWindow):
 		else:
 			cur_file = self.ui.cboRecent.currentText()
 			if os.path.exists(cur_file):
-
-
+				# check if this is the right DB
+				SQLStatement = 'SELECT * FROM LibDB ORDER BY SeqName DESC LIMIT 1 '
+				try:
+					DataIn = RunSQL(cur_file, SQLStatement)
+				except:
+					QMessageBox.warning(self, 'Warning', 'There is no LibDB table in the selected database!',
+					                    QMessageBox.Ok,
+					                    QMessageBox.Ok)
+					return
 
 				self.open_db(self.ui.cboRecent.currentText())
 			else:
