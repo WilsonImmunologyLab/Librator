@@ -5439,7 +5439,49 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	# actionHANumbering
 	@pyqtSlot()
+	def on_btnCopyRecords_clicked(self):
+		global DBFilename
+		# selected records
+		listItems = self.ui.listWidgetStrainsIn.selectedItems()
+		if len(listItems) == 0:
+			QMessageBox.warning(self, 'Warning', 'Please select at least one record!',
+			                    QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+		else:
+			SQLStatement = 'SELECT * FROM LibDB WHERE '
+			WhereState = ''
+			NumSeqs = len(listItems)
+			i = 1
+			# search selected sequence name
+			for item in listItems:
+				eachItemIs = item.text()
+				WhereState += 'SeqName = "' + eachItemIs + '"'
+				if NumSeqs > i:
+					WhereState += ' OR '
+				i += 1
+			SQLStatement = SQLStatement + WhereState
+
+		# select target DB
+		new_db = openFile(self, 'ldb')
+
+		# import data
+		BackMessage = CopyDatatoDB2(SQLStatement, DBFilename, new_db)
+		if BackMessage == 1:
+			QMessageBox.warning(self, 'Warning', 'Faiil to insert those resords into target DB!',
+			                    QMessageBox.Ok,
+			                    QMessageBox.Ok)
+		else:
+			question = 'Would you like to open the target Database?'
+			buttons = 'YN'
+			answer = questionMessage(self, question, buttons)
+			if answer == 'Yes':
+				DBFilename = new_db
+				self.open_db(DBFilename)
+
+	@pyqtSlot()
 	def on_btnExtractRecords_clicked(self):
+		global DBFilename
 		# selected records
 		listItems = self.ui.listWidgetStrainsIn.selectedItems()
 		if len(listItems) == 0:
@@ -5462,7 +5504,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			SQLStatement = SQLStatement + WhereState
 		# create DB
 		options = QtWidgets.QFileDialog.Options()
-		global DBFilename
+
 		# options |= QtWidgets.QFileDialog.DontUseNativeDialog
 		new_db, _ = QtWidgets.QFileDialog.getSaveFileName(self,
 		                                                      "New Database",
@@ -5478,12 +5520,19 @@ class LibratorMain(QtWidgets.QMainWindow):
 				new_db = shortname + '.ldb'
 			creatnewDB(new_db)
 
-		# import data
-		CopyDatatoDB2(SQLStatement, DBFilename, new_db)
-
-		# open new DB
-		DBFilename = new_db
-		self.open_db(DBFilename)
+			# import data
+			BackMessage = CopyDatatoDB2(SQLStatement, DBFilename, new_db)
+			if BackMessage == 1:
+				QMessageBox.warning(self, 'Warning', 'Faiil to insert those resords into target DB!',
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+			else:
+				question = 'Would you like to open the target Database?'
+				buttons = 'YN'
+				answer = questionMessage(self, question, buttons)
+				if answer == 'Yes':
+					DBFilename = new_db
+					self.open_db(DBFilename)
 
 	@pyqtSlot()
 	def on_actionHANumbering_triggered(self):

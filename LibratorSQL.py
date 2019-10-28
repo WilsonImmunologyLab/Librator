@@ -81,14 +81,15 @@ def CopyDatatoDB2(SQLSELECT, DBpathname, DB2path):
         cursor.execute(SQLStatement)
     except:
         print(SQLStatement)
-        return
+        return 1
 
     try:
         cursor.execute(SQLStatement2)
     except:
         print(SQLStatement2)
-        return
+        return 1
     conn.commit()
+    return
 
 
 def UpdateMulti(SQLCommand, DBpathname):
