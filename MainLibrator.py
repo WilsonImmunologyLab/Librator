@@ -5866,7 +5866,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_actionImportLei_triggered(self):
-
 		global DBFilename
 
 		typeOpen = 'csv'
@@ -6710,9 +6709,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 			sequences_block = alignment.split(">")
 
 			for cur_block in sequences_block:
+				if cur_block == '':
+					continue
 				tmp = cur_block.split("\n")
 				cur_name = tmp[0]
-				cur_name = cur_name[1:]
 				tmp = tmp[1:]
 				seperator = ""
 				cur_seq = seperator.join(tmp)
@@ -6798,13 +6798,15 @@ class LibratorMain(QtWidgets.QMainWindow):
 					if x >= donor_sequences_arr[y][2] and x < donor_sequences_arr[y][3]:
 						cur_residue_donor.append(cur_donor_seq[x])
 				count = Counter(cur_residue_donor).most_common(2)
-				if len(count) > 1:
-					if count[0][1] > count[1][1]:
-						if cur_residue_base != count[0][0]:
+
+				if count[0][0] != cur_residue_base:
+					if len(count) > 1:
+						if count[0][1] > count[1][1]:
 							cur_mutation = cur_residue_base + str(x + 1) + count[0][0]
 							mutation.append(cur_mutation)
-				else:
-					pass
+					else:
+						cur_mutation = cur_residue_base + str(x + 1) + count[0][0]
+						mutation.append(cur_mutation)
 
 			# generate sequence
 			if len(mutation) != 0:
