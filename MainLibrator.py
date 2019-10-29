@@ -20,8 +20,9 @@ from sequenceedit import Ui_SequenceEditDialog
 from gibsonclone import Ui_gibsoncloneDialog
 from base_path_dialog import Ui_basePathDialog
 from fusiondialog import Ui_fusionDialog
+from updatesequencedialog import Ui_UpdateSequenceDialog
 
-from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText, openfastq
+from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText
 from VgenesTextEdit import VGenesTextMain
 from ui_VGenesTextEdit import ui_TextEditor
 import LibratorSeq
@@ -69,6 +70,23 @@ global joint_up
 joint_up = "TCCACTCCCAGGTCCAACTGCACCTCGGTTCTATCGATTGAATTC"
 global joint_down
 joint_down = "GGGTCCGGATACATACCAGAGGCCCCGCGAGATGG"
+
+
+class updateSeqDialog(QtWidgets.QDialog):
+	updateSignal = pyqtSignal(str, str)
+	def __init__(self):
+		super(updateSeqDialog, self).__init__()
+		self.ui = Ui_UpdateSequenceDialog()
+		self.ui.setupUi(self)
+
+		self.ui.confirmButton.clicked.connect(self.accept)
+		self.ui.cancelButton.clicked.connect(self.reject)
+
+	def accept(self):
+		SeqName = self.ui.lineEdit.text()
+		Seq = self.ui.textEdit.toPlainText()
+
+		self.updateSignal.emit(SeqName,Seq)
 
 
 class fusionDialog(QtWidgets.QDialog):
@@ -1260,6 +1278,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.ui.txtSeqAlignment.setFont(font)
 
+	@pyqtSlot()
+	def on_btnEditSequence_clicked(self):
+		self.open_update_dialog()
 
 	@pyqtSlot()
 	def on_btnImportBase_clicked(self):
@@ -6235,6 +6256,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# translate nt to aa
 			HAAA = Translator(HASeq.upper(), 0)
 			HAAA = HAAA[0]
+
+			# check AA sequence
+			Msg = SequenceCheck(HAAA, 'aa')
+			if Msg != 'none':
+				Msg =  'Your Sequence ' + HASeq + 'have some improper Amino Acid: ' + Msg + '. Do you still want to continue?'
+				reply = QMessageBox.question(self, 'Information',
+				                             Msg, QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+				if reply == QMessageBox.No:
+					return
+
 			# HA numbering
 			HANumbering(HAAA)
 			if subtype == "H1N1" or subtype == "Group 1":
@@ -6476,8 +6507,27 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessGibsonDialog.gibsonSignal.connect(self.GenerateGibson)
 			self.modalessGibsonDialog.show()
 
-	def open_fusion_dialog(self):
+	def open_update_dialog(self):
 		global BaseSeq
+		if self.ui.txtName.toPlainText() == "":
+			QMessageBox.warning(self, 'Warning', 'Please determine a sequence first!', QMessageBox.Ok, QMessageBox.Ok)
+		else:
+			self.modalessUpdateDialog = updateSeqDialog()
+			#
+			self.modalessUpdateDialog.ui.lineEdit.setText(self.ui.txtName.toPlainText())
+			self.modalessUpdateDialog.ui.textEdit.setText(self.ui.textSeq.toPlainText())
+			self.modalessUpdateDialog.updateSignal.connect(self.updateNTseq)
+			self.modalessUpdateDialog.show()
+
+	def updateNTseq(self,SeqName,Seq):
+		self.UpdateSeq(SeqName, Seq, 'Sequence')
+
+		self.ListItemChanged()
+
+		self.modalessUpdateDialog.close()
+
+
+	def open_fusion_dialog(self):
 		if self.ui.lblBaseName.toPlainText() == "":
 			QMessageBox.warning(self, 'Warning', 'Please determine a base sequence first!', QMessageBox.Ok, QMessageBox.Ok)
 		else:
@@ -7723,6 +7773,19 @@ def ReadFASTA(outfilename):
 		# Returns a list of seqname and sequences, but now aligned
 		return ReadFile
 
+def SequenceCheck(sequence, type):
+	Msg = 'none'
+	if type == 'aa':
+		pattern = re.compile(r'[^ILVFMCAGPTSYWQNHEDKR]')
+	else:
+		pattern = re.compile(r'[^ATCUG]')
+
+	strange_residues = re.findall(pattern, sequence)
+
+	if len(strange_residues) > 0:
+		Msg = ','.join(strange_residues)
+
+	return Msg
 
 
 def Translator(Sequence, frame):
