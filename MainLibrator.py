@@ -73,7 +73,6 @@ joint_up = "TCCACTCCCAGGTCCAACTGCACCTCGGTTCTATCGATTGAATTC"
 global joint_down
 joint_down = "GGGTCCGGATACATACCAGAGGCCCCGCGAGATGG"
 
-
 class updateSeqDialog(QtWidgets.QDialog):
 	updateSignal = pyqtSignal(str, str)
 	def __init__(self):
@@ -272,6 +271,14 @@ class basePathDialog(QtWidgets.QDialog):
 			                    'The path for PyMOL does not exist! Check your input!', QMessageBox.Ok, QMessageBox.Ok)
 			return
 
+		# save MYSQL setting
+		mysql_setting_file = working_prefix + 'mysql_setting.txt'
+		file_handle = open(mysql_setting_file, 'w')
+		my_info = self.ui.IPinput.text() + ',' + self.ui.Portinput.text() + ',' + self.ui.DBnameinput.text() + \
+		          ',' + self.ui.Userinput.text() + ',' + self.ui.Passinput.text()
+		file_handle.write(my_info)
+		file_handle.close()
+
 		self.close()
 
 class MutationDialog(QtWidgets.QDialog):
@@ -360,6 +367,8 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 
 
 	def accept(self):  # redo accept method
+		global working_prefix
+
 		active_tab = self.ui.tabWidget.currentIndex()
 		if active_tab == 0:
 			# send signal
@@ -421,6 +430,15 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 
 			text = [i.text() for i in list(selections)]
 			text = '\n'.join(text)
+
+			# save MYSQL setting
+			mysql_setting_file = working_prefix + 'mysql_setting.txt'
+			file_handle = open(mysql_setting_file, 'w')
+			my_info = self.ui.IPinput.text() + ',' + self.ui.Portinput.text() + ',' + self.ui.DBnameinput.text() + \
+			          ',' + self.ui.Userinput.text() + ',' + self.ui.Passinput.text()
+			file_handle.write(my_info)
+			file_handle.close()
+
 			self.gibsonSignal.emit(1, text, joint_up, joint_down, out_path, db_path)
 
 
@@ -6533,6 +6551,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessMutationDialog.show()
 
 	def open_gibson_dialog(self):
+		global working_prefix
 		global joint_down
 		global joint_up
 		if self.ui.txtName.toPlainText() == "":
@@ -6548,6 +6567,30 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessGibsonDialog.ui.jointUP.setText(joint_up)
 			self.modalessGibsonDialog.ui.jointDOWN.setText(joint_down)
 			self.modalessGibsonDialog.gibsonSignal.connect(self.GenerateGibson)
+
+			# check saved MYSQL setting
+			mysql_setting_file = working_prefix + 'mysql_setting.txt'
+
+			if os.path.exists(mysql_setting_file):
+				my_open = open(mysql_setting_file, 'r')
+				my_info = my_open.readlines()
+				my_open.close()
+				my_info = my_info[0]
+			else:
+				file_handle = open(mysql_setting_file, 'w')
+				my_info = ',,,,'
+				file_handle.write(my_info)
+				file_handle.close()
+
+			my_info = my_info.strip('\n')
+			Setting = my_info.split(',')
+
+			self.modalessGibsonDialog.ui.IPinput.setText(Setting[0])
+			self.modalessGibsonDialog.ui.Portinput.setText(Setting[1])
+			self.modalessGibsonDialog.ui.DBnameinput.setText(Setting[2])
+			self.modalessGibsonDialog.ui.Userinput.setText(Setting[3])
+			self.modalessGibsonDialog.ui.Passinput.setText(Setting[4])
+
 			self.modalessGibsonDialog.show()
 
 	def open_update_dialog(self):
@@ -6602,6 +6645,30 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessbaseDialog.ui.musclePath.setText(muscle_path)
 		self.modalessbaseDialog.ui.clustaloPath.setText(clustal_path)
 		self.modalessbaseDialog.ui.pymolPath.setText(pymol_path)
+
+		# check saved MYSQL setting
+		mysql_setting_file = working_prefix + 'mysql_setting.txt'
+
+		if os.path.exists(mysql_setting_file):
+			my_open = open(mysql_setting_file, 'r')
+			my_info = my_open.readlines()
+			my_open.close()
+			my_info = my_info[0]
+		else:
+			file_handle = open(mysql_setting_file, 'w')
+			my_info = ',,,,'
+			file_handle.write(my_info)
+			file_handle.close()
+
+		my_info = my_info.strip('\n')
+		Setting = my_info.split(',')
+
+		self.modalessbaseDialog.ui.IPinput.setText(Setting[0])
+		self.modalessbaseDialog.ui.Portinput.setText(Setting[1])
+		self.modalessbaseDialog.ui.DBnameinput.setText(Setting[2])
+		self.modalessbaseDialog.ui.Userinput.setText(Setting[3])
+		self.modalessbaseDialog.ui.Passinput.setText(Setting[4])
+
 		self.modalessbaseDialog.show()
 
 	def showhumbering(self, Data, Note, dnaCheck, aaCheck, posCheck):

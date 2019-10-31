@@ -113,7 +113,7 @@ class Ui_gibsoncloneDialog(object):
         self.tabWidget.addTab(self.tab_2, "")
 
         self.retranslateUi(gibsoncloneDialog)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(gibsoncloneDialog)
 
     def retranslateUi(self, gibsoncloneDialog):
