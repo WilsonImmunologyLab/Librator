@@ -3114,7 +3114,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 					# case 4
 					if cur_end <= donor_end and cur_end >= donor_start and donor_start >= cur_start:
 						cur_donor_start = donor_start - cur_start
-						cur_donor_end = cur_end
+						cur_donor_end = cur_end - cur_start
 						AAPosColorSeg = AAPosColorSeg[:cur_donor_start] + 'D' * \
 						                (cur_donor_end - cur_donor_start)
 					# case 5
@@ -6260,7 +6260,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# check AA sequence
 			Msg = SequenceCheck(HAAA, 'aa')
 			if Msg != 'none':
-				Msg =  'Your Sequence ' + HASeq + 'have some improper Amino Acid: ' + Msg + '. Do you still want to continue?'
+				Msg =  'Your AA Sequence of \n' + DataIn[0][0] + '\nhave some improper Amino Acid: ' + Msg + '.\nDo you still want to continue?'
 				reply = QMessageBox.question(self, 'Information',
 				                             Msg, QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 				if reply == QMessageBox.No:
@@ -6520,10 +6520,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessUpdateDialog.show()
 
 	def updateNTseq(self,SeqName,Seq):
+		# update the value in DB
 		self.UpdateSeq(SeqName, Seq, 'Sequence')
-
+		# refresh the interface
 		self.ListItemChanged()
-
+		# close the dialog
 		self.modalessUpdateDialog.close()
 
 
