@@ -1,5 +1,6 @@
 __author__ = 'wilsonp'
 import sqlite3 as db
+import mysql.connector as conmysql
 import os
 # first need connect to a database
 from LibDialogues import openFile, openFiles, newFile, questionMessage, setText
@@ -300,6 +301,18 @@ def RunInsertion(DBpathname, SQLStatement):
         conn.close()
         return 0
 
+def RunMYSQLInsertion(DBpathname, SQLStatement):
+    conn = conmysql.connect(host=DBpathname[0],port=DBpathname[1], user=DBpathname[3], password=DBpathname[4], database=DBpathname[2])
+    cursor = conn.cursor()
+    cursor.execute(SQLStatement)
+    if cursor.rowcount != 1:
+        response = 1
+    else:
+        response = 0
+        conn.commit()
+    cursor.close()
+
+    return response
 
 
 def RunSQL(DBpathname, SQLStatement):
@@ -340,6 +353,15 @@ def RunSQL(DBpathname, SQLStatement):
 
     # conn.commit()  #  saves data into file
     conn.close()
+
+    return DataIs
+
+def RunMYSQL(DBpathname, SQLStatement):
+    conn = conmysql.connect(host=DBpathname[0],port=DBpathname[1], user=DBpathname[3], password=DBpathname[4], database=DBpathname[2])
+    cursor = conn.cursor()
+    cursor.execute(SQLStatement)
+    DataIs = cursor.fetchall()
+    cursor.close()
 
     return DataIs
 

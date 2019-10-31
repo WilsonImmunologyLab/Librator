@@ -4,7 +4,8 @@ from PyQt5 import QtWidgets, QtPrintSupport
 from PyQt5.QtWidgets import *
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QCursor
-from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion, creatnewFragmentDB, CopyDatatoDB2
+from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion, creatnewFragmentDB,\
+	CopyDatatoDB2, RunMYSQL, RunMYSQLInsertion
 from HA_numbering_function import HA_numbering_Jesse
 from itertools import combinations
 from collections import Counter
@@ -13,6 +14,7 @@ from platform import system
 import os, sys, re, time, string
 import pandas as pd
 import numpy as np
+import mysql.connector as conmysql
 
 from MainLibrator_UI import Ui_MainLibrator
 from mutationdialog import Ui_MutationDialog
@@ -314,7 +316,7 @@ class MutationDialog(QtWidgets.QDialog):
 		#self.hide()
 
 class gibsoncloneDialog(QtWidgets.QDialog):
-	gibsonSignal = pyqtSignal(str, str, str, str, str)  # user define signal
+	gibsonSignal = pyqtSignal(int, str, str, str, str, list)  # user define signal
 
 	def __init__(self):
 		super(gibsoncloneDialog, self).__init__()
@@ -358,28 +360,69 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 
 
 	def accept(self):  # redo accept method
-		# send signal
-		selections = self.ui.selection.selectedItems()
-		joint_up = self.ui.jointUP.toPlainText()
-		joint_down = self.ui.jointDOWN.toPlainText()
-		db_psth = self.ui.dbpath.text()
-		out_path = self.ui.outpath.text()
+		active_tab = self.ui.tabWidget.currentIndex()
+		if active_tab == 0:
+			# send signal
+			selections = self.ui.selection.selectedItems()
+			joint_up = self.ui.jointUP.toPlainText()
+			joint_down = self.ui.jointDOWN.toPlainText()
+			db_path = [self.ui.dbpath.text()]
+			out_path = self.ui.outpath.text()
 
-		if len(selections) == 0:
-			QMessageBox.warning(self, 'Warning', 'Please select at least one sequence!', QMessageBox.Ok,
-								QMessageBox.Ok)
-		else:
+			if len(selections) == 0:
+				QMessageBox.warning(self, 'Warning', 'Please select at least one sequence!', QMessageBox.Ok,
+									QMessageBox.Ok)
+			else:
+				if joint_up == "" or joint_down == "": 		# OriPos
+					QMessageBox.warning(self, 'Warning',
+											'The joint region can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
+				else:
+					if out_path == "":
+						QMessageBox.warning(self, 'Warning',
+											'The output path can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
+					else:
+						text = [i.text() for i in list(selections)]
+						text = '\n'.join(text)
+						self.gibsonSignal.emit(0, text, joint_up, joint_down, out_path, db_path)
+		elif active_tab == 1:
+			# send signal
+			selections = self.ui.selection.selectedItems()
+			joint_up = self.ui.jointUP.toPlainText()
+			joint_down = self.ui.jointDOWN.toPlainText()
+			out_path = self.ui.outpath.text()
+
+			server_ip = self.ui.IPinput.text()
+			server_port = self.ui.Portinput.text()
+			db_name = self.ui.DBnameinput.text()
+			db_user = self.ui.Userinput.text()
+			db_pass = self.ui.Passinput.text()
+
+			db_path = [server_ip, server_port, db_name, db_user, db_pass]
+
+			if len(selections) == 0:
+				QMessageBox.warning(self, 'Warning', 'Please select at least one sequence!', QMessageBox.Ok,
+									QMessageBox.Ok)
+				return
+
 			if joint_up == "" or joint_down == "": 		# OriPos
 				QMessageBox.warning(self, 'Warning',
 										'The joint region can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
-			else:
-				if out_path == "":
-					QMessageBox.warning(self, 'Warning',
-										'The output path can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
-				else:
-					text = [i.text() for i in list(selections)]
-					text = '\n'.join(text)
-					self.gibsonSignal.emit(text, joint_up, joint_down, out_path, db_psth)
+				return
+
+			if out_path == "":
+				QMessageBox.warning(self, 'Warning',
+									'The output path can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
+				return
+
+			if server_ip == '' or db_name == '' or db_user == '' or db_pass == '':
+				QMessageBox.warning(self, 'Warning',
+				                    'The output path can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
+				return
+
+			text = [i.text() for i in list(selections)]
+			text = '\n'.join(text)
+			self.gibsonSignal.emit(1, text, joint_up, joint_down, out_path, db_path)
+
 
 
 class SequenceEditDialog(QtWidgets.QDialog):
@@ -7049,7 +7092,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			pass
 
 
-	def GenerateGibson(self, selections, joint_up_str, joint_down_str, out_dir, db_file):
+	def GenerateGibson(self, mode, selections, joint_up_str, joint_down_str, out_dir, db_file):
 		listItems = selections.split("\n")
 		WhereState = ''
 		NumSeqs = len(listItems)
@@ -7101,9 +7144,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			data = pd.DataFrame(data_list)
 			data.columns = ['Name', 'NTseq', 'AAseq']
 			subtype = subtype[0:2]
-			self.generate_gibson_fragments(data, subtype, temp_folder, out_dir, joint_up_str, joint_down_str, db_file)
+			self.generate_gibson_fragments(data, subtype, temp_folder, out_dir, joint_up_str, joint_down_str, db_file, mode)
 
-	def generate_gibson_fragments(self, data, subtype, temp_folder, out_dir, joint_up_str, joint_down_str, db_file):
+	def generate_gibson_fragments(self, data, subtype, temp_folder, out_dir, joint_up_str, joint_down_str, db_file, mode):
 		global muscle_path
 		# initial the temp file name
 		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
@@ -7281,7 +7324,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 				# search from SQL DB
 				SQLCommand = "SELECT * FROM Fragments WHERE AAseq = '" + aa_seq + "'"
 
-				fetch_results = RunSQL(db_file, SQLCommand)
+				if mode == 0: #local mode
+					fetch_results = RunSQL(db_file[0], SQLCommand)
+				else:
+					fetch_results = RunMYSQL(db_file, SQLCommand)
+
 				row = len(fetch_results)
 				if (row != 0):
 					fragment_name = fetch_results[0][0]
@@ -7300,7 +7347,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 				else:
 					SQLCommand = "SELECT Name FROM Fragments WHERE Fragment = '" + str(
 						i + 1) + "' AND Subtype = '" + subtype + "'"
-					fetch_results = RunSQL(db_file, SQLCommand)
+
+					if mode == 0:  # local mode
+						fetch_results = RunSQL(db_file[0], SQLCommand)
+					else:
+						fetch_results = RunMYSQL(db_file, SQLCommand)
+
 					row = len(fetch_results)
 					num_id = str(row + 1)
 					num_id_len = len(num_id)
@@ -7325,7 +7377,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 								 + "'" + nt_seq + "'," \
 								 + "'" + in_stock + "')"
 
-					response = RunInsertion(db_file, SQLCommand)
+					if mode == 0:  # local mode
+						response = RunInsertion(db_file[0], SQLCommand)
+					else:
+						response = RunMYSQLInsertion(db_file, SQLCommand)
+
 					if response == 1:
 						QMessageBox.warning(self, 'Warning', "Error happen when insert the new fregment records!",
 											QMessageBox.Ok, QMessageBox.Ok)
