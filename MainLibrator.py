@@ -67,6 +67,10 @@ global clustal_path
 clustal_path = '/usr/local/bin/clustalo'
 global pymol_path
 pymol_path = '/usr/local/bin/pymol'
+global raxml_path
+raxml_path = '/usr/local/bin/raxml'
+global figtree_path
+figtree_path = '/Applications/FigTree.app/Contents/MacOS/universalJavaApplicationStub'
 
 global joint_up
 joint_up = "TCCACTCCCAGGTCCAACTGCACCTCGGTTCTATCGATTGAATTC"
@@ -199,6 +203,8 @@ class basePathDialog(QtWidgets.QDialog):
 		self.ui.browseMuscle.clicked.connect(self.browsemuscledir)
 		self.ui.browseClustal.clicked.connect(self.browseclustaldir)
 		self.ui.browsePymol.clicked.connect(self.browsepymoldir)
+		self.ui.browseFigtree.clicked.connect(self.browsefigtreedir)
+		self.ui.browseRaxml.clicked.connect(self.browseraxmldir)
 
 		self.ui.yes.clicked.connect(self.accept)
 		self.ui.no.clicked.connect(self.reject)
@@ -215,6 +221,12 @@ class basePathDialog(QtWidgets.QDialog):
 	def browsepymoldir(self):  # browse and select path
 		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
 		self.ui.pymolPath.setText(out_dir)
+	def browsefigtreedir(self):  # browse and select path
+		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
+		self.ui.FigtreePath.setText(out_dir)
+	def browseraxmldir(self):  # browse and select path
+		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
+		self.ui.RaxmlPath.setText(out_dir)
 
 	def accept(self):  # redo accept method
 		global working_prefix
@@ -222,6 +234,8 @@ class basePathDialog(QtWidgets.QDialog):
 		global pymol_path
 		global muscle_path
 		global clustal_path
+		global figtree_path
+		global raxml_path
 
 		tmp_working_prefix = self.ui.basePath.text()
 		tmp_working_prefix = tmp_working_prefix.rstrip('/') + '/'
@@ -251,25 +265,61 @@ class basePathDialog(QtWidgets.QDialog):
 		if os.path.exists(self.ui.musclePath.text()):
 			muscle_path = self.ui.musclePath.text()
 		else:
-			QMessageBox.warning(self, 'Warning',
-			                    'The path for muscle does not exist! Check your input!', QMessageBox.Ok, QMessageBox.Ok)
-			return
+			question = 'The path for muscle you typed seems not exist, do you still want to continue?'
+			buttons = 'YN'
+			answer = questionMessage(self, question, buttons)
+			if answer == 'No':
+				return
+			else:
+				muscle_path = self.ui.musclePath.text()
 
 		# check if clustal omega path exist or not
 		if os.path.exists(self.ui.clustaloPath.text()):
 			clustal_path = self.ui.clustaloPath.text()
 		else:
-			QMessageBox.warning(self, 'Warning',
-			                    'The path for clustal omega does not exist! Check your input!', QMessageBox.Ok, QMessageBox.Ok)
-			return
+			question = 'The path for clustal omega you typed seems not exist, do you still want to continue?'
+			buttons = 'YN'
+			answer = questionMessage(self, question, buttons)
+			if answer == 'No':
+				return
+			else:
+				clustal_path = self.ui.clustaloPath.text()
 
 		# check if PyMOL path exist or not
 		if os.path.exists(self.ui.pymolPath.text()):
 			pymol_path = self.ui.pymolPath.text()
 		else:
-			QMessageBox.warning(self, 'Warning',
-			                    'The path for PyMOL does not exist! Check your input!', QMessageBox.Ok, QMessageBox.Ok)
-			return
+			question = 'The path for PyMOL you typed seems not exist, do you still want to continue?'
+			buttons = 'YN'
+			answer = questionMessage(self, question, buttons)
+			if answer == 'No':
+				return
+			else:
+				pymol_path = self.ui.pymolPath.text()
+
+		# check if FigTree path exist or not
+		if os.path.exists(self.ui.FigtreePath.text()):
+			figtree_path = self.ui.FigtreePath.text()
+		else:
+			question = 'The path for FigTree you typed seems not exist, do you still want to continue?'
+			buttons = 'YN'
+			answer = questionMessage(self, question, buttons)
+			if answer == 'No':
+				return
+			else:
+				figtree_path = self.ui.FigtreePath.text()
+
+		# check if RAxML path exist or not
+		if os.path.exists(self.ui.RaxmlPath.text()):
+			raxml_path = self.ui.RaxmlPath.text()
+		else:
+			question = 'The path for RAxML you typed seems not exist, do you still want to continue?'
+			buttons = 'YN'
+			answer = questionMessage(self, question, buttons)
+			if answer == 'No':
+				return
+			else:
+				raxml_path = self.ui.RaxmlPath.text()
 
 		# save MYSQL setting
 		mysql_setting_file = working_prefix + 'mysql_setting.txt'
@@ -1520,6 +1570,110 @@ class LibratorMain(QtWidgets.QMainWindow):
 		AAseq = self.ui.textAA.toPlainText()
 		lenSeq = len(AAseq)
 		return cursor.selectionStart(), cursor.selectionEnd(), lenSeq
+
+	@pyqtSlot()
+	def on_actionTree_triggered(self):
+		global DataIs
+		global DBFilename
+		global temp_folder
+		global raxml_path
+		global figtree_path
+
+		listItems = self.ui.listWidgetStrainsIn.selectedItems()
+		# if not listItems: return
+		WhereState = ''
+		NumSeqs = len(listItems)
+		i = 1
+		if len(listItems) == 0:
+			QMessageBox.warning(self, 'Warning', 'Please select sequence from active sequence panel!', QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+		elif len(listItems) < 4:
+			QMessageBox.warning(self, 'Warning', 'Please select at least 4 sequences from active sequence panel!',
+			 					QMessageBox.Ok, QMessageBox.Ok)
+			return
+		elif len(listItems) > 100:
+			QMessageBox.warning(self, 'Warning', 'Max sequence number is limited to 100!',
+			                    QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		for item in listItems:
+			eachItemIs = item.text()
+			WhereState += 'SeqName = "' + eachItemIs + '"'
+			if NumSeqs > i:
+				WhereState += ' OR '
+			i += 1
+
+		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+
+		# write sequences into file
+		time_stamp = str(int(time.time() * 100))
+		this_folder = temp_folder + time_stamp
+		cmd = 'mkdir ' + this_folder
+		os.system(cmd)
+
+		aafilename = this_folder + "/input.fas"
+		outfilename = this_folder + "/alignment.fas"
+		treefilename = 'tree'
+		out_handle = open(aafilename, 'w')
+
+		for item in DataIn:
+			SeqName = item[0]
+			Sequence = item[1]
+			VFrom = int(item[2]) - 1
+			if VFrom == -1: VFrom = 0
+
+			VTo = int(item[3])
+			Sequence = Sequence[VFrom:VTo]
+			Sequence = Sequence.upper()
+			AAseq = Translator(Sequence,0)
+
+			# parse seq name
+			SeqName = re.sub(r'[^\w\d\/\>]','_', SeqName)
+			SeqName = re.sub(r'_+', '_', SeqName)
+			SeqName = SeqName.strip('_')
+
+			out_handle.write('>' + SeqName + '\n')
+			out_handle.write(AAseq[0] + '\n')
+		out_handle.close()
+
+		# alignment
+		cmd = muscle_path
+		cmd += " -in " + aafilename + " -out " + outfilename
+		os.system(cmd)
+
+		# generate tree
+		cmd = 'cd ' + this_folder + ';'
+		cmd += 'raxml'
+		cmd += ' -m PROTGAMMAAUTO -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
+		os.system(cmd)
+
+		# open file folder
+		my_cur_os = system()
+		if my_cur_os == 'Windows':
+			cmd = 'explorer ' + this_folder  # Windows
+		elif my_cur_os == 'Darwin':
+			cmd = 'open ' + this_folder  # mac
+		elif my_cur_os == 'Linux':
+			cmd = 'nautilus' + this_folder  # Linux
+		else:
+			cmd = ''
+		if cmd != '':
+			try:
+				os.system(cmd)
+			except ValueError:
+				pass
+
+		# try to open best tree using FigTree
+		try:
+			cmd = figtree_path + ' ' + this_folder + '/RAxML_bestTree.tree'
+			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+			             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+		except:
+			QMessageBox.warning(self, 'Warning', 'Can not find FigTree in your computer! Please open trees manually in the folder',
+			                    QMessageBox.Ok,
+			                    QMessageBox.Ok)
 
 	@pyqtSlot()
 	def on_actionMultiple_Alignement_triggered(self):
@@ -6639,12 +6793,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global muscle_path
 		global clustal_path
 		global pymol_path
+		global figtree_path
+		global raxml_path
 
 		self.modalessbaseDialog = basePathDialog()
 		self.modalessbaseDialog.ui.basePath.setText(working_prefix)
 		self.modalessbaseDialog.ui.musclePath.setText(muscle_path)
 		self.modalessbaseDialog.ui.clustaloPath.setText(clustal_path)
 		self.modalessbaseDialog.ui.pymolPath.setText(pymol_path)
+		self.modalessbaseDialog.ui.FigtreePath.setText(figtree_path)
+		self.modalessbaseDialog.ui.RaxmlPath.setText(raxml_path)
 
 		# check saved MYSQL setting
 		mysql_setting_file = working_prefix + 'mysql_setting.txt'

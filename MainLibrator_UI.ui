@@ -2406,7 +2406,7 @@
    <addaction name="actionHANumbering"/>
    <addaction name="actionFind_Clonal"/>
    <addaction name="actionImportLei"/>
-   <addaction name="actionSuggestCanonical"/>
+   <addaction name="actionTree"/>
    <addaction name="separator"/>
    <addaction name="actionMultiple_Alignement"/>
    <addaction name="actionDNA"/>
@@ -2853,16 +2853,16 @@
     <string>Creates a database from IMGT formatted FASTA files</string>
    </property>
   </action>
-  <action name="actionSuggestCanonical">
+  <action name="actionTree">
    <property name="icon">
-    <iconset resource="Resources/VgenesResources.qrc">
-     <normaloff>:/PNG-Icons/checkmark.png</normaloff>:/PNG-Icons/checkmark.png</iconset>
+    <iconset>
+     <normaloff>Resources/tree.png</normaloff>Resources/tree.png</iconset>
    </property>
    <property name="text">
-    <string>SuggestCanonical</string>
+    <string>SuggestTree</string>
    </property>
    <property name="toolTip">
-    <string>Checks best clones from minipreps</string>
+    <string>Generate Maximum Likelihood Tree</string>
    </property>
   </action>
   <action name="actionRevert_to_previous">
