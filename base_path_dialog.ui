@@ -399,7 +399,7 @@
     </font>
    </property>
    <property name="title">
-    <string>Database Setting</string>
+    <string>Remote Database Setting</string>
    </property>
    <widget class="QLabel" name="label_7">
     <property name="geometry">

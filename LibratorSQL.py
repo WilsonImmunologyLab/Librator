@@ -197,7 +197,7 @@ def ProcessFASTA(FASTAfile):
     return CleanSeq
 
 
-def enterData(DBpathname, LibratorSeqs):
+def enterData(obj, DBpathname, LibratorSeqs):
 
     (dirname, filename) = os.path.split(DBpathname)
 
@@ -242,20 +242,15 @@ def enterData(DBpathname, LibratorSeqs):
         exists = True
         if row == None:
             exists = False
-
         else: #seq already exists with same name
-
-
-            query = 'Save duplicated sequence with a new name?'
-            answer2 = questionMessage(query, 'YN')
-            if answer2 == "Yes":
-                query = 'Existing name: ' + uId + '\nEnter a new name:'
-                DefaultTxt = uId + '_duplicate'
-                newName = setText(query, DefaultTxt)
-                item[0] = newName
-                exists = False
-
-
+            exists = True
+            #query = 'Save duplicated sequence with a new name?'
+            #answer2 = questionMessage(obj, query, 'YN')
+            #if answer2 == "Yes":
+            #    query = 'Existing name: ' + uId + '\nEnter a new name:'
+            #    DefaultTxt = uId + '_duplicate'
+            #    newName = setText(query, DefaultTxt)
+            #    item[0] = newName
 
         if exists == False:
             Recordlen = len(item)
@@ -267,8 +262,6 @@ def enterData(DBpathname, LibratorSeqs):
 
                 FinalBLASTed.append(tuple(item))
                 numberprocessed +=1
-
-
 
     if len(FinalBLASTed) > 0:
         cursor.executemany('''INSERT INTO LibDB(SeqName, Sequence, SeqLen, SubType, Form, VFrom, VTo, Active, Role, Donor, Mutations, ID) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)''', FinalBLASTed)

@@ -113,7 +113,7 @@ class Ui_gibsoncloneDialog(object):
         self.tabWidget.addTab(self.tab_2, "")
 
         self.retranslateUi(gibsoncloneDialog)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(gibsoncloneDialog)
 
     def retranslateUi(self, gibsoncloneDialog):
@@ -136,6 +136,6 @@ class Ui_gibsoncloneDialog(object):
         self.label_9.setText(_translate("gibsoncloneDialog", "DB name"))
         self.label_10.setText(_translate("gibsoncloneDialog", "Password"))
         self.label_11.setText(_translate("gibsoncloneDialog", "Port"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("gibsoncloneDialog", "Online DB"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("gibsoncloneDialog", "Remote DB"))
 
 

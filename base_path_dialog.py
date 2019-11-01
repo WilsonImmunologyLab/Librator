@@ -235,7 +235,7 @@ class Ui_basePathDialog(object):
         self.label_6.setText(_translate("basePathDialog", "Your current RAxML path is:"))
         self.browseFigtree.setText(_translate("basePathDialog", "Browse"))
         self.label_12.setText(_translate("basePathDialog", "Your current FigTree path is:"))
-        self.groupBox_2.setTitle(_translate("basePathDialog", "Database Setting"))
+        self.groupBox_2.setTitle(_translate("basePathDialog", "Remote Database Setting"))
         self.label_7.setText(_translate("basePathDialog", "Server IP"))
         self.label_8.setText(_translate("basePathDialog", "User Name"))
         self.label_10.setText(_translate("basePathDialog", "Password"))

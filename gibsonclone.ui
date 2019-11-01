@@ -191,7 +191,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -236,7 +236,7 @@
    </widget>
    <widget class="QWidget" name="tab_2">
     <attribute name="title">
-     <string>Online DB</string>
+     <string>Remote DB</string>
     </attribute>
     <widget class="QLabel" name="label_8">
      <property name="geometry">

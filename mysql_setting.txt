@@ -1,1 +1,1 @@
-,,,,
+localhost,3306,Librator,root,123456

@@ -1883,7 +1883,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 							# if DBFilename == 'none':
 							# 	self.on_action_New_triggered()
 							# 	return
-							NumEnterred = enterData(DBFilename, SeqInfoPacket)
+							NumEnterred = enterData(self, DBFilename, SeqInfoPacket)
 
 							# self.HANumbering(AASeqWas) #changes Numbering back to original
 							self.ui.listWidgetStrainsIn.setCurrentRow(0)
@@ -6275,7 +6275,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			if DBFilename == 'none':
 				self.on_action_New_triggered()
 				return
-			NumEnterred = enterData(DBFilename,SeqInfoPacket)
+			NumEnterred = enterData(self, DBFilename,SeqInfoPacket)
 		self.PopulateCombos()
 
 	@pyqtSlot()
@@ -8065,14 +8065,15 @@ def ReadFASTA(outfilename):
 			Readline = ''
 			for line in currentFile2:
 				Readline = line.replace('\n', '').replace('\r', '')
-				if Readline[0] == '>':
-					if Seq != '':  # saves the previous except on first round
-						SeqRead = (SeqName, Seq)
-						ReadFile.append(SeqRead)
-						Seq = ''
-					SeqName = Readline[1:]
-				else:
-					Seq += Readline
+				if Readline != '':
+					if Readline[0] == '>':
+						if Seq != '':  # saves the previous except on first round
+							SeqRead = (SeqName, Seq)
+							ReadFile.append(SeqRead)
+							Seq = ''
+						SeqName = Readline[1:]
+					else:
+						Seq += Readline
 			SeqRead = (SeqName, Seq)  # must save last one at end
 			ReadFile.append(SeqRead)
 
