@@ -7212,7 +7212,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 			cmd = muscle_path
 			cmd += " -in " + in_file + " -out " + out_file
 			# print(cmd)
-			os.system(cmd)
+			try:
+				os.system(cmd)
+			except:
+				QMessageBox.warning(self, 'Warning', 'Errors happen when running muscle! Current command: \n' + cmd, QMessageBox.Ok, QMessageBox.Ok)
+				return
 
 			# read alignment from muscle results
 			align_file = open(out_file, "r")
@@ -7292,8 +7296,25 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			# generate mutated sequences
 			if mutation_schema == "all":
+				# calculate total mutations number
+				single_mutation_number = len(all_single_mutations)
+				Msg = 'Total ' + str(single_mutation_number) + ' single mutations detected between ' + base_sequence \
+				      + ' and ' + donor_sequences + '\n'
+				total_num = 0
+				for i in range(1,single_mutation_number+1):
+					cur_total_num = factorial(single_mutation_number)/(factorial(i)*factorial(single_mutation_number-i))
+					total_num += cur_total_num
+					Msg += 'There are ' + str(cur_total_num) + ' different combinations of ' + str(i) + ' mutations\n'
+				Msg += 'There are ' + str(total_num) + ' different combinations of all mutations\n'
+				Msg += 'Do you still want continue?'
+
+				buttons = 'YN'
+				answer = questionMessage(self, Msg, buttons)
+				if answer == 'No':
+					return
+
 				all_mutation_combination = []
-				for x in range(1,len(all_single_mutations)+1):
+				for x in range(1,single_mutation_number+1):
 					tmp = list(combinations(all_single_mutations, x))
 					all_mutation_combination.extend(tmp)
 
@@ -7718,6 +7739,12 @@ def MakeRuler(pos1, pos2, step, mode):
 					ruler += '.'
 					cur_pos += 1
 	return ruler
+
+def factorial(n):
+    if n == 0 or n == 1:
+        return 1
+    else:
+        return (n*factorial(n-1))
 
 def HANumbering(AASeq):
 	import uuid
