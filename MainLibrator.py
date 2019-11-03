@@ -1695,6 +1695,104 @@ class LibratorMain(QtWidgets.QMainWindow):
 			                    QMessageBox.Ok)
 
 	@pyqtSlot()
+	def on_actionNTTree_triggered(self):
+		global DataIs
+		global DBFilename
+		global temp_folder
+		global raxml_path
+		global figtree_path
+
+		listItems = self.ui.listWidgetStrainsIn.selectedItems()
+		# if not listItems: return
+		WhereState = ''
+		NumSeqs = len(listItems)
+		i = 1
+		if len(listItems) == 0:
+			QMessageBox.warning(self, 'Warning', 'Please select sequence from active sequence panel!', QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+		elif len(listItems) < 4:
+			QMessageBox.warning(self, 'Warning', 'Please select at least 4 sequences from active sequence panel!',
+			                    QMessageBox.Ok, QMessageBox.Ok)
+			return
+		elif len(listItems) > 100:
+			QMessageBox.warning(self, 'Warning', 'Max sequence number is limited to 100!',
+			                    QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		for item in listItems:
+			eachItemIs = item.text()
+			WhereState += 'SeqName = "' + eachItemIs + '"'
+			if NumSeqs > i:
+				WhereState += ' OR '
+			i += 1
+
+		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+
+		# write sequences into file
+		time_stamp = str(int(time.time() * 100))
+		this_folder = temp_folder + time_stamp
+		cmd = 'mkdir ' + this_folder
+		os.system(cmd)
+
+		aafilename = this_folder + "/input.fas"
+		outfilename = this_folder + "/alignment.fas"
+		treefilename = 'tree'
+		out_handle = open(aafilename, 'w')
+
+		for item in DataIn:
+			SeqName = item[0]
+			Sequence = item[1]
+
+			# parse seq name
+			SeqName = re.sub(r'[^\w\d\/\>]', '_', SeqName)
+			SeqName = re.sub(r'_+', '_', SeqName)
+			SeqName = SeqName.strip('_')
+
+			out_handle.write('>' + SeqName + '\n')
+			out_handle.write(Sequence + '\n')
+		out_handle.close()
+
+		# alignment
+		cmd = muscle_path
+		cmd += " -in " + aafilename + " -out " + outfilename
+		os.system(cmd)
+
+		# generate tree
+		cmd = 'cd ' + this_folder + ';'
+		cmd += 'raxml'
+		cmd += ' -m GTRGAMMA -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
+		os.system(cmd)
+
+		# open file folder
+		my_cur_os = system()
+		if my_cur_os == 'Windows':
+			cmd = 'explorer ' + this_folder  # Windows
+		elif my_cur_os == 'Darwin':
+			cmd = 'open ' + this_folder  # mac
+		elif my_cur_os == 'Linux':
+			cmd = 'nautilus' + this_folder  # Linux
+		else:
+			cmd = ''
+		if cmd != '':
+			try:
+				os.system(cmd)
+			except ValueError:
+				pass
+
+		# try to open best tree using FigTree
+		try:
+			cmd = figtree_path + ' ' + this_folder + '/RAxML_bestTree.tree'
+			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+			             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+		except:
+			QMessageBox.warning(self, 'Warning',
+			                    'Can not find FigTree in your computer! Please open trees manually in the folder',
+			                    QMessageBox.Ok,
+			                    QMessageBox.Ok)
+
+	@pyqtSlot()
 	def on_actionMultiple_Alignement_triggered(self):
 
 		global DataIs

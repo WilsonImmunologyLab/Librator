@@ -2284,14 +2284,6 @@
     <addaction name="separator"/>
     <addaction name="actionAbout_2"/>
    </widget>
-   <widget class="QMenu" name="menuEdit">
-    <property name="title">
-     <string>Edit</string>
-    </property>
-    <addaction name="actionCopy"/>
-    <addaction name="actionCut"/>
-    <addaction name="actionPaste"/>
-   </widget>
    <widget class="QMenu" name="menuDatabase">
     <property name="tearOffEnabled">
      <bool>false</bool>
@@ -2342,7 +2334,6 @@
     <addaction name="actionCheck_Update_base_folder"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuEdit"/>
    <addaction name="menuSequences"/>
    <addaction name="menuDatabase"/>
    <addaction name="menuTools"/>
@@ -2396,8 +2387,8 @@
    <addaction name="actionPaste"/>
    <addaction name="separator"/>
    <addaction name="actionHANumbering"/>
-   <addaction name="actionFind_Clonal"/>
-   <addaction name="actionImportLei"/>
+   <addaction name="separator"/>
+   <addaction name="actionNTTree"/>
    <addaction name="actionTree"/>
    <addaction name="separator"/>
    <addaction name="actionMultiple_Alignement"/>
@@ -2847,10 +2838,10 @@
   <action name="actionTree">
    <property name="icon">
     <iconset>
-     <normaloff>Resources/tree.png</normaloff>Resources/tree.png</iconset>
+     <normaloff>Resources/treeAA.png</normaloff>Resources/treeAA.png</iconset>
    </property>
    <property name="text">
-    <string>SuggestTree</string>
+    <string>GenerateTree</string>
    </property>
    <property name="toolTip">
     <string>Generate Maximum Likelihood Tree</string>
@@ -2921,6 +2912,18 @@
   <action name="actionCheck_Update_bin_folder">
    <property name="text">
     <string>Check/Update bin folder</string>
+   </property>
+  </action>
+  <action name="actionNTTree">
+   <property name="icon">
+    <iconset>
+     <normaloff>Resources/treeNT.png</normaloff>Resources/treeNT.png</iconset>
+   </property>
+   <property name="text">
+    <string>GenerateTree</string>
+   </property>
+   <property name="toolTip">
+    <string>Generate Maximum Likelihood Tree (Using nucleotide sequences)</string>
    </property>
   </action>
  </widget>
