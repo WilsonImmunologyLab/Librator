@@ -23,6 +23,7 @@ from gibsonclone import Ui_gibsoncloneDialog
 from base_path_dialog import Ui_basePathDialog
 from fusiondialog import Ui_fusionDialog
 from updatesequencedialog import Ui_UpdateSequenceDialog
+from deletedialog import Ui_deleteDialog
 
 from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText
 from VgenesTextEdit import VGenesTextMain
@@ -76,6 +77,24 @@ global joint_up
 joint_up = "TCCACTCCCAGGTCCAACTGCACCTCGGTTCTATCGATTGAATTC"
 global joint_down
 joint_down = "GGGTCCGGATACATACCAGAGGCCCCGCGAGATGG"
+
+class deleteDialog(QtWidgets.QDialog):
+	deleteSignal = pyqtSignal(list)
+	def __init__(self):
+		super(deleteDialog, self).__init__()
+		self.ui = Ui_deleteDialog()
+		self.ui.setupUi(self)
+
+		self.ui.deleteButton.clicked.connect(self.accept)
+		self.ui.cancelButton.clicked.connect(self.reject)
+
+	def accept(self):
+		selItems = self.ui.listWidget.selectedItems()
+		del_list = []
+		for item in selItems:
+			del_list.append(item.text())
+
+		self.deleteSignal.emit(del_list)
 
 class updateSeqDialog(QtWidgets.QDialog):
 	updateSignal = pyqtSignal(str, str)
@@ -1901,8 +1920,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			for item in listToDelete:
 				eachItemIs = item.text()
 				# itemRow = item.row()
-
-
 				# 'SELECT * FROM vgenesDB WHERE SeqName = '
 				question = 'Are you certain you want to delete '+ eachItemIs + '?'
 				buttons = 'YN'
@@ -6142,47 +6159,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_btnDelete_clicked(self):
-		# delete all selected elements
-		delete = self.ui.listWidgetStrains.selectedItems()
-
-		WhereState = ''
-		NumSeqs = len(delete)
-		i = 1
-
-		for element in delete:
-			delete_element = element.text()
-			msg = 'Delete sequence: ' + delete_element + ' ?'
-
-			reply = QMessageBox.question(self, 'Information', msg ,
-			                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-			if reply == QMessageBox.Yes:
-				WhereState += 'SeqName = "' + delete_element + '"'
-				if NumSeqs > i:
-					WhereState += ' OR '
-			i += 1
-
-		SQLStatement = 'DELETE FROM LibDB WHERE ' + WhereState
-		deleterecords(DBFilename, SQLStatement)
-
-		# refresh the list - all sequence list
-		self.ui.listWidgetStrains.clear()
-		SQLStatement = 'SELECT `SeqName` FROM LibDB'
-		records = RunSQL(DBFilename, SQLStatement)
-		new_records = []
-		for x in records:
-			new_records.append(x[0])
-		self.ui.listWidgetStrains.addItems(new_records)
-
-		# refresh the list - active sequence list
-		self.ui.listWidgetStrainsIn.clear()
-		SQLStatement = 'SELECT `SeqName` FROM LibDB WHERE Active = "True"'
-		records = RunSQL(DBFilename, SQLStatement)
-		new_records = []
-		for x in records:
-			new_records.append(x[0])
-		self.ui.listWidgetStrainsIn.addItems(new_records)
-
-
+		self.open_delete_dialog()
 
 	@pyqtSlot()
 	def ImportSeqs(self):
@@ -6766,6 +6743,59 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ListItemChanged()
 		# close the dialog
 		self.modalessUpdateDialog.close()
+
+	def open_delete_dialog(self):
+		delete = self.ui.listWidgetStrains.selectedItems()
+		delete1 = self.ui.listWidgetStrainsIn.selectedItems()
+		if len(delete) == 0 and len(delete1) == 0:
+			return
+		elif len(delete) == 0 and len(delete1) > 0:
+			delete = delete1
+
+		list = []
+		for item in delete:
+			list.append(item.text())
+
+		self.modalessDeleteDialog = deleteDialog()
+		self.modalessDeleteDialog.ui.listWidget.addItems(list)
+		self.modalessDeleteDialog.deleteSignal.connect(self.delRecords)
+		self.modalessDeleteDialog.show()
+
+	def delRecords(self, del_list):
+		NumSeqs = len(del_list)
+		if NumSeqs == 0:
+			return
+
+		WhereState = ''
+		i = 1
+		for element in del_list:
+			WhereState += 'SeqName = "' + element + '"'
+			if NumSeqs > i:
+				WhereState += ' OR '
+			i += 1
+
+		SQLStatement = 'DELETE FROM LibDB WHERE ' + WhereState
+		deleterecords(DBFilename, SQLStatement)
+
+		# refresh the list - all sequence list
+		self.ui.listWidgetStrains.clear()
+		SQLStatement = 'SELECT `SeqName` FROM LibDB'
+		records = RunSQL(DBFilename, SQLStatement)
+		new_records = []
+		for x in records:
+			new_records.append(x[0])
+		self.ui.listWidgetStrains.addItems(new_records)
+
+		# refresh the list - active sequence list
+		self.ui.listWidgetStrainsIn.clear()
+		SQLStatement = 'SELECT `SeqName` FROM LibDB WHERE Active = "True"'
+		records = RunSQL(DBFilename, SQLStatement)
+		new_records = []
+		for x in records:
+			new_records.append(x[0])
+		self.ui.listWidgetStrainsIn.addItems(new_records)
+
+		self.modalessDeleteDialog.close()
 
 
 	def open_fusion_dialog(self):
@@ -8043,7 +8073,6 @@ def HANumbering(AASeq):
 			HAIn = (HASegment, AA, HANumber, HAbase, HAAg)
 			H1Numbering[i] = HAIn
 			StartTest = False
-
 
 	os.remove(SavedFile)
 	os.remove(workingfilename)
