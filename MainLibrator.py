@@ -23,6 +23,7 @@ from base_path_dialog import Ui_basePathDialog
 from fusiondialog import Ui_fusionDialog
 from updatesequencedialog import Ui_UpdateSequenceDialog
 from deletedialog import Ui_deleteDialog
+from treedialog import Ui_treeDialog
 
 from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText
 from VgenesTextEdit import VGenesTextMain
@@ -76,6 +77,140 @@ global joint_up
 joint_up = "TCCACTCCCAGGTCCAACTGCACCTCGGTTCTATCGATTGAATTC"
 global joint_down
 joint_down = "GGGTCCGGATACATACCAGAGGCCCCGCGAGATGG"
+
+
+
+class treeDialog(QtWidgets.QDialog):
+	treeSignal = pyqtSignal(list, str)
+	def __init__(self):
+		super(treeDialog, self).__init__()
+		self.ui = Ui_treeDialog()
+		self.ui.setupUi(self)
+
+		self.ui.confirmButton.clicked.connect(self.accept)
+		self.ui.cancelButton.clicked.connect(self.reject)
+
+		self.ui.nameList.clicked.connect(self.highlightSeq)
+		self.ui.showButton.clicked.connect(self.highlightRegion)
+		self.ui.seqEdit.cursorPositionChanged.connect(self.ruler)
+
+	def ruler(self):
+		cursor = self.ui.seqEdit.textCursor()
+		StartP = cursor.selectionStart()
+		EndP = cursor.selectionEnd()
+
+		text = self.ui.seqEdit.toPlainText()
+		tmp = re.findall(r"\n", text)
+		LenSeq = int(len(text)/len(tmp)) - 1
+
+		row_length = LenSeq + 1
+		StartP = int(StartP%row_length)
+		EndP = int(EndP % row_length)
+
+		if StartP == EndP:
+			lblText = 'Sequence: position = ' + str(EndP) + ' of ' + str(LenSeq) + ' BP'
+		else:
+			lblText = 'Sequence: ' + str(StartP + 1) + ' to ' + str(EndP) + ' (' + str(
+				EndP - StartP) + ' bases) ' ' selected of ' + str(LenSeq) + ' BP'
+
+		self.ui.lbl.setText(lblText)
+
+	def highlightSeq(self):
+		sel_seq = []
+		for item in self.ui.nameList.selectedItems():
+			sel_seq.append(item.text())
+
+		color = []
+		seq_len = len(self.seqs[0]) + 1
+		for i in range(0,len(self.names)):
+			if self.names[i] in sel_seq:
+				color.append('7')
+			else:
+				color.append('0')
+		self.DecorateSeq(color, seq_len)
+
+	def highlightRegion(self):
+		seq_len = len(self.seqs[0]) + 1
+		start = self.ui.startBox.value()
+		end = self.ui.endBox.value()
+		if start == 0 and end == 0:
+			Msg = 'You set start and end position to 0, nothing to highlight!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		if start == 0:
+			self.ui.startBox.setValue(1)
+			start = 1
+		if end > seq_len:
+			self.ui.endBox.setValue(seq_len)
+			end = seq_len
+		if start > end:
+			self.ui.endBox.setValue(0)
+			self.ui.startBox.setValue(0)
+			Msg = 'Start posotion should be smaller than end position!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
+		num_len = len(self.seqs)
+		self.DecorateRegion(start, end, seq_len, num_len)
+
+	def accept(self):
+		start = self.ui.startBox.value() - 1
+		end = self.ui.endBox.value()
+
+		seq_list = []
+		for i in range(0,len(self.names)):
+			seq = self.seqs[i]
+			seq = seq[start:end]
+			seq_list.append([self.names[i],seq])
+
+		self.treeSignal.emit(seq_list, self.path)
+		self.close()
+
+	def DecorateRegion(self, start, end, seq_len, num_len):
+		cursor = self.ui.seqEdit.textCursor()
+		CurPos = 0
+
+		# Setup the desired format for matches
+		format = QTextCharFormat()
+		start = start - 1
+		for i in range(0,num_len):  # QColor is RGB: 0-255, 0-255, 0-255
+			if start > 0:
+				format.setForeground(QBrush(QColor("black")))
+				cursor.setPosition(CurPos)
+				cursor.setPosition(CurPos + start, QTextCursor.KeepAnchor)
+				cursor.mergeCharFormat(format)
+
+			format.setForeground(QBrush(QColor("red")))
+			cursor.setPosition(CurPos + start)
+			cursor.setPosition(CurPos + end, QTextCursor.KeepAnchor)
+			cursor.mergeCharFormat(format)
+
+			if end < seq_len:
+				format.setForeground(QBrush(QColor("black")))
+				cursor.setPosition(CurPos + end)
+				cursor.setPosition(CurPos + seq_len, QTextCursor.KeepAnchor)
+				cursor.mergeCharFormat(format)
+
+			CurPos += seq_len
+
+	def DecorateSeq(self, ColorMap, Len):
+		cursor = self.ui.seqEdit.textCursor()
+		CurPos = 0
+
+		# Setup the desired format for matches
+		format = QTextCharFormat()
+
+		for valueIs in ColorMap:  # QColor is RGB: 0-255, 0-255, 0-255
+			if valueIs == '0':
+				format.setBackground(QBrush(QColor("white")))
+			elif valueIs == '7':
+				format.setBackground(QBrush(QColor("lightGray")))
+
+			cursor.setPosition(CurPos)
+			cursor.setPosition(CurPos + Len, QTextCursor.KeepAnchor)
+			cursor.mergeCharFormat(format)
+
+			CurPos += Len
 
 class deleteDialog(QtWidgets.QDialog):
 	deleteSignal = pyqtSignal(list)
@@ -1361,6 +1496,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			for element in AlignIn:
 				out_handle.write('>' + element[0] + '\n')
 				out_handle.write(element[1] + '\n')
+			out_handle.close()
 
 
 	@pyqtSlot()
@@ -1661,37 +1797,26 @@ class LibratorMain(QtWidgets.QMainWindow):
 		cmd += " -in " + aafilename + " -out " + outfilename
 		os.system(cmd)
 
-		# generate tree
-		cmd = 'cd ' + this_folder + ';'
-		cmd += raxml_path
-		cmd += ' -m PROTGAMMAAUTO -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
-		os.system(cmd)
+		# open dialog, review alignment
+		seq_names = []
+		seq_seqs = []
+		tmp_seq = ''
+		file_handle = open(outfilename, 'r')
+		for line in file_handle:
+			Readline = line.replace('\n', '').replace('\r', '')
+			if len(Readline) > 0:
+				if Readline[0] == '>':
+					Readline = Readline.replace('>', '')
+					seq_names.append(Readline)
+					if tmp_seq != '':
+						seq_seqs.append(tmp_seq)
+						tmp_seq = ''
+				else:
+					tmp_seq += Readline
+		seq_seqs.append(tmp_seq)
 
-		# open file folder
-		my_cur_os = system()
-		if my_cur_os == 'Windows':
-			cmd = 'explorer ' + this_folder  # Windows
-		elif my_cur_os == 'Darwin':
-			cmd = 'open ' + this_folder  # mac
-		elif my_cur_os == 'Linux':
-			cmd = 'nautilus' + this_folder  # Linux
-		else:
-			cmd = ''
-		if cmd != '':
-			try:
-				os.system(cmd)
-			except ValueError:
-				pass
+		self.open_tree_dialog(seq_names, seq_seqs, this_folder)
 
-		# try to open best tree using FigTree
-		try:
-			cmd = figtree_path + ' ' + this_folder + '/RAxML_bestTree.tree'
-			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
-			             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
-		except:
-			QMessageBox.warning(self, 'Warning', 'Can not find FigTree in your computer! Please open trees manually in the folder',
-			                    QMessageBox.Ok,
-			                    QMessageBox.Ok)
 
 	@pyqtSlot()
 	def on_actionNTTree_triggered(self):
@@ -1758,38 +1883,25 @@ class LibratorMain(QtWidgets.QMainWindow):
 		cmd += " -in " + aafilename + " -out " + outfilename
 		os.system(cmd)
 
-		# generate tree
-		cmd = 'cd ' + this_folder + ';'
-		cmd += raxml_path
-		cmd += ' -m GTRGAMMA -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
-		os.system(cmd)
+		# open dialog, review alignment
+		seq_names = []
+		seq_seqs = []
+		tmp_seq = ''
+		file_handle = open(outfilename, 'r')
+		for line in file_handle:
+			Readline = line.replace('\n', '').replace('\r', '')
+			if len(Readline) > 0:
+				if Readline[0] == '>':
+					Readline = Readline.replace('>', '')
+					seq_names.append(Readline)
+					if tmp_seq != '':
+						seq_seqs.append(tmp_seq)
+						tmp_seq = ''
+				else:
+					tmp_seq += Readline
+		seq_seqs.append(tmp_seq)
 
-		# open file folder
-		my_cur_os = system()
-		if my_cur_os == 'Windows':
-			cmd = 'explorer ' + this_folder  # Windows
-		elif my_cur_os == 'Darwin':
-			cmd = 'open ' + this_folder  # mac
-		elif my_cur_os == 'Linux':
-			cmd = 'nautilus' + this_folder  # Linux
-		else:
-			cmd = ''
-		if cmd != '':
-			try:
-				os.system(cmd)
-			except ValueError:
-				pass
-
-		# try to open best tree using FigTree
-		try:
-			cmd = figtree_path + ' ' + this_folder + '/RAxML_bestTree.tree'
-			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
-			             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
-		except:
-			QMessageBox.warning(self, 'Warning',
-			                    'Can not find FigTree in your computer! Please open trees manually in the folder',
-			                    QMessageBox.Ok,
-			                    QMessageBox.Ok)
+		self.open_tree_dialog(seq_names, seq_seqs, this_folder)
 
 	@pyqtSlot()
 	def on_actionMultiple_Alignement_triggered(self):
@@ -6892,6 +7004,63 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.modalessDeleteDialog.close()
 
+	def open_tree_dialog(self, Names, Seqs, this_path):
+		self.modalessTreeDialog = treeDialog()
+
+		self.modalessTreeDialog.ui.nameList.addItems(Names)
+		seq_text = '\n'.join(Seqs) + '\n'
+		self.modalessTreeDialog.ui.seqEdit.setText(seq_text)
+		self.modalessTreeDialog.path = this_path
+		self.modalessTreeDialog.names = Names
+		self.modalessTreeDialog.seqs = Seqs
+		self.modalessTreeDialog.treeSignal.connect(self.drawTree)
+
+		self.modalessTreeDialog.show()
+
+	def drawTree(self, Data, this_path):
+		global raxml_path
+		global figtree_path
+		outfilename = this_path + "/alignment_parsed.fas"
+		treefilename = 'tree'
+		# generate output file
+		file_handle = open(outfilename, 'w')
+		for i in range(0,len(Data)):
+			file_handle.write('>' + Data[i][0] + '\n')
+			file_handle.write(Data[i][1] + '\n')
+		file_handle.close()
+
+		# generate tree
+		cmd = 'cd ' + this_path + ';'
+		cmd += raxml_path
+		cmd += ' -m PROTGAMMAAUTO -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
+		os.system(cmd)
+
+		# open file folder
+		my_cur_os = system()
+		if my_cur_os == 'Windows':
+			cmd = 'explorer ' + this_path  # Windows
+		elif my_cur_os == 'Darwin':
+			cmd = 'open ' + this_path  # mac
+		elif my_cur_os == 'Linux':
+			cmd = 'nautilus' + this_path  # Linux
+		else:
+			cmd = ''
+		if cmd != '':
+			try:
+				os.system(cmd)
+			except ValueError:
+				pass
+
+		# try to open best tree using FigTree
+		try:
+			cmd = figtree_path + ' ' + this_path + '/RAxML_bestTree.tree'
+			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+			             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+		except:
+			QMessageBox.warning(self, 'Warning',
+			                    'Can not find FigTree in your computer! Please open trees manually in the folder',
+			                    QMessageBox.Ok,
+			                    QMessageBox.Ok)
 
 	def open_fusion_dialog(self):
 		if self.ui.lblBaseName.toPlainText() == "":
