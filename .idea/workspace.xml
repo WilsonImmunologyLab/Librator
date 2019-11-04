@@ -7,6 +7,9 @@
       <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainLibrator_UI.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainLibrator_UI.ui" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/VgenesResources.qrc" beforeDir="false" afterPath="$PROJECT_DIR$/Resources/VgenesResources.qrc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/VgenesResources_rc.py" beforeDir="false" afterPath="$PROJECT_DIR$/Resources/VgenesResources_rc.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VgenesResources_rc.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

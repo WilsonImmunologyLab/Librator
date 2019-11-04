@@ -7,7 +7,6 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-import images_qr
 
 
 class Ui_MainLibrator(object):
@@ -168,6 +167,7 @@ class Ui_MainLibrator(object):
         self.listWidgetStrains = QtWidgets.QListWidget(self.frame_6)
         self.listWidgetStrains.setMinimumSize(QtCore.QSize(0, 150))
         self.listWidgetStrains.setDragDropMode(QtWidgets.QAbstractItemView.DragOnly)
+        self.listWidgetStrains.setDefaultDropAction(QtCore.Qt.IgnoreAction)
         self.listWidgetStrains.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
         self.listWidgetStrains.setObjectName("listWidgetStrains")
         self.gridLayout_5.addWidget(self.listWidgetStrains, 2, 0, 1, 1)
@@ -183,6 +183,7 @@ class Ui_MainLibrator(object):
         self.listWidgetStrainsIn = QtWidgets.QListWidget(self.frame_6)
         self.listWidgetStrainsIn.setMinimumSize(QtCore.QSize(0, 150))
         self.listWidgetStrainsIn.setDragDropMode(QtWidgets.QAbstractItemView.InternalMove)
+        self.listWidgetStrainsIn.setDefaultDropAction(QtCore.Qt.IgnoreAction)
         self.listWidgetStrainsIn.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
         self.listWidgetStrainsIn.setMovement(QtWidgets.QListView.Free)
         self.listWidgetStrainsIn.setProperty("isWrapping", False)
@@ -1093,7 +1094,7 @@ class Ui_MainLibrator(object):
         self.actionCreateAnalysisDB.setObjectName("actionCreateAnalysisDB")
         self.actionTree = QtWidgets.QAction(MainLibrator)
         icon29 = QtGui.QIcon()
-        icon29.addPixmap(QtGui.QPixmap(":Resources/treeAA.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon29.addPixmap(QtGui.QPixmap(":/PNG-Icons/treeAA.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionTree.setIcon(icon29)
         self.actionTree.setObjectName("actionTree")
         self.actionRevert_to_previous = QtWidgets.QAction(MainLibrator)
@@ -1124,7 +1125,7 @@ class Ui_MainLibrator(object):
         self.actionCheck_Update_bin_folder.setObjectName("actionCheck_Update_bin_folder")
         self.actionNTTree = QtWidgets.QAction(MainLibrator)
         icon32 = QtGui.QIcon()
-        icon32.addPixmap(QtGui.QPixmap(":Resources/treeNT.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon32.addPixmap(QtGui.QPixmap(":/PNG-Icons/treeNT.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionNTTree.setIcon(icon32)
         self.actionNTTree.setObjectName("actionNTTree")
         self.menuOpen_Recent.addAction(self.actionOpen_last)
@@ -1198,8 +1199,8 @@ class Ui_MainLibrator(object):
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.actionHANumbering)
         self.toolBar.addSeparator()
-        self.toolBar.addAction(self.actionTree)
         self.toolBar.addAction(self.actionNTTree)
+        self.toolBar.addAction(self.actionTree)
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.actionMultiple_Alignement)
         self.toolBar.addAction(self.actionDNA)
@@ -1414,8 +1415,8 @@ class Ui_MainLibrator(object):
         self.actionImport_Vgenes_database.setToolTip(_translate("MainLibrator", "imports the contents of a second VGenes database into the current database"))
         self.actionCreateAnalysisDB.setText(_translate("MainLibrator", "Create analysis DB"))
         self.actionCreateAnalysisDB.setToolTip(_translate("MainLibrator", "Creates a database from IMGT formatted FASTA files"))
-        self.actionTree.setText(_translate("MainLibrator", "GenerateTree"))
-        self.actionTree.setToolTip(_translate("MainLibrator", "Generate Maximum Likelihood Tree"))
+        self.actionTree.setText(_translate("MainLibrator", "Generate AA Tree"))
+        self.actionTree.setToolTip(_translate("MainLibrator", "Generate Maximum Likelihood Tree (Using Amino Acid sequences)"))
         self.actionRevert_to_previous.setText(_translate("MainLibrator", "Revert to previous"))
         self.actionRevert_to_previous.setToolTip(_translate("MainLibrator", "Revert current file to the state when this instance of VGenes was opened"))
         self.actionAnalyze_Isotypes.setText(_translate("MainLibrator", "Analyze Isotypes"))
@@ -1429,7 +1430,7 @@ class Ui_MainLibrator(object):
         self.actionOpen_last.setText(_translate("MainLibrator", "Open Last"))
         self.actionCheck_Update_base_folder.setText(_translate("MainLibrator", "Set PATH"))
         self.actionCheck_Update_bin_folder.setText(_translate("MainLibrator", "Check/Update bin folder"))
-        self.actionNTTree.setText(_translate("MainLibrator", "GenerateTree"))
+        self.actionNTTree.setText(_translate("MainLibrator", "Generate NT Tree"))
         self.actionNTTree.setToolTip(_translate("MainLibrator", "Generate Maximum Likelihood Tree (Using nucleotide sequences)"))
 
 

@@ -14,7 +14,6 @@ from platform import system
 import os, sys, re, time, string
 import pandas as pd
 import numpy as np
-import mysql.connector as conmysql
 
 from MainLibrator_UI import Ui_MainLibrator
 from mutationdialog import Ui_MutationDialog
@@ -1724,8 +1723,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			eachItemIs = item.text()
 			WhereState += 'SeqName = "' + eachItemIs + '"'
 			if NumSeqs > i:
-			WhereState += ' OR '
-		i += 1
+				WhereState += ' OR '
+			i += 1
 
 		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
 		DataIn = RunSQL(DBFilename, SQLStatement)
@@ -1871,12 +1870,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 					WhereState += 'SeqName = "' + eachItemIs + '"'
 					if NumSeqs > i:
 						WhereState += ' OR '
-
 					i += 1
 
-
-				SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState  #SeqName = "327_Cl15_H1" OR SeqName = "327_Cl16_H1" OR SeqName = "327_Cl17_H1"'
-				# SQLStatement = 'SELECT * FROM LibDB WHERE SeqName = "' + eachItemIs + '"'
+				SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
 				DataIn = RunSQL(DBFilename, SQLStatement)
 
 				for item in DataIn:
@@ -1900,11 +1896,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 			Subtype = self.ui.cboSubtype.currentText()
 			self.ui.cboSubtype_2.setCurrentText(Subtype)
 			if Subtype == 'H3N2' or Subtype == 'Group 2' or Subtype == 'Other':
-				self.ui.btnH1Num.setChecked(True)
+				self.ui.btnH1Num.setChecked(False)
 				self.ui.btnH3Num.setChecked(True)
 			elif Subtype == 'H1N1' or Subtype == 'Group 1':
 				self.ui.btnH1Num.setChecked(True)
-				self.ui.btnH3Num.setChecked(True)
+				self.ui.btnH3Num.setChecked(False)
 
 			self.CheckDecorations()
 

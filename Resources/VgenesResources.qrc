@@ -130,5 +130,7 @@
     <file>yen_currency_sign.png</file>
     <file>zoom_in.png</file>
     <file>zoom_out.png</file>
+    <file>treeAA.png</file>
+    <file>treeNT.png</file>
   </qresource>
 </RCC>

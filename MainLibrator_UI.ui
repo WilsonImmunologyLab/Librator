@@ -377,6 +377,9 @@
                  <property name="dragDropMode">
                   <enum>QAbstractItemView::DragOnly</enum>
                  </property>
+                 <property name="defaultDropAction">
+                  <enum>Qt::IgnoreAction</enum>
+                 </property>
                  <property name="selectionMode">
                   <enum>QAbstractItemView::ExtendedSelection</enum>
                  </property>
@@ -413,6 +416,9 @@
                  </property>
                  <property name="dragDropMode">
                   <enum>QAbstractItemView::InternalMove</enum>
+                 </property>
+                 <property name="defaultDropAction">
+                  <enum>Qt::IgnoreAction</enum>
                  </property>
                  <property name="selectionMode">
                   <enum>QAbstractItemView::ExtendedSelection</enum>
@@ -2837,14 +2843,14 @@
   </action>
   <action name="actionTree">
    <property name="icon">
-    <iconset>
-     <normaloff>Resources/treeAA.png</normaloff>Resources/treeAA.png</iconset>
+    <iconset resource="Resources/VgenesResources.qrc">
+     <normaloff>:/PNG-Icons/treeAA.png</normaloff>:/PNG-Icons/treeAA.png</iconset>
    </property>
    <property name="text">
     <string>Generate AA Tree</string>
    </property>
    <property name="toolTip">
-    <string>(Using Amino Acid sequences)</string>
+    <string>Generate Maximum Likelihood Tree (Using Amino Acid sequences)</string>
    </property>
   </action>
   <action name="actionRevert_to_previous">
@@ -2916,8 +2922,8 @@
   </action>
   <action name="actionNTTree">
    <property name="icon">
-    <iconset>
-     <normaloff>Resources/treeNT.png</normaloff>Resources/treeNT.png</iconset>
+    <iconset resource="Resources/VgenesResources.qrc">
+     <normaloff>:/PNG-Icons/treeNT.png</normaloff>:/PNG-Icons/treeNT.png</iconset>
    </property>
    <property name="text">
     <string>Generate NT Tree</string>
