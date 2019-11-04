@@ -6354,6 +6354,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		DataIs = RunSQL(DBFilename, 'None')
 		global BaseSeq
 		self.ui.listWidgetStrainsIn.clear()
+		self.ui.listWidgetStrains.clear()
 		for item in DataIs:
 			SeqName = item[0]
 			# self.ui.cmbListBase.addItem(SeqName)
