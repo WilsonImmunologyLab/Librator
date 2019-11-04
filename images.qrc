@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/" >
+    <file>Resources/treeAA.png</file>
+    <file>Resources/treeNT.png</file>
+  </qresource>
+</RCC>

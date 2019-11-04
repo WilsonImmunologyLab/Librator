@@ -7,6 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import images_qr
 
 
 class Ui_MainLibrator(object):
@@ -1092,7 +1093,7 @@ class Ui_MainLibrator(object):
         self.actionCreateAnalysisDB.setObjectName("actionCreateAnalysisDB")
         self.actionTree = QtWidgets.QAction(MainLibrator)
         icon29 = QtGui.QIcon()
-        icon29.addPixmap(QtGui.QPixmap("Resources/treeAA.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon29.addPixmap(QtGui.QPixmap(":Resources/treeAA.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionTree.setIcon(icon29)
         self.actionTree.setObjectName("actionTree")
         self.actionRevert_to_previous = QtWidgets.QAction(MainLibrator)
@@ -1123,7 +1124,7 @@ class Ui_MainLibrator(object):
         self.actionCheck_Update_bin_folder.setObjectName("actionCheck_Update_bin_folder")
         self.actionNTTree = QtWidgets.QAction(MainLibrator)
         icon32 = QtGui.QIcon()
-        icon32.addPixmap(QtGui.QPixmap("Resources/treeNT.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon32.addPixmap(QtGui.QPixmap(":Resources/treeNT.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionNTTree.setIcon(icon32)
         self.actionNTTree.setObjectName("actionNTTree")
         self.menuOpen_Recent.addAction(self.actionOpen_last)

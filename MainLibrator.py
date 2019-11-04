@@ -1664,7 +1664,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# generate tree
 		cmd = 'cd ' + this_folder + ';'
-		cmd += 'raxml'
+		cmd += raxml_path
 		cmd += ' -m PROTGAMMAAUTO -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
 		os.system(cmd)
 
@@ -1724,8 +1724,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			eachItemIs = item.text()
 			WhereState += 'SeqName = "' + eachItemIs + '"'
 			if NumSeqs > i:
-				WhereState += ' OR '
-			i += 1
+			WhereState += ' OR '
+		i += 1
 
 		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
 		DataIn = RunSQL(DBFilename, SQLStatement)
@@ -1761,7 +1761,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# generate tree
 		cmd = 'cd ' + this_folder + ';'
-		cmd += 'raxml'
+		cmd += raxml_path
 		cmd += ' -m GTRGAMMA -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
 		os.system(cmd)
 

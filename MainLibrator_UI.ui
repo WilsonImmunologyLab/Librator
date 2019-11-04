@@ -2841,10 +2841,10 @@
      <normaloff>Resources/treeAA.png</normaloff>Resources/treeAA.png</iconset>
    </property>
    <property name="text">
-    <string>GenerateTree</string>
+    <string>Generate AA Tree</string>
    </property>
    <property name="toolTip">
-    <string>Generate Maximum Likelihood Tree</string>
+    <string>(Using Amino Acid sequences)</string>
    </property>
   </action>
   <action name="actionRevert_to_previous">
@@ -2920,7 +2920,7 @@
      <normaloff>Resources/treeNT.png</normaloff>Resources/treeNT.png</iconset>
    </property>
    <property name="text">
-    <string>GenerateTree</string>
+    <string>Generate NT Tree</string>
    </property>
    <property name="toolTip">
     <string>Generate Maximum Likelihood Tree (Using nucleotide sequences)</string>
