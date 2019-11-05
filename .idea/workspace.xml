@@ -4,22 +4,8 @@
     <list default="true" id="9f472839-8a65-4dce-be83-d1c7511e6e93" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DB/AAATester.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/AAATester.ldb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base_path_dialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/base_path_dialog.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/base_path_dialog.ui" beforeDir="false" afterPath="$PROJECT_DIR$/base_path_dialog.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deletedialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/deletedialog.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deletedialog.ui" beforeDir="false" afterPath="$PROJECT_DIR$/deletedialog.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fusiondialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/fusiondialog.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fusiondialog.ui" beforeDir="false" afterPath="$PROJECT_DIR$/fusiondialog.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gibsonclone.py" beforeDir="false" afterPath="$PROJECT_DIR$/gibsonclone.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gibsonclone.ui" beforeDir="false" afterPath="$PROJECT_DIR$/gibsonclone.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mutationdialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/mutationdialog.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mutationdialog.ui" beforeDir="false" afterPath="$PROJECT_DIR$/mutationdialog.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sequenceedit.py" beforeDir="false" afterPath="$PROJECT_DIR$/sequenceedit.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sequenceedit.ui" beforeDir="false" afterPath="$PROJECT_DIR$/sequenceedit.ui" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/treedialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/treedialog.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/treedialog.ui" beforeDir="false" afterPath="$PROJECT_DIR$/treedialog.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/updatesequencedialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/updatesequencedialog.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/updatesequencedialog.ui" beforeDir="false" afterPath="$PROJECT_DIR$/updatesequencedialog.ui" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
