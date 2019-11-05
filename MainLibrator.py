@@ -7975,6 +7975,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 			for i in range(num_fragment):
 				fragment = cur_seq[aa_start[i] - 1: aa_end[i]]
 
+				# check if sequence is incomplete
+				if fragment[0] == '-' and i == 0:
+					question = 'Fragment 1 of you sequence ' + cur_name + ' is incomplete, do you still want continue?'
+					buttons = 'YN'
+					answer = questionMessage(self, question, buttons)
+					if answer == 'No':
+						return
+
 				hyphen_pos = [i.start() for i in re.finditer('-', fragment)]
 				nt_start[i] = (aa_start[i] - 1 - num_of_hyphen) * 3 + 1
 				num_of_hyphen = num_of_hyphen + len(hyphen_pos)
