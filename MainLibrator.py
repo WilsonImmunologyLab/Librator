@@ -227,6 +227,7 @@ class GibsonMSADialog(QtWidgets.QDialog):
 
 	def accept(self):
 		self.gibson_msa_Signal.emit(self.fragment_data, self.mode, self.db_file, self.out_dir, self.joint, self.subtype)
+		self.close()
 
 	def highlightSeq(self):
 		sel_seq = []

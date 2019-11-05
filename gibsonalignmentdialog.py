@@ -117,7 +117,7 @@ class Ui_GibsonMSADialog(object):
         self.gridLayout.addWidget(self.label_2, 3, 1, 1, 1)
 
         self.retranslateUi(GibsonMSADialog)
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(GibsonMSADialog)
 
     def retranslateUi(self, GibsonMSADialog):
