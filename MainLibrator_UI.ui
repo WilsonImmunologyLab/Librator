@@ -2408,6 +2408,7 @@
    <addaction name="actionIncrease_font_size"/>
    <addaction name="actionDecrease_font_size"/>
    <addaction name="separator"/>
+   <addaction name="actionClean"/>
   </widget>
   <action name="action_Open">
    <property name="icon">
@@ -2910,14 +2911,13 @@
     <string>Open Last</string>
    </property>
   </action>
-  <action name="actionCheck_Update_base_folder">
-   <property name="text">
-    <string>Set PATH</string>
+  <action name="actionClean">
+   <property name="icon">
+    <iconset resource="Resources/VgenesResources.qrc">
+     <normaloff>:/PNG-Icons/bin.png</normaloff>:/PNG-Icons/bin.png</iconset>
    </property>
-  </action>
-  <action name="actionCheck_Update_bin_folder">
    <property name="text">
-    <string>Check/Update bin folder</string>
+    <string>Clean TEMP files</string>
    </property>
   </action>
   <action name="actionNTTree">
@@ -2930,6 +2930,11 @@
    </property>
    <property name="toolTip">
     <string>Generate Maximum Likelihood Tree (Using nucleotide sequences)</string>
+   </property>
+  </action>
+  <action name="actionCheck_Update_base_folder">
+   <property name="text">
+    <string>Set PATH</string>
    </property>
   </action>
  </widget>

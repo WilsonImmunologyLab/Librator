@@ -1546,7 +1546,18 @@ class LibratorMain(QtWidgets.QMainWindow):
 		#
 		# 	self.ui.tableView.setFont(font)
 
+	@pyqtSlot()
+	def on_actionClean_triggered(self):
+		global temp_folder
 
+		question = 'Clean all TEMP files?'
+		buttons = 'YN'
+		answer = questionMessage(self, question, buttons)
+		if answer == 'No':
+			return
+		else:
+			cmd = 'cd ' + temp_folder + '; rm -rf ' + temp_folder + '*'
+			os.system(cmd)
 
 	@pyqtSlot()
 	def on_actionExport_triggered(self):
