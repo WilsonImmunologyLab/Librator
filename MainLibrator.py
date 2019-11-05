@@ -1271,14 +1271,21 @@ class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 		self.DecorateText(ColorMap, cursor)
 
 	def DecorateText(self, ColorMap, cursor):
-		CurPos = 0
-		# Setup the desired format for matches
+		# setup default color for all text
 		format = QTextCharFormat()
+		format.setBackground(QBrush(QColor("white")))
+		format.setForeground(QBrush(QColor("black")))
 
+		cursor.setPosition(0)
+		cursor.setPosition(len(ColorMap), QTextCursor.KeepAnchor)
+		cursor.mergeCharFormat(format)
+
+		# Setup the desired format for matches
+		CurPos = 0
 		for valueIs in ColorMap:  #QColor is RGB: 0-255, 0-255, 0-255
 			if valueIs == '0':
-				format.setBackground(QBrush(QColor("white")))
-				format.setForeground(QBrush(QColor("black")))
+				CurPos += 1
+				continue
 			elif valueIs == '1':
 				format.setBackground(QBrush(QColor(255,00,0))) #or 'red'
 				format.setForeground(QBrush(QColor("black")))
@@ -3622,23 +3629,21 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def DecorateText(self, ColorMap, cursor):
-		# o in colormap is black text on white background
-		#  cursor is cursor from textbox being decorated, i.e.:
-		# cursor = self.ui.txtAASeq.textCursor()   when from sequence panel
-		#  need provide cursor strat as well...so starts color mid window:
-		#          CurPos = (WindowSize // 2)      when from sequence panel
-		#  CurPos and cursor will allow me to run through entire text of
-		# any window with different paramaters and colormaps
-
-
-		CurPos = 0
-		# Setup the desired format for matches
+		# setup default color for all text
 		format = QTextCharFormat()
+		format.setBackground(QBrush(QColor("white")))
+		format.setForeground(QBrush(QColor("black")))
 
+		cursor.setPosition(0)
+		cursor.setPosition(len(ColorMap), QTextCursor.KeepAnchor)
+		cursor.mergeCharFormat(format)
+
+		# Setup the desired format for matches
+		CurPos = 0
 		for valueIs in ColorMap:  #QColor is RGB: 0-255, 0-255, 0-255
 			if valueIs == '0':
-				format.setBackground(QBrush(QColor("white")))
-				format.setForeground(QBrush(QColor("black")))
+				CurPos += 1
+				continue
 			elif valueIs == '1':
 				format.setBackground(QBrush(QColor(255,00,0))) #or 'red'
 				format.setForeground(QBrush(QColor("black")))
@@ -3694,6 +3699,71 @@ class LibratorMain(QtWidgets.QMainWindow):
 			cursor.mergeCharFormat(format)
 
 			CurPos += 1
+
+	@pyqtSlot()
+	def DecorateTextOld(self, ColorMap, cursor):
+		# Setup the desired format for matches
+		format = QTextCharFormat()
+		CurPos = 0
+		for valueIs in ColorMap:  # QColor is RGB: 0-255, 0-255, 0-255
+			if valueIs == '0':
+				format.setBackground(QBrush(QColor("white")))
+				format.setForeground(QBrush(QColor("black")))
+			elif valueIs == '1':
+				format.setBackground(QBrush(QColor(255, 00, 0)))  # or 'red'
+				format.setForeground(QBrush(QColor("black")))
+			elif valueIs == '2':
+				format.setBackground(QBrush(QColor("darkMagenta")))
+				format.setForeground(QBrush(QColor("white")))
+			elif valueIs == '3':
+				format.setBackground(QBrush(QColor("darkred")))
+				format.setForeground(QBrush(QColor("white")))
+			elif valueIs == '3':
+				format.setBackground(QBrush(QColor("Magenta")))
+				format.setForeground(QBrush(QColor("black")))
+			elif valueIs == '4':
+				format.setBackground(QBrush(QColor("yellow")))
+				format.setForeground(QBrush(QColor("black")))
+			elif valueIs == '5':
+				format.setBackground(QBrush(QColor("black")))
+				format.setForeground(QBrush(QColor("white")))
+			elif valueIs == '6':
+				format.setBackground(QBrush(QColor("green")))
+				format.setForeground(QBrush(QColor("white")))
+			elif valueIs == '7':
+				format.setBackground(QBrush(QColor("lightGray")))
+				format.setForeground(QBrush(QColor("black")))
+			elif valueIs == '8':
+				format.setBackground(QBrush(QColor("yellow")))
+				format.setForeground(QBrush(QColor("black")))
+			elif valueIs == '9':
+				format.setBackground(QBrush(QColor("lightGray")))
+				format.setForeground(QBrush(QColor("black")))
+			elif valueIs == '10':
+				format.setBackground(QBrush(QColor("black")))
+				format.setForeground(QBrush(QColor("white")))
+			elif valueIs == 'A':
+				format.setBackground(QBrush(QColor("darkBlue")))
+				format.setForeground(QBrush(QColor("white")))
+			elif valueIs == 'B':
+				format.setBackground(QBrush(QColor("darkGreen")))
+				format.setForeground(QBrush(QColor("white")))
+			elif valueIs == 'C':
+				format.setBackground(QBrush(QColor("blue")))
+				format.setForeground(QBrush(QColor("yellow")))
+			elif valueIs == 'D':
+				format.setBackground(QBrush(QColor("Gray")))
+				format.setForeground(QBrush(QColor("black")))
+			elif valueIs == 'E':
+				format.setBackground(QBrush(QColor("lightGray")))
+				format.setForeground(QBrush(QColor("red")))
+
+			cursor.setPosition(CurPos)
+			cursor.setPosition(CurPos + 1, QTextCursor.KeepAnchor)
+			cursor.mergeCharFormat(format)
+
+			CurPos += 1
+
 
 	def AlignSequencesFusion(self, DataIn, Notes, dnaCheck, aaCheck, posCheck):
 		# import tempfile
@@ -5675,7 +5745,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 		VGenesTextWindows[window_id].textEdit.setText(textToShow)
 		if ColorMap != 'none':
 			cursor = VGenesTextWindows[window_id].textEdit.textCursor()
+
+			# test running time
+			#start = time.time()
 			self.DecorateText(ColorMap, cursor)
+			#end = time.time()
+			#print('Running time for new function' + str(end - start) + '\n')
+
+			#start = time.time()
+			#self.DecorateTextOld(ColorMap, cursor)
+			#end = time.time()
+			#print('Running time for old function' + str(end - start) + '\n')
 
 	@pyqtSlot()
 	def ShowVGenesTextEditLegend(self, textToShow, ColorMap, window_id):

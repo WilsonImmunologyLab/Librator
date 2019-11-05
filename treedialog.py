@@ -31,7 +31,7 @@ class Ui_treeDialog(object):
         self.seqEdit.setLineWrapColumnOrWidth(0)
         self.seqEdit.setObjectName("seqEdit")
         self.horizontalLayoutWidget = QtWidgets.QWidget(treeDialog)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(600, 760, 541, 32))
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(780, 760, 361, 32))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
@@ -98,7 +98,7 @@ class Ui_treeDialog(object):
         self.label_3.setText(_translate("treeDialog", "Determine region:"))
         self.label_2.setText(_translate("treeDialog", "Start:(0-5000)"))
         self.label_4.setText(_translate("treeDialog", "End:(0-5000)"))
-        self.showButton.setText(_translate("treeDialog", "Display Selected Region"))
+        self.showButton.setText(_translate("treeDialog", "Highlight selected region"))
         self.lbl.setText(_translate("treeDialog", "Sequence: "))
 
 
