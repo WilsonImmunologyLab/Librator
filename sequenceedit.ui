@@ -13,175 +13,115 @@
   <property name="windowTitle">
    <string>Edit Sequences</string>
   </property>
-  <widget class="QTabWidget" name="ModeTab">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>100</y>
-     <width>631</width>
-     <height>341</height>
-    </rect>
-   </property>
-   <property name="currentIndex">
-    <number>0</number>
-   </property>
-   <widget class="QWidget" name="tab">
-    <attribute name="title">
-     <string>Base Biased</string>
-    </attribute>
-    <widget class="QListWidget" name="DonorList_tab1">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>40</y>
-       <width>611</width>
-       <height>271</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_tab1">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>581</width>
-       <height>16</height>
-      </rect>
-     </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="BaseSeqLabel">
      <property name="text">
-      <string>Please select donor sequences, multiple selection is allowed</string>
+      <string>Base Sequence</string>
      </property>
     </widget>
-   </widget>
-   <widget class="QWidget" name="tab_2">
-    <attribute name="title">
-     <string>Cocktail</string>
-    </attribute>
-    <widget class="QLabel" name="label_tab2">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>581</width>
-       <height>16</height>
-      </rect>
-     </property>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="BaseSeqName">
      <property name="text">
-      <string>Please select donor sequence, only single selection allowed</string>
+      <string>Base Sequence</string>
      </property>
     </widget>
-    <widget class="QListWidget" name="DonorList_tab2">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>40</y>
-       <width>611</width>
-       <height>221</height>
-      </rect>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QLabel" name="ModeLabel">
+     <property name="text">
+      <string>Please choose sequence editing mode:</string>
      </property>
     </widget>
-    <widget class="QWidget" name="horizontalLayoutWidget_2">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>270</y>
-       <width>611</width>
-       <height>31</height>
-      </rect>
+   </item>
+   <item row="2" column="0" colspan="2">
+    <widget class="QTabWidget" name="ModeTab">
+     <property name="currentIndex">
+      <number>1</number>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QRadioButton" name="radioButton_all">
-        <property name="text">
-         <string>All possible combinations</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="radioButton_single">
-        <property name="text">
-         <string>Only single muitations</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </widget>
-  </widget>
-  <widget class="QLabel" name="BaseSeqLabel">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>30</y>
-     <width>101</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Base Sequence</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="ModeLabel">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>70</y>
-     <width>261</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Please choose sequence editing mode:</string>
-   </property>
-  </widget>
-  <widget class="QWidget" name="horizontalLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>460</y>
-     <width>631</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <widget class="QPushButton" name="GenerateSeq">
-      <property name="text">
-       <string>Genearate Sequences</string>
-      </property>
-      <property name="default">
-       <bool>true</bool>
-      </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Base Biased</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_tab1">
+         <property name="text">
+          <string>Please select donor sequences, multiple selection is allowed</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QListWidget" name="DonorList_tab1"/>
+       </item>
+      </layout>
      </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="Cancel">
-      <property name="text">
-       <string>Cancel</string>
-      </property>
-      <property name="autoDefault">
-       <bool>true</bool>
-      </property>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Cocktail</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_tab2">
+         <property name="text">
+          <string>Please select donor sequence, only single selection allowed</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QListWidget" name="DonorList_tab2"/>
+       </item>
+       <item row="2" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QRadioButton" name="radioButton_all">
+           <property name="text">
+            <string>All possible combinations</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioButton_single">
+           <property name="text">
+            <string>Only single muitations</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
      </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QLabel" name="BaseSeqName">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>30</y>
-     <width>511</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Base Sequence</string>
-   </property>
-  </widget>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="GenerateSeq">
+       <property name="text">
+        <string>Genearate Sequences</string>
+       </property>
+       <property name="default">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="Cancel">
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>
