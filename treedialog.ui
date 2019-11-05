@@ -20,25 +20,6 @@
    <string>Alignment Reviewer</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" colspan="3">
-    <widget class="QLabel" name="label">
-     <property name="font">
-      <font>
-       <pointsize>18</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Review alignment of your selected sequences:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="3" colspan="2">
-    <widget class="QLabel" name="lbl">
-     <property name="text">
-      <string>Sequence: </string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0">
     <widget class="QListWidget" name="nameList">
      <property name="maximumSize">
@@ -181,6 +162,25 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Review alignment of your selected sequences:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QLabel" name="lbl">
+     <property name="text">
+      <string>Sequence: </string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

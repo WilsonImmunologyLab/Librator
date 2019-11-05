@@ -24,6 +24,7 @@ from fusiondialog import Ui_fusionDialog
 from updatesequencedialog import Ui_UpdateSequenceDialog
 from deletedialog import Ui_deleteDialog
 from treedialog import Ui_treeDialog
+from gibsonalignmentdialog import Ui_GibsonMSADialog
 
 from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText
 from VgenesTextEdit import VGenesTextMain
@@ -211,6 +212,101 @@ class treeDialog(QtWidgets.QDialog):
 			cursor.mergeCharFormat(format)
 
 			CurPos += Len
+
+class GibsonMSADialog(QtWidgets.QDialog):
+	gibson_msa_Signal = pyqtSignal(object, int, list, str, list, str)
+	def __init__(self):
+		super(GibsonMSADialog, self).__init__()
+		self.ui = Ui_GibsonMSADialog()
+		self.ui.setupUi(self)
+
+		self.ui.confirmButton.clicked.connect(self.accept)
+		self.ui.cancelButton.clicked.connect(self.reject)
+
+		self.ui.nameList.clicked.connect(self.highlightSeq)
+
+	def accept(self):
+		self.gibson_msa_Signal.emit(self.fragment_data, self.mode, self.db_file, self.out_dir, self.joint, self.subtype)
+
+	def highlightSeq(self):
+		sel_seq = []
+		for item in self.ui.nameList.selectedItems():
+			sel_seq.append(item.text())
+
+		color = []
+		names = self.names
+		num_names = len(names)
+		for item in self.names:
+			if item in sel_seq:
+				color.append('7')
+			else:
+				color.append('0')
+		self.DecorateSeq(color, self.len)
+
+	def DecorateSeq(self, ColorMap, Len):
+		cursor1 = self.ui.seqEditF1.textCursor()
+		cursor2 = self.ui.seqEditF2.textCursor()
+		cursor3 = self.ui.seqEditF3.textCursor()
+		cursor4 = self.ui.seqEditF4.textCursor()
+
+		# Setup the desired format for matches
+		format = QTextCharFormat()
+		# F1
+		CurPos = 0
+		for valueIs in ColorMap:
+			if valueIs == '0':
+				format.setBackground(QBrush(QColor("white")))
+			elif valueIs == '7':
+				format.setBackground(QBrush(QColor("lightGray")))
+
+			cursor1.setPosition(CurPos)
+			cursor1.setPosition(CurPos + Len[0], QTextCursor.KeepAnchor)
+			cursor1.mergeCharFormat(format)
+
+			CurPos += Len[0] + 1
+
+		# F2
+		CurPos = 0
+		for valueIs in ColorMap:
+			if valueIs == '0':
+				format.setBackground(QBrush(QColor("white")))
+			elif valueIs == '7':
+				format.setBackground(QBrush(QColor("lightGray")))
+
+			cursor2.setPosition(CurPos)
+			cursor2.setPosition(CurPos + Len[1], QTextCursor.KeepAnchor)
+			cursor2.mergeCharFormat(format)
+
+			CurPos += Len[1] + 1
+
+		# F3
+		CurPos = 0
+		for valueIs in ColorMap:
+			if valueIs == '0':
+				format.setBackground(QBrush(QColor("white")))
+			elif valueIs == '7':
+				format.setBackground(QBrush(QColor("lightGray")))
+
+			cursor3.setPosition(CurPos)
+			cursor3.setPosition(CurPos + Len[2], QTextCursor.KeepAnchor)
+			cursor3.mergeCharFormat(format)
+
+			CurPos += Len[2] + 1
+
+		# F4
+		CurPos = 0
+		for valueIs in ColorMap:
+			if valueIs == '0':
+				format.setBackground(QBrush(QColor("white")))
+			elif valueIs == '7':
+				format.setBackground(QBrush(QColor("lightGray")))
+
+			cursor4.setPosition(CurPos)
+			cursor4.setPosition(CurPos + Len[3], QTextCursor.KeepAnchor)
+			cursor4.mergeCharFormat(format)
+
+			CurPos += Len[3] + 1
+
 
 class deleteDialog(QtWidgets.QDialog):
 	deleteSignal = pyqtSignal(list)
@@ -7768,6 +7864,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	def generate_gibson_fragments(self, data, subtype, temp_folder, out_dir, joint_up_str, joint_down_str, db_file, mode):
 		global muscle_path
+		global H1_start, H1_end, H3_start, H1_end, H1template, H1template_seq, H3template, H3template_seq
+
 		# initial the temp file name
 		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
 		in_file = temp_folder + "in" + time_stamp + ".fas"
@@ -7777,14 +7875,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# set template
 			template_name = H1template
 			template_seq = H1template_seq
-			aa_start = H1_start;
-			aa_end = H1_end;
+			aa_start = list(H1_start);
+			aa_end = list(H1_end);
 		elif (subtype == "H3") or (subtype == "Group2"):
 			# set template
 			template_name = H3template
 			template_seq = H3template_seq
-			aa_start = H3_start;
-			aa_end = H3_end;
+			aa_start = list(H3_start);
+			aa_end = list(H3_end);
 		else:
 			print("We don't support other subtypes for now! Please input Influenza A HA!")
 			return
@@ -7850,33 +7948,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# get all the query alignments
 		sequences_block = sequences_block[1:]
 
-		# get time stamp for current data
-		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
-		# initial output file 1, summary EXCEL file
-		summary_out_file = out_dir + "/Summary_" + time_stamp + ".xlsx"
-		writer_summary = pd.ExcelWriter(summary_out_file)
-		summary_array = []
-		summary_index = 0
-
-		# initial output file 2, IDT 96 well order format
-		idt_out_file = out_dir + "/IDTorder_" + time_stamp + ".xlsx"
-		writer_idt = pd.ExcelWriter(idt_out_file)
-		idt_array = [["" for i in range(4)] for j in range(96)]
-		well_row = ['A','B','C','D','E','F','G','H']
-		well_col = range(1,13)
-
-		cur_idt_index = 0
-		for cur_row in well_row:
-			for cur_col in well_col:
-				idt_array[cur_idt_index][0] = str(cur_row) + str(cur_col)
-				cur_idt_index += 1
-		cur_idt_index = 0
-
 		for cur_seq_block in sequences_block:
 			cur_seq_fragment_data = []
-
 			if template_name in cur_seq_block:
 				continue
+
 			tmp = cur_seq_block.split("\n")
 			cur_name = tmp[0]
 			cur_seq_fragment_data.append(cur_name)
@@ -7889,15 +7965,20 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# remove the hyphen in AA sequences and modify nt start and end
 			nt_start = [0] * num_fragment
 			nt_end = [0] * num_fragment
-			diff = 0
+			num_of_hyphen = 0
+
+			# find how many '-' before fragment 1
+			pre_fragment = cur_seq[0:aa_start[0] - 1]
+			hyphen_pos = [i.start() for i in re.finditer('-', pre_fragment)]
+			num_of_hyphen = num_of_hyphen + len(hyphen_pos)
 
 			for i in range(num_fragment):
 				fragment = cur_seq[aa_start[i] - 1: aa_end[i]]
 
 				hyphen_pos = [i.start() for i in re.finditer('-', fragment)]
-				nt_start[i] = (aa_start[i] - 1) * 3 + 1 - diff
-				diff = diff + len(hyphen_pos) * 3
-				nt_end[i] = aa_end[i] * 3 - diff
+				nt_start[i] = (aa_start[i] - 1 - num_of_hyphen) * 3 + 1
+				num_of_hyphen = num_of_hyphen + len(hyphen_pos)
+				nt_end[i] = (aa_end[i] - num_of_hyphen) * 3
 				fragment1 = fragment.replace("-", "")
 
 				nt_fragment = cur_seq_nt[nt_start[i] - 1: nt_end[i]]
@@ -7916,9 +7997,126 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		fragment_data = pd.DataFrame(fragment_data)
 		fragment_data.columns = col_name
+		# generate fragments done!
 
+		# open dialog to show fragments and let user to confirm
+		seq_names = fragment_data['Name'].tolist()
+		F1_seqs = fragment_data['F_AA_1_origin'].tolist()
+		F2_seqs = fragment_data['F_AA_2_origin'].tolist()
+		F3_seqs = fragment_data['F_AA_3_origin'].tolist()
+		F4_seqs = fragment_data['F_AA_4_origin'].tolist()
+
+		F1_seq_text = '\n'.join(F1_seqs) + '\n'
+		F2_seq_text = '\n'.join(F2_seqs) + '\n'
+		F3_seq_text = '\n'.join(F3_seqs) + '\n'
+		F4_seq_text = '\n'.join(F4_seqs) + '\n'
+
+		# create dialog
+		self.modalessGibsonMSADialog = GibsonMSADialog()
+		# set values and text
+		self.modalessGibsonMSADialog.ui.nameList.addItems(seq_names)
+		self.modalessGibsonMSADialog.ui.seqEditF1.setText(F1_seq_text)
+		self.modalessGibsonMSADialog.ui.seqEditF2.setText(F2_seq_text)
+		self.modalessGibsonMSADialog.ui.seqEditF3.setText(F3_seq_text)
+		self.modalessGibsonMSADialog.ui.seqEditF4.setText(F4_seq_text)
+
+		# color text for F1, F2, F3, F4
+		num_seq = len(seq_names)
+		format = QTextCharFormat()
+
+		# F1
+		cursor1 = self.modalessGibsonMSADialog.ui.seqEditF1.textCursor()
+		len_f1 = len(F1_seqs[0])
+		CurPos = 0
+		for i in range(0,num_seq):
+			format.setForeground(QBrush(QColor("red")))
+			cursor1.setPosition(CurPos + len_f1 - 9)
+			cursor1.setPosition(CurPos + len_f1, QTextCursor.KeepAnchor)
+			cursor1.mergeCharFormat(format)
+			CurPos += len_f1 + 1
+		# F2
+		cursor2 = self.modalessGibsonMSADialog.ui.seqEditF2.textCursor()
+		len_f2 = len(F2_seqs[0])
+		CurPos = 0
+		for i in range(0, num_seq):
+			format.setForeground(QBrush(QColor("red")))
+			cursor2.setPosition(CurPos + 0)
+			cursor2.setPosition(CurPos + 9, QTextCursor.KeepAnchor)
+			cursor2.mergeCharFormat(format)
+
+			cursor2.setPosition(CurPos + len_f2 - 9)
+			cursor2.setPosition(CurPos + len_f2, QTextCursor.KeepAnchor)
+			cursor2.mergeCharFormat(format)
+			CurPos += len_f2 + 1
+		# F3
+		cursor3 = self.modalessGibsonMSADialog.ui.seqEditF3.textCursor()
+		len_f3 = len(F3_seqs[0])
+		CurPos = 0
+		for i in range(0, num_seq):
+			format.setForeground(QBrush(QColor("red")))
+			cursor3.setPosition(CurPos + 0)
+			cursor3.setPosition(CurPos + 9, QTextCursor.KeepAnchor)
+			cursor3.mergeCharFormat(format)
+
+			cursor3.setPosition(CurPos + len_f3 - 9)
+			cursor3.setPosition(CurPos + len_f3, QTextCursor.KeepAnchor)
+			cursor3.mergeCharFormat(format)
+			CurPos += len_f3 + 1
+		# F4
+		cursor4 = self.modalessGibsonMSADialog.ui.seqEditF4.textCursor()
+		len_f4 = len(F4_seqs[0])
+		CurPos = 0
+		for i in range(0, num_seq):
+			format.setForeground(QBrush(QColor("red")))
+			cursor4.setPosition(CurPos + 0)
+			cursor4.setPosition(CurPos + 9, QTextCursor.KeepAnchor)
+			cursor4.mergeCharFormat(format)
+			CurPos += len_f4 + 1
+
+		# link data
+		self.modalessGibsonMSADialog.fragment_data = fragment_data
+		self.modalessGibsonMSADialog.mode = mode
+		self.modalessGibsonMSADialog.db_file = db_file
+		self.modalessGibsonMSADialog.out_dir = out_dir
+		self.modalessGibsonMSADialog.names = seq_names
+		self.modalessGibsonMSADialog.len = [len_f1, len_f2, len_f3, len_f4]
+		self.modalessGibsonMSADialog.joint = [joint_up_str, joint_down_str]
+		self.modalessGibsonMSADialog.subtype = subtype
+		# link signals
+		self.modalessGibsonMSADialog.gibson_msa_Signal.connect(self.GibsonConfirm)
+		# show dialog
+		self.modalessGibsonMSADialog.show()
+
+
+	def GibsonConfirm(self, fragment_data, mode, db_file, out_dir, joint, subtype):
 		new_fragment_name_list = []
 		existing_fragment_name_list = []
+		num_fragment = 4
+		joint_up_str = joint[0]
+		joint_down_str = joint[1]
+
+		# get time stamp for current data
+		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+		# initial output file 1, summary EXCEL file
+		summary_out_file = out_dir + "/Summary_" + time_stamp + ".xlsx"
+		writer_summary = pd.ExcelWriter(summary_out_file)
+		summary_array = []
+		summary_index = 0
+
+		# initial output file 2, IDT 96 well order format
+		idt_out_file = out_dir + "/IDTorder_" + time_stamp + ".xlsx"
+		writer_idt = pd.ExcelWriter(idt_out_file)
+		idt_array = [["" for i in range(4)] for j in range(96)]
+		well_row = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+		well_col = range(1, 13)
+
+		cur_idt_index = 0
+		for cur_row in well_row:
+			for cur_col in well_col:
+				idt_array[cur_idt_index][0] = str(cur_row) + str(cur_col)
+				cur_idt_index += 1
+		cur_idt_index = 0
+
 		#print("Seq_name\tFragment\tAAseq\tName\tInstock\tNTseq")
 		for index in fragment_data.index:
 			# for each virus, open a file for its all 4 fragments
@@ -8060,8 +8258,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		writer_summary.save()
 
 		self.modalessGibsonDialog.close()
-		os.remove(in_file)
-		os.remove(out_file)
 
 		# open Fragments file folder
 		my_cur_os = system()
