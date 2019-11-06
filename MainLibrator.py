@@ -8055,6 +8055,20 @@ class LibratorMain(QtWidgets.QMainWindow):
 				cur_seq_fragment_data.append(fragment)
 				cur_seq_fragment_data.append(fragment1)
 				cur_seq_fragment_data.append(nt_fragment)
+
+				# check if NT seq perfect match AA
+				nt_fragment_aa = Translator(nt_fragment,0)
+				nt_fragment_aa = nt_fragment_aa[0]
+				if nt_fragment_aa != fragment1:
+					Msg = 'AA seq for current fragment is:\n!'
+					Msg += fragment1 + '\n'
+					Msg += 'AA seq translated from current NT fragment is:\n!'
+					Msg += nt_fragment_aa + '\n'
+					Msg += 'The two sequences do not match!'
+					Msg += 'Please chekc your original NT sequences to make sure there are no strange nucleotide!'
+					QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+					return
+
 			fragment_data.append(cur_seq_fragment_data)
 
 		# make col name
