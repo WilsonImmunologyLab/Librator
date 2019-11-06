@@ -1787,6 +1787,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.modalessSeqEditDialog = None
 
+		self.TextEdit = VGenesTextMain()
+
 
 	@pyqtSlot()
 	def UpdateRecent(self):
@@ -6687,7 +6689,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.TextEdit.textEdit.setFont(font)
 
-		# self.TextEdit.show()
+		#self.TextEdit.show()
 
 		self.TextEdit.textEdit.setText(Document)
 
