@@ -6882,13 +6882,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 			HAAA = HAAA[0]
 
 			# check AA sequence
-			Msg = SequenceCheck(HAAA, 'aa')
-			if Msg != 'none':
-				Msg =  'Your AA Sequence of \n' + DataIn[0][0] + '\nhave some improper Amino Acid: ' + Msg + '.\nDo you still want to continue?'
-				reply = QMessageBox.question(self, 'Information',
-				                             Msg, QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-				if reply == QMessageBox.No:
-					return
+			#Msg = SequenceCheck(HAAA, 'aa')
+			#if Msg != 'none':
+			#	Msg =  'Your AA Sequence of \n' + DataIn[0][0] + '\nhave some improper Amino Acid: ' + Msg + '.\nDo you still want to continue?'
+			#	reply = QMessageBox.question(self, 'Information',
+			#	                             Msg, QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+			#	if reply == QMessageBox.No:
+			#		return
 
 			# HA numbering
 			HANumbering(HAAA)
@@ -7741,11 +7741,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 			align_file = open(out_file, "r")
 			alignment = align_file.read()
 			sequences_block = alignment.split(">")
+			sequences_block = sequences_block[1:]
 
 			for cur_block in sequences_block:
 				tmp = cur_block.split("\n")
 				cur_name = tmp[0]
-				cur_name = cur_name[1:]
 				tmp = tmp[1:]
 				seperator = ""
 				cur_seq = seperator.join(tmp)
@@ -7784,6 +7784,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				for pos_iter in hyphen_pos_base:
 					if alignment_donor_start >= pos_iter:
 						donor_start -= 1
+						if donor_start < 0:
+							donor_start = 0
 						donor_end -= 1
 					elif alignment_donor_end >= pos_iter:
 						donor_end -= 1
@@ -7821,7 +7823,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				      + ' and ' + donor_sequences + '\n'
 				total_num = 0
 				for i in range(1,single_mutation_number+1):
-					cur_total_num = factorial(single_mutation_number)/(factorial(i)*factorial(single_mutation_number-i))
+					cur_total_num = int(factorial(single_mutation_number)/(factorial(i)*factorial(single_mutation_number-i)))
 					total_num += cur_total_num
 					Msg += 'There are ' + str(cur_total_num) + ' different combinations of ' + str(i) + ' mutations\n'
 				Msg += 'There are ' + str(total_num) + ' different combinations of all mutations\n'
@@ -7842,6 +7844,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 					new_seq_name = base_sequence + '-' + mutation + '(Cocktail)'
 					self.generate_mutation_sequence("OriPos", base_sequence, new_seq_name, mutation, "")
 			elif mutation_schema == "single":
+				single_mutation_number = len(all_single_mutations)
+				Msg = 'Total ' + str(single_mutation_number) + ' single mutations detected between ' + base_sequence \
+				      + ' and ' + donor_sequences + '\n'
+				Msg += 'Do you still want continue?'
+
+				buttons = 'YN'
+				answer = questionMessage(self, Msg, buttons)
+				if answer == 'No':
+					return
+
 				for mutation in all_single_mutations:
 					new_seq_name = base_sequence + '-' + mutation + '(Cocktail)'
 					self.generate_mutation_sequence("OriPos", base_sequence, new_seq_name, mutation, "")

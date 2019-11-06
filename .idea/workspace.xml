@@ -130,6 +130,46 @@
           <line>197</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/MainLibrator.py</url>
+          <line>7773</line>
+          <option name="timeStamp" value="86" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/MainLibrator.py</url>
+          <line>7767</line>
+          <option name="timeStamp" value="87" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/MainLibrator.py</url>
+          <line>7781</line>
+          <option name="timeStamp" value="88" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/MainLibrator.py</url>
+          <line>7782</line>
+          <option name="timeStamp" value="89" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/MainLibrator.py</url>
+          <line>7783</line>
+          <option name="timeStamp" value="90" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/MainLibrator.py</url>
+          <line>7808</line>
+          <option name="timeStamp" value="91" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/MainLibrator.py</url>
+          <line>7804</line>
+          <option name="timeStamp" value="92" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/MainLibrator.py</url>
+          <line>7805</line>
+          <option name="timeStamp" value="93" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
@@ -140,6 +180,13 @@
         <watch expression="nt_start" />
         <watch expression="hyphen_pos" />
         <watch expression="fragment_data" />
+        <watch expression="base_aa_seq" />
+        <watch expression="donor_aa_seq" />
+        <watch expression="sequences_block" />
+        <watch expression="cur_block" />
+        <watch expression="cur_name" />
+        <watch expression="cur_seq" />
+        <watch expression="hyphen_pos_base" />
       </configuration>
     </watches-manager>
   </component>
