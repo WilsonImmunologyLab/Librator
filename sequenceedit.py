@@ -72,7 +72,7 @@ class Ui_SequenceEditDialog(object):
         self.gridLayout.addLayout(self.horizontalLayout, 3, 0, 1, 2)
 
         self.retranslateUi(SequenceEditDialog)
-        self.ModeTab.setCurrentIndex(1)
+        self.ModeTab.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(SequenceEditDialog)
 
     def retranslateUi(self, SequenceEditDialog):

@@ -225,6 +225,9 @@ class GibsonMSADialog(QtWidgets.QDialog):
 
 		self.ui.nameList.clicked.connect(self.highlightSeq)
 
+		self.ui.radioNT.clicked.connect(self.switchSeq)
+		self.ui.radioAA.clicked.connect(self.switchSeq)
+
 	def accept(self):
 		self.gibson_msa_Signal.emit(self.fragment_data, self.mode, self.db_file, self.out_dir, self.joint, self.subtype)
 		self.close()
@@ -242,9 +245,254 @@ class GibsonMSADialog(QtWidgets.QDialog):
 				color.append('7')
 			else:
 				color.append('0')
-		self.DecorateSeq(color, self.len)
+		if self.ui.radioAA.isChecked():
+			self.DecorateAASeq(color, self.len)
+		else:
+			self.DecorateNTSeq(color)
 
-	def DecorateSeq(self, ColorMap, Len):
+	def switchSeq(self):
+		fragment_data = self.fragment_data
+		if self.ui.radioAA.isChecked():
+			seq_names = fragment_data['Name'].tolist()
+			F1_seqs = fragment_data['F_AA_1_origin'].tolist()
+			F2_seqs = fragment_data['F_AA_2_origin'].tolist()
+			F3_seqs = fragment_data['F_AA_3_origin'].tolist()
+			F4_seqs = fragment_data['F_AA_4_origin'].tolist()
+
+			F1_seq_text = '\n'.join(F1_seqs) + '\n'
+			F2_seq_text = '\n'.join(F2_seqs) + '\n'
+			F3_seq_text = '\n'.join(F3_seqs) + '\n'
+			F4_seq_text = '\n'.join(F4_seqs) + '\n'
+
+			self.ui.seqEditF1.setText(F1_seq_text)
+			self.ui.seqEditF2.setText(F2_seq_text)
+			self.ui.seqEditF3.setText(F3_seq_text)
+			self.ui.seqEditF4.setText(F4_seq_text)
+
+			# color text for F1, F2, F3, F4
+			num_seq = len(seq_names)
+			format = QTextCharFormat()
+
+			# F1
+			cursor1 = self.ui.seqEditF1.textCursor()
+			len_f1 = len(F1_seqs[0])
+			CurPos = 0
+			for i in range(0, num_seq):
+				format.setForeground(QBrush(QColor("red")))
+				cursor1.setPosition(CurPos + len_f1 - 9)
+				cursor1.setPosition(CurPos + len_f1, QTextCursor.KeepAnchor)
+				cursor1.mergeCharFormat(format)
+				CurPos += len_f1 + 1
+			# F2
+			cursor2 = self.ui.seqEditF2.textCursor()
+			len_f2 = len(F2_seqs[0])
+			CurPos = 0
+			for i in range(0, num_seq):
+				format.setForeground(QBrush(QColor("red")))
+				cursor2.setPosition(CurPos + 0)
+				cursor2.setPosition(CurPos + 9, QTextCursor.KeepAnchor)
+				cursor2.mergeCharFormat(format)
+
+				cursor2.setPosition(CurPos + len_f2 - 9)
+				cursor2.setPosition(CurPos + len_f2, QTextCursor.KeepAnchor)
+				cursor2.mergeCharFormat(format)
+				CurPos += len_f2 + 1
+			# F3
+			cursor3 = self.ui.seqEditF3.textCursor()
+			len_f3 = len(F3_seqs[0])
+			CurPos = 0
+			for i in range(0, num_seq):
+				format.setForeground(QBrush(QColor("red")))
+				cursor3.setPosition(CurPos + 0)
+				cursor3.setPosition(CurPos + 9, QTextCursor.KeepAnchor)
+				cursor3.mergeCharFormat(format)
+
+				cursor3.setPosition(CurPos + len_f3 - 9)
+				cursor3.setPosition(CurPos + len_f3, QTextCursor.KeepAnchor)
+				cursor3.mergeCharFormat(format)
+				CurPos += len_f3 + 1
+			# F4
+			cursor4 = self.ui.seqEditF4.textCursor()
+			len_f4 = len(F4_seqs[0])
+			CurPos = 0
+			for i in range(0, num_seq):
+				format.setForeground(QBrush(QColor("red")))
+				cursor4.setPosition(CurPos + 0)
+				cursor4.setPosition(CurPos + 9, QTextCursor.KeepAnchor)
+				cursor4.mergeCharFormat(format)
+				CurPos += len_f4 + 1
+
+			self.ui.notice.setText('"-" in sequences will be removed before generating Fragments')
+		else:
+			joint_up_str = '\n' + self.joint[0]
+			joint_down_str = self.joint[1] + '\n'
+
+			seq_names = fragment_data['Name'].tolist()
+			F1_seqs = fragment_data['F_NT_1'].tolist()
+			F2_seqs = fragment_data['F_NT_2'].tolist()
+			F3_seqs = fragment_data['F_NT_3'].tolist()
+			F4_seqs = fragment_data['F_NT_4'].tolist()
+
+			F1_seq_text = self.joint[0] + joint_up_str.join(F1_seqs) + '\n'
+			F2_seq_text = '\n'.join(F2_seqs) + '\n'
+			F3_seq_text = '\n'.join(F3_seqs) + '\n'
+			F4_seq_text = joint_down_str.join(F4_seqs) + joint_down_str
+
+			self.ui.seqEditF1.setText(F1_seq_text)
+			self.ui.seqEditF2.setText(F2_seq_text)
+			self.ui.seqEditF3.setText(F3_seq_text)
+			self.ui.seqEditF4.setText(F4_seq_text)
+
+			# color text for F1, F2, F3, F4
+			num_seq = len(seq_names)
+			format = QTextCharFormat()
+
+			# F1
+			cursor1 = self.ui.seqEditF1.textCursor()
+			CurPos = 0
+			for i in range(0, num_seq):
+				cur_len = len(self.joint[0]) + len(F1_seqs[i])
+				format.setForeground(QBrush(QColor("red")))
+				cursor1.setPosition(CurPos + 0)
+				cursor1.setPosition(CurPos + len(self.joint[0]), QTextCursor.KeepAnchor)
+				cursor1.mergeCharFormat(format)
+
+				cursor1.setPosition(CurPos + cur_len - 25)
+				cursor1.setPosition(CurPos + cur_len, QTextCursor.KeepAnchor)
+				cursor1.mergeCharFormat(format)
+				CurPos += cur_len + 1
+
+			# F2
+			cursor2 = self.ui.seqEditF2.textCursor()
+			CurPos = 0
+			for i in range(0, num_seq):
+				cur_len = len(F2_seqs[i])
+				format.setForeground(QBrush(QColor("red")))
+				cursor2.setPosition(CurPos + 0)
+				cursor2.setPosition(CurPos + 25, QTextCursor.KeepAnchor)
+				cursor2.mergeCharFormat(format)
+
+				cursor2.setPosition(CurPos + cur_len - 25)
+				cursor2.setPosition(CurPos + cur_len, QTextCursor.KeepAnchor)
+				cursor2.mergeCharFormat(format)
+				CurPos += cur_len + 1
+
+			# F3
+			cursor3 = self.ui.seqEditF3.textCursor()
+			CurPos = 0
+			for i in range(0, num_seq):
+				cur_len = len(F3_seqs[i])
+				format.setForeground(QBrush(QColor("red")))
+				cursor3.setPosition(CurPos + 0)
+				cursor3.setPosition(CurPos + 25, QTextCursor.KeepAnchor)
+				cursor3.mergeCharFormat(format)
+
+				cursor3.setPosition(CurPos + cur_len - 25)
+				cursor3.setPosition(CurPos + cur_len, QTextCursor.KeepAnchor)
+				cursor3.mergeCharFormat(format)
+				CurPos += cur_len + 1
+
+			# F4
+			cursor4 = self.ui.seqEditF4.textCursor()
+			CurPos = 0
+			for i in range(0, num_seq):
+				cur_len = len(F4_seqs[i]) + len(self.joint[1])
+				format.setForeground(QBrush(QColor("red")))
+				cursor4.setPosition(CurPos + 0)
+				cursor4.setPosition(CurPos + 25, QTextCursor.KeepAnchor)
+				cursor4.mergeCharFormat(format)
+
+				cursor4.setPosition(CurPos + cur_len - len(self.joint[1]))
+				cursor4.setPosition(CurPos + cur_len, QTextCursor.KeepAnchor)
+				cursor4.mergeCharFormat(format)
+				CurPos += cur_len + 1
+
+			self.ui.notice.setText('NT fragments have same AA sequence will be merged')
+
+		self.highlightSeq()
+
+	def DecorateNTSeq(self, ColorMap):
+		format = QTextCharFormat()
+		# F1
+		cursor = self.ui.seqEditF1.textCursor()
+		text = self.ui.seqEditF1.toPlainText()
+
+		text_list = text.split('\n')
+		CurPos = 0
+		for i in range(0,len(ColorMap)):
+			valueIs = ColorMap[i]
+
+			if valueIs == '0':
+				format.setBackground(QBrush(QColor("white")))
+			elif valueIs == '7':
+				format.setBackground(QBrush(QColor("lightGray")))
+
+			cursor.setPosition(CurPos)
+			cursor.setPosition(CurPos + len(text_list[i]), QTextCursor.KeepAnchor)
+			cursor.mergeCharFormat(format)
+
+			CurPos += len(text_list[i]) + 1
+		# F2
+		cursor = self.ui.seqEditF2.textCursor()
+		text = self.ui.seqEditF2.toPlainText()
+
+		text_list = text.split('\n')
+		CurPos = 0
+		for i in range(0, len(ColorMap)):
+			valueIs = ColorMap[i]
+
+			if valueIs == '0':
+				format.setBackground(QBrush(QColor("white")))
+			elif valueIs == '7':
+				format.setBackground(QBrush(QColor("lightGray")))
+
+			cursor.setPosition(CurPos)
+			cursor.setPosition(CurPos + len(text_list[i]), QTextCursor.KeepAnchor)
+			cursor.mergeCharFormat(format)
+
+			CurPos += len(text_list[i]) + 1
+
+		# F3
+		cursor = self.ui.seqEditF3.textCursor()
+		text = self.ui.seqEditF3.toPlainText()
+
+		text_list = text.split('\n')
+		CurPos = 0
+		for i in range(0, len(ColorMap)):
+			valueIs = ColorMap[i]
+
+			if valueIs == '0':
+				format.setBackground(QBrush(QColor("white")))
+			elif valueIs == '7':
+				format.setBackground(QBrush(QColor("lightGray")))
+
+			cursor.setPosition(CurPos)
+			cursor.setPosition(CurPos + len(text_list[i]), QTextCursor.KeepAnchor)
+			cursor.mergeCharFormat(format)
+
+			CurPos += len(text_list[i]) + 1
+
+		# F4
+		cursor = self.ui.seqEditF4.textCursor()
+		text = self.ui.seqEditF4.toPlainText()
+
+		text_list = text.split('\n')
+		CurPos = 0
+		for i in range(0, len(ColorMap)):
+			valueIs = ColorMap[i]
+
+			if valueIs == '0':
+				format.setBackground(QBrush(QColor("white")))
+			elif valueIs == '7':
+				format.setBackground(QBrush(QColor("lightGray")))
+
+			cursor.setPosition(CurPos)
+			cursor.setPosition(CurPos + len(text_list[i]), QTextCursor.KeepAnchor)
+			cursor.mergeCharFormat(format)
+
+			CurPos += len(text_list[i]) + 1
+
+	def DecorateAASeq(self, ColorMap, Len):
 		cursor1 = self.ui.seqEditF1.textCursor()
 		cursor2 = self.ui.seqEditF2.textCursor()
 		cursor3 = self.ui.seqEditF3.textCursor()
