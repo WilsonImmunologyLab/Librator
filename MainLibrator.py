@@ -155,8 +155,20 @@ class treeDialog(QtWidgets.QDialog):
 		self.DecorateRegion(start, end, seq_len, num_len)
 
 	def accept(self):
-		start = self.ui.startBox.value() - 1
+		start = self.ui.startBox.value()
 		end = self.ui.endBox.value()
+
+		if start > end:
+			self.ui.endBox.setValue(0)
+			self.ui.startBox.setValue(0)
+			Msg = 'Start posotion should be smaller than end position!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		if start == 0 and end == 0:
+			end = 5000
+		else:
+			start = start - 1
 
 		seq_list = []
 		for i in range(0,len(self.names)):
