@@ -591,6 +591,43 @@ class MutationDialog(QtWidgets.QDialog):
 		self.ui.addMutation.clicked.connect(self.accept)
 		self.ui.cancel.clicked.connect(self.reject)
 
+		self.ui.radioAll.clicked.connect(self.disable_name)
+		self.ui.radioSingle.clicked.connect(self.active_name)
+
+		self.ui.Mutation.textChanged.connect(self.update_name)
+		self.ui.HA1mutation.textChanged.connect(self.update_name)
+		self.ui.HA2mutation.textChanged.connect(self.update_name)
+		self.ui.tabWidget.currentChanged.connect(self.update_name)
+
+	def disable_name(self):
+		self.ui.SeqName.setDisabled(True)
+
+	def active_name(self):
+		self.ui.SeqName.setDisabled(False)
+
+	def update_name(self):
+		active_tab = self.ui.tabWidget.currentIndex()
+		if self.ui.radioSingle.isChecked():
+			if active_tab == 0:  # OriPos
+				seq_name = self.ui.CurSeq.text()
+				mu = self.ui.Mutation.text().upper()
+				if mu != '':
+					seq_name += '-' + mu
+				self.ui.SeqName.setText(seq_name)
+			else:
+				seq_name = self.ui.CurSeq.text()
+				mu1 = self.ui.HA1mutation.text().upper()
+				mu2 = self.ui.HA2mutation.text().upper()
+				if mu1 != '':
+					mu1 += '(HA1)'
+				if mu2 != '':
+					mu2 += '(HA2)'
+
+				if mu1 != '' or mu2 != '':
+					seq_name += '-' + mu1 + mu2
+
+				self.ui.SeqName.setText(seq_name)
+
 	def accept(self):  # redo accept method
 		# send signal
 		active_tab = self.ui.tabWidget.currentIndex()
