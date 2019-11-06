@@ -614,7 +614,73 @@ class fusionDialog(QtWidgets.QDialog):
 
 		self.ui.confirmButton.clicked.connect(self.accept)
 		self.ui.cancelButton.clicked.connect(self.reject)
-		self.ui.showButton.clicked.connect(self.showalignment)
+		#self.ui.showButton.clicked.connect(self.showalignment)
+		self.ui.selection.clicked.connect(self.displaySeq)
+
+		self.ui.startBase.valueChanged.connect(self.highlight)
+		self.ui.endBase.valueChanged.connect(self.highlight)
+		self.ui.startDonor.valueChanged.connect(self.highlight)
+		self.ui.endDonor.valueChanged.connect(self.highlight)
+
+		self.base_len = 0
+		self.donor_len = 0
+
+	def highlight(self):
+		startBase = int(self.ui.startBase.text())
+		endBase = int(self.ui.endBase.text())
+
+		if startBase != 0 and endBase != 0:
+			if endBase > self.base_len:
+				endBase = self.base_len
+				self.ui.endBase.setValue(endBase)
+			if endBase > startBase:
+				mut_info = range(startBase, endBase + 1)
+
+				base = self.ui.basename.text()
+				WhereState = 'SeqName = "' + base + '"'
+				SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+				DataIn = RunSQL(DBFilename, SQLStatement)
+				Sequence = DataIn[0][1]
+				VFrom = int(DataIn[0][2]) - 1
+				if VFrom == -1: VFrom = 0
+				VTo = int(DataIn[0][3])
+				Sequence = Sequence[VFrom:VTo]
+				Sequence = Sequence.upper()
+				AA_Sequence = Translator(Sequence, 0)
+				AA_Sequence = AA_Sequence[0]
+
+				HANumbering(AA_Sequence)
+				Decorations = ['H3Num', 'H1Num', 'Muts']
+				self.Decorate(Decorations, self.ui.textEditBase, mut_info)
+
+		startDonor = int(self.ui.startDonor.text())
+		endDonor = int(self.ui.endDonor.text())
+
+		if startDonor != 0 and endDonor != 0:
+			if endDonor > self.donor_len:
+				endDonor = self.donor_len
+				self.ui.endDonor.setValue(endDonor)
+			if endDonor > startDonor:
+				mut_info = range(startDonor, endDonor + 1)
+
+				donor = self.ui.selection.selectedItems()
+				if len(donor) > 0:
+					donor = donor[0].text()
+					WhereState = 'SeqName = "' + donor + '"'
+					SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+					DataIn = RunSQL(DBFilename, SQLStatement)
+					Sequence = DataIn[0][1]
+					VFrom = int(DataIn[0][2]) - 1
+					if VFrom == -1: VFrom = 0
+					VTo = int(DataIn[0][3])
+					Sequence = Sequence[VFrom:VTo]
+					Sequence = Sequence.upper()
+					AA_Sequence = Translator(Sequence, 0)
+					AA_Sequence = AA_Sequence[0]
+
+					HANumbering(AA_Sequence)
+					Decorations = ['H3Num', 'H1Num', 'Muts']
+					self.Decorate(Decorations, self.ui.textEditDonor, mut_info)
 
 	def accept(self):
 		# get sequence editing information
@@ -654,6 +720,65 @@ class fusionDialog(QtWidgets.QDialog):
 		base_seq = self.ui.basename.text()
 
 		self.fusionSeqSignal.emit(base_seq, donor_seq, del_start, del_end, add_start, add_end)
+
+	def displaySeq(self):
+		global DBFilename
+		global H1Numbering
+		global H3Numbering
+
+		if self.ui.textEditBase.toPlainText() == '':
+			# base sequence
+			base = self.ui.basename.text()
+			WhereState = 'SeqName = "' + base + '"'
+			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			Sequence = DataIn[0][1]
+			VFrom = int(DataIn[0][2]) - 1
+			if VFrom == -1: VFrom = 0
+			VTo = int(DataIn[0][3])
+			Sequence = Sequence[VFrom:VTo]
+			Sequence = Sequence.upper()
+			AA_Sequence = Translator(Sequence, 0)
+			AA_Sequence = AA_Sequence[0]
+
+			HANumbering(AA_Sequence)
+			Decorations = ['H3Num', 'H1Num','Muts']
+			self.Decorate(Decorations, self.ui.textEditBase, 'none')
+
+			self.ui.label_base.setText('Base Sequence: ' + base)
+			self.base_len = len(AA_Sequence)
+
+		# selected donor
+		donor = self.ui.selection.selectedItems()
+		if len(donor) > 0:
+			donor = donor[0].text()
+			WhereState = 'SeqName = "' + donor + '"'
+			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			Sequence = DataIn[0][1]
+			VFrom = int(DataIn[0][2]) - 1
+			if VFrom == -1: VFrom = 0
+			VTo = int(DataIn[0][3])
+			Sequence = Sequence[VFrom:VTo]
+			Sequence = Sequence.upper()
+			AA_Sequence = Translator(Sequence, 0)
+			AA_Sequence = AA_Sequence[0]
+
+			HANumbering(AA_Sequence)
+			Decorations = ['H3Num', 'H1Num','Muts']
+			self.Decorate(Decorations, self.ui.textEditDonor, 'none')
+
+			self.ui.label_donor.setText('Donor Sequence: ' + donor)
+			self.donor_len = len(AA_Sequence)
+
+			self.ui.startDonor.setDisabled(False)
+			self.ui.endDonor.setDisabled(False)
+		else:
+			self.ui.textEditDonor.setText('')
+			self.ui.startDonor.setDisabled(True)
+			self.ui.endDonor.setDisabled(True)
+			self.ui.label_donor.setText('Donor Sequence: ')
+
 
 
 	def showalignment(self):
@@ -701,6 +826,633 @@ class fusionDialog(QtWidgets.QDialog):
 
 		Notes = ''
 		self.fusionSignal.emit(AlignIn,Notes, self.ui.dna.isChecked(), self.ui.aa.isChecked(), self.ui.ba.isChecked())
+
+	def Decorate(self, Decorations, textEdit, mutation_info):
+		AAColorMap = ''
+
+		H3NumOn = False
+		H1NumOn = False
+		H3AgOn = False
+		H1AgOn = False
+		DomainsOn = False
+		MutsOn = False
+		DonRegOn = False
+		AAColorMap = ''
+		AASeq = ''
+		NumLine = ''
+		AAPosColorMap= ''
+		rePos = ''
+		LenResP = 0
+		ResDownP=0
+
+		for Decoration in Decorations:
+			if Decoration == 'H3Num':
+				H3NumOn = True
+
+			if Decoration == 'H1Num':
+				H1NumLine = ''
+				H1NumOn = True
+
+			if Decoration == 'Muts':
+				MutsLine = ''
+				MutsOn = True
+
+		H3NumLine = ''
+		H3ColorMap = ''
+
+		H1NumLine = ''
+		H1ColorMap = ''
+
+		Key = ''
+		KeyMap = ''
+		HA2K = False
+		TMK = False
+		TrimK = False
+		StopK = False
+		# MakeItUp = ''
+		ResT = ''
+		InHA1 = False
+		InHA2 = False
+		NotLong = False
+		ResDown = 0
+
+		H3Key = ''
+		H3KeyCMap = ''
+
+		H1Key = ''
+		H1KeyCMap = ''
+		AAKey = 'Sequence elements:  HA1    HA2   stop   Transmembrane  Trimerization-Avitag-H6  Highlight Region \n'
+		AAKeyC = '000000000000000000000000099999991111111888888888888888BBBBBBBBBBBBBBBBBBBBBBBBBEEEEEEEEEEEEEEEEEE\n'
+
+		PosKey = ''
+		PosKeyC = ''
+
+		if H3NumOn == True:
+			for pos in range(1, len(H3Numbering)):
+				residue = H3Numbering[pos]
+				AA = residue[1]
+				AASeq += AA
+				resPos = str(pos)
+
+				tesResNP = pos / 5
+				if resPos == 1:
+					NumLine += str(pos)
+					AAPosColorMap += '0'
+
+				elif tesResNP.is_integer():  # is divisible by 5
+					ResTP = str(pos)
+					LenResP = len(ResTP)
+
+					if NumberingMap['H3HA1end'] > (pos + LenResP + 1):
+						ResDownP = LenResP
+						NumLine += ResTP[LenResP - ResDownP]
+
+						ResDownP -= 1
+						AAPosColorMap += '0'
+					else:
+						NumLine += '.'
+						AAPosColorMap += '0'
+				else:
+					if ResDownP != 0:
+						NumLine += ResTP[LenResP - ResDownP]
+						AAPosColorMap += '0'
+						# H3ColorMap += '0'
+						ResDownP -= 1
+					else:
+						NumLine += '.'
+						AAPosColorMap += '0'
+
+				region = residue[0]
+
+				if region == 'HA1':
+					NextC = '0'
+					InHA1 = True
+				elif region == 'HA2':
+					InHA2 = True
+					NextC = '9'
+					HA2K = True
+				elif region == 'TM':
+					NextC = '8'
+					TMK = True
+				elif region == 'Trimer-Avitag-H6':
+					NextC = 'B'
+					TrimK = True
+				else:
+					NextC = '0'
+
+				if AA == '*':
+					NextC = '1'
+					StopK = True
+				AAColorMap += NextC
+
+				res = residue[2]
+				Ag = residue[4]
+
+				if res != '-':
+					# if res.is_integer():
+					tesResN = res / 5
+					if res == 1:
+						H3NumLine += str(res)
+						H3ColorMap += '5'
+
+					elif tesResN.is_integer(): #is divisible by 5
+						ResT = str(res)
+						LenRes = len(ResT)
+						if region == 'HA1':
+							if NumberingMap['H3HA1end'] > (res + LenRes +1):
+								ResDown = LenRes
+								H3NumLine += ResT[LenRes - ResDown]
+								if Ag == '-':
+									H3ColorMap += '0'
+								elif Ag == 'A':
+									H3ColorMap += '6'
+								elif Ag == 'B':
+									H3ColorMap += '2'
+								elif Ag == 'C':
+									H3ColorMap += '7'
+								elif Ag == 'D':
+									H3ColorMap += '3'
+								elif Ag == 'E':
+									H3ColorMap += 'C'
+								elif Ag == 'Stalk-MN':
+									H3ColorMap += 'A'
+								else:
+									H3ColorMap += '0'
+
+								ResDown -= 1
+							else:
+								H3NumLine += '.'
+								if Ag == '-':
+									H3ColorMap += '0'
+								elif Ag == 'A':
+									H3ColorMap += '6'
+								elif Ag == 'B':
+									H3ColorMap += '2'
+								elif Ag == 'C':
+									H3ColorMap += '7'
+								elif Ag == 'D':
+									H3ColorMap += '3'
+								elif Ag == 'E':
+									H3ColorMap += 'C'
+								elif Ag == 'Stalk-MN':
+									H3ColorMap += 'A'
+								else:
+									H3ColorMap += '0'
+
+						elif region == 'HA2':
+							if NumberingMap['H3HA2end'] > (res + LenRes + 1):
+								ResDown = LenRes
+								H3NumLine += ResT[LenRes - ResDown]
+								if Ag == '-':
+									H3ColorMap += '0'
+								elif Ag == 'Stalk-MN':
+									H3ColorMap += 'A'
+								else:
+									H3ColorMap += '0'
+
+								ResDown -= 1
+							else:
+								H3NumLine += '.'
+								if Ag == '-':
+									H3ColorMap += '0'
+								elif Ag == 'Stalk-MN':
+									H3ColorMap += 'A'
+								else:
+									H3ColorMap += '0'
+
+					else:
+						if ResDown != 0:
+							H3NumLine += ResT[LenRes - ResDown]
+							if region == 'HA1':
+								if Ag == '-':
+									H3ColorMap += '0'
+								elif Ag == 'A':
+									H3ColorMap += '6'
+								elif Ag == 'B':
+									H3ColorMap += '2'
+								elif Ag == 'C':
+									H3ColorMap += '7'
+								elif Ag == 'D':
+									H3ColorMap += '3'
+								elif Ag == 'E':
+									H3ColorMap += 'C'
+								elif Ag == 'Stalk-MN':
+									H3ColorMap += 'A'
+								else:
+									H3ColorMap += '0'
+							elif region == 'HA2':
+								if Ag == '-':
+									H3ColorMap += '0'
+								elif Ag == 'Stalk-MN':
+									H3ColorMap += 'A'
+								else:
+									H3ColorMap += '0'
+							else:
+								H3ColorMap += '0'
+
+							# H3ColorMap += '0'
+							ResDown -= 1
+						else:
+							H3NumLine += '.'
+							if region == 'HA1':
+								if Ag == '-':
+									H3ColorMap += '0'
+								elif Ag == 'A':
+									H3ColorMap += '6'
+								elif Ag == 'B':
+									H3ColorMap += '2'
+								elif Ag == 'C':
+									H3ColorMap += '7'
+								elif Ag == 'D':
+									H3ColorMap += '3'
+								elif Ag == 'E':
+									H3ColorMap += 'C'
+								elif Ag == 'Stalk-MN':
+									H3ColorMap += 'A'
+								else:
+									H3ColorMap += '0'
+							elif region == 'HA2':
+								if Ag == '-':
+									H3ColorMap += '0'
+								elif Ag == 'Stalk-MN':
+									H3ColorMap += 'A'
+								else:
+									H3ColorMap += '0'
+							else:
+								H3ColorMap += '0'
+				else:
+
+					H3NumLine += res
+					H3ColorMap += '0'
+
+			H3Key = 'H3 Antigenic Sites:  A    B    C    D    E   Stalk-MN \n'
+			H3KeyCMap = '000000000000000000066666222227777733333CCCCCAAAAAAAAAA\n'
+
+		if H1NumOn == True:
+			ResDown = 0
+			ResT = ''
+
+			for pos in range(1, len(H1Numbering)):
+				residue = H1Numbering[pos]
+
+				region = residue[0]
+
+				if H3NumOn == False:
+					AA = residue[1]
+					AASeq += AA
+					resPos = str(pos)
+
+					tesResNP = pos / 5
+					if resPos == 1:
+						NumLine += str(pos)
+						AAPosColorMap += '0'
+
+					elif tesResNP.is_integer():  # is divisible by 5
+						ResTP = str(pos)
+						LenResP = len(ResTP)
+
+						if NumberingMap['H3HA1end'] > (pos + LenResP + 1):
+							ResDownP = LenResP
+							NumLine += ResTP[LenResP - ResDownP]
+							ResDownP -= 1
+							AAPosColorMap += '0'
+						else:
+							NumLine += '.'
+
+							AAPosColorMap += '0'
+
+					else:
+						if ResDownP != 0:
+							NumLine += ResTP[LenResP - ResDownP]
+							AAPosColorMap += '0'
+							# H3ColorMap += '0'
+							ResDownP -= 1
+						else:
+							NumLine += '.'
+							AAPosColorMap += '0'
+
+					if region == 'HA1':
+						NextC = '0'
+						InHA1 = True
+					elif region == 'HA2':
+						InHA2 = True
+						NextC = '9'
+						HA2K = True
+					elif region == 'TM':
+						NextC = '8'
+						TMK = True
+					elif region == 'Trimer-Avitag-H6':
+						NextC = 'B'
+						TrimK = True
+					else:
+						NextC = '0'
+
+					if AA == '*':
+						NextC = '1'
+						StopK = True
+
+					AAColorMap += NextC
+
+
+				res = residue[2]
+				Ag = residue[4]
+
+				if res != '-':
+					# if res.is_integer():
+					tesResN = res / 5
+					if res == 1:
+						H1NumLine += str(res)
+						H1ColorMap += '5'
+
+					elif tesResN.is_integer(): #is divisible by 5
+						ResT = str(res)
+						LenRes = len(ResT)
+						if region == 'HA1':
+							if NumberingMap['H1HA1end'] > (res + LenRes +1):
+								ResDown = LenRes
+								H1NumLine += ResT[LenRes - ResDown]
+								if Ag == '-':
+									H1ColorMap += '0'
+								elif Ag == 'Cb':
+									H1ColorMap += '7'
+								elif Ag == 'Ca1':
+									H1ColorMap += '2'
+								elif Ag == 'Ca2':
+									H1ColorMap += '4'
+								elif Ag == 'Sa':
+									H1ColorMap += '3'
+								elif Ag == 'Sb':
+									H1ColorMap += '6'
+								else:
+									H1ColorMap += '0'
+
+								ResDown -= 1
+							else:
+								H1NumLine += '.'
+								if Ag == '-':
+									H1ColorMap += '0'
+								elif Ag == 'Cb':
+									H1ColorMap += '7'
+								elif Ag == 'Ca1':
+									H1ColorMap += '2'
+								elif Ag == 'Ca2':
+									H1ColorMap += '4'
+								elif Ag == 'Sa':
+									H1ColorMap += '3'
+								elif Ag == 'Sb':
+									H1ColorMap += '6'
+								else:
+									H1ColorMap += '0'
+
+						elif region == 'HA2':
+							if NumberingMap['H1HA2end'] > (res + LenRes + 1):
+								ResDown = LenRes
+								H1NumLine += ResT[LenRes - ResDown]
+								if Ag == '-':
+									H1ColorMap += '0'
+								elif Ag == 'Stalk-MN':
+									H1ColorMap += 'A'
+								else:
+									H1ColorMap += '0'
+
+								ResDown -= 1
+							else:
+								H1NumLine += '.'
+								if Ag == '-':
+									H1ColorMap += '0'
+								elif Ag == 'Stalk-MN':
+									H1ColorMap += 'A'
+								else:
+									H1ColorMap += '0'
+
+					else:
+						if ResDown != 0:
+							H1NumLine += ResT[LenRes - ResDown]
+							if region == 'HA1':
+								if Ag == '-':
+									H1ColorMap += '0'
+								elif Ag == 'Cb':
+									H1ColorMap += '7'
+								elif Ag == 'Ca1':
+									H1ColorMap += '2'
+								elif Ag == 'Ca2':
+									H1ColorMap += '4'
+								elif Ag == 'Sa':
+									H1ColorMap += '3'
+								elif Ag == 'Sb':
+									H1ColorMap += '6'
+								else:
+									H1ColorMap += '0'
+							elif region == 'HA2':
+								if Ag == '-':
+									H1ColorMap += '0'
+								elif Ag == 'Stalk-MN':
+									H1ColorMap += 'A'
+								else:
+									H1ColorMap += '0'
+							else:
+								H1ColorMap += '0'
+
+							ResDown -= 1
+						else:
+							H1NumLine += '.'
+							if region == 'HA1':
+								if Ag == '-':
+									H1ColorMap += '0'
+								elif Ag == 'Cb':
+									H1ColorMap += '7'
+								elif Ag == 'Ca1':
+									H1ColorMap += '2'
+								elif Ag == 'Ca2':
+									H1ColorMap += '4'
+								elif Ag == 'Sa':
+									H1ColorMap += '3'
+								elif Ag == 'Sb':
+									H1ColorMap += '6'
+								else:
+									H1ColorMap += '0'
+							elif region == 'HA2':
+								if Ag == '-':
+									H1ColorMap += '0'
+								elif Ag == 'Stalk-MN':
+									H1ColorMap += 'A'
+								else:
+									H1ColorMap += '0'
+							else:
+								H1ColorMap += '0'
+				else:
+
+					H1NumLine += res
+					H1ColorMap += '0'
+			H1Key = 'H1 Antigenic Sites:  Ca1    Ca2    Cb    Sa    Sb   Stalk-MN \n'
+			H1KeyCMap = '000000000000000000022222224444444777777333333666666AAAAAAAAAA\n'
+
+		SeqName = ''
+		LenSeqName = len(SeqName)
+
+		Sequence = SeqName + '\n'
+		ColorMap = ''
+		for i in range(0,LenSeqName):
+			ColorMap += '0'
+		ColorMap += '\n'
+
+		for i in range(0, len(AASeq), 60):
+			AASeqSeg = AASeq[i:i + 60]
+			AAColorSeg = AAColorMap[i:i + 60]
+			NumLineSeg = NumLine[i:i + 60]
+			AAPosColorSeg = AAPosColorMap[i:i + 60]
+
+			if DonRegOn == True:
+				if donor_info != 'none':
+					donor_start, donor_end = donor_info.split('-')
+					donor_start = int(donor_start) - 1
+					donor_end = int(donor_end)
+
+					cur_start = i
+					cur_end = i + 60
+					# case 1
+					if cur_start > donor_end:
+						pass
+					# case 2
+					if cur_start <= donor_end and cur_start >= donor_start and donor_end <= cur_end:
+						cur_donor_start = 0
+						cur_donor_end = donor_end - cur_start
+						AAPosColorSeg = 'D'*cur_donor_end + AAPosColorSeg[cur_donor_end:]
+					# case 3
+					if cur_start <= donor_start and cur_end >= donor_end:
+						cur_donor_start = donor_start - cur_start
+						cur_donor_end = donor_end - cur_start
+						AAPosColorSeg = AAPosColorSeg[:cur_donor_start] + 'D' * (cur_donor_end - cur_donor_start) +\
+						                AAPosColorSeg[cur_donor_end:]
+					# case 4
+					if cur_end <= donor_end and cur_end >= donor_start and donor_start >= cur_start:
+						cur_donor_start = donor_start - cur_start
+						cur_donor_end = cur_end - cur_start
+						AAPosColorSeg = AAPosColorSeg[:cur_donor_start] + 'D' * \
+						                (cur_donor_end - cur_donor_start)
+					# case 5
+					if cur_start >= donor_start and cur_end <= donor_end:
+						AAPosColorSeg = 'D' * 60
+					# case 6
+					if donor_start > cur_end:
+						pass
+
+			NumLineSeg = '    Position: ' + NumLineSeg + '\n'
+			AAPosColorSeg = '00000000000000' + AAPosColorSeg + '\n'
+
+			Sequence += NumLineSeg
+			ColorMap += AAPosColorSeg
+
+			if H3NumOn == True:
+				H3NumSeg = 'H3-Numbering: ' + H3NumLine[i:i+60] + '\n'
+				H3ColorSeg = '00000000000000' + H3ColorMap[i:i + 60] + '\n'
+				Sequence += H3NumSeg
+				ColorMap += H3ColorSeg
+
+			if H1NumOn == True:
+				H1NumSeg = 'H1-Numbering: ' + H1NumLine[i:i + 60] + '\n'
+				H1ColorSeg = '00000000000000' + H1ColorMap[i:i + 60] + '\n'
+				Sequence += H1NumSeg
+				ColorMap += H1ColorSeg
+
+			if MutsOn == True:
+				cur_start = i
+				cur_end = i + 60
+
+				if mutation_info != "none":
+					for x in mutation_info:
+						mutation_pos = int(x) - 1
+
+						if mutation_pos in range(cur_start, cur_end):
+							AAColorSeg = list(AAColorSeg)
+							AAColorSeg[mutation_pos - cur_start] = 'E'
+							AAColorSeg = ''.join(AAColorSeg)
+
+			AASeqSeg = '    Sequence: ' + AASeqSeg + '\n\n'
+			AAColorSeg = '00000000000000' + AAColorSeg + '\n\n'
+
+			Sequence += AASeqSeg
+			ColorMap += AAColorSeg
+
+		Sequence += ' \n'
+		ColorMap += '0\n'
+
+
+		Sequence += AAKey + H3Key + H1Key + PosKey
+		ColorMap += AAKeyC + H3KeyCMap + H1KeyCMap + PosKeyC
+		# Add note at begining that HA1 is black andHA2 is grey or
+		textEdit.setText(Sequence)
+		#return
+		cursor = textEdit.textCursor()
+
+		format = QTextCharFormat()
+		format.setBackground(QBrush(QColor("white")))
+		format.setForeground(QBrush(QColor("black")))
+
+		cursor.setPosition(0)
+		cursor.setPosition(len(ColorMap), QTextCursor.KeepAnchor)
+		cursor.mergeCharFormat(format)
+
+		# Setup the desired format for matches
+		CurPos = 0
+		for valueIs in ColorMap:  # QColor is RGB: 0-255, 0-255, 0-255
+			if valueIs == '0':
+				CurPos += 1
+				continue
+			elif valueIs == '1':
+				format.setBackground(QBrush(QColor(255, 00, 0)))  # or 'red'
+				format.setForeground(QBrush(QColor("black")))
+			elif valueIs == '2':
+				format.setBackground(QBrush(QColor("darkMagenta")))
+				format.setForeground(QBrush(QColor("white")))
+			elif valueIs == '3':
+				format.setBackground(QBrush(QColor("darkred")))
+				format.setForeground(QBrush(QColor("white")))
+			elif valueIs == '3':
+				format.setBackground(QBrush(QColor("Magenta")))
+				format.setForeground(QBrush(QColor("black")))
+			elif valueIs == '4':
+				format.setBackground(QBrush(QColor("yellow")))
+				format.setForeground(QBrush(QColor("black")))
+			elif valueIs == '5':
+				format.setBackground(QBrush(QColor("black")))
+				format.setForeground(QBrush(QColor("white")))
+			elif valueIs == '6':
+				format.setBackground(QBrush(QColor("green")))
+				format.setForeground(QBrush(QColor("white")))
+			elif valueIs == '7':
+				format.setBackground(QBrush(QColor("lightGray")))
+				format.setForeground(QBrush(QColor("black")))
+			elif valueIs == '8':
+				format.setBackground(QBrush(QColor("yellow")))
+				format.setForeground(QBrush(QColor("black")))
+			elif valueIs == '9':
+				format.setBackground(QBrush(QColor("lightGray")))
+				format.setForeground(QBrush(QColor("black")))
+			elif valueIs == '10':
+				format.setBackground(QBrush(QColor("black")))
+				format.setForeground(QBrush(QColor("white")))
+			elif valueIs == 'A':
+				format.setBackground(QBrush(QColor("darkBlue")))
+				format.setForeground(QBrush(QColor("white")))
+			elif valueIs == 'B':
+				format.setBackground(QBrush(QColor("darkGreen")))
+				format.setForeground(QBrush(QColor("white")))
+			elif valueIs == 'C':
+				format.setBackground(QBrush(QColor("blue")))
+				format.setForeground(QBrush(QColor("yellow")))
+			elif valueIs == 'D':
+				format.setBackground(QBrush(QColor("Gray")))
+				format.setForeground(QBrush(QColor("black")))
+			elif valueIs == 'E':
+				format.setBackground(QBrush(QColor("lightGray")))
+				format.setForeground(QBrush(QColor("red")))
+
+			cursor.setPosition(CurPos)
+			cursor.setPosition(CurPos + 1, QTextCursor.KeepAnchor)
+			cursor.mergeCharFormat(format)
+
+			CurPos += 1
 
 
 class basePathDialog(QtWidgets.QDialog):
@@ -892,9 +1644,9 @@ class MutationDialog(QtWidgets.QDialog):
 		# send signal
 		active_tab = self.ui.tabWidget.currentIndex()
 		seq_name = self.ui.SeqName.text()
-		mutation = self.ui.Mutation.text()
-		mutation_ha1 = self.ui.HA1mutation.text()
-		mutation_ha2 = self.ui.HA2mutation.text()
+		mutation = self.ui.Mutation.text().upper()
+		mutation_ha1 = self.ui.HA1mutation.text().upper()
+		mutation_ha2 = self.ui.HA2mutation.text().upper()
 		template_name = self.ui.CurSeq.text()
 		if self.ui.radioSingle.isChecked():
 			mode = 'single'
@@ -2639,7 +3391,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		else:
 			return
 
-		self.Decorate(Decorations)
+		cursor = self.ui.txtAASeq.textCursor()
+
+		self.Decorate(Decorations, cursor)
 
 	@pyqtSlot()
 	def DecorateSingle(self):
@@ -3287,10 +4041,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ShowVGenesTextEditLegend(legend_text, legend_color,window_id)
 
 	@pyqtSlot()
-	def Decorate(self, Decorations):
+	def Decorate(self, Decorations, cursor):
 		AAColorMap = ''
 
-		cursor = self.ui.txtAASeq.textCursor()
 		H3NumOn = False
 		H1NumOn = False
 		H3AgOn = False
@@ -4023,16 +4776,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# Add note at begining that HA1 is black andHA2 is grey or
 		self.ui.txtAASeq.setText(Sequence)
 		self.DecorateText(ColorMap, cursor)
-		#
-		# KeyDoc =
-		# KeyCMap =
-		# cursor = self.ui.txtKey.textCursor()
-		# self.ui.txtKey.setText(KeyDoc)
-		# self.DecorateText(KeyCMap, cursor)
-
-
-		# for pos in range(1, len(H3Numbering)):
-		# 	residue = H3Numbering[pos]
 
 	@pyqtSlot()
 	def DecorateText(self, ColorMap, cursor):
@@ -7567,6 +8310,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessFusionDialog.ui.basename.setText(BaseSeq)
 			self.modalessFusionDialog.fusionSignal.connect(self.showhumbering)
 			self.modalessFusionDialog.fusionSeqSignal.connect(self.fusionseq)
+			self.modalessFusionDialog.displaySeq()
 			self.modalessFusionDialog.show()
 
 	def open_basepath_dialog(self):
