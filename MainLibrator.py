@@ -661,12 +661,34 @@ class updateSeqDialog(QtWidgets.QDialog):
 
 		self.ui.confirmButton.clicked.connect(self.accept)
 		self.ui.cancelButton.clicked.connect(self.reject)
+		self.ui.textEdit.textChanged.connect(self.updateAA)
 
 	def accept(self):
 		SeqName = self.ui.lineEdit.text()
 		Seq = self.ui.textEdit.toPlainText()
 
 		self.updateSignal.emit(SeqName,Seq)
+
+	def updateAA(self):
+		text_nt = self.ui.textEdit.toPlainText()
+		aa_seq = Translator(text_nt,0)
+		aa_seq = aa_seq[0]
+
+		self.ui.textEditAA.setText(aa_seq)
+
+	def markATG(self):
+		text = self.ui.textEdit.toPlainText()
+		cursor = self.ui.textEdit.textCursor()
+		format = QTextCharFormat()
+		format.setBackground(QBrush(QColor("red")))
+		format.setForeground(QBrush(QColor("white")))
+
+		pos_list = [i.start() for i in re.finditer('ATG', text)]
+		if len(pos_list) > 0:
+			for pos in pos_list:
+				cursor.setPosition(pos)
+				cursor.setPosition(pos + 3, QTextCursor.KeepAnchor)
+				cursor.mergeCharFormat(format)
 
 
 class fusionDialog(QtWidgets.QDialog):
@@ -1722,23 +1744,23 @@ class MutationDialog(QtWidgets.QDialog):
 		else:
 			mode = 'screen'
 
-		if seq_name in self.active_sequence:
+		if seq_name in self.active_sequence and mode == 'single':
 			QMessageBox.warning(self, 'Warning', 'The sequence name is already taken! Please make a unique name for '
 												 'your Generated sequence!', QMessageBox.Ok, QMessageBox.Ok)
-		else:
-			if active_tab == 0: 		# OriPos
-				if mutation == "":
-					QMessageBox.warning(self, 'Warning',
-										'The mutation can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
-				else:
-					self.applySignal.emit("OriPos", template_name, seq_name, mutation, "Nothing", mode)
-			elif active_tab == 1:		# H1H3pos
-				if (mutation_ha1 == "" and mutation_ha2 == ""):
-					QMessageBox.warning(self, 'Warning',
-										'The mutation can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
-				else:
-					self.applySignal.emit("H1H3pos", template_name, seq_name, mutation_ha1, mutation_ha2, mode)
-		#self.hide()
+			return
+
+		if active_tab == 0: 		# OriPos
+			if mutation == "":
+				QMessageBox.warning(self, 'Warning',
+									'The mutation can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
+			else:
+				self.applySignal.emit("OriPos", template_name, seq_name, mutation, "Nothing", mode)
+		elif active_tab == 1:		# H1H3pos
+			if (mutation_ha1 == "" and mutation_ha2 == ""):
+				QMessageBox.warning(self, 'Warning',
+									'The mutation can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
+			else:
+				self.applySignal.emit("H1H3pos", template_name, seq_name, mutation_ha1, mutation_ha2, mode)
 
 class gibsoncloneDialog(QtWidgets.QDialog):
 	gibsonSignal = pyqtSignal(int, str, str, str, str, list)  # user define signal
@@ -2602,6 +2624,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.ui.textSeq.textChanged.connect(self.SeqChanged)
 
+		#self.ui.txtSearch.textChanged.connect(self.searchPattern)
+
+		self.ui.rdoDNA.clicked.connect(self.resetSearch)
+		self.ui.rdoAA.clicked.connect(self.resetSearch)
+		#self.ui.pushButton.clicked.connect(self.resetSearch)
+		self.ui.btnSearch.clicked.connect(self.searchPattern)
+
 		self.UpdateRecent()
 
 		self.modalessMutationDialog = None
@@ -2609,6 +2638,54 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessSeqEditDialog = None
 
 		self.TextEdit = VGenesTextMain()
+
+	def resetSearch(self):
+		self.ui.txtSearch.setPlainText('')
+
+		textNT = self.ui.textSeq.toPlainText()
+		cursorNT = self.ui.textSeq.textCursor()
+		textAA = self.ui.textAA.toPlainText()
+		cursorAA = self.ui.textAA.textCursor()
+
+		format = QTextCharFormat()
+		format.setBackground(QBrush(QColor("white")))
+		format.setForeground(QBrush(QColor("black")))
+
+		cursorNT.setPosition(0)
+		cursorNT.setPosition(len(textNT), QTextCursor.KeepAnchor)
+		cursorNT.mergeCharFormat(format)
+
+		cursorAA.setPosition(0)
+		cursorAA.setPosition(len(textAA), QTextCursor.KeepAnchor)
+		cursorAA.mergeCharFormat(format)
+
+
+
+	def searchPattern(self):
+		pattern = self.ui.txtSearch.toPlainText().upper()
+
+		if self.ui.rdoDNA.isChecked():
+			text = self.ui.textSeq.toPlainText()
+			cursor = self.ui.textSeq.textCursor()
+		else:
+			text = self.ui.textAA.toPlainText()
+			cursor = self.ui.textAA.textCursor()
+
+		format = QTextCharFormat()
+		format.setBackground(QBrush(QColor("white")))
+		format.setForeground(QBrush(QColor("black")))
+		cursor.setPosition(0)
+		cursor.setPosition(len(text), QTextCursor.KeepAnchor)
+		cursor.mergeCharFormat(format)
+
+		format.setBackground(QBrush(QColor("red")))
+		format.setForeground(QBrush(QColor("white")))
+		pos_list = [i.start() for i in re.finditer(pattern, text)]
+		if len(pos_list) > 0:
+			for pos in pos_list:
+				cursor.setPosition(pos)
+				cursor.setPosition(pos + len(pattern), QTextCursor.KeepAnchor)
+				cursor.mergeCharFormat(format)
 
 
 	@pyqtSlot()
@@ -2866,14 +2943,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.lblDNA.setText(lblText)
 
 	# def ChangeListName(self):
-
-
-	@pyqtSlot()
-	def on_btnSearch_clicked(self):
-
-		search = self.ui.txtSearch.toPlainText()
-		if search != '':
-			self.FindSeq(search)
 
 	@pyqtSlot()
 	def FindSeq(self, SeqFind):
@@ -8148,21 +8217,21 @@ class LibratorMain(QtWidgets.QMainWindow):
 				mutations = mutation1.split(',')
 				for x in mutations:
 					if x != '':
-						seq_name1 = template_name + '-' + x + ' ' + seq_name
+						seq_name1 = template_name + '-' + x
 						self.generate_mutation_sequence(numbering, template_name, seq_name1, x, mutation2)
 			else:
 				mutation1 = mutation1.strip(',')
 				mutations = mutation1.split(',')
 				for x in mutations:
 					if x != '':
-						seq_name1 = template_name + '-' + x + '(HA1)' + ' ' + seq_name
+						seq_name1 = template_name + '-' + x + '(HA1)'
 						self.generate_mutation_sequence(numbering, template_name, seq_name1, x, '')
 
 				mutation2 = mutation2.strip(',')
 				mutations = mutation2.split(',')
 				for x in mutations:
 					if x != '':
-						seq_name1 = template_name + '-' + x + '(HA2)' + ' ' + seq_name
+						seq_name1 = template_name + '-' + x + '(HA2)'
 						self.generate_mutation_sequence(numbering, template_name, seq_name1, '', x)
 
 
@@ -8240,6 +8309,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessUpdateDialog.ui.lineEdit.setText(self.ui.txtName.toPlainText())
 			self.modalessUpdateDialog.ui.textEdit.setText(self.ui.textSeq.toPlainText())
 			self.modalessUpdateDialog.updateSignal.connect(self.updateNTseq)
+			self.modalessUpdateDialog.markATG()
 			self.modalessUpdateDialog.show()
 
 	def updateNTseq(self,SeqName,Seq):

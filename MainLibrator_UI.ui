@@ -321,34 +321,356 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>0</y>
+             <y>-307</y>
              <width>928</width>
-             <height>928</height>
+             <height>1144</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_14">
-            <item row="3" column="0">
-             <widget class="QPlainTextEdit" name="txtName">
-              <property name="maximumSize">
+            <item row="5" column="0">
+             <widget class="QFrame" name="frame_13">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
                <size>
-                <width>16777215</width>
-                <height>37</height>
+                <width>0</width>
+                <height>0</height>
                </size>
               </property>
-              <property name="font">
-               <font>
-                <family>Arial</family>
-                <pointsize>14</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
+              <property name="frameShape">
+               <enum>QFrame::NoFrame</enum>
               </property>
-              <property name="toolTip">
-               <string>Double click name to edit</string>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
               </property>
-              <property name="readOnly">
-               <bool>true</bool>
-              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_4">
+               <item>
+                <widget class="QFrame" name="frame_16">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_13">
+                  <item row="1" column="4">
+                   <widget class="QSpinBox" name="spnFrom">
+                    <property name="maximumSize">
+                     <size>
+                      <width>70</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <number>5000</number>
+                    </property>
+                    <property name="value">
+                     <number>1</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="lblDNA">
+                    <property name="minimumSize">
+                     <size>
+                      <width>350</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>DNA Sequence:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <spacer name="horizontalSpacer_3">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>60</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="1" column="3">
+                   <widget class="QLabel" name="seqlabel_9">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>50</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>Lucida Grande</family>
+                      <pointsize>14</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>From:</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="7">
+                   <widget class="QPushButton" name="btnReadingFrames">
+                    <property name="maximumSize">
+                     <size>
+                      <width>160</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Show Reading Frames</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QLabel" name="seqlabel_10">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>120</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>Lucida Grande</family>
+                      <pointsize>14</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Coding Region:</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="5">
+                   <widget class="QLabel" name="seqlabel_19">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>30</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>Lucida Grande</family>
+                      <pointsize>14</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>To:</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="6">
+                   <widget class="QSpinBox" name="spnTo">
+                    <property name="maximumSize">
+                     <size>
+                      <width>70</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <number>5000</number>
+                    </property>
+                    <property name="value">
+                     <number>5000</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QFrame" name="frame_3">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Plain</enum>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_8">
+                  <item row="0" column="1">
+                   <widget class="QCommandLinkButton" name="btnSearch">
+                    <property name="maximumSize">
+                     <size>
+                      <width>100</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>14</pointsize>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>Search</string>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="Resources/VgenesResources.qrc">
+                      <normaloff>:/PNG-Icons/search.png</normaloff>:/PNG-Icons/search.png</iconset>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="4">
+                   <widget class="QRadioButton" name="rdoAA">
+                    <property name="maximumSize">
+                     <size>
+                      <width>101</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Amino Acid</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="2">
+                   <widget class="QPlainTextEdit" name="txtSearch">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>30</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>60</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="3">
+                   <widget class="QRadioButton" name="rdoDNA">
+                    <property name="maximumSize">
+                     <size>
+                      <width>56</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>DNA</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="5">
+                   <widget class="QPushButton" name="btnEditSequence">
+                    <property name="text">
+                     <string>Edit Sequence</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QTextEdit" name="textSeq">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblAA">
+                 <property name="text">
+                  <string>Amino Acid Sequence:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QTextEdit" name="textAA">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </widget>
             </item>
             <item row="2" column="0">
@@ -474,361 +796,6 @@
                 <widget class="QPushButton" name="btnDelete">
                  <property name="text">
                   <string>Delete</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="5" column="0">
-             <widget class="QFrame" name="frame_13">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_4">
-               <item>
-                <widget class="QFrame" name="frame_16">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>100</height>
-                  </size>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::NoFrame</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <layout class="QGridLayout" name="gridLayout_13">
-                  <item row="1" column="5">
-                   <widget class="QLabel" name="seqlabel_19">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                     <size>
-                      <width>0</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>30</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <family>Lucida Grande</family>
-                      <pointsize>14</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>To:</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="6">
-                   <widget class="QSpinBox" name="spnTo">
-                    <property name="maximumSize">
-                     <size>
-                      <width>70</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <property name="minimum">
-                     <number>1</number>
-                    </property>
-                    <property name="maximum">
-                     <number>5000</number>
-                    </property>
-                    <property name="value">
-                     <number>5000</number>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="3">
-                   <widget class="QLabel" name="seqlabel_9">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                     <size>
-                      <width>0</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>50</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <family>Lucida Grande</family>
-                      <pointsize>14</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>From:</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="4">
-                   <widget class="QSpinBox" name="spnFrom">
-                    <property name="maximumSize">
-                     <size>
-                      <width>70</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <property name="minimum">
-                     <number>1</number>
-                    </property>
-                    <property name="maximum">
-                     <number>5000</number>
-                    </property>
-                    <property name="value">
-                     <number>1</number>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="2">
-                   <widget class="QLabel" name="seqlabel_10">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                     <size>
-                      <width>0</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>120</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <family>Lucida Grande</family>
-                      <pointsize>14</pointsize>
-                     </font>
-                    </property>
-                    <property name="text">
-                     <string>Coding Region:</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="7">
-                   <widget class="QPushButton" name="btnReadingFrames">
-                    <property name="maximumSize">
-                     <size>
-                      <width>160</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>Show Reading Frames</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="lblDNA">
-                    <property name="minimumSize">
-                     <size>
-                      <width>350</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>DNA Sequence:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <spacer name="horizontalSpacer_3">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>60</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QFrame" name="frame_3">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::NoFrame</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Plain</enum>
-                 </property>
-                 <layout class="QGridLayout" name="gridLayout_8">
-                  <item row="0" column="2">
-                   <widget class="QPushButton" name="pushButton">
-                    <property name="text">
-                     <string>Clear</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="4">
-                   <widget class="QRadioButton" name="rdoAA">
-                    <property name="maximumSize">
-                     <size>
-                      <width>101</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>Amino Acid</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QPlainTextEdit" name="txtSearch">
-                    <property name="minimumSize">
-                     <size>
-                      <width>0</width>
-                      <height>30</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>60</height>
-                     </size>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="3">
-                   <widget class="QRadioButton" name="rdoDNA">
-                    <property name="maximumSize">
-                     <size>
-                      <width>56</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>DNA</string>
-                    </property>
-                    <property name="checked">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="0">
-                   <widget class="QPushButton" name="btnSearch">
-                    <property name="text">
-                     <string>Search:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="5">
-                   <widget class="QPushButton" name="btnEditSequence">
-                    <property name="text">
-                     <string>Edit Sequence</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QTextEdit" name="textSeq">
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="lblAA">
-                 <property name="text">
-                  <string>Amino Acid Sequence:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QTextEdit" name="textAA">
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_48">
-                 <property name="text">
-                  <string>Results:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QTextEdit" name="txtResult">
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>16777215</height>
-                  </size>
                  </property>
                 </widget>
                </item>
@@ -1056,6 +1023,30 @@
                 </widget>
                </item>
               </layout>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QPlainTextEdit" name="txtName">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Arial</family>
+                <pointsize>14</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="toolTip">
+               <string>Double click name to edit</string>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
            </layout>
@@ -2972,22 +2963,6 @@
     <hint type="destinationlabel">
      <x>529</x>
      <y>329</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton</sender>
-   <signal>pressed()</signal>
-   <receiver>txtSearch</receiver>
-   <slot>clear()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>766</x>
-     <y>748</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>683</x>
-     <y>740</y>
     </hint>
    </hints>
   </connection>
