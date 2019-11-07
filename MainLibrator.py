@@ -91,8 +91,10 @@ class treeDialog(QtWidgets.QDialog):
 		self.ui.confirmButton.clicked.connect(self.accept)
 		self.ui.cancelButton.clicked.connect(self.reject)
 
-		self.ui.nameList.clicked.connect(self.highlightSeq)
-		self.ui.showButton.clicked.connect(self.highlightRegion)
+		self.ui.nameList.itemSelectionChanged.connect(self.highlightSeq)
+		self.ui.startBox.valueChanged.connect(self.highlightRegion)
+		self.ui.endBox.valueChanged.connect(self.highlightRegion)
+		#self.ui.showButton.clicked.connect(self.highlightRegion)
 		self.ui.seqEdit.cursorPositionChanged.connect(self.ruler)
 
 	def ruler(self):
@@ -134,25 +136,18 @@ class treeDialog(QtWidgets.QDialog):
 		seq_len = len(self.seqs[0]) + 1
 		start = self.ui.startBox.value()
 		end = self.ui.endBox.value()
-		if start == 0 and end == 0:
-			Msg = 'You set start and end position to 0, nothing to highlight!'
-			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
-			return
 
-		if start == 0:
-			self.ui.startBox.setValue(1)
-			start = 1
 		if end > seq_len:
-			self.ui.endBox.setValue(seq_len)
 			end = seq_len
-		if start > end:
-			self.ui.endBox.setValue(0)
-			self.ui.startBox.setValue(0)
-			Msg = 'Start posotion should be smaller than end position!'
-			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
-			return
-		num_len = len(self.seqs)
-		self.DecorateRegion(start, end, seq_len, num_len)
+			self.ui.endBox.setValue(end)
+		if start > seq_len:
+			start = seq_len - 1
+			self.ui.startBox.setValue(start)
+
+		if start != 0 and end != 0:
+			if end > start:
+				num_len = len(self.seqs)
+				self.DecorateRegion(start, end, seq_len, num_len)
 
 	def accept(self):
 		start = self.ui.startBox.value()
