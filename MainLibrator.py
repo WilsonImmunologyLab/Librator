@@ -235,7 +235,8 @@ class GibsonMSADialog(QtWidgets.QDialog):
 		self.ui.confirmButton.clicked.connect(self.accept)
 		self.ui.cancelButton.clicked.connect(self.reject)
 
-		self.ui.nameList.clicked.connect(self.highlightSeq)
+		#self.ui.nameList.clicked.connect(self.highlightSeq)
+		self.ui.nameList.itemSelectionChanged.connect(self.highlightSeq)
 
 		self.ui.radioNT.clicked.connect(self.switchSeq)
 		self.ui.radioAA.clicked.connect(self.switchSeq)
@@ -284,6 +285,9 @@ class GibsonMSADialog(QtWidgets.QDialog):
 			# color text for F1, F2, F3, F4
 			num_seq = len(seq_names)
 			format = QTextCharFormat()
+			format_hyphen = QTextCharFormat()
+			format_hyphen.setBackground(QBrush(QColor("red")))
+			format_hyphen.setForeground(QBrush(QColor("white")))
 
 			# F1
 			cursor1 = self.ui.seqEditF1.textCursor()
@@ -295,6 +299,14 @@ class GibsonMSADialog(QtWidgets.QDialog):
 				cursor1.setPosition(CurPos + len_f1, QTextCursor.KeepAnchor)
 				cursor1.mergeCharFormat(format)
 				CurPos += len_f1 + 1
+
+			text = self.ui.seqEditF1.toPlainText()
+			list = [i.start() for i in re.finditer('-',text)]
+			if len(list) > 0:
+				for pos in list:
+					cursor1.setPosition(pos)
+					cursor1.setPosition(pos + 1, QTextCursor.KeepAnchor)
+					cursor1.mergeCharFormat(format_hyphen)
 			# F2
 			cursor2 = self.ui.seqEditF2.textCursor()
 			len_f2 = len(F2_seqs[0])
@@ -309,6 +321,14 @@ class GibsonMSADialog(QtWidgets.QDialog):
 				cursor2.setPosition(CurPos + len_f2, QTextCursor.KeepAnchor)
 				cursor2.mergeCharFormat(format)
 				CurPos += len_f2 + 1
+
+			text = self.ui.seqEditF2.toPlainText()
+			list = [i.start() for i in re.finditer('-', text)]
+			if len(list) > 0:
+				for pos in list:
+					cursor2.setPosition(pos)
+					cursor2.setPosition(pos + 1, QTextCursor.KeepAnchor)
+					cursor2.mergeCharFormat(format_hyphen)
 			# F3
 			cursor3 = self.ui.seqEditF3.textCursor()
 			len_f3 = len(F3_seqs[0])
@@ -323,6 +343,14 @@ class GibsonMSADialog(QtWidgets.QDialog):
 				cursor3.setPosition(CurPos + len_f3, QTextCursor.KeepAnchor)
 				cursor3.mergeCharFormat(format)
 				CurPos += len_f3 + 1
+
+			text = self.ui.seqEditF3.toPlainText()
+			list = [i.start() for i in re.finditer('-', text)]
+			if len(list) > 0:
+				for pos in list:
+					cursor3.setPosition(pos)
+					cursor3.setPosition(pos + 1, QTextCursor.KeepAnchor)
+					cursor3.mergeCharFormat(format_hyphen)
 			# F4
 			cursor4 = self.ui.seqEditF4.textCursor()
 			len_f4 = len(F4_seqs[0])
@@ -333,6 +361,14 @@ class GibsonMSADialog(QtWidgets.QDialog):
 				cursor4.setPosition(CurPos + 9, QTextCursor.KeepAnchor)
 				cursor4.mergeCharFormat(format)
 				CurPos += len_f4 + 1
+
+			text = self.ui.seqEditF4.toPlainText()
+			list = [i.start() for i in re.finditer('-', text)]
+			if len(list) > 0:
+				for pos in list:
+					cursor4.setPosition(pos)
+					cursor4.setPosition(pos + 1, QTextCursor.KeepAnchor)
+					cursor4.mergeCharFormat(format_hyphen)
 
 			self.ui.notice.setText('"-" in sequences will be removed before generating Fragments')
 		else:
@@ -512,6 +548,9 @@ class GibsonMSADialog(QtWidgets.QDialog):
 
 		# Setup the desired format for matches
 		format = QTextCharFormat()
+		format_hyphen = QTextCharFormat()
+		format_hyphen.setBackground(QBrush(QColor("red")))
+		format_hyphen.setForeground(QBrush(QColor("white")))
 		# F1
 		CurPos = 0
 		for valueIs in ColorMap:
@@ -525,6 +564,14 @@ class GibsonMSADialog(QtWidgets.QDialog):
 			cursor1.mergeCharFormat(format)
 
 			CurPos += Len[0] + 1
+
+		text = self.ui.seqEditF1.toPlainText()
+		list = [i.start() for i in re.finditer('-', text)]
+		if len(list) > 0:
+			for pos in list:
+				cursor1.setPosition(pos)
+				cursor1.setPosition(pos + 1, QTextCursor.KeepAnchor)
+				cursor1.mergeCharFormat(format_hyphen)
 
 		# F2
 		CurPos = 0
@@ -540,6 +587,14 @@ class GibsonMSADialog(QtWidgets.QDialog):
 
 			CurPos += Len[1] + 1
 
+		text = self.ui.seqEditF2.toPlainText()
+		list = [i.start() for i in re.finditer('-', text)]
+		if len(list) > 0:
+			for pos in list:
+				cursor2.setPosition(pos)
+				cursor2.setPosition(pos + 1, QTextCursor.KeepAnchor)
+				cursor2.mergeCharFormat(format_hyphen)
+
 		# F3
 		CurPos = 0
 		for valueIs in ColorMap:
@@ -553,6 +608,14 @@ class GibsonMSADialog(QtWidgets.QDialog):
 			cursor3.mergeCharFormat(format)
 
 			CurPos += Len[2] + 1
+
+		text = self.ui.seqEditF3.toPlainText()
+		list = [i.start() for i in re.finditer('-', text)]
+		if len(list) > 0:
+			for pos in list:
+				cursor3.setPosition(pos)
+				cursor3.setPosition(pos + 1, QTextCursor.KeepAnchor)
+				cursor3.mergeCharFormat(format_hyphen)
 
 		# F4
 		CurPos = 0
@@ -568,6 +631,13 @@ class GibsonMSADialog(QtWidgets.QDialog):
 
 			CurPos += Len[3] + 1
 
+		text = self.ui.seqEditF4.toPlainText()
+		list = [i.start() for i in re.finditer('-', text)]
+		if len(list) > 0:
+			for pos in list:
+				cursor4.setPosition(pos)
+				cursor4.setPosition(pos + 1, QTextCursor.KeepAnchor)
+				cursor4.mergeCharFormat(format_hyphen)
 
 class deleteDialog(QtWidgets.QDialog):
 	deleteSignal = pyqtSignal(list)
@@ -773,8 +843,12 @@ class fusionDialog(QtWidgets.QDialog):
 
 			self.ui.startDonor.setDisabled(False)
 			self.ui.endDonor.setDisabled(False)
+			self.ui.startDonor.setValue(0)
+			self.ui.endDonor.setValue(0)
 		else:
 			self.ui.textEditDonor.setText('')
+			self.ui.startDonor.setValue(0)
+			self.ui.endDonor.setValue(0)
 			self.ui.startDonor.setDisabled(True)
 			self.ui.endDonor.setDisabled(True)
 			self.ui.label_donor.setText('Donor Sequence: ')
@@ -9112,6 +9186,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# color text for F1, F2, F3, F4
 		num_seq = len(seq_names)
 		format = QTextCharFormat()
+		format_hyphen = QTextCharFormat()
+		format_hyphen.setBackground(QBrush(QColor("red")))
+		format_hyphen.setForeground(QBrush(QColor("white")))
 
 		# F1
 		cursor1 = self.modalessGibsonMSADialog.ui.seqEditF1.textCursor()
@@ -9123,6 +9200,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 			cursor1.setPosition(CurPos + len_f1, QTextCursor.KeepAnchor)
 			cursor1.mergeCharFormat(format)
 			CurPos += len_f1 + 1
+
+		text = self.modalessGibsonMSADialog.ui.seqEditF1.toPlainText()
+		pos_list = [i.start() for i in re.finditer('-', text)]
+		if len(pos_list) > 0:
+			for pos in pos_list:
+				cursor1.setPosition(pos)
+				cursor1.setPosition(pos + 1, QTextCursor.KeepAnchor)
+				cursor1.mergeCharFormat(format_hyphen)
 		# F2
 		cursor2 = self.modalessGibsonMSADialog.ui.seqEditF2.textCursor()
 		len_f2 = len(F2_seqs[0])
@@ -9137,6 +9222,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 			cursor2.setPosition(CurPos + len_f2, QTextCursor.KeepAnchor)
 			cursor2.mergeCharFormat(format)
 			CurPos += len_f2 + 1
+
+		text = self.modalessGibsonMSADialog.ui.seqEditF2.toPlainText()
+		pos_list = [i.start() for i in re.finditer('-', text)]
+		if len(pos_list) > 0:
+			for pos in pos_list:
+				cursor2.setPosition(pos)
+				cursor2.setPosition(pos + 1, QTextCursor.KeepAnchor)
+				cursor2.mergeCharFormat(format_hyphen)
 		# F3
 		cursor3 = self.modalessGibsonMSADialog.ui.seqEditF3.textCursor()
 		len_f3 = len(F3_seqs[0])
@@ -9151,6 +9244,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 			cursor3.setPosition(CurPos + len_f3, QTextCursor.KeepAnchor)
 			cursor3.mergeCharFormat(format)
 			CurPos += len_f3 + 1
+
+		text = self.modalessGibsonMSADialog.ui.seqEditF3.toPlainText()
+		pos_list = [i.start() for i in re.finditer('-', text)]
+		if len(pos_list) > 0:
+			for pos in pos_list:
+				cursor3.setPosition(pos)
+				cursor3.setPosition(pos + 1, QTextCursor.KeepAnchor)
+				cursor3.mergeCharFormat(format_hyphen)
 		# F4
 		cursor4 = self.modalessGibsonMSADialog.ui.seqEditF4.textCursor()
 		len_f4 = len(F4_seqs[0])
@@ -9161,6 +9262,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 			cursor4.setPosition(CurPos + 9, QTextCursor.KeepAnchor)
 			cursor4.mergeCharFormat(format)
 			CurPos += len_f4 + 1
+
+		text = self.modalessGibsonMSADialog.ui.seqEditF4.toPlainText()
+		pos_list = [i.start() for i in re.finditer('-', text)]
+		if len(pos_list) > 0:
+			for pos in pos_list:
+				cursor4.setPosition(pos)
+				cursor4.setPosition(pos + 1, QTextCursor.KeepAnchor)
+				cursor4.mergeCharFormat(format_hyphen)
 
 		# link data
 		self.modalessGibsonMSADialog.fragment_data = fragment_data
