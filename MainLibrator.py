@@ -2680,12 +2680,15 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		format.setBackground(QBrush(QColor("red")))
 		format.setForeground(QBrush(QColor("white")))
-		pos_list = [i.start() for i in re.finditer(pattern, text)]
-		if len(pos_list) > 0:
-			for pos in pos_list:
-				cursor.setPosition(pos)
-				cursor.setPosition(pos + len(pattern), QTextCursor.KeepAnchor)
-				cursor.mergeCharFormat(format)
+		try:
+			pos_list = [i.start() for i in re.finditer(pattern, text)]
+			if len(pos_list) > 0:
+				for pos in pos_list:
+					cursor.setPosition(pos)
+					cursor.setPosition(pos + len(pattern), QTextCursor.KeepAnchor)
+					cursor.mergeCharFormat(format)
+		except Exception:
+			pass
 
 
 	@pyqtSlot()
