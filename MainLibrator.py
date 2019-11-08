@@ -2622,14 +2622,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.ui.tabWidget.currentChanged['int'].connect(self.FillAlignmentTab)
 
-		self.ui.textSeq.textChanged.connect(self.SeqChanged)
+		#self.ui.textSeq.textChanged.connect(self.SeqChanged)
 
 		#self.ui.txtSearch.textChanged.connect(self.searchPattern)
 
 		self.ui.rdoDNA.clicked.connect(self.resetSearch)
 		self.ui.rdoAA.clicked.connect(self.resetSearch)
-		#self.ui.pushButton.clicked.connect(self.resetSearch)
-		self.ui.btnSearch.clicked.connect(self.searchPattern)
+		self.ui.SearchButton.clicked.connect(self.searchPattern)
 
 		self.UpdateRecent()
 
