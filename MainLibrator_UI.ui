@@ -321,7 +321,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-307</y>
+             <y>0</y>
              <width>928</width>
              <height>1144</height>
             </rect>
@@ -2169,6 +2169,16 @@
             <property name="text">
              <string>Gibson Clones</string>
             </property>
+            <property name="icon">
+             <iconset resource="Resources/VgenesResources.qrc">
+              <normaloff>:/PNG-Icons/GibsonClone.png</normaloff>:/PNG-Icons/GibsonClone.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>40</width>
+              <height>40</height>
+             </size>
+            </property>
            </widget>
           </item>
          </layout>
@@ -2201,6 +2211,16 @@
          </property>
          <property name="text">
           <string>3D Visualization</string>
+         </property>
+         <property name="icon">
+          <iconset resource="Resources/VgenesResources.qrc">
+           <normaloff>:/PNG-Icons/PyMOL.png</normaloff>:/PNG-Icons/PyMOL.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>40</width>
+           <height>40</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -2241,22 +2261,10 @@
     <property name="title">
      <string>File</string>
     </property>
-    <widget class="QMenu" name="menuOpen_Recent">
-     <property name="title">
-      <string>Open Recent</string>
-     </property>
-     <addaction name="actionOpen_last"/>
-    </widget>
     <addaction name="action_New"/>
     <addaction name="action_Open"/>
-    <addaction name="action_Save"/>
-    <addaction name="actionSave_As"/>
-    <addaction name="actionRevert_to_previous"/>
-    <addaction name="separator"/>
-    <addaction name="actionPreferences"/>
     <addaction name="separator"/>
     <addaction name="actionPrint"/>
-    <addaction name="menuOpen_Recent"/>
    </widget>
    <widget class="QMenu" name="menuSequences">
     <property name="title">
@@ -2269,49 +2277,17 @@
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="actionIMGT"/>
-    <addaction name="actionIgBlast"/>
     <addaction name="actionHANumbering"/>
-    <addaction name="actionMap_hotspots"/>
     <addaction name="actionMultiple_Alignement"/>
-    <addaction name="actionImportLei"/>
-    <addaction name="actionFind_Clonal"/>
-    <addaction name="actionCreateVDJdb"/>
-    <addaction name="actionAnalyze_Isotypes"/>
+    <addaction name="actionNTTree"/>
+    <addaction name="actionTree"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
     <addaction name="action_Help"/>
-    <addaction name="separator"/>
     <addaction name="actionAbout_2"/>
-   </widget>
-   <widget class="QMenu" name="menuDatabase">
-    <property name="tearOffEnabled">
-     <bool>false</bool>
-    </property>
-    <property name="title">
-     <string>Database</string>
-    </property>
-    <widget class="QMenu" name="menuQuery">
-     <property name="title">
-      <string>Query</string>
-     </property>
-     <addaction name="actionView_subset"/>
-     <addaction name="actionReport"/>
-    </widget>
-    <addaction name="actionTop"/>
-    <addaction name="actionBottom"/>
-    <addaction name="actionMove_Up"/>
-    <addaction name="actionMove_Down"/>
-    <addaction name="separator"/>
-    <addaction name="actionDelete_record"/>
-    <addaction name="actionAdd_record"/>
-    <addaction name="actionDuplicate_current"/>
-    <addaction name="menuQuery"/>
-    <addaction name="actionImport_Vgenes_database"/>
-    <addaction name="actionCreateAnalysisDB"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -2321,28 +2297,40 @@
     <addaction name="actionIncrease_font_size"/>
     <addaction name="actionDecrease_font_size"/>
    </widget>
-   <widget class="QMenu" name="menuHighThroughput">
-    <property name="title">
-     <string>HighThroughput</string>
-    </property>
-    <addaction name="actionMergeMySeq"/>
-    <addaction name="actionImportCluster"/>
-    <addaction name="actionRename10x"/>
-    <addaction name="actionFixNames"/>
-   </widget>
    <widget class="QMenu" name="menuSetting">
     <property name="title">
      <string>Setting</string>
     </property>
-    <addaction name="actionCheck_Update_base_folder"/>
+    <addaction name="actionPreferences"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit_Sequence">
+    <property name="title">
+     <string>Edit Sequence</string>
+    </property>
+    <addaction name="actionMutation"/>
+    <addaction name="actionEditing"/>
+    <addaction name="actionFusion"/>
+   </widget>
+   <widget class="QMenu" name="menuVisualization">
+    <property name="title">
+     <string>Visualization</string>
+    </property>
+    <addaction name="actionPyMOL"/>
+   </widget>
+   <widget class="QMenu" name="menuGibsonClone">
+    <property name="title">
+     <string>GibsonClone</string>
+    </property>
+    <addaction name="actionGibsonClone"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSequences"/>
-   <addaction name="menuDatabase"/>
    <addaction name="menuTools"/>
    <addaction name="menuView"/>
+   <addaction name="menuEdit_Sequence"/>
+   <addaction name="menuVisualization"/>
+   <addaction name="menuGibsonClone"/>
    <addaction name="menuHelp"/>
-   <addaction name="menuHighThroughput"/>
    <addaction name="menuSetting"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -2383,11 +2371,10 @@
    <addaction name="action_Import"/>
    <addaction name="actionExport"/>
    <addaction name="separator"/>
-   <addaction name="actionCopy"/>
-   <addaction name="actionCut"/>
-   <addaction name="actionPaste"/>
-   <addaction name="separator"/>
    <addaction name="actionHANumbering"/>
+   <addaction name="actionMutation"/>
+   <addaction name="actionEditing"/>
+   <addaction name="actionFusion"/>
    <addaction name="separator"/>
    <addaction name="actionNTTree"/>
    <addaction name="actionTree"/>
@@ -2930,6 +2917,66 @@
   <action name="actionCheck_Update_base_folder">
    <property name="text">
     <string>Set PATH</string>
+   </property>
+  </action>
+  <action name="actionMutation">
+   <property name="icon">
+    <iconset resource="Resources/VgenesResources.qrc">
+     <normaloff>:/PNG-Icons/paint_brush.png</normaloff>:/PNG-Icons/paint_brush.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mutation</string>
+   </property>
+   <property name="toolTip">
+    <string>Generate Sequences with specific mutations</string>
+   </property>
+  </action>
+  <action name="actionEditing">
+   <property name="icon">
+    <iconset resource="Resources/VgenesResources.qrc">
+     <normaloff>:/PNG-Icons/scissor.png</normaloff>:/PNG-Icons/scissor.png</iconset>
+   </property>
+   <property name="text">
+    <string>Editing</string>
+   </property>
+   <property name="toolTip">
+    <string>Edit sequences with Base biased mode or Cocktail mode</string>
+   </property>
+  </action>
+  <action name="actionFusion">
+   <property name="icon">
+    <iconset resource="Resources/VgenesResources.qrc">
+     <normaloff>:/PNG-Icons/link.png</normaloff>:/PNG-Icons/link.png</iconset>
+   </property>
+   <property name="text">
+    <string>Fusion</string>
+   </property>
+   <property name="toolTip">
+    <string>Fuse two sequences of different subtypes</string>
+   </property>
+  </action>
+  <action name="actionPyMOL">
+   <property name="icon">
+    <iconset resource="Resources/VgenesResources.qrc">
+     <normaloff>:/PNG-Icons/PyMOL.png</normaloff>:/PNG-Icons/PyMOL.png</iconset>
+   </property>
+   <property name="text">
+    <string>PyMOL</string>
+   </property>
+   <property name="toolTip">
+    <string>Use PyMOL to visualize 3D structure</string>
+   </property>
+  </action>
+  <action name="actionGibsonClone">
+   <property name="icon">
+    <iconset resource="Resources/VgenesResources.qrc">
+     <normaloff>:/PNG-Icons/GibsonClone.png</normaloff>:/PNG-Icons/GibsonClone.png</iconset>
+   </property>
+   <property name="text">
+    <string>GibsonClone</string>
+   </property>
+   <property name="toolTip">
+    <string>Generate Fragments for Gibson Clone use</string>
    </property>
   </action>
  </widget>

@@ -4,11 +4,12 @@
     <list default="true" id="9f472839-8a65-4dce-be83-d1c7511e6e93" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DB/Test.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/Test.ldb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Flu.icns" beforeDir="false" afterPath="$PROJECT_DIR$/Flu.icns" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LibratorSQL.py" beforeDir="false" afterPath="$PROJECT_DIR$/LibratorSQL.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainLibrator_UI.ui" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_record.txt" beforeDir="false" afterPath="$PROJECT_DIR$/db_record.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/VgenesResources.qrc" beforeDir="false" afterPath="$PROJECT_DIR$/Resources/VgenesResources.qrc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/VgenesResources_rc.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/VgenesResources_rc.py" beforeDir="false" afterPath="$PROJECT_DIR$/VgenesResources_rc.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -31,11 +32,12 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Resources" />
     <property name="settings.editor.selected.configurable" value="preferences.externalTools" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Resources" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>

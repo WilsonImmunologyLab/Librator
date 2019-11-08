@@ -7077,6 +7077,55 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.open_basepath_dialog()
 
 	@pyqtSlot()
+	def on_actionMutation_triggered(self):
+		self.open_mutation_dialog()
+
+	@pyqtSlot()
+	def on_actionEditing_triggered(self):
+		self.sequence_editing()
+
+	@pyqtSlot()
+	def on_actionEditing_triggered(self):
+		self.sequence_editing()
+
+	@pyqtSlot()
+	def on_actionFusion_triggered(self):
+		self.open_fusion_dialog()
+
+	@pyqtSlot()
+	def on_actionPyMOL_triggered(self):
+		global pymol_path, working_prefix
+
+		seq = self.ui.txtName.toPlainText()
+		if seq == '':
+			QMessageBox.warning(self, 'Warning',
+			                    'Please select a sequence first!', QMessageBox.Ok, QMessageBox.Ok)
+			return
+		mutation = self.ui.txtInsert_Base.toPlainText().strip(",")
+		subtype = str(self.ui.cboSubtype.currentText())
+
+		# set 3D templates for different subtypes
+		if subtype == "H1N1":
+			pdb_path = working_prefix + "PDB/4jtv.pdb"
+		elif subtype == "H3N2":
+			pdb_path = working_prefix + "PDB/4hmg.pdb"
+		elif subtype == "B":
+			pdb_path = working_prefix + "PDB/3hto.pdb"
+		elif subtype == "Group 1":
+			pdb_path = working_prefix + "PDB/4jtv.pdb"
+		elif subtype == "Group 2":
+			pdb_path = working_prefix + "PDB/4hmg.pdb"
+		else:
+			pdb_path = working_prefix + "PDB/3hto.pdb"
+
+		self.show3Dstructure(mutation, pdb_path, pymol_path, subtype)
+
+	@pyqtSlot()
+	def on_actionGibsonClone_triggered(self):
+		self.open_gibson_dialog()
+
+
+	@pyqtSlot()
 	def on_action_Open_triggered(self):  # how to activate menu and toolbar actions!!!
 		#need to simply get database name and populate list views
 		global DBFilename
@@ -7992,7 +8041,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_pymolBTN_clicked(self):
-		global pymol_path
+		global pymol_path, working_prefix
 
 		seq = self.ui.txtName.toPlainText()
 		if seq == '':

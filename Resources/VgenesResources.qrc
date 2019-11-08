@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="PNG-Icons">
+    <file>PyMOL.png</file>
+    <file>GibsonClone.png</file>
     <file>Export.png</file>
     <file>Import.png</file>
     <file>ScalePic.png</file>
