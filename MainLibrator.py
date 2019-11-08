@@ -7065,6 +7065,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 		cursor = VGenesTextWindows[window_id].textEdit_legend.textCursor()
 		self.DecorateText(ColorMap, cursor)
 
+	@pyqtSlot()
+	def on_action_Help_triggered(self):
+		Msg = 'Librator was developed and supported by Wilson Lab. Please refer to http://Wilsonlab.uchicago.edu ' \
+		      'for more information'
+		QMessageBox.information(self, 'information', Msg, QMessageBox.Ok,
+		                        QMessageBox.Ok)
+
+	@pyqtSlot()
+	def on_actionPreferences_triggered(self):
+		self.open_basepath_dialog()
 
 	@pyqtSlot()
 	def on_action_Open_triggered(self):  # how to activate menu and toolbar actions!!!
@@ -7074,6 +7084,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global BaseSeq
 
 		DBFilename = openFile(self, 'ldb')
+		if DBFilename == None or DBFilename == '':
+			return
+
 		# check if this is the right DB
 		SQLStatement = 'SELECT * FROM LibDB ORDER BY SeqName DESC LIMIT 1 '
 		try:
@@ -7294,19 +7307,30 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# select target DB
 		new_db = openFile(self, 'ldb')
 
-		# import data
-		BackMessage = CopyDatatoDB2(SQLStatement, DBFilename, new_db)
-		if BackMessage == 1:
-			QMessageBox.warning(self, 'Warning', 'Faiil to insert those resords into target DB!',
-			                    QMessageBox.Ok,
-			                    QMessageBox.Ok)
-		else:
-			question = 'Would you like to open the target Database?'
-			buttons = 'YN'
-			answer = questionMessage(self, question, buttons)
-			if answer == 'Yes':
-				DBFilename = new_db
-				self.open_db(DBFilename)
+		if new_db != None and new_db != '':
+			# import data
+			BackMessage = CopyDatatoDB2(SQLStatement, DBFilename, new_db)
+			if BackMessage == 1:
+				QMessageBox.warning(self, 'Warning', 'Faiil to attach DB!',
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+			elif BackMessage == 2:
+				QMessageBox.warning(self, 'Warning',
+				                    'No data table detected in your database!',
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+			elif BackMessage == 3:
+				QMessageBox.warning(self, 'Warning',
+				                    'Fail to insert data into your DB! Duplicated records identified!',
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+			else:
+				question = 'Would you like to open the target Database?'
+				buttons = 'YN'
+				answer = questionMessage(self, question, buttons)
+				if answer == 'Yes':
+					DBFilename = new_db
+					self.open_db(DBFilename)
 
 	@pyqtSlot()
 	def on_btnExtractRecords_clicked(self):

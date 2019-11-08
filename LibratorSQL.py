@@ -58,6 +58,7 @@ def creatnewFragmentDB(DBpathname):
                    ' PRIMARY KEY("Name"))')
 
     conn.commit()
+    cursor.close()
     conn.close()
 
 
@@ -67,17 +68,10 @@ def CopyDatatoDB2(SQLSELECT, DBpathname, DB2path):
     conn = db.connect(DBpathname)
     cursor = conn.cursor()
 
-
-    # ATTACH DATABASE "\mydir\data\beta.sqlite\" AS beta;
-    # CREATE TABLE NewTable AS
-    # SELECT * FROM beta.table3;
-    # DETACH DATABASE beta;
-
-    # INSERT INTO blog_posts
-    # SELECT * FROM BlogProduction.dbo.blog_posts
     SQLStatement = 'ATTACH DATABASE "'+ DB2path + '" AS DB2'
+    SQLStatement1 = 'SELECT * FROM DB2.LibDB'
     SQLStatement2 = 'INSERT INTO DB2.LibDB '+ SQLSELECT
-    SQLStatement3 = 'DETACH DATABASE DB2'
+    #SQLStatement3 = 'DETACH DATABASE DB2'
     try:
         cursor.execute(SQLStatement)
     except:
@@ -85,11 +79,20 @@ def CopyDatatoDB2(SQLSELECT, DBpathname, DB2path):
         return 1
 
     try:
+        cursor.execute(SQLStatement1)
+    except:
+        print(SQLStatement1)
+        return 2
+
+    try:
         cursor.execute(SQLStatement2)
     except:
         print(SQLStatement2)
-        return 1
+        return 3
+
     conn.commit()
+    cursor.close()
+    conn.close()
     return
 
 
@@ -116,6 +119,7 @@ def UpdateMulti(SQLCommand, DBpathname):
     # ID PRIMARY KEY,
 
     conn.commit()
+    cursor.close()
     conn.close
 
 
@@ -140,6 +144,7 @@ def UpdateField(ID, Value, Field, DBpathname):
     # ID PRIMARY KEY,
 
     conn.commit()
+    cursor.close()
     conn.close
 
 
@@ -270,6 +275,7 @@ def enterData(obj, DBpathname, LibratorSeqs):
 
 
     conn.commit()  #  saves data into file
+    cursor.close()
     conn.close()
     # readData(DBpathname)
 
@@ -345,6 +351,7 @@ def RunSQL(DBpathname, SQLStatement):
 
 
     # conn.commit()  #  saves data into file
+    cursor.close()
     conn.close()
 
     return DataIs
@@ -355,6 +362,7 @@ def RunMYSQL(DBpathname, SQLStatement):
     cursor.execute(SQLStatement)
     DataIs = cursor.fetchall()
     cursor.close()
+    conn.close()
 
     return DataIs
 
@@ -379,6 +387,7 @@ def ImportVDB(pathname, DBFilename):
 
     cursor.execute('''INSERT INTO DBpathname.LibDB SELECT * FROM VGDB2.LibDB''')
 
+    cursor.close()
     conn.close()
 
 def readData(DBpathname, SQLStatement):
@@ -405,6 +414,7 @@ def readData(DBpathname, SQLStatement):
             DataIs.append(column)
 
     # conn.commit()  #  saves data into file
+    cursor.close()
     conn.close()
 
     return DataIs
@@ -420,6 +430,7 @@ def FetchOneRecord(databasename):
     cursor.execute('select avg(temp) from temps')
     row = cursor.fetchone()
 
+    cursor.close()
     conn.close()
     print('The average temp for the week was: %s' % row[0])
 
@@ -454,6 +465,7 @@ def deleterecords (DBFilename, SQLStatement):
     # for row in rows:
     #     print('%s %s' % (row[0], row[1]))
     conn.commit()
+    cursor.close()
     conn.close()
 
 

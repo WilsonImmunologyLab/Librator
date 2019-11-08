@@ -2378,8 +2378,6 @@
    <addaction name="separator"/>
    <addaction name="action_New"/>
    <addaction name="action_Open"/>
-   <addaction name="action_Save"/>
-   <addaction name="actionSave_As"/>
    <addaction name="actionPrint"/>
    <addaction name="separator"/>
    <addaction name="action_Import"/>
@@ -2399,13 +2397,13 @@
    <addaction name="actionAA"/>
    <addaction name="actionBA"/>
    <addaction name="separator"/>
-   <addaction name="actionPreferences"/>
-   <addaction name="action_Help"/>
-   <addaction name="separator"/>
    <addaction name="actionIncrease_font_size"/>
    <addaction name="actionDecrease_font_size"/>
    <addaction name="separator"/>
    <addaction name="actionClean"/>
+   <addaction name="separator"/>
+   <addaction name="actionPreferences"/>
+   <addaction name="action_Help"/>
   </widget>
   <action name="action_Open">
    <property name="icon">
