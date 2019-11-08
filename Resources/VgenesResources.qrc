@@ -1,5 +1,8 @@
 <RCC>
   <qresource prefix="PNG-Icons">
+    <file>Mutation.png</file>
+    <file>EditSeq.png</file>
+    <file>Fusion.png</file>
     <file>PyMOL.png</file>
     <file>GibsonClone.png</file>
     <file>Export.png</file>

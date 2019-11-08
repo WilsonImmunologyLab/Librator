@@ -2922,7 +2922,7 @@
   <action name="actionMutation">
    <property name="icon">
     <iconset resource="Resources/VgenesResources.qrc">
-     <normaloff>:/PNG-Icons/paint_brush.png</normaloff>:/PNG-Icons/paint_brush.png</iconset>
+     <normaloff>:/PNG-Icons/Mutation.png</normaloff>:/PNG-Icons/Mutation.png</iconset>
    </property>
    <property name="text">
     <string>Mutation</string>
@@ -2934,7 +2934,7 @@
   <action name="actionEditing">
    <property name="icon">
     <iconset resource="Resources/VgenesResources.qrc">
-     <normaloff>:/PNG-Icons/scissor.png</normaloff>:/PNG-Icons/scissor.png</iconset>
+     <normaloff>:/PNG-Icons/EditSeq.png</normaloff>:/PNG-Icons/EditSeq.png</iconset>
    </property>
    <property name="text">
     <string>Editing</string>
@@ -2946,7 +2946,7 @@
   <action name="actionFusion">
    <property name="icon">
     <iconset resource="Resources/VgenesResources.qrc">
-     <normaloff>:/PNG-Icons/link.png</normaloff>:/PNG-Icons/link.png</iconset>
+     <normaloff>:/PNG-Icons/Fusion.png</normaloff>:/PNG-Icons/Fusion.png</iconset>
    </property>
    <property name="text">
     <string>Fusion</string>
