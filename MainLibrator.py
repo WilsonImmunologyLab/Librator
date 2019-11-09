@@ -15,6 +15,15 @@ import os, sys, re, time, string
 import pandas as pd
 import numpy as np
 
+import matplotlib
+matplotlib.use("Qt5Agg")
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+matplotlib.rcParams["font.sans-serif"] = ["Times New Roman"]
+matplotlib.rcParams["font.size"] = 6
+import seaborn as sns
+
 from MainLibrator_UI import Ui_MainLibrator
 from mutationdialog import Ui_MutationDialog
 from sequenceedit import Ui_SequenceEditDialog
@@ -79,6 +88,11 @@ joint_up = "TCCACTCCCAGGTCCAACTGCACCTCGGTTCTATCGATTGAATTC"
 global joint_down
 joint_down = "GGGTCCGGATACATACCAGAGGCCCCGCGAGATGG"
 
+class MyFigure(FigureCanvas):
+    def __init__(self,width=5, height=4, dpi=100):
+        self.fig = Figure(figsize=(width, height), dpi=dpi)
+        super(MyFigure,self).__init__(self.fig)
+        self.axes = self.fig.add_subplot(111)
 
 
 class treeDialog(QtWidgets.QDialog):
@@ -1801,7 +1815,7 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 		                                                      "New Fragment database",
 		                                                      "Librator database Files (*.ldb);;All Files (*)",
 		                                                      options=options)
-		if DBFilename != '':
+		if DBFilename != 'none':
 			creatnewFragmentDB(DBFilename)
 			self.ui.dbpath.setText(DBFilename)
 
@@ -3266,6 +3280,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def FillAlignmentTab(self):
+		global DBFilename
 		AlignIn = []
 		EachIn = ()
 
@@ -3321,6 +3336,57 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.btnH3Num.setChecked(False)
 
 			self.CheckDecorations()
+
+		elif self.ui.tabWidget.currentIndex() == 4:
+			if DBFilename == 'none':
+				return
+			#  plot stat for subtype
+			# get data
+			SQLStatement = 'SELECT Subtype FROM LibDB'
+			DataIn = RunSQL(DBFilename, SQLStatement)
+
+			data = []
+			for element in DataIn:
+				data.append(element[0])
+			result = Counter(data)
+			labels = result.keys()
+			values = result.values()
+			#colors = ['hotpink','slateblue','goldenrod','olivedrab',"maroon", "grey", "orange", "deepskyblue", "peru", "m"]
+			colors = sns.color_palette("hls", len(values))
+
+			F = MyFigure(width=6, height=3, dpi=144)
+			F.axes.pie(values, labels=labels, colors=colors, radius=1.0, pctdistance = 0.8,autopct='%1.1f%%',startangle=90)
+			x = [1, 0, 0, 0]
+			F.axes.pie(x, colors = 'w', radius=0.6)
+
+			scene = QGraphicsScene()
+			scene.addWidget(F)
+			self.ui.graphicsView1.setScene(scene)
+			self.ui.graphicsView1.show()
+
+			#  plot stat for Role
+			# get data
+			SQLStatement = 'SELECT Role FROM LibDB'
+			DataIn = RunSQL(DBFilename, SQLStatement)
+
+			data = []
+			for element in DataIn:
+				data.append(element[0])
+			result = Counter(data)
+			labels = result.keys()
+			values = result.values()
+			colors = sns.color_palette("hls", len(values))
+
+			F = MyFigure(width=6, height=3, dpi=144)
+			F.axes.pie(values, labels=labels, colors=colors, radius=1.0, pctdistance = 0.8,autopct='%1.1f%%',startangle=90)
+			x = [1, 0, 0, 0]
+			F.axes.pie(x, colors='w', radius=0.6)
+
+			scene = QGraphicsScene()
+			scene.addWidget(F)
+			self.ui.graphicsView2.setScene(scene)
+			self.ui.graphicsView2.show()
+
 
 
 	@pyqtSlot()
@@ -7133,7 +7199,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global BaseSeq
 
 		DBFilename = openFile(self, 'ldb')
-		if DBFilename == None or DBFilename == '':
+		if DBFilename == None or DBFilename == 'none':
 			return
 
 		# check if this is the right DB
@@ -7742,7 +7808,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		                                                      "Librator database Files (*.ldb);;All Files (*)",
 		                                                      options=options)
 
-		if DBFilename != None and DBFilename != '':
+		if DBFilename != None and DBFilename != 'none':
 			(dirname, filename) = os.path.split(DBFilename)
 			(shortname, extension) = os.path.splitext(filename)
 
