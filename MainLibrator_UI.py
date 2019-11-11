@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'MainLibrator_UI.ui'
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created by: PyQt5 UI code generator 5.13.2
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -55,13 +56,15 @@ class Ui_MainLibrator(object):
         self.gridLayout_6 = QtWidgets.QGridLayout(self.frame_2)
         self.gridLayout_6.setObjectName("gridLayout_6")
         self.lblBaseName = QtWidgets.QTextEdit(self.frame_2)
-        self.lblBaseName.setMaximumSize(QtCore.QSize(16777215, 40))
+        self.lblBaseName.setMinimumSize(QtCore.QSize(0, 30))
+        self.lblBaseName.setMaximumSize(QtCore.QSize(16777215, 50))
         self.lblBaseName.setReadOnly(True)
         self.lblBaseName.setObjectName("lblBaseName")
-        self.gridLayout_6.addWidget(self.lblBaseName, 1, 0, 1, 2)
+        self.gridLayout_6.addWidget(self.lblBaseName, 2, 0, 1, 2)
         self.label_4 = QtWidgets.QLabel(self.frame_2)
+        self.label_4.setMaximumSize(QtCore.QSize(16777215, 16))
         self.label_4.setObjectName("label_4")
-        self.gridLayout_6.addWidget(self.label_4, 0, 0, 1, 1)
+        self.gridLayout_6.addWidget(self.label_4, 1, 0, 1, 1)
         self.gridLayout_9.addWidget(self.frame_2, 0, 2, 1, 1)
         self.line = QtWidgets.QFrame(self.frame_11)
         self.line.setMinimumSize(QtCore.QSize(0, 60))
@@ -896,29 +899,19 @@ class Ui_MainLibrator(object):
         font.setPointSize(15)
         self.groupBox1.setFont(font)
         self.groupBox1.setObjectName("groupBox1")
-        self.gridLayout_4 = QtWidgets.QGridLayout(self.groupBox1)
-        self.gridLayout_4.setObjectName("gridLayout_4")
-        self.graphicsView1 = QtWidgets.QGraphicsView(self.groupBox1)
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.graphicsView1.setFont(font)
-        self.graphicsView1.setObjectName("graphicsView1")
-        self.gridLayout_4.addWidget(self.graphicsView1, 0, 0, 1, 1)
         self.gridLayout_3.addWidget(self.groupBox1, 0, 0, 1, 1)
         self.groupBox2 = QtWidgets.QGroupBox(self.tab)
         font = QtGui.QFont()
         font.setPointSize(15)
         self.groupBox2.setFont(font)
         self.groupBox2.setObjectName("groupBox2")
-        self.gridLayout_11 = QtWidgets.QGridLayout(self.groupBox2)
-        self.gridLayout_11.setObjectName("gridLayout_11")
-        self.graphicsView2 = QtWidgets.QGraphicsView(self.groupBox2)
+        self.gridLayout_3.addWidget(self.groupBox2, 0, 1, 1, 1)
+        self.groupBox3 = QtWidgets.QGroupBox(self.tab)
         font = QtGui.QFont()
-        font.setPointSize(12)
-        self.graphicsView2.setFont(font)
-        self.graphicsView2.setObjectName("graphicsView2")
-        self.gridLayout_11.addWidget(self.graphicsView2, 0, 0, 1, 1)
-        self.gridLayout_3.addWidget(self.groupBox2, 1, 0, 1, 1)
+        font.setPointSize(15)
+        self.groupBox3.setFont(font)
+        self.groupBox3.setObjectName("groupBox3")
+        self.gridLayout_3.addWidget(self.groupBox3, 1, 0, 1, 2)
         self.tabWidget.addTab(self.tab, "")
         self.gridLayout_2.addWidget(self.tabWidget, 2, 0, 1, 1)
         MainLibrator.setCentralWidget(self.centralwidget)
@@ -1363,6 +1356,7 @@ class Ui_MainLibrator(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabProtein), _translate("MainLibrator", "Protein"))
         self.groupBox1.setTitle(_translate("MainLibrator", "Subtype"))
         self.groupBox2.setTitle(_translate("MainLibrator", "Role"))
+        self.groupBox3.setTitle(_translate("MainLibrator", "Amino Acid Variation of Influenza HA/NA"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainLibrator", "Summary"))
         self.menuFile.setTitle(_translate("MainLibrator", "File"))
         self.menuSequences.setTitle(_translate("MainLibrator", "Sequences"))
@@ -1476,6 +1470,4 @@ class Ui_MainLibrator(object):
         self.actionPyMOL.setToolTip(_translate("MainLibrator", "Use PyMOL to visualize 3D structure"))
         self.actionGibsonClone.setText(_translate("MainLibrator", "GibsonClone"))
         self.actionGibsonClone.setToolTip(_translate("MainLibrator", "Generate Fragments for Gibson Clone use"))
-
-
 import VgenesResources_rc

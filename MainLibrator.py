@@ -6,12 +6,15 @@ from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QCursor
 from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion, creatnewFragmentDB,\
 	CopyDatatoDB2, RunMYSQL, RunMYSQLInsertion
+#from PyQt5.QtWebEngineWidgets import QWebEnginePage
+#from PyQt5.QtWebEngineWidgets import QWebEngineView
+
 from HA_numbering_function import HA_numbering_Jesse
 from itertools import combinations
 from collections import Counter
 from subprocess import call, Popen, PIPE
 from platform import system
-import os, sys, re, time, string
+import os, sys, re, time, string, sip
 import pandas as pd
 import numpy as np
 
@@ -2599,57 +2602,30 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global VGenesTextWindows
 	# def __init__(self, master=None):
 		super(LibratorMain, self).__init__()  # parent)
-
 		self.ui = Ui_MainLibrator()
-
 		self.ui.setupUi(self)
 
 		self.ui.listWidgetStrainsIn.itemClicked['QListWidgetItem*'].connect(self.ListItemChanged)
-
-		# self.ui.listWidgetStrainsIn.itemDoubleClicked['QListWidgetItem*'].connect(self.ChangeListName)
-
+		self.ui.listWidgetStrainsIn.itemSelectionChanged.connect(self.ListItemChanged)
 		self.ui.cboRole.currentTextChanged['QString'].connect(self.RoleChanged)
-
 		self.ui.cboForm.currentTextChanged['QString'].connect(self.FormChanged)
-
 		self.ui.cboSubtype.currentTextChanged['QString'].connect(self.SubTypeChanged)
-
 		self.ui.cboRecent.currentTextChanged['QString'].connect(self.OpenRecent)
-
 		self.ui.cboReportOptions.currentTextChanged['QString'].connect(self.GenerateReport)
-
 		self.ui.spnFrom.valueChanged['int'].connect(self.SeqFrom)
-
 		self.ui.spnTo.valueChanged['int'].connect(self.SeqTo)
-
 		self.ui.spnAlignFont.valueChanged['int'].connect(self.AlignFont)
-
-		#self.ui.txtDonorRegions.textChanged.connect(self.DonorRegions)
-
 		self.ui.txtDonorRegions.selectionChanged.connect(self.DonorRegionsDialog)
-
-		#self.ui.txtInsert_Base.textChanged.connect(self.Mutations)
-
 		self.ui.txtInsert_Base.selectionChanged.connect(self.MutationsDialog)
-
 		self.ui.txtName.cursorPositionChanged.connect(self.EditSeqName)
-
 		self.ui.tabWidget.currentChanged['int'].connect(self.FillAlignmentTab)
-
-		#self.ui.textSeq.textChanged.connect(self.SeqChanged)
-
-		#self.ui.txtSearch.textChanged.connect(self.searchPattern)
-
 		self.ui.rdoDNA.clicked.connect(self.resetSearch)
 		self.ui.rdoAA.clicked.connect(self.resetSearch)
 		self.ui.SearchButton.clicked.connect(self.searchPattern)
 
 		self.UpdateRecent()
-
 		self.modalessMutationDialog = None
-
 		self.modalessSeqEditDialog = None
-
 		self.TextEdit = VGenesTextMain()
 
 	def resetSearch(self):
@@ -2747,18 +2723,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			# self.ui.txtDNASeq.setFont(font)
 			self.ui.txtAASeq.setFont(font)
-
-		# elif self.ui.tabWidget.currentIndex() == 1:
-		# 	FontIs = self.ui.tableView.font()
-		# 	font = QFont(FontIs)
-		#
-		# 	FontSize = int(font.pointSize())
-		# 	if FontSize > 7:
-		# 		FontSize += 1
-		# 	font.setPointSize(FontSize)
-		# 	font.setFamily('Lucida Grande')
-		#
-		# 	self.ui.tableView.setFont(font)
 
 	@pyqtSlot()
 	def on_actionClean_triggered(self):
@@ -3288,7 +3252,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.ui.actionAA.setChecked(True)
 			self.ui.actionDNA.setChecked(True)
 			self.ui.actionBA.setChecked(False)
-			self.ui.listWidgetStrainsIn.selectAll()
+			#self.ui.listWidgetStrainsIn.selectAll()
 			listItems = self.ui.listWidgetStrainsIn.selectedItems()
 			WhereState = ''
 			NumSeqs = len(listItems)
@@ -3354,15 +3318,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 			#colors = ['hotpink','slateblue','goldenrod','olivedrab',"maroon", "grey", "orange", "deepskyblue", "peru", "m"]
 			colors = sns.color_palette("hls", len(values))
 
-			F = MyFigure(width=6, height=3, dpi=144)
+			F = MyFigure(width=3, height=3, dpi=160)
 			F.axes.pie(values, labels=labels, colors=colors, radius=1.0, pctdistance = 0.8,autopct='%1.1f%%',startangle=90)
 			x = [1, 0, 0, 0]
 			F.axes.pie(x, colors = 'w', radius=0.6)
 
-			scene = QGraphicsScene()
-			scene.addWidget(F)
-			self.ui.graphicsView1.setScene(scene)
-			self.ui.graphicsView1.show()
+			gridlayout_fig1 = QGridLayout(self.ui.groupBox1)
+			gridlayout_fig1.addWidget(F,0,1)
 
 			#  plot stat for Role
 			# get data
@@ -3377,16 +3339,227 @@ class LibratorMain(QtWidgets.QMainWindow):
 			values = result.values()
 			colors = sns.color_palette("hls", len(values))
 
-			F = MyFigure(width=6, height=3, dpi=144)
+			F = MyFigure(width=3, height=3, dpi=160)
 			F.axes.pie(values, labels=labels, colors=colors, radius=1.0, pctdistance = 0.8,autopct='%1.1f%%',startangle=90)
 			x = [1, 0, 0, 0]
 			F.axes.pie(x, colors='w', radius=0.6)
 
-			scene = QGraphicsScene()
-			scene.addWidget(F)
-			self.ui.graphicsView2.setScene(scene)
-			self.ui.graphicsView2.show()
+			gridlayout_fig2 = QGridLayout(self.ui.groupBox2)
+			gridlayout_fig2.addWidget(F, 0, 1)
 
+			#  plot stat for something
+			# get data
+			self.ui.comboBoxHANA = QComboBox()
+			self.ui.comboBoxHANA.addItem("HA")
+			self.ui.comboBoxHANA.addItem("NA")
+			self.ui.comboBoxHANA.currentIndexChanged.connect(self.FigChange)
+
+			self.ui.comboBoxIndex = QComboBox()
+			self.ui.comboBoxIndex.addItem("Percentage of Variation")
+			self.ui.comboBoxIndex.addItem("Amino Acid Variation Index")
+			self.ui.comboBoxIndex.currentIndexChanged.connect(self.FigChange)
+
+			self.Stat_fig()
+
+			gridlayout_fig3 = QGridLayout(self.ui.groupBox3)
+			gridlayout_fig3.addWidget(self.ui.comboBoxHANA, 1, 0)
+			gridlayout_fig3.addWidget(self.ui.comboBoxIndex, 1, 1)
+			gridlayout_fig3.addWidget(self.F, 2, 0, 10, 0)
+
+	def FigChange(self):
+		sip.delete(self.F)
+		self.Stat_fig()
+		#self.ui.groupBox3.layout().itemAt(2).widget().deleteLater()
+		self.ui.groupBox3.layout().addWidget(self.F, 2, 0, 10, 0)
+
+
+	def Stat_fig(self):
+		self.F = MyFigure(width=6, height=3, dpi=160)
+
+		if self.ui.comboBoxHANA.currentIndex() == 0 and self.ui.comboBoxIndex.currentIndex() == 0:  # HA + PCT
+			AAVI_seaH1 = [0, 0, 0.19, 0.03, 0, 0.01, 0.05, 0, 0, 0.01, 0.10, 0.06, 0.09, 0, 0.01, 0.08, 0, 0, 0, 0.01,
+			              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			              0, 0, 0.46, 0.16, 0, 0, 0, 0, 0, 0, 0.11, 0, 0.01, 0, 0.08, 0, 0, 0, 0.01, 0, 0, 0.07, 0,
+			              0.04, 0.09, 0, 0, 0, 0.03, 0, 0, 0, 0, 0, 0, 0.06, 0.12, 0, 0.12, 0.03, 0.05, 0.08, 0.01, 0,
+			              0, 0, 0, 0.09, 0, 0.39, 0.01, 0.02, 0.08, 0.02, 0, 0, 0.02, 0, 0, 0, 0, 0.32, 0, 0.04, 0.01,
+			              0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0, 0.01, 0, 0, 0.01, 0.01, 0, 0, 0, 0, 0, 0, 0, 0.06, 0.03, 0,
+			              0, 0, 0.07, 0, 0.07, 0.06, 0.02, 0.40, 0, 0.03, 0.11, 0.01, 0.04, 0, 0.01, 0.01, 0.08, 0,
+			              0.35, 0.11, 0, 0, 0, 0.18, 0, 0, 0.01, 0, 0, 0.01, 0.16, 0.01, 0.04, 0.02, 0.08, 0, 0, 0.05,
+			              0, 0.03, 0.07, 0, 0, 0.16, 0, 0.03, 0.01, 0.06, 0, 0, 0, 0, 0.01, 0, 0, 0, 0.02, 0, 0.01, 0,
+			              0.11, 0.14, 0.05, 0.34, 0.25, 0, 0.42, 0.50, 0.08, 0, 0.17, 0.18, 0.02, 0.01, 0, 0, 0, 0.01,
+			              0, 0.02, 0.01, 0, 0.05, 0, 0.08, 0.01, 0.31, 0, 0.01, 0, 0, 0.02, 0.02, 0.05, 0, 0, 0, 0.01,
+			              0, 0.07, 0.01, 0.05, 0, 0, 0.03, 0, 0, 0, 0, 0, 0, 0.01, 0.01, 0, 0.03, 0.01, 0, 0, 0.02, 0,
+			              0, 0, 0.04, 0, 0, 0, 0.01, 0.01, 0, 0.15, 0.14, 0, 0, 0.01, 0.01, 0.02, 0.01, 0.01, 0.03,
+			              0.01, 0, 0, 0, 0, 0.32, 0, 0.01, 0.01, 0.11, 0.02, 0.16, 0.44, 0, 0.03, 0.06, 0.01, 0, 0, 0,
+			              0, 0.03, 0, 0, 0, 0, 0.01, 0.01, 0, 0, 0.01, 0, 0, 0.05, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			              0.01, 0, 0.16, 0, 0, 0, 0, 0.03, 0, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0, 0, 0,
+			              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			              0, 0.02, 0.01, 0, 0, 0, 0.01, 0, 0, 0.03, 0, 0, 0, 0, 0, 0, 0, 0.01, 0.03, 0, 0.01, 0, 0, 0,
+			              0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.02, 0.02, 0, 0, 0.07, 0, 0.01, 0, 0.01, 0, 0, 0, 0, 0, 0,
+			              0, 0, 0, 0.32, 0, 0.12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0.02,
+			              0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0.17, 0, 0, 0.02, 0, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0,
+			              0, 0, 0, 0, 0, 0, 0.04, 0.17, 0.01, 0, 0, 0, 0, 0, 0.02, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.02,
+			              0, 0, 0.01, 0, 0.13, 0, 0.01, 0.01, 0.01, 0, 0, 0, 0, 0, 0, 0, 0.01, 0.01, 0.02, 0, 0, 0, 0,
+			              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			              0, 0, 0.01, 0, 0, 0]
+			AAVI_pdmH1 = [0, 0.01, 0.04, 0.01, 0, 0.02, 0.01, 0.02, 0, 0.03, 0, 0.01, 0.43, 0.01, 0.01, 0.01, 0.01, 0,
+			              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			              0.01, 0, 0.01, 0, 0, 0.01, 0.01, 0, 0.01, 0.01, 0, 0, 0, 0, 0, 0.03, 0, 0.02, 0.02, 0, 0,
+			              0.01, 0, 0, 0.01, 0, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0.02, 0, 0, 0, 0.01, 0.40,
+			              0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0.44, 0, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0.23, 0, 0, 0,
+			              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0, 0.01, 0, 0, 0.01, 0.07, 0.01, 0, 0, 0, 0.01,
+			              0.01, 0.01, 0.02, 0.10, 0.02, 0, 0, 0, 0.01, 0, 0, 0.04, 0.03, 0.01, 0, 0.02, 0.01, 0.04, 0,
+			              0, 0, 0, 0, 0, 0, 0, 0.02, 0, 0, 0.01, 0.02, 0, 0, 0, 0.02, 0.02, 0.46, 0.33, 0.38, 0, 0.01,
+			              0, 0.01, 0, 0, 0, 0.01, 0.04, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.29, 0, 0.32, 0.03, 0.01, 0, 0,
+			              0.01, 0.01, 0, 0, 0, 0.01, 0, 0.05, 0, 0.01, 0, 0, 0, 0.03, 0, 0.04, 0, 0, 0, 0, 0, 0.01, 0,
+			              0, 0, 0.02, 0.48, 0, 0, 0, 0, 0, 0.04, 0.02, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.03, 0.05, 0.04, 0,
+			              0, 0, 0, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0.02, 0.01, 0, 0, 0, 0, 0, 0.33, 0.01, 0, 0.01, 0.14,
+			              0.02, 0, 0, 0, 0, 0.01, 0.01, 0, 0.01, 0.01, 0.01, 0.02, 0.01, 0.01, 0, 0, 0, 0, 0, 0, 0,
+			              0.02, 0.29, 0, 0, 0.02, 0, 0, 0, 0, 0, 0, 0.01, 0, 0.40, 0.01, 0.01, 0.02, 0, 0, 0, 0.03, 0,
+			              0, 0, 0, 0, 0.01, 0, 0, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.03, 0, 0, 0.01, 0, 0, 0, 0, 0, 0,
+			              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0, 0, 0,
+			              0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0.01, 0, 0.02, 0, 0.16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.05, 0, 0, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0,
+			              0, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0,
+			              0, 0, 0, 0, 0, 0.25, 0, 0, 0, 0.01, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01,
+			              0.01, 0.02, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0, 0.01, 0, 0, 0.01, 0, 0, 0.02, 0, 0, 0, 0, 0.03,
+			              0, 0, 0.27, 0, 0.02, 0, 0, 0.02, 0, 0.03, 0, 0, 0.01, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.09,
+			              0, 0, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+			AAVI_H3 = [0, 0.01, 0.01, 0.01, 0, 0, 0.01, 0.01, 0.08, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.04, 0, 0.03,
+			           0.38, 0, 0.02, 0.01, 0.01, 0.01, 0.01, 0.02, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0, 0, 0.06,
+			           0, 0, 0, 0, 0, 0.03, 0, 0.26, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.22, 0.01, 0.01, 0.24, 0.01,
+			           0.09, 0, 0, 0.10, 0.01, 0, 0.01, 0.04, 0.02, 0, 0, 0, 0.20, 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0, 0,
+			           0, 0, 0.06, 0, 0, 0.03, 0.01, 0, 0, 0.02, 0.07, 0, 0, 0, 0, 0.01, 0, 0, 0.06, 0.19, 0, 0.07, 0,
+			           0.01, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0.02, 0, 0, 0, 0, 0, 0.01, 0, 0.01, 0, 0, 0, 0, 0, 0, 0.32,
+			           0.06, 0, 0.04, 0, 0.01, 0, 0.21, 0, 0, 0.21, 0, 0.03, 0, 0.15, 0, 0.04, 0.11, 0, 0.12, 0, 0.51,
+			           0.01, 0.51, 0.23, 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0, 0.05, 0.06, 0.05, 0.14, 0.39, 0.49, 0, 0.01,
+			           0.01, 0.01, 0, 0, 0, 0.01, 0, 0, 0.28, 0.04, 0.12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.05, 0,
+			           0.01, 0.12, 0.02, 0, 0.06, 0.16, 0.01, 0, 0.03, 0.08, 0.25, 0.03, 0, 0.01, 0.05, 0.01, 0, 0, 0,
+			           0.01, 0.01, 0, 0, 0, 0.19, 0.02, 0.02, 0, 0.01, 0.01, 0, 0.06, 0, 0.01, 0.05, 0.20, 0, 0.31,
+			           0.06, 0.06, 0, 0.01, 0.04, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0.01, 0, 0.01, 0, 0.01, 0,
+			           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.02, 0.17, 0.05, 0, 0.01, 0, 0, 0, 0, 0.01, 0, 0.01, 0, 0.01, 0,
+			           0.01, 0.04, 0, 0.24, 0, 0.04, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0.01, 0, 0, 0, 0, 0, 0, 0, 0.02,
+			           0, 0, 0, 0, 0.01, 0, 0, 0.01, 0, 0.01, 0, 0.39, 0.22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0,
+			           0.09, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.03, 0.12, 0, 0, 0, 0, 0, 0, 0,
+			           0, 0, 0, 0, 0, 0, 0.12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0.01, 0.07, 0, 0, 0.01, 0, 0, 0,
+			           0, 0, 0.01, 0, 0.05, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.27, 0, 0, 0, 0,
+			           0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			           0, 0, 0, 0.01, 0, 0, 0, 0, 0.07, 0, 0.04, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0,
+			           0.01, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0.05, 0.05, 0, 0, 0, 0, 0.26, 0, 0, 0.03, 0, 0.35, 0.01, 0,
+			           0, 0.01, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0.01, 0, 0, 0, 0, 0, 0, 0.01, 0, 0, 0,
+			           0, 0, 0, 0.02, 0, 0, 0, 0, 0, 0, 0.08, 0.11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0,
+			           0.01, 0, 0, 0]
+			x = range(len(AAVI_seaH1))
+			self.F.axes.bar(x, AAVI_seaH1, width=0.3, alpha=0.8, color='red', label="Season H1")
+			self.F.axes.bar([i + 0.3 for i in x], AAVI_pdmH1, width=0.3, alpha=0.8, color='blue', label="pdm09 H1")
+			self.F.axes.bar([i + 0.6 for i in x], AAVI_H3, width=0.3, alpha=0.8, color='green', label="H3")
+			self.F.fig.suptitle("Pct of variations for HA")
+		elif self.ui.comboBoxHANA.currentIndex() == 1 and self.ui.comboBoxIndex.currentIndex() == 0:  # NA + PCT
+			t = np.arange(0.0, 5.0, 0.01)
+			s = np.cos(2 * np.pi * t)
+			self.F.axes.plot(t, s)
+			self.F.fig.suptitle("cos2")
+		elif self.ui.comboBoxHANA.currentIndex() == 0 and self.ui.comboBoxIndex.currentIndex() == 1:  # HA + AAVI
+			AAVI_seaH1 = [0, 0.02, 1.82, 0.39, 0.02, 0.05, 0.39, 0, 0, 0.04, 0.83, 0.62, 1.22, 0.01, 0.10, 1.16, 0,
+			              0, 0, 0.02, 0, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0, 0.04, 0.02, 0, 0, 0, 0,
+			              0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4.99, 2.36, 0, 0, 0, 0.01, 0, 0, 1.37, 0, 0.09, 0, 1.25,
+			              0.01, 0, 0, 0.03, 0, 0, 0.56, 0, 0.28, 0.64, 0.01, 0, 0, 0.27, 0, 0, 0, 0, 0.02, 0, 0.57,
+			              1.22, 0, 2.29, 0.32, 0.90, 1.54, 0.06, 0, 0, 0, 0.01, 0.98, 0, 8.83, 0.03, 0.15, 0.69,
+			              0.15, 0, 0, 0.16, 0, 0, 0, 0, 7.20, 0, 0.45, 0.05, 0, 0.02, 0, 0, 0.03, 0, 0.01, 0, 0.01,
+			              0, 0.05, 0, 0, 0.02, 0.03, 0, 0, 0, 0.01, 0, 0, 0, 1.10, 0.42, 0.01, 0, 0.01, 1.21, 0,
+			              0.94, 0.81, 0.26, 3.13, 0, 0.19, 0.78, 0.03, 0.22, 0, 0.03, 0.03, 1.68, 0.01, 6.80, 1.55,
+			              0, 0, 0, 1.73, 0, 0, 0.06, 0, 0, 0.03, 3.14, 0.09, 0.56, 0.19, 0.61, 0, 0, 0.84, 0, 0.50,
+			              1.19, 0.01, 0.01, 2.38, 0, 0.29, 0.02, 0.72, 0.01, 0, 0.01, 0, 0.03, 0.01, 0, 0, 0.09, 0,
+			              0.04, 0, 0.86, 2.46, 0.69, 15.50, 6.11, 0, 11.87, 9.27, 0.62, 0, 3.70, 2.40, 0.17, 0.08,
+			              0.01, 0.02, 0, 0.02, 0, 0.22, 0.05, 0.02, 0.55, 0, 0.73, 0.02, 2.56, 0, 0.10, 0, 0, 0.11,
+			              0.21, 0.69, 0, 0, 0, 0.03, 0.01, 0.79, 0.06, 0.74, 0, 0, 0.18, 0.02, 0, 0, 0, 0.01, 0,
+			              0.02, 0.06, 0, 0.26, 0.03, 0.02, 0, 0.15, 0, 0, 0, 0.36, 0, 0, 0, 0.03, 0.02, 0, 1.62,
+			              1.57, 0, 0, 0.02, 0.02, 0.15, 0.02, 0.04, 0.35, 0.06, 0, 0, 0, 0, 4.66, 0, 0.06, 0.04,
+			              0.97, 0.13, 2.70, 8.03, 0, 0.22, 0.66, 0.02, 0, 0, 0, 0, 0.33, 0, 0.01, 0.01, 0, 0.05,
+			              0.02, 0.01, 0, 0.02, 0, 0, 0.33, 0, 0, 0.02, 0, 0, 0, 0, 0, 0, 0.01, 0, 0, 0.06, 0, 1.66,
+			              0.01, 0, 0, 0.02, 0.16, 0, 0, 0, 0, 0, 0.05, 0, 0, 0.01, 0, 0.04, 0, 0, 0, 0.01, 0, 0, 0,
+			              0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0, 1.10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			              0, 0, 0, 0.12, 0.02, 0, 0, 0, 0.03, 0, 0, 0.17, 0.01, 0, 0, 0.02, 0, 0.01, 0, 0.04, 0.19,
+			              0, 0.03, 0, 0, 0, 0.08, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0.12, 0.28, 0, 0, 0.52, 0, 0.06,
+			              0.02, 0.02, 0, 0.02, 0, 0, 0, 0, 0, 0, 0, 2.92, 0, 1.08, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			              0, 0, 0, 0, 0, 0, 0.02, 0.04, 0, 0.16, 0.04, 0, 0.01, 0.01, 0, 0, 0, 0.01, 0, 0, 0.06,
+			              3.09, 0, 0, 0.09, 0.01, 0, 0, 0, 0, 0.07, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.20, 1.31,
+			              0.07, 0, 0, 0, 0, 0, 0.10, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0, 0.10, 0, 0, 0.06, 0, 1.83,
+			              0.01, 0.03, 0.11, 0.03, 0, 0, 0.01, 0.01, 0, 0, 0, 0.03, 0.12, 0.09, 0.01, 0.01, 0, 0,
+			              0.01, 0, 0, 0, 0, 0.02, 0, 0, 0, 0, 0, 0, 0.01, 0.02, 0, 0, 0, 0, 0, 0.02, 0, 0, 0, 0, 0,
+			              0, 0, 0, 0.01, 0, 0, 0.08, 0.01, 0, 0]
+			AAVI_pdmH1 = [0, 0.15, 0.97, 0.18, 0.02, 0.37, 0.10, 0.19, 0.01, 0.66, 0.08, 0.34, 12.57, 0.23, 0.20,
+			              0.23, 0.06, 0.01, 0.03, 0, 0, 0.01, 0, 0.01, 0, 0.01, 0, 0, 0, 0, 0.07, 0.04, 0.01, 0.01,
+			              0, 0.10, 0, 0, 0.03, 0.01, 0.01, 0, 0.01, 0, 0, 0, 0.06, 0.04, 0.11, 0, 0, 0.36, 0.17,
+			              0.02, 0.15, 0.08, 0.02, 0, 0, 0.08, 0, 0.73, 0, 0.47, 0.61, 0, 0, 0.11, 0, 0, 0.10, 0,
+			              0.07, 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0, 0.02, 0, 0.08, 0.44, 0.06, 0.06, 0.07, 0.18, 13.29,
+			              0, 0, 0.01, 0, 0, 0, 0, 0.05, 0.21, 14.90, 0.02, 0.17, 0, 0, 0, 0, 0, 0, 0, 0.05, 0, 0.10,
+			              3.94, 0, 0.01, 0, 0, 0, 0, 0.01, 0, 0.01, 0, 0.02, 0, 0.01, 0.01, 0.04, 0.09, 0, 0, 0.12,
+			              0, 0, 0.09, 1.77, 0.21, 0, 0, 0, 0.13, 0.05, 0.10, 0.39, 2.31, 0.28, 0, 0.05, 0, 0.10, 0,
+			              0, 0.72, 0.76, 0.20, 0.01, 0.38, 0.08, 0.57, 0, 0, 0.08, 0, 0, 0.05, 0, 0, 0.32, 0.01,
+			              0.02, 0.14, 0.41, 0.02, 0, 0, 0.45, 0.22, 14.82, 13.85, 10.98, 0, 0.24, 0, 0.06, 0.01,
+			              0.03, 0.02, 0.08, 0.37, 0, 0, 0.01, 0, 0.01, 0.01, 0, 0, 0.01, 5.84, 0.02, 12.56, 0.56,
+			              0.19, 0, 0.04, 0.33, 0.04, 0, 0.01, 0.01, 0.15, 0.01, 0.74, 0.01, 0.08, 0.01, 0, 0.03,
+			              0.34, 0, 0.80, 0, 0.01, 0.04, 0.05, 0.02, 0.09, 0, 0, 0.02, 0.57, 19.24, 0, 0.01, 0.01,
+			              0.02, 0.01, 1.24, 0.14, 0.05, 0, 0, 0.02, 0.04, 0, 0.01, 0, 0.02, 0.32, 0.85, 0.85, 0,
+			              0.01, 0.01, 0.02, 0.04, 0.03, 0, 0, 0, 0, 0, 0, 0, 0.32, 0.15, 0, 0.01, 0.01, 0, 0, 10.72,
+			              0.18, 0.07, 0.06, 4.95, 0.51, 0.03, 0.04, 0.01, 0, 0.09, 0.09, 0.01, 0.07, 0.15, 0.30,
+			              0.47, 0.38, 0.29, 0, 0.01, 0.02, 0.04, 0, 0, 0, 0.46, 10.02, 0, 0.01, 0.45, 0.01, 0, 0.01,
+			              0.01, 0, 0, 0.07, 0.03, 7.19, 0.16, 0.10, 0.41, 0.01, 0, 0, 0.79, 0, 0.01, 0, 0, 0, 0.06,
+			              0, 0.08, 0.09, 0, 0.03, 0.01, 0.03, 0, 0, 0, 0, 0, 0.54, 0.01, 0.02, 0.19, 0, 0.01, 0.01,
+			              0, 0, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.02, 0.01, 0, 0, 0, 0, 0.01, 0.02,
+			              0.01, 0.01, 0.01, 0.12, 0, 0, 0, 0, 0.01, 0, 0, 0, 0.18, 0.01, 0, 0, 0, 0.35, 0.01, 0.37,
+			              0, 4.35, 0.01, 0, 0.01, 0, 0.01, 0, 0.01, 0.01, 0.02, 0.01, 0, 0, 0, 0.03, 0.01, 0, 0.02,
+			              0.03, 0.03, 0.01, 0, 0, 0, 0.01, 0.04, 0, 0.02, 0.03, 0.01, 0.90, 0.02, 0, 0, 0, 0, 0,
+			              0.05, 0, 0, 0, 0, 0, 0, 0.12, 0, 0, 0, 0, 0.01, 0, 0, 0, 0.02, 0, 0, 0, 0, 0, 0.01, 0.04,
+			              0, 0.01, 0, 0, 0.03, 0, 0.03, 0, 0.02, 0.11, 0, 0.01, 0.02, 0.02, 0.05, 0.05, 9.18, 0, 0,
+			              0.04, 0.29, 0, 0, 0.07, 0, 0.12, 0, 0.02, 0.01, 0, 0, 0, 0, 0.01, 0, 0.01, 0, 0.06, 0.07,
+			              0.48, 0, 0.02, 0.01, 0.03, 0.05, 0.01, 0.01, 0.05, 0.01, 0, 0.10, 0, 0, 0.18, 0, 0.02,
+			              0.41, 0, 0.05, 0.04, 0, 0.70, 0.01, 0.01, 5.74, 0.01, 0.41, 0, 0.03, 0.30, 0, 0.32, 0.01,
+			              0.01, 0.14, 0.17, 0, 0.01, 0.01, 0, 0.01, 0, 0, 0, 0.01, 1.30, 0, 0, 0, 0.02, 0.05, 0.02,
+			              0.12, 0.02, 0, 0, 0, 0, 0.03, 0.03, 0, 0, 0, 0, 0.01, 0, 0, 0, 0, 0, 0, 0.01, 0.06, 0, 0]
+			AAVI_H3 = [0, 0.09, 0.15, 0.25, 0.03, 0, 0.11, 0.12, 2.24, 0.22, 0.36, 0.28, 0.44, 0.50, 0.52, 1.08,
+			           0.04, 0.91, 15.73, 0.05, 0.57, 0.31, 0.12, 0.20, 0.22, 0.34, 0, 0.07, 0, 0, 0.02, 0, 0, 0.02,
+			           0.01, 0.01, 0.17, 0.01, 0, 0.01, 1.81, 0, 0.04, 0, 0.01, 0.06, 0.81, 0.04, 7.26, 0.10, 0, 0,
+			           0, 0.01, 0, 0, 0, 0, 0.02, 0.02, 7.93, 0.20, 0.18, 10.14, 0.11, 3.63, 0.01, 0, 3.82, 0.28, 0,
+			           0.17, 1.12, 0.24, 0.03, 0, 0, 9.38, 0.09, 0, 0.01, 0.02, 0.08, 0, 0.01, 0, 0, 0, 0, 0, 1.45,
+			           0, 0.04, 0.72, 0.10, 0.03, 0.07, 0.55, 2.08, 0, 0.03, 0.01, 0.01, 0.09, 0, 0, 1.75, 7.60,
+			           0.04, 2.39, 0.01, 0.15, 0, 0, 0, 0, 0.06, 0.01, 0.08, 0.07, 0.05, 0.34, 0.05, 0, 0.01, 0,
+			           0.01, 0.17, 0.01, 0.19, 0.01, 0, 0.07, 0, 0.01, 0, 18.50, 2.56, 0, 1.70, 0, 0.33, 0, 7.82,
+			           0.01, 0.02, 7.65, 0, 0.59, 0, 8.01, 0, 1.39, 2.00, 0, 6.36, 0.02, 19.74, 0.16, 37.29, 9.29,
+			           0.12, 0, 0, 0.01, 0.18, 0, 0, 0, 0, 1.04, 2.26, 0.94, 6.77, 12.53, 19.46, 0.01, 0.12, 0.32,
+			           0.08, 0.04, 0.03, 0.04, 0.16, 0.07, 0, 10.19, 0.79, 5.09, 0.02, 0.02, 0, 0, 0, 0.02, 0, 0,
+			           0.07, 0.03, 0, 0, 1.98, 0.02, 0.31, 4.66, 0.40, 0, 1.77, 6.84, 0.29, 0.01, 0.70, 2.45, 8.58,
+			           0.65, 0.01, 0.09, 0.78, 0.10, 0.01, 0, 0, 0.29, 0.21, 0.08, 0, 0, 5.18, 0.28, 0.58, 0.01,
+			           0.15, 0.08, 0.04, 1.53, 0.05, 0.25, 0.90, 4.67, 0, 9.02, 2.17, 1.00, 0, 0.15, 0.85, 0.01,
+			           0.02, 0.02, 0, 0.01, 0.06, 0, 0.08, 0.03, 0.01, 0, 0.37, 0.01, 0.10, 0.01, 0.13, 0.04, 0.21,
+			           0, 0, 0, 0.02, 0, 0, 0.01, 0, 0, 0, 0.05, 0.38, 4.63, 1.89, 0.03, 0.17, 0.02, 0, 0.05, 0.04,
+			           0.12, 0, 0.10, 0.08, 0.26, 0.03, 0.26, 1.35, 0, 11.20, 0.08, 1.48, 0, 0.01, 0.01, 0, 0.01, 0,
+			           0, 0.01, 0.13, 0.03, 0.27, 0.02, 0, 0, 0, 0.01, 0.02, 0.01, 0.32, 0.06, 0.01, 0.01, 0, 0.40,
+			           0, 0.01, 0.11, 0.01, 0.10, 0.03, 8.85, 8.25, 0.02, 0, 0.01, 0, 0, 0, 0, 0, 0, 0, 0.10, 0.01,
+			           0.03, 1.90, 0.03, 0.07, 0.01, 0, 0.05, 0, 0.01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0.47,
+			           3.98, 0.01, 0, 0, 0, 0, 0.01, 0.01, 0, 0.05, 0, 0.09, 0.01, 0, 4.03, 0, 0, 0.01, 0, 0.01,
+			           0.02, 0.04, 0, 0, 0, 0.10, 0.01, 0.10, 1.07, 0.01, 0.01, 0.08, 0.03, 0.01, 0.01, 0.01, 0.05,
+			           0.16, 0.05, 1.38, 0.02, 0.01, 0.01, 0.07, 0, 0.01, 0, 0.01, 0.01, 0, 0.01, 0, 0, 0.04, 0.01,
+			           0.05, 0, 0.01, 0, 7.74, 0.01, 0.09, 0.07, 0.01, 0.05, 0, 0.04, 0, 0, 0.06, 0, 0.14, 0, 0.02,
+			           0, 0.01, 0, 0.05, 0.04, 0.05, 0.05, 0.03, 0.02, 0.06, 0.02, 0, 0, 0.01, 0.04, 0.01, 0.03,
+			           0.02, 0.02, 0.01, 0.01, 0.05, 0.01, 0.01, 0.18, 0.01, 0.01, 0, 0.01, 1.74, 0.01, 0.81, 0.26,
+			           0.01, 0.01, 0.01, 0, 0, 0, 0, 0, 0.20, 0.01, 0, 0, 0, 0.01, 0.13, 0.01, 0, 0, 0.07, 0, 0.02,
+			           0.01, 0.21, 0, 0.97, 1.40, 0.01, 0.01, 0.01, 0.02, 4.02, 0.02, 0, 0.63, 0, 14.32, 0.17, 0, 0,
+			           0.20, 0, 0.01, 0.01, 0.02, 0.05, 0, 0.01, 0.11, 0.02, 0.07, 0.03, 0.19, 0.09, 0, 0.10, 0.04,
+			           0.06, 0.02, 0.01, 0.05, 0, 0.09, 0.03, 0, 0.01, 0, 0.01, 0.02, 0.34, 0, 0.01, 0.04, 0.01,
+			           0.04, 0.02, 2.19, 2.71, 0.03, 0.03, 0, 0.04, 0.05, 0.05, 0, 0.03, 0, 0.02, 0.11, 0.01, 0.01,
+			           0.01, 0.06, 0, 0.11, 0.01, 0, 0.01]
+			x = range(len(AAVI_seaH1))
+			self.F.axes.bar(x, AAVI_seaH1, width=0.3, alpha=0.8, color='red', label="Season H1")
+			self.F.axes.bar([i + 0.3 for i in x], AAVI_pdmH1, width=0.3, alpha=0.8, color='blue', label="pdm09 H1")
+			self.F.axes.bar([i + 0.6 for i in x], AAVI_H3, width=0.3, alpha=0.8, color='green', label="H3")
+			self.F.fig.suptitle("AAVI for HA")
+		elif self.ui.comboBoxHANA.currentIndex() == 1 and self.ui.comboBoxIndex.currentIndex() == 1:  # NA + AAVI
+			t = np.arange(0.0, 5.0, 0.01)
+			s = np.cos(4 * np.pi * t)
+			self.F.axes.plot(t, s)
+			self.F.fig.suptitle("cos4")
 
 
 	@pyqtSlot()
@@ -7201,62 +7374,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		DBFilename = openFile(self, 'ldb')
 		if DBFilename == None or DBFilename == 'none':
 			return
-
-		# check if this is the right DB
-		SQLStatement = 'SELECT * FROM LibDB ORDER BY SeqName DESC LIMIT 1 '
-		try:
-			DataIn = RunSQL(DBFilename, SQLStatement)
-		except:
-			QMessageBox.warning(self, 'Warning', 'There is no LibDB table in the selected database!',
-			                    QMessageBox.Ok,
-			                    QMessageBox.Ok)
-			return
-
-		if isinstance(DBFilename, str):
-			titletext = 'Librator - ' + DBFilename
-			self.setWindowTitle(titletext)
-
-			# self.ui.listWidgetStrainsIn.setCurrentRow(0)
-
-			self.PopulateCombos()
-			self.UpdateRecentFilelist(DBFilename)
-			# self.ui.listWidgetStrainsIn.setCurrentIndex(0)
-
-			ItemsList = self.ui.listWidgetStrainsIn.count()
-			if ItemsList > 0:
-				self.ui.listWidgetStrainsIn.setCurrentRow(0)
-				self.ListItemChanged()
-				for item in DataIs:
-					FromV = int(item[5])-1
-					if FromV == -1: FromV = 0
-					ToV = int(item[6])-1
-
-					HASeq = item[1]
-					HASeq = HASeq[FromV:ToV]
-
-					AASeq = Translator(HASeq.upper(), 0)
-					AASeqIs = AASeq[0]
-				HANumbering(AASeqIs)
-
-			# check if the database have base sequence
-			SQLStatement = 'SELECT * FROM LibDB WHERE `Role` = "BaseSeq"'
-			data_fetch = RunSQL(DBFilename, SQLStatement)
-
-			if len(data_fetch) == 1:
-				CurName = data_fetch[0][0]
-				BaseSeq = CurName
-				self.ui.lblBaseName.setText(CurName)
-			elif len(data_fetch) > 1:
-				QMessageBox.warning(self, 'Warning', 'Your database have multiple base sequences! Will choose the first one as current base sequence',
-									QMessageBox.Ok, QMessageBox.Ok)
-				CurName = data_fetch[0][0]
-				BaseSeq = CurName
-				self.ui.lblBaseName.setText(CurName)
-			else:
-				BaseSeq = ''
-				self.ui.lblBaseName.setText('Sequence Name')
-		self.ui.cboRecent.setCurrentIndex(0)
-
+		self.open_db(DBFilename)
 
 	def open_db(self, infile):  # how to activate menu and toolbar actions!!!
 		#need to simply get database name and populate list views
@@ -7282,26 +7400,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# self.ui.listWidgetStrainsIn.setCurrentRow(0)
 			self.PopulateCombos()
 			self.UpdateRecentFilelist(DBFilename)
-			# self.ui.listWidgetStrainsIn.setCurrentIndex(0)
-
-			ItemsList = self.ui.listWidgetStrainsIn.count()
-			if ItemsList > 0:
-				self.ui.listWidgetStrainsIn.setCurrentRow(0)
-				self.ListItemChanged()
-				for item in DataIs:
-					FromV = int(item[5])-1
-					if FromV == -1: FromV = 0
-					ToV = int(item[6])-1
-
-					HASeq = item[1]
-					HASeq = HASeq[FromV:ToV]
-
-					AASeq = Translator(HASeq.upper(), 0)
-					AASeqIs = AASeq[0]
-				HANumbering(AASeqIs)
 
 			# refresh the list - all sequence list
 			self.ui.listWidgetStrains.clear()
+			self.ui.listWidgetStrainsIn.clear()
 			SQLStatement = 'SELECT `SeqName` FROM LibDB'
 			records = RunSQL(DBFilename, SQLStatement)
 			new_records = []
