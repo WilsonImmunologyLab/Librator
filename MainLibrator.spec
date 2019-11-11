@@ -30,7 +30,8 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=False , icon='Flu.icns')
+          console=False , 
+          icon='Flu.icns')
 app = BUNDLE(exe,
              name='MainLibrator.app',
              icon='Flu.icns',

@@ -1,12 +1,12 @@
 # Librator by Patrick Wilson
-from PyQt5.QtCore import pyqtSlot, QTimer, QDateTime, Qt, QSortFilterProxyModel, QModelIndex, QEventLoop, pyqtSignal,QEventLoop
+from PyQt5.QtCore import pyqtSlot, QTimer, QDateTime, Qt, QSortFilterProxyModel, QModelIndex, QEventLoop, pyqtSignal,\
+	QEventLoop, QUrl
 from PyQt5 import QtWidgets, QtPrintSupport
 from PyQt5.QtWidgets import *
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QCursor
 from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion, creatnewFragmentDB,\
 	CopyDatatoDB2, RunMYSQL, RunMYSQLInsertion
-#from PyQt5.QtWebEngineWidgets import QWebEnginePage
 #from PyQt5.QtWebEngineWidgets import QWebEngineView
 
 from HA_numbering_function import HA_numbering_Jesse
@@ -2628,6 +2628,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessSeqEditDialog = None
 		self.TextEdit = VGenesTextMain()
 
+		gridlayout_HTML = QGridLayout(self.ui.groupBoxHTML)
+		#view = QWebEngineView(self)
+		#view.load(QUrl("http://wilsonlab.uchicago.edu/"))
+		#gridlayout_HTML.addWidget(view)
+		#view.show()
+
 	def resetSearch(self):
 		self.ui.txtSearch.setPlainText('')
 
@@ -3596,7 +3602,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.F.axes.bar(x, AAVI_seaH1, width=0.3, alpha=0.8, color=colors[0], label="Season H1")
 			self.F.axes.bar([i + 0.3 for i in x], AAVI_pdmH1, width=0.3, alpha=0.8, color=colors[1], label="pdm09 H1")
 			self.F.axes.bar([i + 0.6 for i in x], AAVI_H3, width=0.3, alpha=0.8, color=colors[2], label="H3")
-			self.F.fig.suptitle("AAVI for HA")
+			self.F.fig.suptitle("Amino Acid Variation Index for HA")
 			self.F.fig.legend()
 			self.F.axes.spines['top'].set_visible(False)
 			self.F.axes.spines['right'].set_visible(False)
@@ -3626,7 +3632,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.F.axes.bar([i + 0.7 for i in x], pct_N8, width=0.1, alpha=0.8, color=colors[7], label="N8")
 			self.F.axes.bar([i + 0.8 for i in x], pct_N9, width=0.1, alpha=0.8, color=colors[8], label="N9")
 
-			self.F.fig.suptitle("Pct of variations for NA")
+			self.F.fig.suptitle("Amino Acid Variation Index for NA")
 			self.F.fig.legend()
 			self.F.axes.spines['top'].set_visible(False)
 			self.F.axes.spines['right'].set_visible(False)
