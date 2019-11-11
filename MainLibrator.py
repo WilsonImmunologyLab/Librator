@@ -719,7 +719,7 @@ class fusionDialog(QtWidgets.QDialog):
 		self.ui.confirmButton.clicked.connect(self.accept)
 		self.ui.cancelButton.clicked.connect(self.reject)
 		#self.ui.showButton.clicked.connect(self.showalignment)
-		self.ui.selection.clicked.connect(self.displaySeq)
+		self.ui.selection.itemSelectionChanged.connect(self.displaySeq)
 
 		self.ui.startBase.valueChanged.connect(self.highlight)
 		self.ui.endBase.valueChanged.connect(self.highlight)
