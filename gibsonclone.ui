@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>811</width>
-    <height>906</height>
+    <width>718</width>
+    <height>974</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Gibson Clone Fragments Design</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" colspan="2">
+  <layout class="QGridLayout" name="gridLayout_6">
+   <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="font">
       <font>
@@ -33,21 +33,21 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0" colspan="2">
+   <item row="2" column="0" colspan="3">
     <widget class="QListWidget" name="selection">
      <property name="selectionMode">
       <enum>QAbstractItemView::MultiSelection</enum>
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="2">
+   <item row="3" column="0">
     <widget class="QLabel" name="label_3">
      <property name="text">
       <string>Joint region for upstream end  (Gibson cloning into the vector):</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="2">
+   <item row="4" column="0" colspan="3">
     <widget class="QTextEdit" name="jointUP">
      <property name="maximumSize">
       <size>
@@ -57,14 +57,14 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="0" colspan="2">
+   <item row="5" column="0">
     <widget class="QLabel" name="label_5">
      <property name="text">
       <string>Joint region for 3' end  (instead of transmembrane region):</string>
      </property>
     </widget>
    </item>
-   <item row="6" column="0" colspan="2">
+   <item row="6" column="0" colspan="3">
     <widget class="QTextEdit" name="jointDOWN">
      <property name="maximumSize">
       <size>
@@ -74,14 +74,14 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="0" colspan="2">
+   <item row="7" column="0">
     <widget class="QLabel" name="label_6">
      <property name="text">
       <string>Fragments Database:</string>
      </property>
     </widget>
    </item>
-   <item row="8" column="0" colspan="2">
+   <item row="8" column="0" colspan="3">
     <widget class="QTabWidget" name="tabWidget">
      <property name="maximumSize">
       <size>
@@ -121,26 +121,6 @@
        <string>Remote DB</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>Server IP</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="IPinput"/>
-       </item>
-       <item row="0" column="2">
-        <widget class="QLabel" name="label_11">
-         <property name="text">
-          <string>Port</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="3" colspan="2">
-        <widget class="QLineEdit" name="Portinput"/>
-       </item>
        <item row="0" column="5">
         <widget class="QLabel" name="label_9">
          <property name="text">
@@ -151,6 +131,9 @@
        <item row="0" column="6">
         <widget class="QLineEdit" name="DBnameinput"/>
        </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="Userinput"/>
+       </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_8">
          <property name="text">
@@ -158,8 +141,8 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="Userinput"/>
+       <item row="0" column="3" colspan="2">
+        <widget class="QLineEdit" name="Portinput"/>
        </item>
        <item row="1" column="2" colspan="2">
         <widget class="QLabel" name="label_10">
@@ -168,31 +151,223 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>Server IP</string>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="4" colspan="3">
         <widget class="QLineEdit" name="Passinput"/>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLabel" name="label_11">
+         <property name="text">
+          <string>Port</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="IPinput"/>
        </item>
       </layout>
      </widget>
     </widget>
    </item>
-   <item row="9" column="0" colspan="2">
+   <item row="9" column="0">
     <widget class="QLabel" name="label_4">
      <property name="text">
       <string>Gibson clone fragments files output path:</string>
      </property>
     </widget>
    </item>
-   <item row="10" column="0">
+   <item row="10" column="0" colspan="2">
     <widget class="QLineEdit" name="outpath"/>
    </item>
-   <item row="10" column="1">
+   <item row="10" column="2">
     <widget class="QPushButton" name="browse">
      <property name="text">
       <string>Browse</string>
      </property>
     </widget>
    </item>
-   <item row="11" column="0" colspan="2">
+   <item row="11" column="0" colspan="3">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Subtype</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_5">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="radioButtonH1">
+        <property name="text">
+         <string>H1/Group1</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="radioButtonH3">
+        <property name="text">
+         <string>H3/Group2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QRadioButton" name="radioButtonNA">
+        <property name="text">
+         <string>NA</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="12" column="0" colspan="3">
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Joint Region Design</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="radioButtonDefault">
+        <property name="text">
+         <string>Default</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="radioButtonUser">
+        <property name="text">
+         <string>User Defined</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="13" column="0" colspan="3">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="5">
+      <widget class="QLineEdit" name="F2_start">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLineEdit" name="F1_end">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLabel" name="label_18">
+       <property name="text">
+        <string>to</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_14">
+       <property name="text">
+        <string>Fragment 3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="6">
+      <widget class="QLabel" name="label_19">
+       <property name="text">
+        <string>to</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="F3_start">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="5">
+      <widget class="QLineEdit" name="F4_start">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="4">
+      <widget class="QLabel" name="label_16">
+       <property name="text">
+        <string>Fragment 4</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="F1_start">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_17">
+       <property name="text">
+        <string>to</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="6">
+      <widget class="QLabel" name="label_20">
+       <property name="text">
+        <string>to</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_13">
+       <property name="text">
+        <string>Fragment 1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <widget class="QLabel" name="label_15">
+       <property name="text">
+        <string>Fragment 2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QLineEdit" name="F3_end">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="7">
+      <widget class="QLineEdit" name="F2_end">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="7">
+      <widget class="QLineEdit" name="F4_end">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="14" column="1" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="yes">

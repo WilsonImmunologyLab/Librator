@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'gibsonalignmentdialog.ui'
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -132,7 +133,7 @@ class Ui_GibsonMSADialog(object):
 
     def retranslateUi(self, GibsonMSADialog):
         _translate = QtCore.QCoreApplication.translate
-        GibsonMSADialog.setWindowTitle(_translate("GibsonMSADialog", "Dialog"))
+        GibsonMSADialog.setWindowTitle(_translate("GibsonMSADialog", "Review and Confirm all fragments"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("GibsonMSADialog", "Fragment 1"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("GibsonMSADialog", "Fragment 2"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("GibsonMSADialog", "Fragment 3"))
@@ -143,5 +144,3 @@ class Ui_GibsonMSADialog(object):
         self.notice.setText(_translate("GibsonMSADialog", "\'-\' in sequences will be removed before generating Fragments"))
         self.radioAA.setText(_translate("GibsonMSADialog", "Amino Acid"))
         self.radioNT.setText(_translate("GibsonMSADialog", "Nucleotide"))
-
-

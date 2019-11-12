@@ -495,7 +495,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>0</y>
+             <y>-60</y>
              <width>928</width>
              <height>1144</height>
             </rect>
@@ -2331,6 +2331,7 @@
      <string>GibsonClone</string>
     </property>
     <addaction name="actionGibsonClone"/>
+    <addaction name="actionGibsonClone_Setting"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSequences"/>
@@ -2986,6 +2987,15 @@
    </property>
    <property name="toolTip">
     <string>Generate Fragments for Gibson Clone use</string>
+   </property>
+  </action>
+  <action name="actionGibsonClone_Setting">
+   <property name="icon">
+    <iconset resource="Resources/VgenesResources.qrc">
+     <normaloff>:/PNG-Icons/settings.png</normaloff>:/PNG-Icons/settings.png</iconset>
+   </property>
+   <property name="text">
+    <string>GibsonClone Setting</string>
    </property>
   </action>
  </widget>

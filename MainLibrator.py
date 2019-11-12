@@ -37,6 +37,7 @@ from updatesequencedialog import Ui_UpdateSequenceDialog
 from deletedialog import Ui_deleteDialog
 from treedialog import Ui_treeDialog
 from gibsonalignmentdialog import Ui_GibsonMSADialog
+from jointdialog import Ui_JointDialog
 
 from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText
 from VgenesTextEdit import VGenesTextMain
@@ -97,6 +98,85 @@ class MyFigure(FigureCanvas):
         super(MyFigure,self).__init__(self.fig)
         self.axes = self.fig.add_subplot(111)
 
+
+class jointDialog(QtWidgets.QDialog):
+	def __init__(self):
+		super(jointDialog, self).__init__()
+		self.ui = Ui_JointDialog()
+		self.ui.setupUi(self)
+
+		global H1_start, H1_end, H3_start, H3_end, NA_start, NA_end
+		global H3_start_user, H3_end_user, H1_start_user, H1_end_user, NA_end_user, NA_start_user
+		global H1_Gibson_file, H3_Gibson_file, NA_Gibson_file
+
+		self.ui.H1_F1_S.setText(str(H1_start[0]))
+		self.ui.H1_F2_S.setText(str(H1_start[1]))
+		self.ui.H1_F3_S.setText(str(H1_start[2]))
+		self.ui.H1_F4_S.setText(str(H1_start[3]))
+		self.ui.H1_F1_E.setText(str(H1_end[0]))
+		self.ui.H1_F2_E.setText(str(H1_end[1]))
+		self.ui.H1_F3_E.setText(str(H1_end[2]))
+		self.ui.H1_F4_E.setText(str(H1_end[3]))
+
+		self.ui.H3_F1_S.setText(str(H3_start[0]))
+		self.ui.H3_F2_S.setText(str(H3_start[1]))
+		self.ui.H3_F3_S.setText(str(H3_start[2]))
+		self.ui.H3_F4_S.setText(str(H3_start[3]))
+		self.ui.H3_F1_E.setText(str(H3_end[0]))
+		self.ui.H3_F2_E.setText(str(H3_end[1]))
+		self.ui.H3_F3_E.setText(str(H3_end[2]))
+		self.ui.H3_F4_E.setText(str(H3_end[3]))
+
+		self.ui.NA_F1_S.setText(str(NA_start[0]))
+		self.ui.NA_F2_S.setText(str(NA_start[1]))
+		self.ui.NA_F3_S.setText(str(NA_start[2]))
+		self.ui.NA_F1_E.setText(str(NA_end[0]))
+		self.ui.NA_F2_E.setText(str(NA_end[1]))
+		self.ui.NA_F3_E.setText(str(NA_end[2]))
+
+		self.ui.saveButton.clicked.connect(self.accept)
+		self.ui.cancelButton.clicked.connect(self.reject)
+		self.ui.exitButton.clicked.connect(self.reject)
+
+	def accept(self):
+		global H1_start, H1_end, H3_start, H3_end, NA_start, NA_end
+		global H3_start_user, H3_end_user, H1_start_user, H1_end_user, NA_end_user, NA_start_user
+		global H1_Gibson_file, H3_Gibson_file, NA_Gibson_file
+
+		if self.ui.H1_F1_SU.text() != '' and self.ui.H1_F1_EU.text() != '' and self.ui.H1_F2_SU.text() != '' and self.ui.H1_F2_EU.text() != '' and self.ui.H1_F3_SU.text() != '' and self.ui.H1_F3_EU.text() != '' and self.ui.H1_F4_SU.text() != '' and self.ui.H1_F4_EU.text() != '':
+			H1_start_user = [int(self.ui.H1_F1_SU.text()), int(self.ui.H1_F2_SU.text()),
+			                 int(self.ui.H1_F3_SU.text()), int(self.ui.H1_F4_SU.text())]
+			H1_end_user = [int(self.ui.H1_F1_EU.text()), int(self.ui.H1_F2_EU.text()),
+			               int(self.ui.H1_F3_EU.text()), int(self.ui.H1_F4_EU.text())]
+
+			file_handle = open(H1_Gibson_file, 'w')
+			text = ','.join(list(map(str, H1_start_user))) + '\n' + ','.join(list(map(str, H1_end_user)))
+			file_handle.write(text)
+			file_handle.close()
+
+		if self.ui.H3_F1_SU.text() != '' and self.ui.H3_F1_EU.text() != '' and self.ui.H3_F2_SU.text() != '' and self.ui.H3_F2_EU.text() != '' and self.ui.H3_F3_SU.text() != '' and self.ui.H3_F3_EU.text() != '' and self.ui.H3_F4_SU.text() != '' and self.ui.H3_F4_EU.text() != '':
+			H3_start_user = [int(self.ui.H3_F1_SU.text()), int(self.ui.H3_F2_SU.text()),
+			                 int(self.ui.H3_F3_SU.text()), int(self.ui.H3_F4_SU.text())]
+			H3_end_user = [int(self.ui.H3_F1_EU.text()), int(self.ui.H3_F2_EU.text()),
+			               int(self.ui.H3_F3_EU.text()), int(self.ui.H3_F4_EU.text())]
+
+			file_handle = open(H3_Gibson_file, 'w')
+			text = ','.join(list(map(str, H3_start_user))) + '\n' + ','.join(list(map(str, H3_end_user)))
+			file_handle.write(text)
+			file_handle.close()
+
+		if self.ui.NA_F1_SU.text() != '' and self.ui.NA_F1_EU.text() != '' and self.ui.NA_F2_SU.text() != '' and self.ui.NA_F2_EU.text() != '' and self.ui.NA_F3_SU.text() != '' and self.ui.NA_F3_EU.text() != '':
+			NA_start_user = [int(self.ui.NA_F1_SU.text()), int(self.ui.NA_F2_SU.text()),
+			                 int(self.ui.NA_F3_SU.text())]
+			NA_end_user = [int(self.ui.NA_F1_EU.text()), int(self.ui.NA_F2_EU.text()),
+			               int(self.ui.NA_F3_EU.text())]
+
+			file_handle = open(NA_Gibson_file, 'w')
+			text = ','.join(list(map(str, NA_start_user))) + '\n' + ','.join(list(map(str, NA_end_user)))
+			file_handle.write(text)
+			file_handle.close()
+
+		self.close()
 
 class treeDialog(QtWidgets.QDialog):
 	treeSignal = pyqtSignal(list, str)
@@ -1692,7 +1772,7 @@ class basePathDialog(QtWidgets.QDialog):
 				raxml_path = self.ui.RaxmlPath.text()
 
 		# save MYSQL setting
-		mysql_setting_file = working_prefix + 'mysql_setting.txt'
+		mysql_setting_file = os.path.join(working_prefix, 'Conf', 'mysql_setting.txt')
 		file_handle = open(mysql_setting_file, 'w')
 		my_info = self.ui.IPinput.text() + ',' + self.ui.Portinput.text() + ',' + self.ui.DBnameinput.text() + \
 		          ',' + self.ui.Userinput.text() + ',' + self.ui.Passinput.text()
@@ -1780,7 +1860,7 @@ class MutationDialog(QtWidgets.QDialog):
 				self.applySignal.emit("H1H3pos", template_name, seq_name, mutation_ha1, mutation_ha2, mode)
 
 class gibsoncloneDialog(QtWidgets.QDialog):
-	gibsonSignal = pyqtSignal(int, str, str, str, str, list)  # user define signal
+	gibsonSignal = pyqtSignal(int, str, str, str, str, list, str, str)  # user define signal
 
 	def __init__(self):
 		super(gibsoncloneDialog, self).__init__()
@@ -1792,11 +1872,71 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 		self.ui.browse.clicked.connect(self.browse)
 		self.ui.createDB.clicked.connect(self.new_db)
 		self.ui.browseDB.clicked.connect(self.browse_db)
+		self.ui.radioButtonH1.clicked.connect(self.setJoint)
+		self.ui.radioButtonH3.clicked.connect(self.setJoint)
+		self.ui.radioButtonNA.clicked.connect(self.setJoint)
+		self.ui.radioButtonDefault.clicked.connect(self.setJoint)
+		self.ui.radioButtonUser.clicked.connect(self.setJoint)
 
 	def browse(self):  # browse and select path
 		global temp_folder
 		out_dir = QFileDialog.getExistingDirectory(self, "select files", temp_folder)
 		self.ui.outpath.setText(out_dir)
+	def setJoint(self):
+		global H1_start, H1_end, H3_start, H3_end, NA_start, NA_end
+		global H3_start_user, H3_end_user, H1_start_user, H1_end_user, NA_end_user, NA_start_user
+
+		if self.ui.radioButtonH1.isChecked() and self.ui.radioButtonDefault.isChecked():
+			data_start = H1_start
+			data_end = H1_end
+		elif self.ui.radioButtonH3.isChecked() and self.ui.radioButtonDefault.isChecked():
+			data_start = H3_start
+			data_end = H3_end
+		elif self.ui.radioButtonNA.isChecked() and self.ui.radioButtonDefault.isChecked():
+			data_start = NA_start
+			data_end = NA_end
+		elif self.ui.radioButtonH1.isChecked() and self.ui.radioButtonUser.isChecked():
+			data_start = H1_start_user
+			data_end = H1_end_user
+		elif self.ui.radioButtonH3.isChecked() and self.ui.radioButtonUser.isChecked():
+			data_start = H3_start_user
+			data_end = H3_end_user
+		elif self.ui.radioButtonNA.isChecked() and self.ui.radioButtonUser.isChecked():
+			data_start = NA_start_user
+			data_end = NA_end_user
+
+
+		if len(data_start) == 3:
+			self.ui.F1_start.setText(str(data_start[0]))
+			self.ui.F2_start.setText(str(data_start[1]))
+			self.ui.F3_start.setText(str(data_start[2]))
+			self.ui.F1_end.setText(str(data_end[0]))
+			self.ui.F2_end.setText(str(data_end[1]))
+			self.ui.F3_end.setText(str(data_end[2]))
+			self.ui.F4_start.setText('')
+			self.ui.F4_end.setText('')
+			self.ui.F4_start.setDisabled(True)
+			self.ui.F4_end.setDisabled(True)
+		elif len(data_start) == 4:
+			self.ui.F4_start.setDisabled(False)
+			self.ui.F4_end.setDisabled(False)
+			self.ui.F1_start.setText(str(data_start[0]))
+			self.ui.F2_start.setText(str(data_start[1]))
+			self.ui.F3_start.setText(str(data_start[2]))
+			self.ui.F4_start.setText(str(data_start[3]))
+			self.ui.F1_end.setText(str(data_end[0]))
+			self.ui.F2_end.setText(str(data_end[1]))
+			self.ui.F3_end.setText(str(data_end[2]))
+			self.ui.F4_end.setText(str(data_end[3]))
+		else:
+			self.ui.F1_start.setText('')
+			self.ui.F2_start.setText('')
+			self.ui.F3_start.setText('')
+			self.ui.F1_end.setText('')
+			self.ui.F2_end.setText('')
+			self.ui.F3_end.setText('')
+			self.ui.F4_start.setText('')
+			self.ui.F4_end.setText('')
 
 	def browse_db(self):  # browse and select path
 		global temp_folder
@@ -1826,6 +1966,18 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 	def accept(self):  # redo accept method
 		global working_prefix
 
+		if self.ui.radioButtonH1.isChecked():
+			subtype = 'H1'
+		elif self.ui.radioButtonH3.isChecked():
+			subtype = 'H3'
+		elif self.ui.radioButtonNA.isChecked():
+			subtype = 'NA'
+
+		if self.ui.radioButtonDefault.isChecked():
+			joint_plan = 'Default'
+		elif self.ui.radioButtonUser.isChecked():
+			joint_plan = 'User'
+
 		active_tab = self.ui.tabWidget.currentIndex()
 		if active_tab == 0:
 			# send signal
@@ -1849,7 +2001,7 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 					else:
 						text = [i.text() for i in list(selections)]
 						text = '\n'.join(text)
-						self.gibsonSignal.emit(0, text, joint_up, joint_down, out_path, db_path)
+						self.gibsonSignal.emit(0, text, joint_up, joint_down, out_path, db_path, subtype, joint_plan)
 		elif active_tab == 1:
 			# send signal
 			selections = self.ui.selection.selectedItems()
@@ -1889,14 +2041,14 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 			text = '\n'.join(text)
 
 			# save MYSQL setting
-			mysql_setting_file = working_prefix + 'mysql_setting.txt'
+			mysql_setting_file = os.path.join(working_prefix, 'Conf', 'mysql_setting.txt')
 			file_handle = open(mysql_setting_file, 'w')
 			my_info = self.ui.IPinput.text() + ',' + self.ui.Portinput.text() + ',' + self.ui.DBnameinput.text() + \
 			          ',' + self.ui.Userinput.text() + ',' + self.ui.Passinput.text()
 			file_handle.write(my_info)
 			file_handle.close()
 
-			self.gibsonSignal.emit(1, text, joint_up, joint_down, out_path, db_path)
+			self.gibsonSignal.emit(1, text, joint_up, joint_down, out_path, db_path, subtype, joint_plan)
 
 
 
@@ -2627,6 +2779,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessMutationDialog = None
 		self.modalessSeqEditDialog = None
 		self.TextEdit = VGenesTextMain()
+		self.modalessJointDialog = None
 
 		self.fig = 0
 
@@ -2656,7 +2809,46 @@ class LibratorMain(QtWidgets.QMainWindow):
 		cursorAA.setPosition(len(textAA), QTextCursor.KeepAnchor)
 		cursorAA.mergeCharFormat(format)
 
+	def on_actionGibsonClone_Setting_triggered(self):
+		global H1_start_user
+		global H3_start_user
+		global NA_start_user
+		self.modalessJointDialog = None
+		self.modalessJointDialog = jointDialog()
 
+		a = H1_start_user
+		b = H3_start_user
+		c = NA_start_user
+
+		if len(H1_start_user) > 0:
+			self.modalessJointDialog.ui.H1_F1_SU.setText(str(H1_start_user[0]))
+			self.modalessJointDialog.ui.H1_F2_SU.setText(str(H1_start_user[1]))
+			self.modalessJointDialog.ui.H1_F3_SU.setText(str(H1_start_user[2]))
+			self.modalessJointDialog.ui.H1_F4_SU.setText(str(H1_start_user[3]))
+			self.modalessJointDialog.ui.H1_F1_EU.setText(str(H1_end_user[0]))
+			self.modalessJointDialog.ui.H1_F2_EU.setText(str(H1_end_user[1]))
+			self.modalessJointDialog.ui.H1_F3_EU.setText(str(H1_end_user[2]))
+			self.modalessJointDialog.ui.H1_F4_EU.setText(str(H1_end_user[3]))
+
+		if len(H3_start_user) > 0:
+			self.modalessJointDialog.ui.H3_F1_SU.setText(str(H3_start_user[0]))
+			self.modalessJointDialog.ui.H3_F2_SU.setText(str(H3_start_user[1]))
+			self.modalessJointDialog.ui.H3_F3_SU.setText(str(H3_start_user[2]))
+			self.modalessJointDialog.ui.H3_F4_SU.setText(str(H3_start_user[3]))
+			self.modalessJointDialog.ui.H3_F1_EU.setText(str(H3_end_user[0]))
+			self.modalessJointDialog.ui.H3_F2_EU.setText(str(H3_end_user[1]))
+			self.modalessJointDialog.ui.H3_F3_EU.setText(str(H3_end_user[2]))
+			self.modalessJointDialog.ui.H3_F4_EU.setText(str(H3_end_user[3]))
+
+		if len(NA_start_user) > 0:
+			self.modalessJointDialog.ui.NA_F1_SU.setText(str(NA_start_user[0]))
+			self.modalessJointDialog.ui.NA_F2_SU.setText(str(NA_start_user[1]))
+			self.modalessJointDialog.ui.NA_F3_SU.setText(str(NA_start_user[2]))
+			self.modalessJointDialog.ui.NA_F1_EU.setText(str(NA_end_user[0]))
+			self.modalessJointDialog.ui.NA_F2_EU.setText(str(NA_end_user[1]))
+			self.modalessJointDialog.ui.NA_F3_EU.setText(str(NA_end_user[2]))
+
+		self.modalessJointDialog.show()
 
 	def searchPattern(self):
 		pattern = self.ui.txtSearch.toPlainText().upper()
@@ -2693,7 +2885,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global working_prefix
 		self.ui.cboRecent.clear()
 		self.ui.cboRecent.addItem('Open previous')
-		record_file = working_prefix + 'db_record.txt'
+		record_file = os.path.join(working_prefix, 'Conf', 'db_record.txt')
 		if os.path.isfile(record_file):
 			with open(record_file, 'r') as currentFile:
 				RecentFiles = currentFile.readlines()
@@ -3364,7 +3556,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			#  plot stat for something
 			# get data
 			self.ui.comboBoxHANA = QComboBox()
-			self.ui.comboBoxHANA.addItem("HA")
+			self.ui.comboBoxHANA.addItem("H1/Group1")
+			self.ui.comboBoxHANA.addItem("H3/Group2")
 			self.ui.comboBoxHANA.addItem("NA")
 			self.ui.comboBoxHANA.currentIndexChanged.connect(self.FigChange)
 
@@ -3390,20 +3583,44 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 
 	def Stat_fig(self):
-		global H1_start, H1_end, NA_start, NA_end, working_prefix
-		HA_joint = []
+		global H1_start, H1_end, H3_start, H3_end, NA_start, NA_end, working_prefix
+		global H3_start_user, H3_end_user, H1_start_user, H1_end_user, NA_end_user, NA_start_user
+
+		H1_joint = []
 		for i in range(0,len(H1_start)-1):
 			cur_joint = [H1_start[i+1], H1_end[i]]
-			HA_joint.append(cur_joint)
+			H1_joint.append(cur_joint)
+		H3_joint = []
+		for i in range(0, len(H3_start) - 1):
+			cur_joint = [H3_start[i + 1], H3_end[i]]
+			H3_joint.append(cur_joint)
 		NA_joint = []
 		for i in range(0,len(NA_start)-1):
 			cur_joint = [NA_start[i+1], NA_end[i]]
 			NA_joint.append(cur_joint)
 
+		H1_joint_user = []
+		if len(H1_start_user) == 4:
+			for i in range(0, len(H1_start_user) - 1):
+				cur_joint = [H1_start_user[i + 1], H1_end_user[i]]
+				H1_joint_user.append(cur_joint)
+
+		H3_joint_user = []
+		if len(H3_start_user) == 4:
+			for i in range(0, len(H3_start_user) - 1):
+				cur_joint = [H3_start_user[i + 1], H3_end_user[i]]
+				H3_joint_user.append(cur_joint)
+
+		NA_joint_user = []
+		if len(NA_start_user) == 3:
+			for i in range(0, len(NA_start_user) - 1):
+				cur_joint = [NA_start_user[i + 1], NA_end_user[i]]
+				NA_joint_user.append(cur_joint)
+
 		self.F = MyFigure(width=6, height=3, dpi=160)
 
-		if self.ui.comboBoxHANA.currentIndex() == 0 and self.ui.comboBoxIndex.currentIndex() == 0:  # HA + PCT
-			data_file = os.path.join(working_prefix, 'Resources', 'HA_PCT.csv')
+		if self.ui.comboBoxHANA.currentIndex() == 0 and self.ui.comboBoxIndex.currentIndex() == 0:  # H1 + PCT
+			data_file = os.path.join(working_prefix, 'Resources', 'H1_PCT.csv')
 			if os.path.exists(data_file):
 				pass
 			else:
@@ -3418,21 +3635,25 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			colors = sns.color_palette("hls", 3)
 			x = range(1, len(data_array[0]) + 1)
-			# start = time.time()
 			self.F.axes.plot(x, data_array[0], color=colors[0], linewidth=1, label="Season H1")
 			self.F.axes.plot(x, data_array[1], color=colors[1], linewidth=1, label="pdm09 H1")
-			self.F.axes.plot(x, data_array[2], color=colors[2], linewidth=1, label="H3")
-			# end = time.time()
-			# print('Running time for new function' + str(end - start) + '\n')
 			i = 0
-			for joint in HA_joint:
+			for joint in H1_joint:
 				if i == 0:
 					self.F.axes.plot([joint[0],joint[1]], [0.1,0.1], color='r', linewidth = 3, label="Joint region")
 					i += 1
 				else:
 					self.F.axes.plot([joint[0], joint[1]], [0.1, 0.1], color='r', linewidth = 3)
+			if len(H1_joint_user) > 0:
+				i = 0
+				for joint in H1_joint_user:
+					if i == 0:
+						self.F.axes.plot([joint[0], joint[1]], [0.2, 0.2], color='b', linewidth=3, label="Joint region (User)")
+						i += 1
+					else:
+						self.F.axes.plot([joint[0], joint[1]], [0.2, 0.2], color='b', linewidth=3)
 
-			self.F.fig.suptitle("Pct of variations for HA")
+			self.F.fig.suptitle("Pct of variations for H1")
 			self.F.fig.legend()
 			self.F.axes.spines['top'].set_visible(False)
 			self.F.axes.spines['right'].set_visible(False)
@@ -3442,7 +3663,50 @@ class LibratorMain(QtWidgets.QMainWindow):
 			yticklabels=['','10%','20%','30%','40%','50%','60%']
 			self.F.axes.set_yticklabels(yticklabels)
 			self.F.fig.subplots_adjust(top = 0.95, bottom = 0.1, right = 0.98, left = 0.05, hspace = 0, wspace = 0)
-		elif self.ui.comboBoxHANA.currentIndex() == 1 and self.ui.comboBoxIndex.currentIndex() == 0:  # NA + PCT
+		elif self.ui.comboBoxHANA.currentIndex() == 1 and self.ui.comboBoxIndex.currentIndex() == 0:  # H3 + PCT
+			data_file = os.path.join(working_prefix, 'Resources', 'H3_PCT.csv')
+			if os.path.exists(data_file):
+				pass
+			else:
+				return
+
+			csvFile = open(data_file, "r")
+			reader = csv.reader(csvFile)
+			data_array = []
+			for item in reader:
+				item = list(map(float, item))
+				data_array.append(item)
+
+			colors = sns.color_palette("hls", 3)
+			x = range(1, len(data_array[0]) + 1)
+			self.F.axes.plot(x, data_array[0], color=colors[0], linewidth=1, label="H3")
+			i = 0
+			for joint in H3_joint:
+				if i == 0:
+					self.F.axes.plot([joint[0],joint[1]], [0.1,0.1], color='r', linewidth = 3, label="Joint region")
+					i += 1
+				else:
+					self.F.axes.plot([joint[0], joint[1]], [0.1, 0.1], color='r', linewidth = 3)
+			if len(H3_joint_user) > 0:
+				i = 0
+				for joint in H3_joint_user:
+					if i == 0:
+						self.F.axes.plot([joint[0], joint[1]], [0.2, 0.2], color='b', linewidth=3, label="Joint region (User)")
+						i += 1
+					else:
+						self.F.axes.plot([joint[0], joint[1]], [0.2, 0.2], color='b', linewidth=3)
+
+			self.F.fig.suptitle("Pct of variations for H3")
+			self.F.fig.legend()
+			self.F.axes.spines['top'].set_visible(False)
+			self.F.axes.spines['right'].set_visible(False)
+			self.F.axes.spines['bottom'].set_position(('data', 0))
+			self.F.axes.spines['left'].set_position(('data', 0))
+			self.F.axes.set_yticks([0,0.1,0.2,0.3,0.4,0.5,0.6])
+			yticklabels=['','10%','20%','30%','40%','50%','60%']
+			self.F.axes.set_yticklabels(yticklabels)
+			self.F.fig.subplots_adjust(top = 0.95, bottom = 0.1, right = 0.98, left = 0.05, hspace = 0, wspace = 0)
+		elif self.ui.comboBoxHANA.currentIndex() == 2 and self.ui.comboBoxIndex.currentIndex() == 0:  # NA + PCT
 			data_file = os.path.join(working_prefix, 'Resources', 'NA_PCT.csv')
 			if os.path.exists(data_file):
 				pass
@@ -3474,6 +3738,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 					i += 1
 				else:
 					self.F.axes.plot([joint[0], joint[1]], [0.1, 0.1], color='r', linewidth=3)
+			if len(NA_joint_user) > 0:
+				i = 0
+				for joint in NA_joint_user:
+					if i == 0:
+						self.F.axes.plot([joint[0], joint[1]], [0.2, 0.2], color='b', linewidth=3, label="Joint region (User)")
+						i += 1
+					else:
+						self.F.axes.plot([joint[0], joint[1]], [0.2, 0.2], color='b', linewidth=3)
 
 			self.F.fig.suptitle("Pct of variations for NA")
 			self.F.fig.legend()
@@ -3486,8 +3758,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.F.axes.set_yticklabels(yticklabels)
 			self.F.fig.subplots_adjust(top=0.95, bottom=0.1, right=0.98, left=0.05, hspace=0, wspace=0)
 
-		elif self.ui.comboBoxHANA.currentIndex() == 0 and self.ui.comboBoxIndex.currentIndex() == 1:  # HA + AAVI
-			data_file = os.path.join(working_prefix, 'Resources', 'HA_AAVI.csv')
+		elif self.ui.comboBoxHANA.currentIndex() == 0 and self.ui.comboBoxIndex.currentIndex() == 1:  # H1 + AAVI
+			data_file = os.path.join(working_prefix, 'Resources', 'H1_AAVI.csv')
 			if os.path.exists(data_file):
 				pass
 			else:
@@ -3501,29 +3773,73 @@ class LibratorMain(QtWidgets.QMainWindow):
 				data_array.append(item)
 
 			colors = sns.color_palette("hls", 3)
-			x = range(1, len(data_array[0])+1)
-			#start = time.time()
+			x = range(1, len(data_array[0]) + 1)
 			self.F.axes.plot(x, data_array[0], color=colors[0], linewidth=1, label="Season H1")
 			self.F.axes.plot(x, data_array[1], color=colors[1], linewidth=1, label="pdm09 H1")
-			self.F.axes.plot(x, data_array[2], color=colors[2], linewidth=1, label="H3")
-			#end = time.time()
-			#print('Running time for new function' + str(end - start) + '\n')
 			i = 0
-			for joint in HA_joint:
+			for joint in H1_joint:
 				if i == 0:
-					self.F.axes.plot([joint[0], joint[1]], [5, 5], color='r', linewidth=3, label="Joint region")
+					self.F.axes.plot([joint[0], joint[1]], [2.5, 2.5], color='r', linewidth=3, label="Joint region")
 					i += 1
 				else:
-					self.F.axes.plot([joint[0], joint[1]], [5, 5], color='r', linewidth=3)
+					self.F.axes.plot([joint[0], joint[1]], [2.5, 2.5], color='r', linewidth=3)
+			if len(H1_joint_user) > 0:
+				i = 0
+				for joint in H1_joint_user:
+					if i == 0:
+						self.F.axes.plot([joint[0], joint[1]], [5, 5], color='b', linewidth=3, label="Joint region (User)")
+						i += 1
+					else:
+						self.F.axes.plot([joint[0], joint[1]], [5, 5], color='b', linewidth=3)
 
-			self.F.fig.suptitle("Amino Acid Variation Index for HA")
+			self.F.fig.suptitle("Amino Acid Variation Index for H1")
 			self.F.fig.legend()
 			self.F.axes.spines['top'].set_visible(False)
 			self.F.axes.spines['right'].set_visible(False)
 			self.F.axes.spines['bottom'].set_position(('data', 0))
 			self.F.axes.spines['left'].set_position(('data', 0))
 			self.F.fig.subplots_adjust(top=0.95, bottom=0.1, right=0.98, left=0.05, hspace=0, wspace=0)
-		elif self.ui.comboBoxHANA.currentIndex() == 1 and self.ui.comboBoxIndex.currentIndex() == 1:  # NA + AAVI
+		elif self.ui.comboBoxHANA.currentIndex() == 1 and self.ui.comboBoxIndex.currentIndex() == 1:  # H3 + AAVI
+			data_file = os.path.join(working_prefix, 'Resources', 'H3_AAVI.csv')
+			if os.path.exists(data_file):
+				pass
+			else:
+				return
+
+			csvFile = open(data_file, "r")
+			reader = csv.reader(csvFile)
+			data_array = []
+			for item in reader:
+				item = list(map(float, item))
+				data_array.append(item)
+
+			colors = sns.color_palette("hls", 3)
+			x = range(1, len(data_array[0]) + 1)
+			self.F.axes.plot(x, data_array[0], color=colors[0], linewidth=1, label="H3")
+			i = 0
+			for joint in H3_joint:
+				if i == 0:
+					self.F.axes.plot([joint[0],joint[1]], [5, 5], color='r', linewidth = 3, label="Joint region")
+					i += 1
+				else:
+					self.F.axes.plot([joint[0], joint[1]], [5, 5], color='r', linewidth = 3)
+			if len(H3_joint_user) > 0:
+				i = 0
+				for joint in H3_joint_user:
+					if i == 0:
+						self.F.axes.plot([joint[0], joint[1]], [10, 10], color='b', linewidth=3, label="Joint region (User)")
+						i += 1
+					else:
+						self.F.axes.plot([joint[0], joint[1]], [10, 10], color='b', linewidth=3)
+
+			self.F.fig.suptitle("Amino Acid Variation Index for H3")
+			self.F.fig.legend()
+			self.F.axes.spines['top'].set_visible(False)
+			self.F.axes.spines['right'].set_visible(False)
+			self.F.axes.spines['bottom'].set_position(('data', 0))
+			self.F.axes.spines['left'].set_position(('data', 0))
+			self.F.fig.subplots_adjust(top = 0.95, bottom = 0.1, right = 0.98, left = 0.05, hspace = 0, wspace = 0)
+		elif self.ui.comboBoxHANA.currentIndex() == 2 and self.ui.comboBoxIndex.currentIndex() == 1:  # NA + AAVI
 			data_file = os.path.join(working_prefix,'Resources','NA_AAVI.csv')
 			if os.path.exists(data_file):
 				pass
@@ -3555,6 +3871,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 					i += 1
 				else:
 					self.F.axes.plot([joint[0], joint[1]], [10, 10], color='r', linewidth=3)
+			if len(NA_joint_user) > 0:
+				i = 0
+				for joint in NA_joint_user:
+					if i == 0:
+						self.F.axes.plot([joint[0], joint[1]], [15, 15], color='b', linewidth=3, label="Joint region (User)")
+						i += 1
+					else:
+						self.F.axes.plot([joint[0], joint[1]], [15, 15], color='b', linewidth=3)
 
 			self.F.fig.suptitle("Amino Acid Variation Index for NA")
 			self.F.fig.legend()
@@ -7471,7 +7795,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 	@pyqtSlot()
 	def UpdateRecentFilelist(self, DBFilename):
 		global working_prefix
-		record_file = working_prefix + 'db_record.txt'
+		record_file = os.path.join(working_prefix, 'Conf', 'db_record.txt')
 
 		if os.path.exists(record_file):
 			my_open = open(record_file, 'r')
@@ -8510,6 +8834,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global working_prefix
 		global joint_down
 		global joint_up
+		global H1_start, H1_end
+
 		if self.ui.txtName.toPlainText() == "":
 			QMessageBox.warning(self, 'Warning', 'Please select a sequence first!', QMessageBox.Ok, QMessageBox.Ok)
 		else:
@@ -8522,10 +8848,20 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessGibsonDialog.ui.selection.addItems(donor_list)
 			self.modalessGibsonDialog.ui.jointUP.setText(joint_up)
 			self.modalessGibsonDialog.ui.jointDOWN.setText(joint_down)
+
+			self.modalessGibsonDialog.ui.F1_start.setText(str(H1_start[0]))
+			self.modalessGibsonDialog.ui.F2_start.setText(str(H1_start[1]))
+			self.modalessGibsonDialog.ui.F3_start.setText(str(H1_start[2]))
+			self.modalessGibsonDialog.ui.F4_start.setText(str(H1_start[3]))
+			self.modalessGibsonDialog.ui.F1_end.setText(str(H1_end[0]))
+			self.modalessGibsonDialog.ui.F2_end.setText(str(H1_end[1]))
+			self.modalessGibsonDialog.ui.F3_end.setText(str(H1_end[2]))
+			self.modalessGibsonDialog.ui.F4_end.setText(str(H1_end[3]))
+
 			self.modalessGibsonDialog.gibsonSignal.connect(self.GenerateGibson)
 
 			# check saved MYSQL setting
-			mysql_setting_file = working_prefix + 'mysql_setting.txt'
+			mysql_setting_file = os.path.join(working_prefix, 'Conf', 'mysql_setting.txt')
 
 			if os.path.exists(mysql_setting_file):
 				my_open = open(mysql_setting_file, 'r')
@@ -8719,7 +9055,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessbaseDialog.ui.RaxmlPath.setText(raxml_path)
 
 		# check saved MYSQL setting
-		mysql_setting_file = working_prefix + 'mysql_setting.txt'
+		mysql_setting_file = os.path.join(working_prefix, 'Conf', 'mysql_setting.txt')
 
 		if os.path.exists(mysql_setting_file):
 			my_open = open(mysql_setting_file, 'r')
@@ -9264,7 +9600,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			pass
 
 
-	def GenerateGibson(self, mode, selections, joint_up_str, joint_down_str, out_dir, db_file):
+	def GenerateGibson(self, mode, selections, joint_up_str, joint_down_str, out_dir, db_file, subtype, joint_plan):
 		listItems = selections.split("\n")
 		WhereState = ''
 		NumSeqs = len(listItems)
@@ -9280,7 +9616,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# initial data container
 		data_list = []
-		subtype = ""
+		subtype1 = ""
 		error_code = 0
 		for item in DataIn:
 			SeqName = item[0]
@@ -9292,9 +9628,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			SequenceNT = Sequence.upper()
 			SequenceAA = Translator(SequenceNT, 0)
 			cur_subtype = item[4]
-			if subtype == "":
-				subtype = cur_subtype
-			elif subtype != cur_subtype:
+			if subtype1 == "":
+				subtype1 = cur_subtype
+			elif subtype1 != cur_subtype:
 				QMessageBox.warning(self, 'Warning', "All candidate sequences should be same subtype!", QMessageBox.Ok,
 									QMessageBox.Ok)
 				error_code = 1
@@ -9315,30 +9651,38 @@ class LibratorMain(QtWidgets.QMainWindow):
 		if error_code == 0:
 			data = pd.DataFrame(data_list)
 			data.columns = ['Name', 'NTseq', 'AAseq']
-			subtype = subtype[0:2]
-			self.generate_gibson_fragments(data, subtype, temp_folder, out_dir, joint_up_str, joint_down_str, db_file, mode)
+			self.generate_gibson_fragments(data, temp_folder, out_dir, joint_up_str, joint_down_str, db_file, mode, subtype, joint_plan)
 
-	def generate_gibson_fragments(self, data, subtype, temp_folder, out_dir, joint_up_str, joint_down_str, db_file, mode):
+	def generate_gibson_fragments(self, data, temp_folder, out_dir, joint_up_str, joint_down_str, db_file, mode, subtype, joint_plan):
 		global muscle_path
-		global H1_start, H1_end, H3_start, H1_end, H1template, H1template_seq, H3template, H3template_seq
+		global H1_start, H1_end, H3_start, H1_end, H1template, H1template_seq, H3template, H3template_seq, NA_start, NA_end
+		global H1_start_user, H1_end_user, H3_start_user, H3_end_user, NA_start_user, NA_end_user
 
 		# initial the temp file name
 		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
 		in_file = temp_folder + "in" + time_stamp + ".fas"
 		out_file = temp_folder + "out" + time_stamp + ".fas"
 
-		if (subtype == "H1") or (subtype == "Group1"):
+		if subtype == "H1":
 			# set template
 			template_name = H1template
 			template_seq = H1template_seq
-			aa_start = list(H1_start);
-			aa_end = list(H1_end);
-		elif (subtype == "H3") or (subtype == "Group2"):
+			if joint_plan == 'Default':
+				aa_start = list(H1_start);
+				aa_end = list(H1_end);
+			else:
+				aa_start = list(H1_start_user);
+				aa_end = list(H1_end_user);
+		elif subtype == "H3":
 			# set template
 			template_name = H3template
 			template_seq = H3template_seq
-			aa_start = list(H3_start);
-			aa_end = list(H3_end);
+			if joint_plan == 'Default':
+				aa_start = list(H3_start);
+				aa_end = list(H3_end);
+			else:
+				aa_start = list(H3_start_user);
+				aa_end = list(H3_end_user);
 		else:
 			print("We don't support other subtypes for now! Please input Influenza A HA!")
 			return
@@ -9455,14 +9799,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 				nt_fragment_aa = Translator(nt_fragment,0)
 				nt_fragment_aa = nt_fragment_aa[0]
 				if nt_fragment_aa != fragment1:
-					Msg = 'AA seq for current fragment is:\n!'
+					Msg = 'AA seq for current fragment is:\n'
 					Msg += fragment1 + '\n'
-					Msg += 'AA seq translated from current NT fragment is:\n!'
+					Msg += 'AA seq translated from current NT fragment is:\n'
 					Msg += nt_fragment_aa + '\n'
 					Msg += 'The two sequences do not match!'
 					Msg += 'Please chekc your original NT sequences to make sure there are no strange nucleotide!'
 					QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
-					return
+					#return
 
 			fragment_data.append(cur_seq_fragment_data)
 
@@ -10300,6 +10644,47 @@ global NA_start
 global NA_end
 NA_start = [1, 131, 292];
 NA_end = [139, 301, 468];
+
+# SETUP user defined joint regions
+global H3_start_user, H3_end_user, H1_start_user, H1_end_user, NA_end_user, NA_start_user
+H3_start_user = []
+H3_end_user = []
+H1_start_user = []
+H1_end_user = []
+NA_end_user = []
+NA_start_user = []
+
+global H1_Gibson_file, H3_Gibson_file, NA_Gibson_file
+H1_Gibson_file = os.path.join(working_prefix,'Conf','H1_Gibson.txt')
+H3_Gibson_file = os.path.join(working_prefix,'Conf','H3_Gibson.txt')
+NA_Gibson_file = os.path.join(working_prefix,'Conf','NA_Gibson.txt')
+
+if os.path.exists(H1_Gibson_file):
+	file_handle = open(H1_Gibson_file, 'r')
+	configure = file_handle.read()
+	configure = configure.split('\n')
+	tmp_start = configure[0].split(',')
+	H1_start_user = list(map(int, tmp_start))
+	tmp_end = configure[1].split(',')
+	H1_end_user = list(map(int, tmp_end))
+
+if os.path.exists(H3_Gibson_file):
+	file_handle = open(H3_Gibson_file, 'r')
+	configure = file_handle.read()
+	configure = configure.split('\n')
+	tmp_start = configure[0].split(',')
+	H3_start_user = list(map(int, tmp_start))
+	tmp_end = configure[1].split(',')
+	H3_end_user = list(map(int, tmp_end))
+
+if os.path.exists(NA_Gibson_file):
+	file_handle = open(NA_Gibson_file, 'r')
+	configure = file_handle.read()
+	configure = configure.split('\n')
+	tmp_start = configure[0].split(',')
+	NA_start_user = list(map(int, tmp_start))
+	tmp_end = configure[1].split(',')
+	NA_end_user = list(map(int, tmp_end))
 
 
 CodonDict={'ATT':'I',   'ATC':'I',  'ATA':'I',  'CTT':'L',  'CTC':'L',
