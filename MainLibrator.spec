@@ -2,11 +2,25 @@
 
 block_cipher = None
 
+added_files = [
+             ('/Users/leil/Documents/Projects/Librator/Librator/Resources/HA_AAVI.csv','.'),
+             ('/Users/leil/Documents/Projects/Librator/Librator/Resources/HA_PCT.csv','.'),
+             ('/Users/leil/Documents/Projects/Librator/Librator/Resources/NA_AAVI.csv','.'),
+             ('/Users/leil/Documents/Projects/Librator/Librator/Resources/NA_PCT.csv','.'),
+             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/3hto.pdb','.'),
+             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/4hmg.pdb','.'),
+             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/4jtv.pdb','.'),
+             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/3lzg.pdb','.'),
+             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/1ruz.pdb','.'),
+             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/1ru7.pdb','.'),
+             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/1ru7.pdb','.')
+             ]
+
 
 a = Analysis(['MainLibrator.py'],
              pathex=['/Users/leil/Documents/Projects/Librator/Librator'],
              binaries=[],
-             datas=[],
+             datas=added_files,
              hiddenimports=[],
              hookspath=['hooks'],
              runtime_hooks=[],

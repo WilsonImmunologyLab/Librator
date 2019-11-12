@@ -8158,6 +8158,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 					numbering = H1Numbering
 				elif subtype == "H3N2" or subtype == "Group2":
 					numbering = H3Numbering
+				else:
+					QMessageBox.warning(self, 'Warning',
+					                    'We will support FLU B later!', QMessageBox.Ok, QMessageBox.Ok)
+					return
 
 				# for HA1 mutations:
 				position = ''
