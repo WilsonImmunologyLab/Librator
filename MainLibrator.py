@@ -3295,6 +3295,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		elif self.ui.tabWidget.currentIndex() == 1:
 			#displays all info about the selected sequence
+			selection = self.ui.listWidgetStrainsIn.selectedItems()
+			if len(selection) == 0:
+				return
 
 			Subtype = self.ui.cboSubtype.currentText()
 			self.ui.cboSubtype_2.setCurrentText(Subtype)
@@ -3380,6 +3383,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 
 	def Stat_fig(self):
+		global H1_start, H1_end, NA_start, NA_end
+		HA_joint = []
+		for i in range(0,len(H1_start)-1):
+			cur_joint = [H1_start[i+1], H1_end[i]]
+			HA_joint.append(cur_joint)
+		NA_joint = []
+		for i in range(0,len(NA_start)-1):
+			cur_joint = [NA_start[i+1], NA_end[i]]
+			NA_joint.append(cur_joint)
+
 		self.F = MyFigure(width=6, height=3, dpi=160)
 
 		if self.ui.comboBoxHANA.currentIndex() == 0 and self.ui.comboBoxIndex.currentIndex() == 0:  # HA + PCT
@@ -3458,9 +3471,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			colors = sns.color_palette("hls", 3)
 			x = range(len(AAVI_seaH1))
-			self.F.axes.bar(x, AAVI_seaH1, width=0.3, alpha=0.8, color=colors[0], label="Season H1")
-			self.F.axes.bar([i + 0.3 for i in x], AAVI_pdmH1, width=0.3, alpha=0.8, color=colors[1], label="pdm09 H1")
-			self.F.axes.bar([i + 0.6 for i in x], AAVI_H3, width=0.3, alpha=0.8, color=colors[2], label="H3")
+			self.F.axes.plot(x, AAVI_seaH1, color=colors[0], linewidth = 1, label="Season H1")
+			self.F.axes.plot(x, AAVI_pdmH1, color=colors[1], linewidth = 1, label="pdm09 H1")
+			self.F.axes.plot(x, AAVI_H3,  color=colors[2], linewidth = 1, label="H3")
+			i = 0
+			for joint in HA_joint:
+				if i == 0:
+					self.F.axes.plot([joint[0],joint[1]], [0.1,0.1], color='r', linewidth = 3, label="Joint region")
+					i += 1
+				else:
+					self.F.axes.plot([joint[0], joint[1]], [0.1, 0.1], color='r', linewidth = 3)
+
 			self.F.fig.suptitle("Pct of variations for HA")
 			self.F.fig.legend()
 			self.F.axes.spines['top'].set_visible(False)
@@ -3484,15 +3505,22 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			colors = sns.color_palette("hls", 9)
 			x = range(len(pct_N1))
-			self.F.axes.bar(x, pct_N1, width=0.1, alpha=0.8, color=colors[0], label="N1")
-			self.F.axes.bar([i + 0.1 for i in x], pct_N2, width=0.1, alpha=0.8, color=colors[1], label="N2")
-			self.F.axes.bar([i + 0.2 for i in x], pct_N3, width=0.1, alpha=0.8, color=colors[2], label="N3")
-			self.F.axes.bar([i + 0.3 for i in x], pct_N4, width=0.1, alpha=0.8, color=colors[3], label="N4")
-			self.F.axes.bar([i + 0.4 for i in x], pct_N5, width=0.1, alpha=0.8, color=colors[4], label="N5")
-			self.F.axes.bar([i + 0.5 for i in x], pct_N6, width=0.1, alpha=0.8, color=colors[5], label="N6")
-			self.F.axes.bar([i + 0.6 for i in x], pct_N7, width=0.1, alpha=0.8, color=colors[6], label="N7")
-			self.F.axes.bar([i + 0.7 for i in x], pct_N8, width=0.1, alpha=0.8, color=colors[7], label="N8")
-			self.F.axes.bar([i + 0.8 for i in x], pct_N9, width=0.1, alpha=0.8, color=colors[8], label="N9")
+			self.F.axes.plot(x, pct_N1, linewidth=1, color=colors[0], label="N1")
+			self.F.axes.plot(x, pct_N2, linewidth=1, color=colors[1], label="N2")
+			self.F.axes.plot(x, pct_N3, linewidth=1, color=colors[2], label="N3")
+			self.F.axes.plot(x, pct_N4, linewidth=1, color=colors[3], label="N4")
+			self.F.axes.plot(x, pct_N5, linewidth=1, color=colors[4], label="N5")
+			self.F.axes.plot(x, pct_N6, linewidth=1, color=colors[5], label="N6")
+			self.F.axes.plot(x, pct_N7, linewidth=1, color=colors[6], label="N7")
+			self.F.axes.plot(x, pct_N8, linewidth=1, color=colors[7], label="N8")
+			self.F.axes.plot(x, pct_N9, linewidth=1, color=colors[8], label="N9")
+			i = 0
+			for joint in NA_joint:
+				if i == 0:
+					self.F.axes.plot([joint[0], joint[1]], [0.1, 0.1], color='r', linewidth=3, label="Joint region")
+					i += 1
+				else:
+					self.F.axes.plot([joint[0], joint[1]], [0.1, 0.1], color='r', linewidth=3)
 
 			self.F.fig.suptitle("Pct of variations for NA")
 			self.F.fig.legend()
@@ -3599,9 +3627,20 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			colors = sns.color_palette("hls", 3)
 			x = range(len(AAVI_seaH1))
-			self.F.axes.bar(x, AAVI_seaH1, width=0.3, alpha=0.8, color=colors[0], label="Season H1")
-			self.F.axes.bar([i + 0.3 for i in x], AAVI_pdmH1, width=0.3, alpha=0.8, color=colors[1], label="pdm09 H1")
-			self.F.axes.bar([i + 0.6 for i in x], AAVI_H3, width=0.3, alpha=0.8, color=colors[2], label="H3")
+			#start = time.time()
+			self.F.axes.plot(x, AAVI_seaH1, color=colors[0], linewidth=1, label="Season H1")
+			self.F.axes.plot(x, AAVI_pdmH1, color=colors[1], linewidth=1, label="pdm09 H1")
+			self.F.axes.plot(x, AAVI_H3, color=colors[2], linewidth=1, label="H3")
+			#end = time.time()
+			#print('Running time for new function' + str(end - start) + '\n')
+			i = 0
+			for joint in HA_joint:
+				if i == 0:
+					self.F.axes.plot([joint[0], joint[1]], [5, 5], color='r', linewidth=3, label="Joint region")
+					i += 1
+				else:
+					self.F.axes.plot([joint[0], joint[1]], [5, 5], color='r', linewidth=3)
+
 			self.F.fig.suptitle("Amino Acid Variation Index for HA")
 			self.F.fig.legend()
 			self.F.axes.spines['top'].set_visible(False)
@@ -3622,15 +3661,22 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			colors = sns.color_palette("hls", 9)
 			x = range(len(pct_N1))
-			self.F.axes.bar(x, pct_N1, width=0.1, alpha=0.8, color=colors[0], label="N1")
-			self.F.axes.bar([i + 0.1 for i in x], pct_N2, width=0.1, alpha=0.8, color=colors[1], label="N2")
-			self.F.axes.bar([i + 0.2 for i in x], pct_N3, width=0.1, alpha=0.8, color=colors[2], label="N3")
-			self.F.axes.bar([i + 0.3 for i in x], pct_N4, width=0.1, alpha=0.8, color=colors[3], label="N4")
-			self.F.axes.bar([i + 0.4 for i in x], pct_N5, width=0.1, alpha=0.8, color=colors[4], label="N5")
-			self.F.axes.bar([i + 0.5 for i in x], pct_N6, width=0.1, alpha=0.8, color=colors[5], label="N6")
-			self.F.axes.bar([i + 0.6 for i in x], pct_N7, width=0.1, alpha=0.8, color=colors[6], label="N7")
-			self.F.axes.bar([i + 0.7 for i in x], pct_N8, width=0.1, alpha=0.8, color=colors[7], label="N8")
-			self.F.axes.bar([i + 0.8 for i in x], pct_N9, width=0.1, alpha=0.8, color=colors[8], label="N9")
+			self.F.axes.plot(x, pct_N1, linewidth=1,  color=colors[0], label="N1")
+			self.F.axes.plot(x, pct_N2, linewidth=1,  color=colors[1], label="N2")
+			self.F.axes.plot(x, pct_N3, linewidth=1,  color=colors[2], label="N3")
+			self.F.axes.plot(x, pct_N4, linewidth=1,  color=colors[3], label="N4")
+			self.F.axes.plot(x, pct_N5, linewidth=1,  color=colors[4], label="N5")
+			self.F.axes.plot(x, pct_N6, linewidth=1,  color=colors[5], label="N6")
+			self.F.axes.plot(x, pct_N7, linewidth=1,  color=colors[6], label="N7")
+			self.F.axes.plot(x, pct_N8, linewidth=1,  color=colors[7], label="N8")
+			self.F.axes.plot(x, pct_N9, linewidth=1,  color=colors[8], label="N9")
+			i = 0
+			for joint in NA_joint:
+				if i == 0:
+					self.F.axes.plot([joint[0], joint[1]], [10, 10], color='r', linewidth=3, label="Joint region")
+					i += 1
+				else:
+					self.F.axes.plot([joint[0], joint[1]], [10, 10], color='r', linewidth=3)
 
 			self.F.fig.suptitle("Amino Acid Variation Index for NA")
 			self.F.fig.legend()
@@ -10366,6 +10412,13 @@ H1template_seq = "MKAILVVLLYTFATANADTLCIGYHANNSTDTVDTVLEKNVTVTHSVNLLEDKHNGKLCKLR
                  "KCDNTCMESVKNGTYDYPKYSEEAKLNREEIDGVKLESTRIYQILAIYSTVASSLVLVVSLGAISFWMCSNGSLQCRICI"
 H1_start = [1, 123, 264, 403];
 H1_end = [131, 272, 411, 518];
+
+# NA part need more discussion
+global NA_start
+global NA_end
+NA_start = [1, 131, 292];
+NA_end = [139, 301, 468];
+
 
 CodonDict={'ATT':'I',   'ATC':'I',  'ATA':'I',  'CTT':'L',  'CTC':'L',
 'CTA':'L',  'CTG':'L',  'TTA':'L',  'TTG':'L',  'GTT':'V',  'GTC':'V',
