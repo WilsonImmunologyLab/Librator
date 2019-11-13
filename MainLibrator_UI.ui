@@ -2203,7 +2203,7 @@
            </font>
           </property>
           <property name="title">
-           <string>Subtype</string>
+           <string>Subtype in current DB</string>
           </property>
          </widget>
         </item>
@@ -2215,7 +2215,7 @@
            </font>
           </property>
           <property name="title">
-           <string>Role</string>
+           <string>Role in current DB</string>
           </property>
          </widget>
         </item>

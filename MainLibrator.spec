@@ -3,19 +3,22 @@
 block_cipher = None
 
 added_files = [
-             ('/Users/leil/Documents/Projects/Librator/Librator/Resources/HA_AAVI.csv','.'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/Resources/HA_PCT.csv','.'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/Resources/NA_AAVI.csv','.'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/Resources/NA_PCT.csv','.'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/3hto.pdb','.'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/4hmg.pdb','.'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/4jtv.pdb','.'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/3lzg.pdb','.'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/1ruz.pdb','.'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/1ru7.pdb','.'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/1ru7.pdb','.')
+             ('/Users/leil/Documents/Projects/Librator/Resources/Data/H1_AAVI.csv','Data'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Data/H1_PCT.csv','Data'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Data/H3_AAVI.csv','Data'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Data/H3_PCT.csv','Data'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Data/NA_AAVI.csv','Data'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Data/NA_PCT.csv','Data'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/PDB/3hto.pdb','PDB'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/PDB/4hmg.pdb','PDB'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/PDB/4jtv.pdb','PDB'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/PDB/3lzg.pdb','PDB'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/PDB/1ruz.pdb','PDB'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/PDB/1ru7.pdb','PDB'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/PDB/1ru7.pdb','PDB'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Conf/db_record.txt','Conf'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Conf/db_record.txt','Temp')
              ]
-
 
 a = Analysis(['MainLibrator.py'],
              pathex=['/Users/leil/Documents/Projects/Librator/Librator'],
@@ -33,20 +36,23 @@ pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
-          a.binaries,
-          a.zipfiles,
-          a.datas,
           [],
+          exclude_binaries=True,
           name='MainLibrator',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          upx_exclude=[],
-          runtime_tmpdir=None,
-          console=False , 
-          icon='Flu.icns')
-app = BUNDLE(exe,
+          console=False )
+coll = COLLECT(exe,
+               a.binaries,
+               a.zipfiles,
+               a.datas,
+               strip=False,
+               upx=True,
+               upx_exclude=[],
+               name='MainLibrator')
+app = BUNDLE(coll,
              name='MainLibrator.app',
              icon='Flu.icns',
              bundle_identifier=None,

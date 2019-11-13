@@ -7,7 +7,7 @@ from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QCursor
 from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion, creatnewFragmentDB,\
 	CopyDatatoDB2, RunMYSQL, RunMYSQLInsertion
-#from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtWebEngineWidgets import QWebEngineView
 
 from HA_numbering_function import HA_numbering_Jesse
 from itertools import combinations
@@ -74,7 +74,7 @@ DBFilename = 'none'
 global working_prefix
 working_prefix = os.path.dirname(os.path.realpath(sys.argv[0])) + '/'
 global temp_folder
-temp_folder = working_prefix + 'Temp/'
+temp_folder = os.path.join(working_prefix, '..', 'Resources', 'Temp')
 
 global muscle_path
 muscle_path = '/usr/local/bin/muscle'
@@ -1692,9 +1692,9 @@ class basePathDialog(QtWidgets.QDialog):
 
 		# check if base path exist or not
 		if os.path.exists(tmp_working_prefix):
-			if os.path.exists(tmp_working_prefix + 'Temp/') and os.path.exists(tmp_working_prefix + 'PDB/'):
-				temp_folder = tmp_working_prefix + 'Temp/'
-				pdb_folder = tmp_working_prefix + 'PDB/'
+			if os.path.exists(os.path.join(tmp_working_prefix, '..', 'Resources', 'Temp')) and os.path.exists(os.path.join(tmp_working_prefix, '..', 'Resources', 'PDB')):
+				temp_folder = os.path.join(tmp_working_prefix, '..', 'Resources', 'Temp')
+				pdb_folder = os.path.join(tmp_working_prefix, '..', 'Resources', 'PDB')
 				working_prefix = tmp_working_prefix
 			elif os.path.exists(tmp_working_prefix + 'Temp/') == False:
 				QMessageBox.warning(self, 'Warning',
@@ -1772,7 +1772,7 @@ class basePathDialog(QtWidgets.QDialog):
 				raxml_path = self.ui.RaxmlPath.text()
 
 		# save MYSQL setting
-		mysql_setting_file = os.path.join(working_prefix, 'Conf', 'mysql_setting.txt')
+		mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
 		file_handle = open(mysql_setting_file, 'w')
 		my_info = self.ui.IPinput.text() + ',' + self.ui.Portinput.text() + ',' + self.ui.DBnameinput.text() + \
 		          ',' + self.ui.Userinput.text() + ',' + self.ui.Passinput.text()
@@ -2041,7 +2041,7 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 			text = '\n'.join(text)
 
 			# save MYSQL setting
-			mysql_setting_file = os.path.join(working_prefix, 'Conf', 'mysql_setting.txt')
+			mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
 			file_handle = open(mysql_setting_file, 'w')
 			my_info = self.ui.IPinput.text() + ',' + self.ui.Portinput.text() + ',' + self.ui.DBnameinput.text() + \
 			          ',' + self.ui.Userinput.text() + ',' + self.ui.Passinput.text()
@@ -2149,7 +2149,7 @@ class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 		try:
 			if len(DataSet) == 1:
 				time_stamp = str(int(time.time() * 100))
-				outfilename = temp_folder + "out-" + time_stamp + ".fas"
+				outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
 				out_handle = open(outfilename, 'w')
 				out_handle.write('>' + DataSet[0][0] + '\n')
 				out_handle.write(DataSet[0][1])
@@ -2783,11 +2783,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.fig = 0
 
-		#gridlayout_HTML = QGridLayout(self.ui.groupBoxHTML)
-		#view = QWebEngineView(self)
-		#view.load(QUrl("http://wilsonlab.uchicago.edu/"))
-		#gridlayout_HTML.addWidget(view)
-		#view.show()
+		gridlayout_HTML = QGridLayout(self.ui.groupBoxHTML)
+		view = QWebEngineView(self)
+		view.load(QUrl("http://wilsonlab.uchicago.edu/"))
+		gridlayout_HTML.addWidget(view)
+		view.show()
 
 	def resetSearch(self):
 		self.ui.txtSearch.setPlainText('')
@@ -2885,7 +2885,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global working_prefix
 		self.ui.cboRecent.clear()
 		self.ui.cboRecent.addItem('Open previous')
-		record_file = os.path.join(working_prefix, 'Conf', 'db_record.txt')
+		record_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'db_record.txt')
 		if os.path.isfile(record_file):
 			with open(record_file, 'r') as currentFile:
 				RecentFiles = currentFile.readlines()
@@ -2934,7 +2934,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		if answer == 'No':
 			return
 		else:
-			cmd = 'cd ' + temp_folder + '; rm -rf ' + temp_folder + '*'
+			cmd = 'cd ' + temp_folder + '; rm -rf ' + temp_folder + '/*'
 			os.system(cmd)
 
 	@pyqtSlot()
@@ -3247,7 +3247,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# write sequences into file
 		time_stamp = str(int(time.time() * 100))
-		this_folder = temp_folder + time_stamp
+		this_folder = os.path.join(temp_folder, time_stamp)
 		cmd = 'mkdir ' + this_folder
 		os.system(cmd)
 
@@ -3340,7 +3340,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# write sequences into file
 		time_stamp = str(int(time.time() * 100))
-		this_folder = temp_folder + time_stamp
+		this_folder = os.path.join(temp_folder, time_stamp)
 		cmd = 'mkdir ' + this_folder
 		os.system(cmd)
 
@@ -3525,7 +3525,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			colors = sns.color_palette("hls", len(values))
 
 			F = MyFigure(width=3, height=3, dpi=160)
-			F.axes.pie(values, labels=labels, colors=colors, radius=1.0, pctdistance = 0.8,autopct='%1.1f%%',startangle=90)
+			F.axes.pie(values, colors=colors, radius=1.0, pctdistance = 0.8,autopct='%1.1f%%',startangle=90)
+			F.fig.legend(labels, title = 'Subtype')
 			x = [1, 0, 0, 0]
 			F.axes.pie(x, colors = 'w', radius=0.6)
 
@@ -3546,7 +3547,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			colors = sns.color_palette("hls", len(values))
 
 			F = MyFigure(width=3, height=3, dpi=160)
-			F.axes.pie(values, labels=labels, colors=colors, radius=1.0, pctdistance = 0.8,autopct='%1.1f%%',startangle=90)
+			F.axes.pie(values,  colors=colors, radius=1.0, pctdistance = 0.8,autopct='%1.1f%%',startangle=90)
+			F.fig.legend(labels, title = 'Role')
 			x = [1, 0, 0, 0]
 			F.axes.pie(x, colors='w', radius=0.6)
 
@@ -3620,7 +3622,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.F = MyFigure(width=6, height=3, dpi=160)
 
 		if self.ui.comboBoxHANA.currentIndex() == 0 and self.ui.comboBoxIndex.currentIndex() == 0:  # H1 + PCT
-			data_file = os.path.join(working_prefix, 'Resources', 'H1_PCT.csv')
+			data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H1_PCT.csv')
 			if os.path.exists(data_file):
 				pass
 			else:
@@ -3664,7 +3666,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.F.axes.set_yticklabels(yticklabels)
 			self.F.fig.subplots_adjust(top = 0.95, bottom = 0.1, right = 0.98, left = 0.05, hspace = 0, wspace = 0)
 		elif self.ui.comboBoxHANA.currentIndex() == 1 and self.ui.comboBoxIndex.currentIndex() == 0:  # H3 + PCT
-			data_file = os.path.join(working_prefix, 'Resources', 'H3_PCT.csv')
+			data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H3_PCT.csv')
 			if os.path.exists(data_file):
 				pass
 			else:
@@ -3707,7 +3709,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.F.axes.set_yticklabels(yticklabels)
 			self.F.fig.subplots_adjust(top = 0.95, bottom = 0.1, right = 0.98, left = 0.05, hspace = 0, wspace = 0)
 		elif self.ui.comboBoxHANA.currentIndex() == 2 and self.ui.comboBoxIndex.currentIndex() == 0:  # NA + PCT
-			data_file = os.path.join(working_prefix, 'Resources', 'NA_PCT.csv')
+			data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'NA_PCT.csv')
 			if os.path.exists(data_file):
 				pass
 			else:
@@ -3759,7 +3761,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.F.fig.subplots_adjust(top=0.95, bottom=0.1, right=0.98, left=0.05, hspace=0, wspace=0)
 
 		elif self.ui.comboBoxHANA.currentIndex() == 0 and self.ui.comboBoxIndex.currentIndex() == 1:  # H1 + AAVI
-			data_file = os.path.join(working_prefix, 'Resources', 'H1_AAVI.csv')
+			data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H1_AAVI.csv')
 			if os.path.exists(data_file):
 				pass
 			else:
@@ -3800,7 +3802,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.F.axes.spines['left'].set_position(('data', 0))
 			self.F.fig.subplots_adjust(top=0.95, bottom=0.1, right=0.98, left=0.05, hspace=0, wspace=0)
 		elif self.ui.comboBoxHANA.currentIndex() == 1 and self.ui.comboBoxIndex.currentIndex() == 1:  # H3 + AAVI
-			data_file = os.path.join(working_prefix, 'Resources', 'H3_AAVI.csv')
+			data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H3_AAVI.csv')
 			if os.path.exists(data_file):
 				pass
 			else:
@@ -3840,7 +3842,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.F.axes.spines['left'].set_position(('data', 0))
 			self.F.fig.subplots_adjust(top = 0.95, bottom = 0.1, right = 0.98, left = 0.05, hspace = 0, wspace = 0)
 		elif self.ui.comboBoxHANA.currentIndex() == 2 and self.ui.comboBoxIndex.currentIndex() == 1:  # NA + AAVI
-			data_file = os.path.join(working_prefix,'Resources','NA_AAVI.csv')
+			data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'NA_AAVI.csv')
 			if os.path.exists(data_file):
 				pass
 			else:
@@ -5640,7 +5642,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		try:
 			if len(DataSet) == 1:
 				time_stamp = str(int(time.time() * 100))
-				outfilename = temp_folder + "out-" + time_stamp + ".fas"
+				outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
 				out_handle = open(outfilename, 'w')
 				out_handle.write('>' + DataSet[0][0] + '\n')
 				out_handle.write(DataSet[0][1])
@@ -6255,7 +6257,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		try:
 			if len(DataSet) == 1:
 				time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
-				outfilename = temp_folder + "out-" + time_stamp + ".fas"
+				outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
 				out_handle = open(outfilename,'w')
 				out_handle.write('>' + DataSet[0][0] + '\n')
 				out_handle.write(DataSet[0][1])
@@ -7672,17 +7674,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# set 3D templates for different subtypes
 		if subtype == "H1N1":
-			pdb_path = working_prefix + "PDB/4jtv.pdb"
+			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4jtv.pdb')
 		elif subtype == "H3N2":
-			pdb_path = working_prefix + "PDB/4hmg.pdb"
+			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4hmg.pdb')
 		elif subtype == "B":
-			pdb_path = working_prefix + "PDB/3hto.pdb"
+			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
 		elif subtype == "Group 1":
-			pdb_path = working_prefix + "PDB/4jtv.pdb"
+			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4jtv.pdb')
 		elif subtype == "Group 2":
-			pdb_path = working_prefix + "PDB/4hmg.pdb"
+			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4hmg.pdb')
 		else:
-			pdb_path = working_prefix + "PDB/3hto.pdb"
+			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
 
 		self.show3Dstructure(mutation, pdb_path, pymol_path, subtype)
 
@@ -7795,7 +7797,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 	@pyqtSlot()
 	def UpdateRecentFilelist(self, DBFilename):
 		global working_prefix
-		record_file = os.path.join(working_prefix, 'Conf', 'db_record.txt')
+		record_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'db_record.txt')
 
 		if os.path.exists(record_file):
 			my_open = open(record_file, 'r')
@@ -8552,17 +8554,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# set 3D templates for different subtypes
 		if subtype == "H1N1":
-			pdb_path = working_prefix + "PDB/4jtv.pdb"
+			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4jtv.pdb')
 		elif subtype == "H3N2":
-			pdb_path = working_prefix + "PDB/4hmg.pdb"
+			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4hmg.pdb')
 		elif subtype == "B":
-			pdb_path = working_prefix + "PDB/3hto.pdb"
+			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
 		elif subtype == "Group 1":
-			pdb_path = working_prefix + "PDB/4jtv.pdb"
+			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4jtv.pdb')
 		elif subtype == "Group 2":
-			pdb_path = working_prefix + "PDB/4hmg.pdb"
+			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4hmg.pdb')
 		else:
-			pdb_path = working_prefix + "PDB/3hto.pdb"
+			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
 
 		self.show3Dstructure(mutation, pdb_path, pymol_path, subtype)
 
@@ -8861,7 +8863,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessGibsonDialog.gibsonSignal.connect(self.GenerateGibson)
 
 			# check saved MYSQL setting
-			mysql_setting_file = os.path.join(working_prefix, 'Conf', 'mysql_setting.txt')
+			mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
 
 			if os.path.exists(mysql_setting_file):
 				my_open = open(mysql_setting_file, 'r')
@@ -9055,7 +9057,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessbaseDialog.ui.RaxmlPath.setText(raxml_path)
 
 		# check saved MYSQL setting
-		mysql_setting_file = os.path.join(working_prefix, 'Conf', 'mysql_setting.txt')
+		mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
 
 		if os.path.exists(mysql_setting_file):
 			my_open = open(mysql_setting_file, 'r')
@@ -9248,8 +9250,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# align all sequences
 			# write sequence into file for alignment
 			time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
-			in_file = temp_folder + "in" + time_stamp + ".fas"
-			out_file = temp_folder + "out" + time_stamp + ".fas"
+			in_file = os.path.join(temp_folder, "in" + time_stamp + ".fas")
+			out_file = os.path.join(temp_folder, "out" + time_stamp + ".fas")
 			temp_file = open(in_file, "w")
 			temp_file.write(">" + base_sequence + "\n")
 			temp_file.write(base_aa_seq + "\n")
@@ -9443,8 +9445,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# get all mutation information in donor region
 			# write sequence into file for alignment
 			time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
-			in_file = temp_folder + "in" + time_stamp + ".fas"
-			out_file = temp_folder + "out" + time_stamp + ".fas"
+			in_file = os.path.join(temp_folder, "in" + time_stamp + ".fas")
+			out_file = os.path.join(temp_folder, "out" + time_stamp + ".fas")
 			temp_file = open(in_file, "w")
 			temp_file.write(">" + base_sequence + "\n")
 			temp_file.write(base_aa_seq + "\n")
@@ -9660,8 +9662,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# initial the temp file name
 		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
-		in_file = temp_folder + "in" + time_stamp + ".fas"
-		out_file = temp_folder + "out" + time_stamp + ".fas"
+		in_file = os.path.join(temp_folder, "in" + time_stamp + ".fas")
+		out_file = os.path.join(temp_folder, "out" + time_stamp + ".fas")
 
 		if subtype == "H1":
 			# set template
@@ -10659,9 +10661,9 @@ NA_end_user = []
 NA_start_user = []
 
 global H1_Gibson_file, H3_Gibson_file, NA_Gibson_file
-H1_Gibson_file = os.path.join(working_prefix,'Conf','H1_Gibson.txt')
-H3_Gibson_file = os.path.join(working_prefix,'Conf','H3_Gibson.txt')
-NA_Gibson_file = os.path.join(working_prefix,'Conf','NA_Gibson.txt')
+H1_Gibson_file = os.path.join(working_prefix, '..', 'Resources', 'Conf','H1_Gibson.txt')
+H3_Gibson_file = os.path.join(working_prefix, '..', 'Resources', 'Conf','H3_Gibson.txt')
+NA_Gibson_file = os.path.join(working_prefix, '..', 'Resources', 'Conf','NA_Gibson.txt')
 
 if os.path.exists(H1_Gibson_file):
 	file_handle = open(H1_Gibson_file, 'r')
