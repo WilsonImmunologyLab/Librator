@@ -9771,6 +9771,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			pre_fragment = cur_seq[0:aa_start[0] - 1]
 			hyphen_pos = [i.start() for i in re.finditer('-', pre_fragment)]
 			num_of_hyphen = num_of_hyphen + len(hyphen_pos)
+			joint_aa_len = aa_end[0] - aa_start[1] + 1
+			num_of_hyphen_last_joint = 0
 
 			for i in range(num_fragment):
 				fragment = cur_seq[aa_start[i] - 1: aa_end[i]]
@@ -9784,10 +9786,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 						return
 
 				hyphen_pos = [i.start() for i in re.finditer('-', fragment)]
-				nt_start[i] = (aa_start[i] - 1 - num_of_hyphen) * 3 + 1
+				nt_start[i] = (aa_start[i] - 1 - num_of_hyphen + num_of_hyphen_last_joint) * 3 + 1
 				num_of_hyphen = num_of_hyphen + len(hyphen_pos)
-				nt_end[i] = (aa_end[i] - num_of_hyphen) * 3
+				nt_end[i] = (aa_end[i] - num_of_hyphen + num_of_hyphen_last_joint) * 3
 				fragment1 = fragment.replace("-", "")
+				hyphen_pos_joint = [i.start() for i in re.finditer('-', fragment[0-joint_aa_len:])]
+				num_of_hyphen_last_joint += len(hyphen_pos_joint)
 
 				nt_fragment = cur_seq_nt[nt_start[i] - 1: nt_end[i]]
 
