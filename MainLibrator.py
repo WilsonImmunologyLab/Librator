@@ -1,6 +1,6 @@
 # Librator by Patrick Wilson
 from PyQt5.QtCore import pyqtSlot, QTimer, QDateTime, Qt, QSortFilterProxyModel, QModelIndex, QEventLoop, pyqtSignal,\
-	QEventLoop, QUrl
+	QEventLoop, QUrl, QSize
 from PyQt5 import QtWidgets, QtPrintSupport
 from PyQt5.QtWidgets import *
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
@@ -8,6 +8,8 @@ from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QC
 from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion, creatnewFragmentDB,\
 	CopyDatatoDB2, RunMYSQL, RunMYSQLInsertion
 from PyQt5.QtWebEngineWidgets import QWebEngineView
+from pyecharts.charts import Bar, Pie, Line
+from pyecharts import options as opts
 
 from HA_numbering_function import HA_numbering_Jesse
 from itertools import combinations
@@ -97,6 +99,17 @@ class MyFigure(FigureCanvas):
         self.fig = Figure(figsize=(width, height), dpi=dpi)
         super(MyFigure,self).__init__(self.fig)
         self.axes = self.fig.add_subplot(111)
+class ResizeWidget(QWebEngineView):
+	def __init__(self):
+		super().__init__()
+
+	def resizeEvent(self, evt):
+		w = evt.oldSize().width()
+		h = evt.oldSize().height()
+		print(f' size before :{w,h}')
+		w2 = evt.size().width()
+		h2 = evt.size().height()
+		print(f' size now :{w, h}')
 
 
 class jointDialog(QtWidgets.QDialog):
@@ -2782,12 +2795,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessJointDialog = None
 
 		self.fig = 0
-
-		gridlayout_HTML = QGridLayout(self.ui.groupBoxHTML)
-		view = QWebEngineView(self)
-		view.load(QUrl("http://wilsonlab.uchicago.edu/"))
-		gridlayout_HTML.addWidget(view)
-		view.show()
+		self.html = 0
 
 	def resetSearch(self):
 		self.ui.txtSearch.setPlainText('')
@@ -3445,6 +3453,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 	@pyqtSlot()
 	def FillAlignmentTab(self):
 		global DBFilename
+		global temp_folder
 		AlignIn = []
 		EachIn = ()
 
@@ -3507,9 +3516,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		elif self.ui.tabWidget.currentIndex() == 4:
 			if DBFilename == 'none':
 				return
-			if self.fig == 1:
-				return
-
 			#  plot stat for subtype
 			# get data
 			SQLStatement = 'SELECT Subtype FROM LibDB'
@@ -3521,7 +3527,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			result = Counter(data)
 			labels = result.keys()
 			values = result.values()
-			#colors = ['hotpink','slateblue','goldenrod','olivedrab',"maroon", "grey", "orange", "deepskyblue", "peru", "m"]
 			colors = sns.color_palette("hls", len(values))
 
 			F = MyFigure(width=3, height=3, dpi=160)
@@ -3530,7 +3535,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 			x = [1, 0, 0, 0]
 			F.axes.pie(x, colors = 'w', radius=0.6)
 
-			gridlayout_fig1 = QGridLayout(self.ui.groupBox1)
+			if self.fig == 0:
+				gridlayout_fig1 = QGridLayout(self.ui.groupBox1)
+			else:
+				gridlayout_fig1 = self.ui.groupBox1.layout()
+				for i in range(gridlayout_fig1.count()):
+					gridlayout_fig1.itemAt(i).widget().deleteLater()
 			gridlayout_fig1.addWidget(F,0,1)
 
 			#  plot stat for Role
@@ -3552,30 +3562,138 @@ class LibratorMain(QtWidgets.QMainWindow):
 			x = [1, 0, 0, 0]
 			F.axes.pie(x, colors='w', radius=0.6)
 
-			gridlayout_fig2 = QGridLayout(self.ui.groupBox2)
+			if self.fig == 0:
+				gridlayout_fig2 = QGridLayout(self.ui.groupBox2)
+			else:
+				gridlayout_fig2 = self.ui.groupBox2.layout()
+				for i in range(gridlayout_fig2.count()):
+					gridlayout_fig2.itemAt(i).widget().deleteLater()
 			gridlayout_fig2.addWidget(F, 0, 1)
 
 			#  plot stat for something
 			# get data
-			self.ui.comboBoxHANA = QComboBox()
-			self.ui.comboBoxHANA.addItem("H1/Group1")
-			self.ui.comboBoxHANA.addItem("H3/Group2")
-			self.ui.comboBoxHANA.addItem("NA")
-			self.ui.comboBoxHANA.currentIndexChanged.connect(self.FigChange)
+			if self.fig == 0:
+				self.ui.comboBoxHANA = QComboBox()
+				self.ui.comboBoxHANA.addItem("H1/Group1")
+				self.ui.comboBoxHANA.addItem("H3/Group2")
+				self.ui.comboBoxHANA.addItem("NA")
+				self.ui.comboBoxHANA.currentIndexChanged.connect(self.FigChange)
 
-			self.ui.comboBoxIndex = QComboBox()
-			self.ui.comboBoxIndex.addItem("Percentage of Variation")
-			self.ui.comboBoxIndex.addItem("Amino Acid Variation Index")
-			self.ui.comboBoxIndex.currentIndexChanged.connect(self.FigChange)
+				self.ui.comboBoxIndex = QComboBox()
+				self.ui.comboBoxIndex.addItem("Percentage of Variation")
+				self.ui.comboBoxIndex.addItem("Amino Acid Variation Index")
+				self.ui.comboBoxIndex.currentIndexChanged.connect(self.FigChange)
 
-			self.Stat_fig()
+				self.Stat_fig()
 
-			gridlayout_fig3 = QGridLayout(self.ui.groupBox3)
-			gridlayout_fig3.addWidget(self.ui.comboBoxHANA, 1, 0)
-			gridlayout_fig3.addWidget(self.ui.comboBoxIndex, 1, 1)
-			gridlayout_fig3.addWidget(self.F, 2, 0, 10, 0)
+				gridlayout_fig3 = QGridLayout(self.ui.groupBox3)
+				gridlayout_fig3.addWidget(self.ui.comboBoxHANA, 1, 0)
+				gridlayout_fig3.addWidget(self.ui.comboBoxIndex, 1, 1)
+				gridlayout_fig3.addWidget(self.F, 2, 0, 10, 0)
 
-			self.fig = 1
+				self.fig = 1
+
+		elif self.ui.tabWidget.currentIndex() == 5:
+			if DBFilename == 'none':
+				return
+			######  plot stat for subtype
+			# get data
+			SQLStatement = 'SELECT Subtype FROM LibDB'
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			data = []
+			for element in DataIn:
+				data.append(element[0])
+			result = Counter(data)
+			labels = result.keys()
+			values = result.values()
+			# generate local HTML
+			html_path = os.path.join(temp_folder, 'test1.html')
+			pie = (
+				Pie(init_opts=opts.InitOpts(width="380px",height="380px"))
+				.add('', [list(z) for z in zip(labels, values)], radius=["40%", "75%"],)
+				.set_global_opts(title_opts=opts.TitleOpts(title=""))
+				.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+			)
+			pie.render(path=html_path)
+			# show local HTML
+			if self.html == 0:
+				gridlayout_HTML = QGridLayout(self.ui.groupBoxHTML1)
+			else:
+				gridlayout_HTML = self.ui.groupBoxHTML1.layout()
+				for i in range(gridlayout_HTML.count()):
+					gridlayout_HTML.itemAt(i).widget().deleteLater()
+			#view = ResizeWidget()
+			view = QWebEngineView(self)
+			view.load(QUrl('file://' + html_path))
+			view.resize(QSize(400, 400))
+			gridlayout_HTML.addWidget(view)
+			view.show()
+
+			######  plot stat for Role
+			# get data
+			SQLStatement = 'SELECT Role FROM LibDB'
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			data = []
+			for element in DataIn:
+				data.append(element[0])
+			result = Counter(data)
+			labels = result.keys()
+			values = result.values()
+			# generate local HTML
+			html_path = os.path.join(temp_folder, 'test2.html')
+			pie = (
+				Pie(init_opts=opts.InitOpts(width="380px", height="380px"))
+					.add('', [list(z) for z in zip(labels, values)], radius=["40%", "75%"],)
+					.set_global_opts(title_opts=opts.TitleOpts(title=""))
+					.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+			)
+			pie.render(path=html_path)
+			# show local HTML
+			if self.html == 0:
+				gridlayout_HTML = QGridLayout(self.ui.groupBoxHTML2)
+			else:
+				gridlayout_HTML = self.ui.groupBoxHTML2.layout()
+				for i in range(gridlayout_HTML.count()):
+					gridlayout_HTML.itemAt(i).widget().deleteLater()
+			view = QWebEngineView(self)
+			view.load(QUrl('file://' + html_path))
+			view.resize(QSize(400, 400))
+			gridlayout_HTML.addWidget(view)
+			view.show()
+
+			######  plot stat for H1
+			if self.html == 0:
+				# get data
+				data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H1_PCT.csv')
+				if os.path.exists(data_file):
+					pass
+				else:
+					return
+
+				csvFile = open(data_file, "r")
+				reader = csv.reader(csvFile)
+				data_array = []
+				for item in reader:
+					item = list(map(float, item))
+					data_array.append(item)
+				# generate local HTML
+				line = (
+					Line(init_opts=opts.InitOpts(width="900px", height="380px"))
+						.add_xaxis(range(1, len(data_array[0]) + 1))
+						.add_yaxis("Season H1", data_array[0], is_symbol_show=False)
+						.add_yaxis("pdm09 H1", data_array[1], is_symbol_show=False)
+						.set_global_opts(title_opts=opts.TitleOpts(title="Pct of variations for H1", subtitle="seasonal/pdm09"))
+				)
+				html_path = os.path.join(temp_folder, 'test3.html')
+				line.render(path=html_path)
+				# show local HTML
+				gridlayout_HTML = QGridLayout(self.ui.groupBoxHTML3)
+				view = QWebEngineView(self)
+				view.load(QUrl('file://' + html_path))
+				gridlayout_HTML.addWidget(view, 1, Qt.AlignCenter)
+				view.show()
+
+				self.html = 1
 
 	def FigChange(self):
 		sip.delete(self.F)
