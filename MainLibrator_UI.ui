@@ -238,7 +238,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sequence&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="currentIndex">
-       <number>6</number>
+       <number>5</number>
       </property>
       <property name="usesScrollButtons">
        <bool>false</bool>
@@ -2248,11 +2248,6 @@
           <property name="title">
            <string>Subtype in current DB</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_6">
-           <item row="0" column="0">
-            <widget class="QWebEngineView" name="HTML1" native="true"/>
-           </item>
-          </layout>
          </widget>
         </item>
         <item row="0" column="1">
@@ -2265,17 +2260,6 @@
           <property name="title">
            <string>Role in current DB</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_7">
-           <item row="0" column="0">
-            <widget class="QWebEngineView" name="HTML2" native="true">
-             <property name="font">
-              <font>
-               <pointsize>15</pointsize>
-              </font>
-             </property>
-            </widget>
-           </item>
-          </layout>
          </widget>
         </item>
         <item row="1" column="0" colspan="2">
@@ -2288,11 +2272,6 @@
           <property name="title">
            <string>Amino Acid Variation of Influenza HA/NA</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_11">
-           <item row="0" column="0">
-            <widget class="QWebEngineView" name="HTML3" native="true"/>
-           </item>
-          </layout>
          </widget>
         </item>
        </layout>
@@ -2328,7 +2307,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="tab_4">
               <attribute name="title">
@@ -3200,14 +3179,6 @@
    </property>
   </action>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QWebEngineView</class>
-   <extends>QWidget</extends>
-   <header>qwebengineview.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="Resources/VgenesResources.qrc"/>
   <include location="Resources/VgenesResources.qrc"/>

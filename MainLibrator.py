@@ -8,7 +8,7 @@ from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QC
 from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion, creatnewFragmentDB,\
 	CopyDatatoDB2, RunMYSQL, RunMYSQLInsertion
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from pyecharts.charts import Bar, Pie, Line
+from pyecharts.charts import Bar, Pie, Line, Page, Grid
 from pyecharts import options as opts
 
 from HA_numbering_function import HA_numbering_Jesse
@@ -101,17 +101,23 @@ class MyFigure(FigureCanvas):
         self.axes = self.fig.add_subplot(111)
 
 class ResizeWidget(QWebEngineView):
-	def __init__(self):
-		super().__init__()
+	resizeSignal = pyqtSignal(int,int)
+	def __init__(self,parent=None):
+		super(ResizeWidget,self).__init__()
+		self.id = 0
+		self.h = 0
+		self.w = 0
 
 	def resizeEvent(self, evt):
-		w = evt.oldSize().width()
-		h = evt.oldSize().height()
-		print(f' size before :{w,h}')
-		w2 = evt.size().width()
-		h2 = evt.size().height()
-		print(f' size now :{w, h}')
-
+		#w = evt.oldSize().width()
+		#h = evt.oldSize().height()
+		#print(f' size before :{w,h}')
+		w = evt.size().width()
+		h = evt.size().height()
+		self.h = h
+		self.w = w
+		print(f' size now :{w, h, self.id}')
+		self.resizeSignal.emit(w,h)
 
 class jointDialog(QtWidgets.QDialog):
 	def __init__(self):
@@ -2800,6 +2806,144 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.fig = 0
 		self.html = 0
 
+		self.ui.HTMLview1 = ResizeWidget(self)
+		self.ui.HTMLview1.id = 1
+		grid_html1 = QGridLayout(self.ui.groupBoxHTML1)
+		grid_html1.addWidget(self.ui.HTMLview1)
+		self.ui.HTMLview2 = ResizeWidget(self)
+		self.ui.HTMLview2.id = 2
+		grid_html2 = QGridLayout(self.ui.groupBoxHTML2)
+		grid_html2.addWidget(self.ui.HTMLview2)
+		self.ui.HTMLview3 = ResizeWidget(self)
+		self.ui.HTMLview3.id = 3
+		grid_html3 = QGridLayout(self.ui.groupBoxHTML3)
+		grid_html3.addWidget(self.ui.HTMLview3)
+
+		self.ui.HTMLview1.resizeSignal.connect(self.resizeHTML)
+		self.ui.HTMLview2.resizeSignal.connect(self.resizeHTML)
+		self.ui.HTMLview3.resizeSignal.connect(self.resizeHTML)
+
+	def resizeHTML(self, w, h):
+		if DBFilename == 'none':
+			return
+		h = h - 20
+		sender = self.sender()
+		a = sender.id
+		if sender.id == 1:
+			######  plot stat for subtype
+			# get data
+			SQLStatement = 'SELECT Subtype FROM LibDB'
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			data = []
+			for element in DataIn:
+				data.append(element[0])
+			result = Counter(data)
+			labels = result.keys()
+			values = result.values()
+			# generate local HTML
+			html_path = os.path.join(temp_folder, 'test1.html')
+			pie = (
+				Pie(init_opts=opts.InitOpts(width="380px", height="380px"))
+					.add('', [list(z) for z in zip(labels, values)], radius=["40%", "75%"], )
+					.set_global_opts(title_opts=opts.TitleOpts(title=""))
+					.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+			)
+			pie.render(path=html_path)
+			# adjust the window size seting
+			file_handle = open(html_path, 'r')
+			lines = file_handle.readlines()
+			file_handle.close()
+			style_line = lines[9]
+			style_pos = style_line.find('style')
+			style_line = style_line[0:style_pos] + 'style="position: fixed; top: 0px; left: 5%;width:90%; height:' + str(h) + 'px;"></div>'
+			lines[9] = style_line
+			content = '\n'.join(lines)
+			file_handle = open(html_path, 'w')
+			file_handle.write(content)
+			file_handle.close()
+			# show local HTML
+			self.ui.HTMLview1.load(QUrl('file://' + html_path))
+			self.ui.HTMLview1.show()
+		elif sender.id == 2:
+			######  plot stat for Role
+			# get data
+			SQLStatement = 'SELECT Role FROM LibDB'
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			data = []
+			for element in DataIn:
+				data.append(element[0])
+			result = Counter(data)
+			labels = result.keys()
+			values = result.values()
+			# generate local HTML
+			html_path = os.path.join(temp_folder, 'test2.html')
+			pie = (
+				Pie(init_opts=opts.InitOpts(width="380px", height="380px"))
+					.add('', [list(z) for z in zip(labels, values)], radius=["40%", "75%"], )
+					.set_global_opts(title_opts=opts.TitleOpts(title=""))
+					.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+			)
+			pie.render(path=html_path)
+			# adjust the window size seting
+			file_handle = open(html_path, 'r')
+			lines = file_handle.readlines()
+			file_handle.close()
+			style_line = lines[9]
+			style_pos = style_line.find('style')
+			style_line = style_line[
+			             0:style_pos] + 'style="position: fixed; top: 0px; left: 5%;width:90%; height:' + str(
+				h) + 'px;"></div>'
+			lines[9] = style_line
+			content = '\n'.join(lines)
+			file_handle = open(html_path, 'w')
+			file_handle.write(content)
+			file_handle.close()
+			# show local HTML
+			self.ui.HTMLview2.load(QUrl('file://' + html_path))
+			self.ui.HTMLview2.show()
+		elif sender.id == 3:
+			######  plot stat for H1
+			# get data
+			data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H1_PCT.csv')
+			if os.path.exists(data_file):
+				pass
+			else:
+				return
+
+			csvFile = open(data_file, "r")
+			reader = csv.reader(csvFile)
+			data_array = []
+			for item in reader:
+				item = list(map(float, item))
+				data_array.append(item)
+			# generate local HTML
+			line = (
+				Line(init_opts=opts.InitOpts(width="900px", height="380px"))
+					.add_xaxis(range(1, len(data_array[0]) + 1))
+					.add_yaxis("Season H1", data_array[0], is_symbol_show=False)
+					.add_yaxis("pdm09 H1", data_array[1], is_symbol_show=False)
+					.set_global_opts(title_opts=opts.TitleOpts(title="Pct of variations for H1", subtitle="seasonal/pdm09"))
+			)
+			html_path = os.path.join(temp_folder, 'test3.html')
+			line.render(path=html_path)
+			# adjust the window size seting
+			file_handle = open(html_path, 'r')
+			lines = file_handle.readlines()
+			file_handle.close()
+			style_line = lines[9]
+			style_pos = style_line.find('style')
+			style_line = style_line[
+			             0:style_pos] + 'style="position: fixed; top: 0px; left: 5%;width:90%; height:' + str(
+				h) + 'px;"></div>'
+			lines[9] = style_line
+			content = '\n'.join(lines)
+			file_handle = open(html_path, 'w')
+			file_handle.write(content)
+			file_handle.close()
+			# show local HTML
+			self.ui.HTMLview3.load(QUrl('file://' + html_path))
+			self.ui.HTMLview3.show()
+
 	def connectDB(self):
 		SQLStatement = 'SELECT * FROM Fragments ORDER BY Name DESC'
 		if self.ui.FragmentTab.currentIndex() == 0:     # connect to local sqLite DB
@@ -2827,6 +2971,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 			for col_index in range(num_col):
 				self.ui.tableWidget.setItem(row_index, col_index, QTableWidgetItem(DataIn[row_index][col_index]))
 
+		# show sort indicator
+		self.ui.tableWidget.horizontalHeader().setSortIndicatorShown(True)
+		# connect sort indicator to slot function
+		self.ui.tableWidget.horizontalHeader().sectionClicked.connect(self.sortTable)
+
+	def sortTable(self, index):
+		self.ui.tableWidget.sortByColumn(index, self.ui.tableWidget.horizontalHeader().sortIndicatorOrder())
 
 	def determineFile(self):
 		global temp_folder
@@ -3643,66 +3794,82 @@ class LibratorMain(QtWidgets.QMainWindow):
 		elif self.ui.tabWidget.currentIndex() == 5:
 			if DBFilename == 'none':
 				return
-			######  plot stat for subtype
-			# get data
-			SQLStatement = 'SELECT Subtype FROM LibDB'
-			DataIn = RunSQL(DBFilename, SQLStatement)
-			data = []
-			for element in DataIn:
-				data.append(element[0])
-			result = Counter(data)
-			labels = result.keys()
-			values = result.values()
-			# generate local HTML
-			html_path = os.path.join(temp_folder, 'test1.html')
-			pie = (
-				Pie(init_opts=opts.InitOpts(width="380px",height="380px"))
-				.add('', [list(z) for z in zip(labels, values)], radius=["40%", "75%"],)
-				.set_global_opts(title_opts=opts.TitleOpts(title=""))
-				.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-			)
-			pie.render(path=html_path)
-			# show local HTML
-			#if self.html == 0:
-			#	gridlayout_HTML = QGridLayout(self.ui.groupBoxHTML1)
-			#else:
-			#	gridlayout_HTML = self.ui.groupBoxHTML1.layout()
-			#	for i in range(gridlayout_HTML.count()):
-			#		gridlayout_HTML.itemAt(i).widget().deleteLater()
-
-			#view = QWebEngineView(self)
-			#view.load(QUrl('file://' + html_path))
-			#gridlayout_HTML.addWidget(self.ui.view, 0, Qt.AlignLeft | Qt.AlignBottom)
-			#view.show()
-
-			self.ui.HTML1.load(QUrl('file://' + html_path))
-			self.ui.HTML1.show()
-
-			######  plot stat for Role
-			# get data
-			SQLStatement = 'SELECT Role FROM LibDB'
-			DataIn = RunSQL(DBFilename, SQLStatement)
-			data = []
-			for element in DataIn:
-				data.append(element[0])
-			result = Counter(data)
-			labels = result.keys()
-			values = result.values()
-			# generate local HTML
-			html_path = os.path.join(temp_folder, 'test2.html')
-			pie = (
-				Pie(init_opts=opts.InitOpts(width="380px", height="380px"))
+			if self.ui.HTMLview1.h != 0:
+				######  plot stat for subtype
+				# get data
+				SQLStatement = 'SELECT Subtype FROM LibDB'
+				DataIn = RunSQL(DBFilename, SQLStatement)
+				data = []
+				for element in DataIn:
+					data.append(element[0])
+				result = Counter(data)
+				labels = result.keys()
+				values = result.values()
+				# generate local HTML
+				html_path = os.path.join(temp_folder, 'test1.html')
+				pie = (
+					Pie(init_opts=opts.InitOpts(width="380px",height="380px"))
 					.add('', [list(z) for z in zip(labels, values)], radius=["40%", "75%"],)
 					.set_global_opts(title_opts=opts.TitleOpts(title=""))
 					.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-			)
-			pie.render(path=html_path)
-			# show local HTML
-			self.ui.HTML2.load(QUrl('file://' + html_path))
-			self.ui.HTML2.show()
-
-			######  plot stat for H1
-			if self.html == 0:
+				)
+				pie.render(path=html_path)
+				# adjust the window size seting
+				file_handle = open(html_path, 'r')
+				lines = file_handle.readlines()
+				file_handle.close()
+				style_line = lines[9]
+				style_pos = style_line.find('style')
+				style_line = style_line[
+				             0:style_pos] + 'style="position: fixed; top: 0px; left: 5%;width:90%; height:' + str(
+					self.ui.HTMLview1.h - 20) + 'px;"></div>'
+				lines[9] = style_line
+				content = '\n'.join(lines)
+				file_handle = open(html_path, 'w')
+				file_handle.write(content)
+				file_handle.close()
+				# show local HTML
+				self.ui.HTMLview1.load(QUrl('file://' + html_path))
+				self.ui.HTMLview1.show()
+			if self.ui.HTMLview2.h != 0:
+				######  plot stat for Role
+				# get data
+				SQLStatement = 'SELECT Role FROM LibDB'
+				DataIn = RunSQL(DBFilename, SQLStatement)
+				data = []
+				for element in DataIn:
+					data.append(element[0])
+				result = Counter(data)
+				labels = result.keys()
+				values = result.values()
+				# generate local HTML
+				html_path = os.path.join(temp_folder, 'test2.html')
+				pie = (
+					Pie(init_opts=opts.InitOpts(width="380px", height="380px"))
+						.add('', [list(z) for z in zip(labels, values)], radius=["40%", "75%"],)
+						.set_global_opts(title_opts=opts.TitleOpts(title=""))
+						.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+				)
+				pie.render(path=html_path)
+				# adjust the window size seting
+				file_handle = open(html_path, 'r')
+				lines = file_handle.readlines()
+				file_handle.close()
+				style_line = lines[9]
+				style_pos = style_line.find('style')
+				style_line = style_line[
+				             0:style_pos] + 'style="position: fixed; top: 0px; left: 5%;width:90%; height:' + str(
+					self.ui.HTMLview2.h - 20) + 'px;"></div>'
+				lines[9] = style_line
+				content = '\n'.join(lines)
+				file_handle = open(html_path, 'w')
+				file_handle.write(content)
+				file_handle.close()
+				# show local HTML
+				self.ui.HTMLview2.load(QUrl('file://' + html_path))
+				self.ui.HTMLview2.show()
+			if self.ui.HTMLview3.h != 0:
+				######  plot stat for H1
 				# get data
 				data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H1_PCT.csv')
 				if os.path.exists(data_file):
@@ -3726,11 +3893,23 @@ class LibratorMain(QtWidgets.QMainWindow):
 				)
 				html_path = os.path.join(temp_folder, 'test3.html')
 				line.render(path=html_path)
+				# adjust the window size seting
+				file_handle = open(html_path, 'r')
+				lines = file_handle.readlines()
+				file_handle.close()
+				style_line = lines[9]
+				style_pos = style_line.find('style')
+				style_line = style_line[
+				             0:style_pos] + 'style="position: fixed; top: 0px; left: 5%;width:90%; height:' + str(
+					self.ui.HTMLview3.h - 20) + 'px;"></div>'
+				lines[9] = style_line
+				content = '\n'.join(lines)
+				file_handle = open(html_path, 'w')
+				file_handle.write(content)
+				file_handle.close()
 				# show local HTML
-				self.ui.HTML3.load(QUrl('file://' + html_path))
-				self.ui.HTML3.show()
-
-				self.html = 1
+				self.ui.HTMLview3.load(QUrl('file://' + html_path))
+				self.ui.HTMLview3.show()
 		elif self.ui.tabWidget.currentIndex() == 6:
 			mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
 
@@ -3754,8 +3933,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.DBnameinput.setText(Setting[2])
 				self.ui.Userinput.setText(Setting[3])
 				self.ui.Passinput.setText(Setting[4])
-
-
 
 	def FigChange(self):
 		sip.delete(self.F)
