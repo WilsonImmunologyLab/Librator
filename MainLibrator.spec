@@ -17,8 +17,12 @@ added_files = [
              ('/Users/leil/Documents/Projects/Librator/Resources/PDB/1ru7.pdb','PDB'),
              ('/Users/leil/Documents/Projects/Librator/Resources/PDB/1ru7.pdb','PDB'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Conf/db_record.txt','Conf'),
-             ('/Users/leil/Documents/Projects/Librator/Resources/Conf/db_record.txt','Temp')
+             ('/Users/leil/Documents/Projects/Librator/Resources/Conf/db_record.txt','Temp'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Tools/raxml','Tools'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Tools/muscle','Tools'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Tools/clustalo','Tools')
              ]
+
 
 a = Analysis(['MainLibrator.py'],
              pathex=['/Users/leil/Documents/Projects/Librator/Librator'],
