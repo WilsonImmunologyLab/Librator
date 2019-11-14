@@ -2788,6 +2788,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.rdoDNA.clicked.connect(self.resetSearch)
 		self.ui.rdoAA.clicked.connect(self.resetSearch)
 		self.ui.SearchButton.clicked.connect(self.searchPattern)
+		self.ui.browseFragmentDB.clicked.connect(self.determineFile)
+		self.ui.connectFragmentDB.clicked.connect(self.connectDB)
 
 		self.UpdateRecent()
 		self.modalessMutationDialog = None
@@ -2797,6 +2799,49 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.fig = 0
 		self.html = 0
+
+	def connectDB(self):
+		SQLStatement = 'SELECT * FROM Fragments ORDER BY Name DESC'
+		if self.ui.FragmentTab.currentIndex() == 0:     # connect to local sqLite DB
+			F_db_name = self.ui.dbpath.text()
+			DataIn = RunSQL(F_db_name, SQLStatement)
+		else:                                           # connect to remote MySQL DB
+			server_ip = self.ui.IPinput.text()
+			server_port = self.ui.Portinput.text()
+			db_name = self.ui.DBnameinput.text()
+			db_user = self.ui.Userinput.text()
+			db_pass = self.ui.Passinput.text()
+
+			db_config = [server_ip, server_port, db_name, db_user, db_pass]
+			DataIn = RunMYSQL(db_config, SQLStatement)
+
+		num_row = len(DataIn)
+		num_col = 9
+		self.ui.tableWidget.setRowCount(num_row)
+		self.ui.tableWidget.setColumnCount(num_col)
+
+		horizontalHeader = ['Name', 'Segment', 'Fragment', 'Subtype', 'ID', 'Template', 'AA seq', 'NT seq', 'In stock']
+		self.ui.tableWidget.setHorizontalHeaderLabels(horizontalHeader)
+
+		for row_index in range(num_row):
+			for col_index in range(num_col):
+				self.ui.tableWidget.setItem(row_index, col_index, QTableWidgetItem(DataIn[row_index][col_index]))
+
+
+	def determineFile(self):
+		global temp_folder
+		out_dir, _ = QFileDialog.getOpenFileName(self, "select existing fragment DB", temp_folder,
+		                                         "Librator database Files (*.ldb);;All Files (*)")
+		# check if this is the right DB
+		SQLStatement = 'SELECT * FROM Fragments ORDER BY Name DESC LIMIT 1 '
+		try:
+			DataIn = RunSQL(out_dir, SQLStatement)
+		except:
+			QMessageBox.warning(self, 'Warning', 'There is no Fragments table in the selected database!',
+			                    QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+		self.ui.dbpath.setText(out_dir)
 
 	def resetSearch(self):
 		self.ui.txtSearch.setPlainText('')
@@ -3455,6 +3500,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 	def FillAlignmentTab(self):
 		global DBFilename
 		global temp_folder
+		global working_prefix
 		AlignIn = []
 		EachIn = ()
 
@@ -3685,6 +3731,31 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.HTML3.show()
 
 				self.html = 1
+		elif self.ui.tabWidget.currentIndex() == 6:
+			mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
+
+			if os.path.exists(mysql_setting_file):
+				my_open = open(mysql_setting_file, 'r')
+				my_info = my_open.readlines()
+				my_open.close()
+				my_info = my_info[0]
+			else:
+				file_handle = open(mysql_setting_file, 'w')
+				my_info = ',,,,'
+				file_handle.write(my_info)
+				file_handle.close()
+
+			my_info = my_info.strip('\n')
+			if my_info != '':
+				Setting = my_info.split(',')
+
+				self.ui.IPinput.setText(Setting[0])
+				self.ui.Portinput.setText(Setting[1])
+				self.ui.DBnameinput.setText(Setting[2])
+				self.ui.Userinput.setText(Setting[3])
+				self.ui.Passinput.setText(Setting[4])
+
+
 
 	def FigChange(self):
 		sip.delete(self.F)
