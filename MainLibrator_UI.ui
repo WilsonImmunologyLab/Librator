@@ -2061,28 +2061,64 @@
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
-        <string>WilsonLab</string>
+        <string>HTML</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_4">
         <item row="0" column="0">
          <widget class="QGroupBox" name="groupBoxHTML1">
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>Subtype in current DB</string>
           </property>
+          <layout class="QGridLayout" name="gridLayout_6">
+           <item row="0" column="0">
+            <widget class="QWebEngineView" name="HTML1" native="true"/>
+           </item>
+          </layout>
          </widget>
         </item>
         <item row="0" column="1">
          <widget class="QGroupBox" name="groupBoxHTML2">
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>Role in current DB</string>
           </property>
+          <layout class="QGridLayout" name="gridLayout_7">
+           <item row="0" column="0">
+            <widget class="QWebEngineView" name="HTML2" native="true">
+             <property name="font">
+              <font>
+               <pointsize>15</pointsize>
+              </font>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item row="1" column="0" colspan="2">
          <widget class="QGroupBox" name="groupBoxHTML3">
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>Amino Acid Variation of Influenza HA/NA</string>
           </property>
+          <layout class="QGridLayout" name="gridLayout_11">
+           <item row="0" column="0">
+            <widget class="QWebEngineView" name="HTML3" native="true"/>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -3013,6 +3049,14 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QWebEngineView</class>
+   <extends>QWidget</extends>
+   <header>qwebengineview.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="Resources/VgenesResources.qrc"/>
   <include location="Resources/VgenesResources.qrc"/>

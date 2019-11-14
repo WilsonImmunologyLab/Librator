@@ -99,6 +99,7 @@ class MyFigure(FigureCanvas):
         self.fig = Figure(figsize=(width, height), dpi=dpi)
         super(MyFigure,self).__init__(self.fig)
         self.axes = self.fig.add_subplot(111)
+
 class ResizeWidget(QWebEngineView):
 	def __init__(self):
 		super().__init__()
@@ -3616,18 +3617,20 @@ class LibratorMain(QtWidgets.QMainWindow):
 			)
 			pie.render(path=html_path)
 			# show local HTML
-			if self.html == 0:
-				gridlayout_HTML = QGridLayout(self.ui.groupBoxHTML1)
-			else:
-				gridlayout_HTML = self.ui.groupBoxHTML1.layout()
-				for i in range(gridlayout_HTML.count()):
-					gridlayout_HTML.itemAt(i).widget().deleteLater()
-			#view = ResizeWidget()
-			view = QWebEngineView(self)
-			view.load(QUrl('file://' + html_path))
-			view.resize(QSize(400, 400))
-			gridlayout_HTML.addWidget(view)
-			view.show()
+			#if self.html == 0:
+			#	gridlayout_HTML = QGridLayout(self.ui.groupBoxHTML1)
+			#else:
+			#	gridlayout_HTML = self.ui.groupBoxHTML1.layout()
+			#	for i in range(gridlayout_HTML.count()):
+			#		gridlayout_HTML.itemAt(i).widget().deleteLater()
+
+			#view = QWebEngineView(self)
+			#view.load(QUrl('file://' + html_path))
+			#gridlayout_HTML.addWidget(self.ui.view, 0, Qt.AlignLeft | Qt.AlignBottom)
+			#view.show()
+
+			self.ui.HTML1.load(QUrl('file://' + html_path))
+			self.ui.HTML1.show()
 
 			######  plot stat for Role
 			# get data
@@ -3649,17 +3652,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			)
 			pie.render(path=html_path)
 			# show local HTML
-			if self.html == 0:
-				gridlayout_HTML = QGridLayout(self.ui.groupBoxHTML2)
-			else:
-				gridlayout_HTML = self.ui.groupBoxHTML2.layout()
-				for i in range(gridlayout_HTML.count()):
-					gridlayout_HTML.itemAt(i).widget().deleteLater()
-			view = QWebEngineView(self)
-			view.load(QUrl('file://' + html_path))
-			view.resize(QSize(400, 400))
-			gridlayout_HTML.addWidget(view)
-			view.show()
+			self.ui.HTML2.load(QUrl('file://' + html_path))
+			self.ui.HTML2.show()
 
 			######  plot stat for H1
 			if self.html == 0:
@@ -3687,11 +3681,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				html_path = os.path.join(temp_folder, 'test3.html')
 				line.render(path=html_path)
 				# show local HTML
-				gridlayout_HTML = QGridLayout(self.ui.groupBoxHTML3)
-				view = QWebEngineView(self)
-				view.load(QUrl('file://' + html_path))
-				gridlayout_HTML.addWidget(view, 1, Qt.AlignCenter)
-				view.show()
+				self.ui.HTML3.load(QUrl('file://' + html_path))
+				self.ui.HTML3.show()
 
 				self.html = 1
 
