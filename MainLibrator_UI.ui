@@ -1803,7 +1803,7 @@
            <number>36</number>
           </property>
           <property name="value">
-           <number>10</number>
+           <number>13</number>
           </property>
          </widget>
         </item>
@@ -1812,7 +1812,7 @@
           <property name="font">
            <font>
             <family>Courier New</family>
-            <pointsize>10</pointsize>
+            <pointsize>13</pointsize>
            </font>
           </property>
           <property name="verticalScrollBarPolicy">

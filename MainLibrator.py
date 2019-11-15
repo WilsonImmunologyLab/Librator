@@ -73,28 +73,79 @@ DataIs = []
 global DBFilename
 DBFilename = 'none'
 
-global working_prefix
-working_prefix = os.path.dirname(os.path.realpath(sys.argv[0])) + '/'
-global temp_folder
-temp_folder = os.path.join(working_prefix, '..', 'Resources', 'Temp')
+# read configure information from file. If no conf file, initial conf path
+global conf_file, ldb_file, joint_file
+conf_file = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), '..', 'Resources', 'Conf', 'path_setting.txt')
+ldb_file = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), '..', 'Resources', 'Conf', 'ldb_setting.txt')
+joint_file = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), '..', 'Resources', 'Conf', 'joint_setting.txt')
 
+global working_prefix
+global temp_folder
 global muscle_path
-muscle_path = os.path.join(working_prefix, '..', 'Resources', 'Tools','muscle')
 global clustal_path
-clustal_path = os.path.join(working_prefix, '..', 'Resources', 'Tools','clustalo')
 global pymol_path
-pymol_path = '/usr/local/bin/pymol'
 global raxml_path
-raxml_path = os.path.join(working_prefix, '..', 'Resources', 'Tools','raxml')
 global figtree_path
-figtree_path = '/Applications/FigTree.app/Contents/MacOS/universalJavaApplicationStub'
 global fragmentdb_path
-fragmentdb_path = ''
+
+if os.path.exists(conf_file):   # if conf exist, read conf info from file
+	file_handle = open(conf_file, 'r')
+	settings = file_handle.readlines()
+	working_prefix = settings[0].strip('\n')
+	temp_folder = settings[1].strip('\n')
+	muscle_path =  settings[2].strip('\n')
+	clustal_path =  settings[3].strip('\n')
+	pymol_path =  settings[4].strip('\n')
+	raxml_path =  settings[5].strip('\n')
+	figtree_path =  settings[6].strip('\n')
+	file_handle.close()
+	del settings
+else:                           # if conf does not exist, initial conf info and write to file
+	working_prefix = os.path.dirname(os.path.realpath(sys.argv[0])) + '/'
+	temp_folder = os.path.join(working_prefix, '..', 'Resources', 'Temp')
+	muscle_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'muscle')
+	clustal_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'clustalo')
+	pymol_path = '/usr/local/bin/pymol'
+	raxml_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'raxml')
+	figtree_path = '/Applications/FigTree.app/Contents/MacOS/universalJavaApplicationStub'
+
+	file_handle = open(conf_file, 'w')
+	file_handle.write(working_prefix + '\n')
+	file_handle.write(temp_folder + '\n')
+	file_handle.write(muscle_path + '\n')
+	file_handle.write(clustal_path + '\n')
+	file_handle.write(pymol_path + '\n')
+	file_handle.write(raxml_path + '\n')
+	file_handle.write(figtree_path)
+	file_handle.close()
+
+if os.path.exists(ldb_file):   # if conf exist, read conf info from file
+	file_handle = open(ldb_file, 'r')
+	settings = file_handle.readlines()
+	fragmentdb_path = settings[0].strip('\n')
+	file_handle.close()
+else:
+	fragmentdb_path = ''
+	file_handle = open(ldb_file, 'w')
+	file_handle.write(fragmentdb_path)
+	file_handle.close()
 
 global joint_up
-joint_up = "TCCACTCCCAGGTCCAACTGCACCTCGGTTCTATCGATTGAATTC"
 global joint_down
-joint_down = "GGGTCCGGATACATACCAGAGGCCCCGCGAGATGG"
+
+if os.path.exists(joint_file):   # if conf exist, read conf info from file
+	file_handle = open(conf_file, 'r')
+	settings = file_handle.readlines()
+	joint_up = settings[0].strip('\n')
+	joint_down = settings[1].strip('\n')
+	file_handle.close()
+else:
+	joint_up = "TCCACTCCCAGGTCCAACTGCACCTCGGTTCTATCGATTGAATTC"
+	joint_down = "GGGTCCGGATACATACCAGAGGCCCCGCGAGATGG"
+	file_handle = open(joint_file, 'w')
+	file_handle.write(joint_up + '\n')
+	file_handle.write(joint_down)
+	file_handle.close()
 
 class MyFigure(FigureCanvas):
     def __init__(self,width=5, height=4, dpi=100):
@@ -1714,6 +1765,8 @@ class basePathDialog(QtWidgets.QDialog):
 		global figtree_path
 		global raxml_path
 		global fragmentdb_path
+		global conf_file
+		global ldb_file
 
 		tmp_working_prefix = self.ui.basePath.text()
 		tmp_working_prefix = tmp_working_prefix.rstrip('/') + '/'
@@ -1810,6 +1863,21 @@ class basePathDialog(QtWidgets.QDialog):
 				return
 			else:
 				fragmentdb_path = self.ui.FragmentDB_path.text()
+
+		# save all changes to file
+		file_handle = open(conf_file, 'w')
+		file_handle.write(working_prefix + '\n')
+		file_handle.write(temp_folder + '\n')
+		file_handle.write(muscle_path + '\n')
+		file_handle.write(clustal_path + '\n')
+		file_handle.write(pymol_path + '\n')
+		file_handle.write(raxml_path + '\n')
+		file_handle.write(figtree_path)
+		file_handle.close()
+
+		file_handle = open(ldb_file, 'w')
+		file_handle.write(fragmentdb_path)
+		file_handle.close()
 
 		# save MYSQL setting
 		mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
