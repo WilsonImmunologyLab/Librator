@@ -238,7 +238,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sequence&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="usesScrollButtons">
        <bool>false</bool>
@@ -1240,45 +1240,65 @@
         <string>Sequence</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_17">
-        <item row="9" column="4">
-         <widget class="QPushButton" name="btnSearchSeq">
+        <item row="6" column="0">
+         <widget class="QLabel" name="lblAAseq">
           <property name="minimumSize">
            <size>
-            <width>70</width>
+            <width>0</width>
             <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>70</width>
+            <width>200</width>
             <height>16777215</height>
            </size>
           </property>
-          <property name="text">
-           <string>Search</string>
+          <property name="font">
+           <font>
+            <family>Lucida Grande</family>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
           </property>
-          <property name="iconSize">
-           <size>
-            <width>24</width>
-            <height>24</height>
-           </size>
+          <property name="text">
+           <string>Sequence Map:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+          <property name="margin">
+           <number>0</number>
           </property>
          </widget>
         </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_19">
-          <property name="text">
-           <string>Sequence Name:</string>
+        <item row="8" column="0" colspan="6">
+         <widget class="QTextEdit" name="txtAASeq">
+          <property name="font">
+           <font>
+            <family>Courier New</family>
+            <pointsize>18</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
           </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QPlainTextEdit" name="txtSeqName2">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>30</height>
-           </size>
+          <property name="verticalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOn</enum>
+          </property>
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOn</enum>
+          </property>
+          <property name="lineWrapMode">
+           <enum>QTextEdit::NoWrap</enum>
+          </property>
+          <property name="acceptRichText">
+           <bool>true</bool>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
           </property>
          </widget>
         </item>
@@ -1444,81 +1464,17 @@
           </layout>
          </widget>
         </item>
-        <item row="9" column="5">
-         <widget class="QPushButton" name="btnNextSearchSeq">
-          <property name="minimumSize">
-           <size>
-            <width>70</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>70</width>
-            <height>16777215</height>
-           </size>
-          </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_19">
           <property name="text">
-           <string>Next</string>
+           <string>Sequence Name:</string>
           </property>
          </widget>
         </item>
-        <item row="9" column="0">
-         <widget class="QLabel" name="label_18">
+        <item row="6" column="1" colspan="2">
+         <widget class="QLabel" name="label">
           <property name="text">
-           <string>Search for:</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="0">
-         <widget class="QLabel" name="lblAAseq">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>200</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>Lucida Grande</family>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Sequence Map:</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-          </property>
-          <property name="wordWrap">
-           <bool>true</bool>
-          </property>
-          <property name="margin">
-           <number>0</number>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="4">
-         <widget class="QLabel" name="lblSeq2">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_20">
-          <property name="text">
-           <string>Subtype:</string>
+           <string>Please scroll to refresh the alignment if the content doesn't change</string>
           </property>
          </widget>
         </item>
@@ -1559,30 +1515,27 @@
           </item>
          </widget>
         </item>
-        <item row="8" column="0" colspan="6">
-         <widget class="QTextEdit" name="txtAASeq">
-          <property name="font">
-           <font>
-            <family>Courier New</family>
-            <pointsize>18</pointsize>
-            <weight>50</weight>
-            <bold>false</bold>
-           </font>
+        <item row="0" column="2">
+         <widget class="QPlainTextEdit" name="txtSeqName2">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>30</height>
+           </size>
           </property>
-          <property name="verticalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOn</enum>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_20">
+          <property name="text">
+           <string>Subtype:</string>
           </property>
-          <property name="horizontalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOn</enum>
-          </property>
-          <property name="lineWrapMode">
-           <enum>QTextEdit::NoWrap</enum>
-          </property>
-          <property name="acceptRichText">
-           <bool>true</bool>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+         </widget>
+        </item>
+        <item row="6" column="4">
+         <widget class="QLabel" name="lblSeq2">
+          <property name="text">
+           <string/>
           </property>
          </widget>
         </item>
@@ -1720,23 +1673,6 @@
           </widget>
          </widget>
         </item>
-        <item row="9" column="2">
-         <widget class="QPlainTextEdit" name="txtSearchSeq">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>40</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="1" colspan="2">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Please scroll to refresh the alignment if the content doesn't change</string>
-          </property>
-         </widget>
-        </item>
        </layout>
        <zorder>frame_18</zorder>
        <zorder>groupBox</zorder>
@@ -1744,13 +1680,9 @@
        <zorder>lblSeq2</zorder>
        <zorder>lblAAseq</zorder>
        <zorder>label_19</zorder>
-       <zorder>label_18</zorder>
-       <zorder>btnSearchSeq</zorder>
-       <zorder>btnNextSearchSeq</zorder>
        <zorder>label_20</zorder>
        <zorder>cboSubtype_2</zorder>
        <zorder>txtSeqName2</zorder>
-       <zorder>txtSearchSeq</zorder>
        <zorder>label</zorder>
       </widget>
       <widget class="QWidget" name="tabAlignment">
