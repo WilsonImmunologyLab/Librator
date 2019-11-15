@@ -2858,6 +2858,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 			file_handle = open(html_path, 'r')
 			lines = file_handle.readlines()
 			file_handle.close()
+			# edit js line
+			js_line = '            <script type="text/javascript" src="' +\
+			          os.path.join(working_prefix,'..','Resources','Js','echarts.min.js') + '"></script>'
+			lines[5] = js_line
+			#edit style line
 			style_line = lines[9]
 			style_pos = style_line.find('style')
 			style_line = style_line[0:style_pos] + 'style="position: fixed; top: 0px; left: 5%;width:90%; height:' + str(h) + 'px;"></div>'
@@ -2893,6 +2898,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 			file_handle = open(html_path, 'r')
 			lines = file_handle.readlines()
 			file_handle.close()
+			# edit js line
+			js_line = '            <script type="text/javascript" src="' + \
+			          os.path.join(working_prefix, '..', 'Resources', 'Js', 'echarts.min.js') + '"></script>'
+			lines[5] = js_line
+			# edit style line
 			style_line = lines[9]
 			style_pos = style_line.find('style')
 			style_line = style_line[
@@ -2935,6 +2945,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 			file_handle = open(html_path, 'r')
 			lines = file_handle.readlines()
 			file_handle.close()
+			# edit js line
+			js_line = '            <script type="text/javascript" src="' + \
+			          os.path.join(working_prefix, '..', 'Resources', 'Js', 'echarts.min.js') + '"></script>'
+			lines[5] = js_line
+			# edit style line
 			style_line = lines[9]
 			style_pos = style_line.find('style')
 			style_line = style_line[
@@ -3873,6 +3888,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 				file_handle = open(html_path, 'r')
 				lines = file_handle.readlines()
 				file_handle.close()
+				# edit js line
+				js_line = '            <script type="text/javascript" src="' + \
+				          os.path.join(working_prefix, '..', 'Resources', 'Js', 'echarts.min.js') + '"></script>'
+				lines[5] = js_line
+				# edit style line
 				style_line = lines[9]
 				style_pos = style_line.find('style')
 				style_line = style_line[
@@ -3910,6 +3930,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 				file_handle = open(html_path, 'r')
 				lines = file_handle.readlines()
 				file_handle.close()
+				# edit js line
+				js_line = '            <script type="text/javascript" src="' + \
+				          os.path.join(working_prefix, '..', 'Resources', 'Js', 'echarts.min.js') + '"></script>'
+				lines[5] = js_line
+				# edit style line
 				style_line = lines[9]
 				style_pos = style_line.find('style')
 				style_line = style_line[
@@ -3952,6 +3977,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 				file_handle = open(html_path, 'r')
 				lines = file_handle.readlines()
 				file_handle.close()
+				# edit js line
+				js_line = '            <script type="text/javascript" src="' + \
+				          os.path.join(working_prefix, '..', 'Resources', 'Js', 'echarts.min.js') + '"></script>'
+				lines[5] = js_line
+				# edit style line
 				style_line = lines[9]
 				style_pos = style_line.find('style')
 				style_line = style_line[
@@ -8651,7 +8681,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		                                                      "Librator database Files (*.ldb);;All Files (*)",
 		                                                      options=options)
 
-		if DBFilename != None and DBFilename != 'none':
+		if DBFilename != None and DBFilename != 'none' and DBFilename != '':
 			(dirname, filename) = os.path.split(DBFilename)
 			(shortname, extension) = os.path.splitext(filename)
 

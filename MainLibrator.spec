@@ -20,7 +20,8 @@ added_files = [
              ('/Users/leil/Documents/Projects/Librator/Resources/Conf/db_record.txt','Temp'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Tools/raxml','Tools'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Tools/muscle','Tools'),
-             ('/Users/leil/Documents/Projects/Librator/Resources/Tools/clustalo','Tools')
+             ('/Users/leil/Documents/Projects/Librator/Resources/Tools/clustalo','Tools'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Js/echarts.min.js','Js')
              ]
 
 
