@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'base_path_dialog.ui'
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -12,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_basePathDialog(object):
     def setupUi(self, basePathDialog):
         basePathDialog.setObjectName("basePathDialog")
-        basePathDialog.resize(664, 687)
+        basePathDialog.resize(664, 744)
         self.gridLayout_3 = QtWidgets.QGridLayout(basePathDialog)
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.label_2 = QtWidgets.QLabel(basePathDialog)
@@ -137,6 +138,26 @@ class Ui_basePathDialog(object):
         self.browseFigtree.setObjectName("browseFigtree")
         self.gridLayout_2.addWidget(self.browseFigtree, 11, 1, 1, 1)
         self.gridLayout_3.addWidget(self.groupBox, 1, 0, 1, 1)
+        self.groupBox_3 = QtWidgets.QGroupBox(basePathDialog)
+        font = QtGui.QFont()
+        font.setPointSize(18)
+        self.groupBox_3.setFont(font)
+        self.groupBox_3.setObjectName("groupBox_3")
+        self.gridLayout_4 = QtWidgets.QGridLayout(self.groupBox_3)
+        self.gridLayout_4.setObjectName("gridLayout_4")
+        self.FragmentDB_path = QtWidgets.QLineEdit(self.groupBox_3)
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.FragmentDB_path.setFont(font)
+        self.FragmentDB_path.setObjectName("FragmentDB_path")
+        self.gridLayout_4.addWidget(self.FragmentDB_path, 0, 0, 1, 1)
+        self.browseFragmentDB = QtWidgets.QPushButton(self.groupBox_3)
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.browseFragmentDB.setFont(font)
+        self.browseFragmentDB.setObjectName("browseFragmentDB")
+        self.gridLayout_4.addWidget(self.browseFragmentDB, 0, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.groupBox_3, 2, 0, 1, 1)
         self.groupBox_2 = QtWidgets.QGroupBox(basePathDialog)
         font = QtGui.QFont()
         font.setPointSize(18)
@@ -204,7 +225,7 @@ class Ui_basePathDialog(object):
         self.Passinput.setFont(font)
         self.Passinput.setObjectName("Passinput")
         self.gridLayout.addWidget(self.Passinput, 1, 4, 1, 3)
-        self.gridLayout_3.addWidget(self.groupBox_2, 2, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.groupBox_2, 3, 0, 1, 1)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.yes = QtWidgets.QPushButton(basePathDialog)
@@ -214,7 +235,7 @@ class Ui_basePathDialog(object):
         self.no = QtWidgets.QPushButton(basePathDialog)
         self.no.setObjectName("no")
         self.horizontalLayout.addWidget(self.no)
-        self.gridLayout_3.addLayout(self.horizontalLayout, 3, 0, 1, 1)
+        self.gridLayout_3.addLayout(self.horizontalLayout, 4, 0, 1, 1)
 
         self.retranslateUi(basePathDialog)
         QtCore.QMetaObject.connectSlotsByName(basePathDialog)
@@ -236,6 +257,8 @@ class Ui_basePathDialog(object):
         self.browseRaxml.setText(_translate("basePathDialog", "Browse"))
         self.label_12.setText(_translate("basePathDialog", "Your current FigTree path is:"))
         self.browseFigtree.setText(_translate("basePathDialog", "Browse"))
+        self.groupBox_3.setTitle(_translate("basePathDialog", "Local Fragment Database Setting"))
+        self.browseFragmentDB.setText(_translate("basePathDialog", "Browse"))
         self.groupBox_2.setTitle(_translate("basePathDialog", "Remote Database Setting"))
         self.label_7.setText(_translate("basePathDialog", "Server IP"))
         self.label_11.setText(_translate("basePathDialog", "Port"))
@@ -244,5 +267,3 @@ class Ui_basePathDialog(object):
         self.label_10.setText(_translate("basePathDialog", "Password"))
         self.yes.setText(_translate("basePathDialog", "Confirm"))
         self.no.setText(_translate("basePathDialog", "Cancel"))
-
-

@@ -79,15 +79,17 @@ global temp_folder
 temp_folder = os.path.join(working_prefix, '..', 'Resources', 'Temp')
 
 global muscle_path
-muscle_path = '/usr/local/bin/muscle'
+muscle_path = os.path.join(working_prefix, '..', 'Resources', 'Tools','muscle')
 global clustal_path
-clustal_path = '/usr/local/bin/clustalo'
+clustal_path = os.path.join(working_prefix, '..', 'Resources', 'Tools','clustalo')
 global pymol_path
 pymol_path = '/usr/local/bin/pymol'
 global raxml_path
-raxml_path = '/usr/local/bin/raxml'
+raxml_path = os.path.join(working_prefix, '..', 'Resources', 'Tools','raxml')
 global figtree_path
 figtree_path = '/Applications/FigTree.app/Contents/MacOS/universalJavaApplicationStub'
+global fragmentdb_path
+fragmentdb_path = ''
 
 global joint_up
 joint_up = "TCCACTCCCAGGTCCAACTGCACCTCGGTTCTATCGATTGAATTC"
@@ -1675,6 +1677,7 @@ class basePathDialog(QtWidgets.QDialog):
 		self.ui.browsePymol.clicked.connect(self.browsepymoldir)
 		self.ui.browseFigtree.clicked.connect(self.browsefigtreedir)
 		self.ui.browseRaxml.clicked.connect(self.browseraxmldir)
+		self.ui.browseFragmentDB.clicked.connect(self.browsesqlitedir)
 
 		self.ui.yes.clicked.connect(self.accept)
 		self.ui.no.clicked.connect(self.reject)
@@ -1697,6 +1700,10 @@ class basePathDialog(QtWidgets.QDialog):
 	def browseraxmldir(self):  # browse and select path
 		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
 		self.ui.RaxmlPath.setText(out_dir)
+	def browsesqlitedir(self):
+		out_dir, _ = QFileDialog.getOpenFileName(self, "select existing fragment DB", temp_folder,
+		                                         "Librator database Files (*.ldb);;All Files (*)")
+		self.ui.FragmentDB_path.setText(out_dir)
 
 	def accept(self):  # redo accept method
 		global working_prefix
@@ -1706,6 +1713,7 @@ class basePathDialog(QtWidgets.QDialog):
 		global clustal_path
 		global figtree_path
 		global raxml_path
+		global fragmentdb_path
 
 		tmp_working_prefix = self.ui.basePath.text()
 		tmp_working_prefix = tmp_working_prefix.rstrip('/') + '/'
@@ -1790,6 +1798,18 @@ class basePathDialog(QtWidgets.QDialog):
 				return
 			else:
 				raxml_path = self.ui.RaxmlPath.text()
+
+		# check if LDB path exist or not
+		if os.path.exists(self.ui.FragmentDB_path.text()):
+			fragmentdb_path = self.ui.FragmentDB_path.text()
+		else:
+			question = 'The path for local Fragment DB you typed seems not exist, do you still want to continue?'
+			buttons = 'YN'
+			answer = questionMessage(self, question, buttons)
+			if answer == 'No':
+				return
+			else:
+				fragmentdb_path = self.ui.FragmentDB_path.text()
 
 		# save MYSQL setting
 		mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
@@ -3053,6 +3073,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global temp_folder
 		out_dir, _ = QFileDialog.getOpenFileName(self, "select existing fragment DB", temp_folder,
 		                                         "Librator database Files (*.ldb);;All Files (*)")
+		if out_dir == '':
+			return
 		# check if this is the right DB
 		SQLStatement = 'SELECT * FROM Fragments ORDER BY Name DESC LIMIT 1 '
 		try:
@@ -4018,6 +4040,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.DBnameinput.setText(Setting[2])
 				self.ui.Userinput.setText(Setting[3])
 				self.ui.Passinput.setText(Setting[4])
+
+			self.ui.dbpath.setText(fragmentdb_path)
+
 
 	def FigChange(self):
 		sip.delete(self.F)
@@ -9489,6 +9514,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global pymol_path
 		global figtree_path
 		global raxml_path
+		global fragmentdb_path
 
 		self.modalessbaseDialog = basePathDialog()
 		self.modalessbaseDialog.ui.basePath.setText(working_prefix)
@@ -9497,6 +9523,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessbaseDialog.ui.pymolPath.setText(pymol_path)
 		self.modalessbaseDialog.ui.FigtreePath.setText(figtree_path)
 		self.modalessbaseDialog.ui.RaxmlPath.setText(raxml_path)
+		self.modalessbaseDialog.ui.FragmentDB_path.setText(fragmentdb_path)
 
 		# check saved MYSQL setting
 		mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
