@@ -2796,6 +2796,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.SearchButton.clicked.connect(self.searchPattern)
 		self.ui.browseFragmentDB.clicked.connect(self.determineFile)
 		self.ui.connectFragmentDB.clicked.connect(self.connectDB)
+		self.ui.FragmentTab.currentChanged['int'].connect(self.clearTable)
 
 		self.UpdateRecent()
 		self.modalessMutationDialog = None
@@ -2822,6 +2823,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.HTMLview1.resizeSignal.connect(self.resizeHTML)
 		self.ui.HTMLview2.resizeSignal.connect(self.resizeHTML)
 		self.ui.HTMLview3.resizeSignal.connect(self.resizeHTML)
+
+	def clearTable(self):
+		self.ui.tableWidget.setRowCount(0)
+		self.ui.tableWidget.setColumnCount(0)
 
 	def resizeHTML(self, w, h):
 		if DBFilename == 'none':
@@ -2969,12 +2974,62 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		for row_index in range(num_row):
 			for col_index in range(num_col):
-				self.ui.tableWidget.setItem(row_index, col_index, QTableWidgetItem(DataIn[row_index][col_index]))
+				if col_index != 8:
+					self.ui.tableWidget.setItem(row_index, col_index, QTableWidgetItem(DataIn[row_index][col_index]))
+				else:
+					cell_comBox = QComboBox()
+					cell_comBox.addItems(['Yes', 'No'])
+					if DataIn[row_index][col_index] == 'yes':
+						cell_comBox.setCurrentIndex(0)
+					else:
+						cell_comBox.setCurrentIndex(1)
+					#cell_comBox.setStyleSheet('QComboBox{margin:3px}')
+					cell_comBox.currentIndexChanged.connect(self.changeInStock)
+					cell_comBox.name = DataIn[row_index][0]
+					cell_comBox.ignore = 0
+					self.ui.tableWidget.setCellWidget(row_index, col_index, cell_comBox)
 
 		# show sort indicator
 		self.ui.tableWidget.horizontalHeader().setSortIndicatorShown(True)
 		# connect sort indicator to slot function
 		self.ui.tableWidget.horizontalHeader().sectionClicked.connect(self.sortTable)
+
+	def changeInStock(self):
+		sender = self.sender()
+		if sender.ignore != 0:
+			return
+		name = sender.name
+		index = sender.currentText()
+
+		question = 'Are you sure you want change instock status of ' + name + ' to ' + index + '?'
+		buttons = 'YN'
+		answer = questionMessage(self, question, buttons)
+		if answer == 'No':
+			sender.ignore = 1
+			if index == 'Yes':
+				sender.setCurrentIndex(1)
+			else:
+				sender.setCurrentIndex(0)
+			sender.ignore = 0
+			return
+		else:
+			SQLStatement = 'UPDATE Fragments SET `Instock`="' + index.lower() + '" WHERE `Name` = "' + name + '"'
+			if self.ui.FragmentTab.currentIndex() == 0: #local DB
+				F_db_name = self.ui.dbpath.text()
+				RunInsertion(F_db_name, SQLStatement)
+			else:   # remote DB
+				server_ip = self.ui.IPinput.text()
+				server_port = self.ui.Portinput.text()
+				db_name = self.ui.DBnameinput.text()
+				db_user = self.ui.Userinput.text()
+				db_pass = self.ui.Passinput.text()
+
+				db_config = [server_ip, server_port, db_name, db_user, db_pass]
+				RunMYSQLInsertion(db_config, SQLStatement)
+
+			Msg = 'Update successfully!'
+			QMessageBox.information(self, 'information', Msg, QMessageBox.Ok,
+			                        QMessageBox.Ok)
 
 	def sortTable(self, index):
 		self.ui.tableWidget.sortByColumn(index, self.ui.tableWidget.horizontalHeader().sortIndicatorOrder())
