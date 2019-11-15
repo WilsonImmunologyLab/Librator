@@ -3199,50 +3199,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		elif sender.id == 3:
 			######  plot stat for H1
 			# get data
-			data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H1_PCT.csv')
-			if os.path.exists(data_file):
-				pass
-			else:
-				return
-
-			csvFile = open(data_file, "r")
-			reader = csv.reader(csvFile)
-			data_array = []
-			for item in reader:
-				item = list(map(float, item))
-				data_array.append(item)
-			# generate local HTML
-			line = (
-				Line(init_opts=opts.InitOpts(width="900px", height="380px"))
-					.add_xaxis(range(1, len(data_array[0]) + 1))
-					.add_yaxis("Season H1", data_array[0], is_symbol_show=False)
-					.add_yaxis("pdm09 H1", data_array[1], is_symbol_show=False)
-					.set_global_opts(title_opts=opts.TitleOpts(title="Pct of variations for H1", subtitle="seasonal/pdm09"))
-			)
-			html_path = os.path.join(temp_folder, 'test3.html')
-			line.render(path=html_path)
-			# adjust the window size seting
-			file_handle = open(html_path, 'r')
-			lines = file_handle.readlines()
-			file_handle.close()
-			# edit js line
-			js_line = '            <script type="text/javascript" src="' + \
-			          os.path.join(working_prefix, '..', 'Resources', 'Js', 'echarts.min.js') + '"></script>'
-			lines[5] = js_line
-			# edit style line
-			style_line = lines[9]
-			style_pos = style_line.find('style')
-			style_line = style_line[
-			             0:style_pos] + 'style="position: fixed; top: 0px; left: 5%;width:90%; height:' + str(
-				h) + 'px;"></div>'
-			lines[9] = style_line
-			content = '\n'.join(lines)
-			file_handle = open(html_path, 'w')
-			file_handle.write(content)
-			file_handle.close()
-			# show local HTML
-			self.ui.HTMLview3.load(QUrl('file://' + html_path))
-			self.ui.HTMLview3.show()
+			self.reloadHTML()
 
 	def connectDB(self):
 		SQLStatement = 'SELECT * FROM Fragments ORDER BY Name DESC'
