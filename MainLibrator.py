@@ -2899,18 +2899,210 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.HTMLview1.id = 1
 		grid_html1 = QGridLayout(self.ui.groupBoxHTML1)
 		grid_html1.addWidget(self.ui.HTMLview1)
+
 		self.ui.HTMLview2 = ResizeWidget(self)
 		self.ui.HTMLview2.id = 2
 		grid_html2 = QGridLayout(self.ui.groupBoxHTML2)
 		grid_html2.addWidget(self.ui.HTMLview2)
+
+		self.ui.comboBoxHANA_html = QComboBox()
+		self.ui.comboBoxHANA_html.addItem("H1/Group1")
+		self.ui.comboBoxHANA_html.addItem("H3/Group2")
+		self.ui.comboBoxHANA_html.addItem("NA")
+		self.ui.comboBoxHANA_html.currentIndexChanged.connect(self.reloadHTML)
+		self.ui.comboBoxIndex_html = QComboBox()
+		self.ui.comboBoxIndex_html.addItem("Percentage of Variation")
+		self.ui.comboBoxIndex_html.addItem("Amino Acid Variation Index")
+		self.ui.comboBoxIndex_html.currentIndexChanged.connect(self.reloadHTML)
 		self.ui.HTMLview3 = ResizeWidget(self)
 		self.ui.HTMLview3.id = 3
 		grid_html3 = QGridLayout(self.ui.groupBoxHTML3)
-		grid_html3.addWidget(self.ui.HTMLview3)
+		grid_html3.addWidget(self.ui.comboBoxHANA_html,1,0)
+		grid_html3.addWidget(self.ui.comboBoxIndex_html,1,1)
+		grid_html3.addWidget(self.ui.HTMLview3,2,0,10,0)
 
 		self.ui.HTMLview1.resizeSignal.connect(self.resizeHTML)
 		self.ui.HTMLview2.resizeSignal.connect(self.resizeHTML)
 		self.ui.HTMLview3.resizeSignal.connect(self.resizeHTML)
+
+	def reloadHTML(self):
+		if self.ui.HTMLview3.h != 0:
+			######  plot stat for H1
+			if self.ui.comboBoxHANA_html.currentIndex() == 0 and self.ui.comboBoxIndex_html.currentIndex() == 0:  # H1 + PCT
+				# get data
+				data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H1_PCT.csv')
+				if os.path.exists(data_file):
+					pass
+				else:
+					return
+
+				csvFile = open(data_file, "r")
+				reader = csv.reader(csvFile)
+				data_array = []
+				for item in reader:
+					item = list(map(float, item))
+					data_array.append(item)
+				# generate local HTML
+				line = (
+					Line(init_opts=opts.InitOpts(width="900px", height="380px"))
+						.add_xaxis(range(1, len(data_array[0]) + 1))
+						.add_yaxis("Season H1", data_array[0], is_symbol_show=False)
+						.add_yaxis("pdm09 H1", data_array[1], is_symbol_show=False)
+						.set_global_opts(
+						title_opts=opts.TitleOpts(title="Variations for H1(Pct)", subtitle="human H1"))
+				)
+			elif self.ui.comboBoxHANA_html.currentIndex() == 1 and self.ui.comboBoxIndex_html.currentIndex() == 0:  # H3 + PCT
+				# get data
+				data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H3_PCT.csv')
+				if os.path.exists(data_file):
+					pass
+				else:
+					return
+
+				csvFile = open(data_file, "r")
+				reader = csv.reader(csvFile)
+				data_array = []
+				for item in reader:
+					item = list(map(float, item))
+					data_array.append(item)
+				# generate local HTML
+				line = (
+					Line(init_opts=opts.InitOpts(width="900px", height="380px"))
+						.add_xaxis(range(1, len(data_array[0]) + 1))
+						.add_yaxis("H3", data_array[0], is_symbol_show=False)
+						.set_global_opts(
+						title_opts=opts.TitleOpts(title="Variations for H3(Pct)", subtitle="human H3"))
+				)
+			elif self.ui.comboBoxHANA_html.currentIndex() == 2 and self.ui.comboBoxIndex_html.currentIndex() == 0:  # NA + PCT
+				# get data
+				data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'NA_PCT.csv')
+				if os.path.exists(data_file):
+					pass
+				else:
+					return
+
+				csvFile = open(data_file, "r")
+				reader = csv.reader(csvFile)
+				data_array = []
+				for item in reader:
+					item = list(map(float, item))
+					data_array.append(item)
+				# generate local HTML
+				line = (
+					Line(init_opts=opts.InitOpts(width="900px", height="380px"))
+						.add_xaxis(range(1, len(data_array[0]) + 1))
+						.add_yaxis("N1", data_array[0], is_symbol_show=False)
+						.add_yaxis("N2", data_array[1], is_symbol_show=False)
+						.add_yaxis("N3", data_array[2], is_symbol_show=False)
+						.add_yaxis("N4", data_array[3], is_symbol_show=False)
+						.add_yaxis("N5", data_array[4], is_symbol_show=False)
+						.add_yaxis("N6", data_array[5], is_symbol_show=False)
+						.add_yaxis("N7", data_array[6], is_symbol_show=False)
+						.add_yaxis("N8", data_array[7], is_symbol_show=False)
+						.add_yaxis("N9", data_array[8], is_symbol_show=False)
+						.set_global_opts(
+						title_opts=opts.TitleOpts(title="Variations for NA(Pct)", subtitle="human NA"))
+				)
+			elif self.ui.comboBoxHANA_html.currentIndex() == 0 and self.ui.comboBoxIndex_html.currentIndex() == 1:  # H1 + AAVI
+				# get data
+				data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H1_AAVI.csv')
+				if os.path.exists(data_file):
+					pass
+				else:
+					return
+
+				csvFile = open(data_file, "r")
+				reader = csv.reader(csvFile)
+				data_array = []
+				for item in reader:
+					item = list(map(float, item))
+					data_array.append(item)
+				# generate local HTML
+				line = (
+					Line(init_opts=opts.InitOpts(width="900px", height="380px"))
+						.add_xaxis(range(1, len(data_array[0]) + 1))
+						.add_yaxis("Season H1", data_array[0], is_symbol_show=False)
+						.add_yaxis("pdm09 H1", data_array[1], is_symbol_show=False)
+						.set_global_opts(
+						title_opts=opts.TitleOpts(title="Variations for H1(AAVI)", subtitle="human H1"))
+				)
+			elif self.ui.comboBoxHANA_html.currentIndex() == 1 and self.ui.comboBoxIndex_html.currentIndex() == 1:  # H3 + AAVI
+				# get data
+				data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H3_AAVI.csv')
+				if os.path.exists(data_file):
+					pass
+				else:
+					return
+
+				csvFile = open(data_file, "r")
+				reader = csv.reader(csvFile)
+				data_array = []
+				for item in reader:
+					item = list(map(float, item))
+					data_array.append(item)
+				# generate local HTML
+				line = (
+					Line(init_opts=opts.InitOpts(width="900px", height="380px"))
+						.add_xaxis(range(1, len(data_array[0]) + 1))
+						.add_yaxis("H3", data_array[0], is_symbol_show=False)
+						.set_global_opts(
+						title_opts=opts.TitleOpts(title="Variations for H3(AAVI)", subtitle="human H3"))
+				)
+			elif self.ui.comboBoxHANA_html.currentIndex() == 2 and self.ui.comboBoxIndex_html.currentIndex() == 1:  # NA + AAVI
+				# get data
+				data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'NA_AAVI.csv')
+				if os.path.exists(data_file):
+					pass
+				else:
+					return
+
+				csvFile = open(data_file, "r")
+				reader = csv.reader(csvFile)
+				data_array = []
+				for item in reader:
+					item = list(map(float, item))
+					data_array.append(item)
+				# generate local HTML
+				line = (
+					Line(init_opts=opts.InitOpts(width="900px", height="380px"))
+						.add_xaxis(range(1, len(data_array[0]) + 1))
+						.add_yaxis("N1", data_array[0], is_symbol_show=False)
+						.add_yaxis("N2", data_array[1], is_symbol_show=False)
+						.add_yaxis("N3", data_array[2], is_symbol_show=False)
+						.add_yaxis("N4", data_array[3], is_symbol_show=False)
+						.add_yaxis("N5", data_array[4], is_symbol_show=False)
+						.add_yaxis("N6", data_array[5], is_symbol_show=False)
+						.add_yaxis("N7", data_array[6], is_symbol_show=False)
+						.add_yaxis("N8", data_array[7], is_symbol_show=False)
+						.add_yaxis("N9", data_array[8], is_symbol_show=False)
+						.set_global_opts(
+						title_opts=opts.TitleOpts(title="Variations for NA(AAVI)", subtitle="human NA"))
+				)
+
+			html_path = os.path.join(temp_folder, 'test3.html')
+			line.render(path=html_path)
+			# adjust the window size seting
+			file_handle = open(html_path, 'r')
+			lines = file_handle.readlines()
+			file_handle.close()
+			# edit js line
+			js_line = '            <script type="text/javascript" src="' + \
+			          os.path.join(working_prefix, '..', 'Resources', 'Js', 'echarts.min.js') + '"></script>'
+			lines[5] = js_line
+			# edit style line
+			style_line = lines[9]
+			style_pos = style_line.find('style')
+			style_line = style_line[
+			             0:style_pos] + 'style="position: fixed; top: 0px; left: 5%;width:90%; height:' + str(
+				self.ui.HTMLview3.h - 20) + 'px;"></div>'
+			lines[9] = style_line
+			content = '\n'.join(lines)
+			file_handle = open(html_path, 'w')
+			file_handle.write(content)
+			file_handle.close()
+			# show local HTML
+			self.ui.HTMLview3.load(QUrl('file://' + html_path))
+			self.ui.HTMLview3.show()
 
 	def clearTable(self):
 		self.ui.tableWidget.setRowCount(0)

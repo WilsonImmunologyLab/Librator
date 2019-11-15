@@ -1308,7 +1308,7 @@ class Ui_MainLibrator(object):
         self.toolBar.addAction(self.action_Help)
 
         self.retranslateUi(MainLibrator)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         self.FragmentTab.setCurrentIndex(0)
         self.listWidgetStrains.doubleClicked['QModelIndex'].connect(self.btnSeqIn.click)
         self.listWidgetStrainsIn.doubleClicked['QModelIndex'].connect(self.btnClearStrain.click)
