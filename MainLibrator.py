@@ -122,7 +122,10 @@ else:                           # if conf does not exist, initial conf info and 
 if os.path.exists(ldb_file):   # if conf exist, read conf info from file
 	file_handle = open(ldb_file, 'r')
 	settings = file_handle.readlines()
-	fragmentdb_path = settings[0].strip('\n')
+	if len(settings) > 0:
+		fragmentdb_path = settings[0].strip('\n')
+	else:
+		fragmentdb_path = ''
 	file_handle.close()
 else:
 	fragmentdb_path = ''
