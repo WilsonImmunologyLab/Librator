@@ -92,14 +92,34 @@ if os.path.exists(conf_file):   # if conf exist, read conf info from file
 	file_handle = open(conf_file, 'r')
 	settings = file_handle.readlines()
 	working_prefix = settings[0].strip('\n')
-	temp_folder = settings[1].strip('\n')
-	muscle_path =  settings[2].strip('\n')
-	clustal_path =  settings[3].strip('\n')
-	pymol_path =  settings[4].strip('\n')
-	raxml_path =  settings[5].strip('\n')
-	figtree_path =  settings[6].strip('\n')
-	file_handle.close()
-	del settings
+
+	if os.path.exists(working_prefix):
+		temp_folder = settings[1].strip('\n')
+		muscle_path =  settings[2].strip('\n')
+		clustal_path =  settings[3].strip('\n')
+		pymol_path =  settings[4].strip('\n')
+		raxml_path =  settings[5].strip('\n')
+		figtree_path =  settings[6].strip('\n')
+		file_handle.close()
+		del settings
+	else:
+		working_prefix = os.path.dirname(os.path.realpath(sys.argv[0])) + '/'
+		temp_folder = os.path.join(working_prefix, '..', 'Resources', 'Temp')
+		muscle_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'muscle')
+		clustal_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'clustalo')
+		pymol_path = '/usr/local/bin/pymol'
+		raxml_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'raxml')
+		figtree_path = '/Applications/FigTree.app/Contents/MacOS/universalJavaApplicationStub'
+
+		file_handle = open(conf_file, 'w')
+		file_handle.write(working_prefix + '\n')
+		file_handle.write(temp_folder + '\n')
+		file_handle.write(muscle_path + '\n')
+		file_handle.write(clustal_path + '\n')
+		file_handle.write(pymol_path + '\n')
+		file_handle.write(raxml_path + '\n')
+		file_handle.write(figtree_path)
+		file_handle.close()
 else:                           # if conf does not exist, initial conf info and write to file
 	working_prefix = os.path.dirname(os.path.realpath(sys.argv[0])) + '/'
 	temp_folder = os.path.join(working_prefix, '..', 'Resources', 'Temp')
