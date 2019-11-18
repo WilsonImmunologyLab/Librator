@@ -391,7 +391,7 @@ class treeDialog(QtWidgets.QDialog):
 			CurPos += Len
 
 class GibsonMSADialog(QtWidgets.QDialog):
-	gibson_msa_Signal = pyqtSignal(object, int, list, str, list, str)
+	gibson_msa_Signal = pyqtSignal(object, int, list, str, list, str, int)
 	def __init__(self):
 		super(GibsonMSADialog, self).__init__()
 		self.ui = Ui_GibsonMSADialog()
@@ -407,7 +407,7 @@ class GibsonMSADialog(QtWidgets.QDialog):
 		self.ui.radioAA.clicked.connect(self.switchSeq)
 
 	def accept(self):
-		self.gibson_msa_Signal.emit(self.fragment_data, self.mode, self.db_file, self.out_dir, self.joint, self.subtype)
+		self.gibson_msa_Signal.emit(self.fragment_data, self.mode, self.db_file, self.out_dir, self.joint, self.subtype, self.num_frag)
 		self.close()
 
 	def highlightSeq(self):
@@ -10547,12 +10547,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 		F1_seqs = fragment_data['F_AA_1_origin'].tolist()
 		F2_seqs = fragment_data['F_AA_2_origin'].tolist()
 		F3_seqs = fragment_data['F_AA_3_origin'].tolist()
-		F4_seqs = fragment_data['F_AA_4_origin'].tolist()
 
 		F1_seq_text = '\n'.join(F1_seqs) + '\n'
 		F2_seq_text = '\n'.join(F2_seqs) + '\n'
 		F3_seq_text = '\n'.join(F3_seqs) + '\n'
-		F4_seq_text = '\n'.join(F4_seqs) + '\n'
 
 		# create dialog
 		self.modalessGibsonMSADialog = GibsonMSADialog()
@@ -10561,7 +10559,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessGibsonMSADialog.ui.seqEditF1.setText(F1_seq_text)
 		self.modalessGibsonMSADialog.ui.seqEditF2.setText(F2_seq_text)
 		self.modalessGibsonMSADialog.ui.seqEditF3.setText(F3_seq_text)
-		self.modalessGibsonMSADialog.ui.seqEditF4.setText(F4_seq_text)
 
 		# color text for F1, F2, F3, F4
 		num_seq = len(seq_names)
@@ -10632,24 +10629,30 @@ class LibratorMain(QtWidgets.QMainWindow):
 				cursor3.setPosition(pos)
 				cursor3.setPosition(pos + 1, QTextCursor.KeepAnchor)
 				cursor3.mergeCharFormat(format_hyphen)
-		# F4
-		cursor4 = self.modalessGibsonMSADialog.ui.seqEditF4.textCursor()
-		len_f4 = len(F4_seqs[0])
-		CurPos = 0
-		for i in range(0, num_seq):
-			format.setForeground(QBrush(QColor("red")))
-			cursor4.setPosition(CurPos + 0)
-			cursor4.setPosition(CurPos + 9, QTextCursor.KeepAnchor)
-			cursor4.mergeCharFormat(format)
-			CurPos += len_f4 + 1
+		if num_fragment == 4:
+			F4_seqs = fragment_data['F_AA_4_origin'].tolist()
+			F4_seq_text = '\n'.join(F4_seqs) + '\n'
+			self.modalessGibsonMSADialog.ui.seqEditF4.setText(F4_seq_text)
+			# F4
+			cursor4 = self.modalessGibsonMSADialog.ui.seqEditF4.textCursor()
+			len_f4 = len(F4_seqs[0])
+			CurPos = 0
+			for i in range(0, num_seq):
+				format.setForeground(QBrush(QColor("red")))
+				cursor4.setPosition(CurPos + 0)
+				cursor4.setPosition(CurPos + 9, QTextCursor.KeepAnchor)
+				cursor4.mergeCharFormat(format)
+				CurPos += len_f4 + 1
 
-		text = self.modalessGibsonMSADialog.ui.seqEditF4.toPlainText()
-		pos_list = [i.start() for i in re.finditer('-', text)]
-		if len(pos_list) > 0:
-			for pos in pos_list:
-				cursor4.setPosition(pos)
-				cursor4.setPosition(pos + 1, QTextCursor.KeepAnchor)
-				cursor4.mergeCharFormat(format_hyphen)
+			text = self.modalessGibsonMSADialog.ui.seqEditF4.toPlainText()
+			pos_list = [i.start() for i in re.finditer('-', text)]
+			if len(pos_list) > 0:
+				for pos in pos_list:
+					cursor4.setPosition(pos)
+					cursor4.setPosition(pos + 1, QTextCursor.KeepAnchor)
+					cursor4.mergeCharFormat(format_hyphen)
+		else:
+			len_f4 = 0
 
 		# link data
 		self.modalessGibsonMSADialog.fragment_data = fragment_data
@@ -10658,6 +10661,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessGibsonMSADialog.out_dir = out_dir
 		self.modalessGibsonMSADialog.names = seq_names
 		self.modalessGibsonMSADialog.len = [len_f1, len_f2, len_f3, len_f4]
+		self.modalessGibsonMSADialog.num_frag = num_fragment
 		self.modalessGibsonMSADialog.joint = [joint_up_str, joint_down_str]
 		self.modalessGibsonMSADialog.subtype = subtype
 		# link signals
@@ -10666,10 +10670,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessGibsonMSADialog.show()
 
 
-	def GibsonConfirm(self, fragment_data, mode, db_file, out_dir, joint, subtype):
+	def GibsonConfirm(self, fragment_data, mode, db_file, out_dir, joint, subtype, num_fragment):
 		new_fragment_name_list = []
 		existing_fragment_name_list = []
-		num_fragment = 4
 		joint_up_str = joint[0]
 		joint_down_str = joint[1]
 
