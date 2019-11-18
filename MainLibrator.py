@@ -2234,7 +2234,7 @@ class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 				out_handle.close()
 			else:
 				if os.path.exists(clustal_path):
-					outfilename = LibratorSeq.ClustalO(DataSet, 80, True, working_prefix, clustal_path)
+					outfilename = LibratorSeq.ClustalO(DataSet, 80, True, temp_folder, clustal_path)
 				else:
 					QMessageBox.warning(self, 'Warning',
 					                    'The Clustal Omega does not exist! Check your path!', QMessageBox.Ok,
@@ -6304,7 +6304,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				out_handle.close()
 			else:
 				if os.path.exists(clustal_path):
-					outfilename = LibratorSeq.ClustalO(DataSet, 80, True, working_prefix, clustal_path)
+					outfilename = LibratorSeq.ClustalO(DataSet, 80, True, temp_folder, clustal_path)
 				else:
 					QMessageBox.warning(self, 'Warning',
 					                    'The Clustal Omega does not exist! Check your path!', QMessageBox.Ok,
@@ -6919,7 +6919,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				out_handle.close()
 			else:
 				if os.path.exists(clustal_path):
-					outfilename = LibratorSeq.ClustalO(DataSet, 80, True, working_prefix, clustal_path)
+					outfilename = LibratorSeq.ClustalO(DataSet, 80, True, temp_folder, clustal_path)
 				else:
 					QMessageBox.warning(self, 'Warning',
 					                    'The Clustal Omega does not exist! Check your path!', QMessageBox.Ok, QMessageBox.Ok)
@@ -7578,7 +7578,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		outfilename = ''
 		try:
 			if os.path.exists(clustal_path):
-				outfilename = LibratorSeq.ClustalO(DataSet, 80, True, working_prefix, clustal_path)
+				outfilename = LibratorSeq.ClustalO(DataSet, 80, True, temp_folder, clustal_path)
 			else:
 				QMessageBox.warning(self, 'Warning',
 				                    'The Clustal Omega does not exist! Check your path!', QMessageBox.Ok,
@@ -8601,9 +8601,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# self.ui.cboActive.clear()
 		listItems = self.ui.listWidgetStrainsIn.selectedItems()
 		if len(listItems) == 0:
-			QMessageBox.warning(self, 'Warning', 'Please select at least one sequence first!',
-			                    QMessageBox.Ok,
-			                    QMessageBox.Ok)
 			return
 		# if not listItems: return
 		for item in listItems:
@@ -8820,7 +8817,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		listItems = self.ui.listWidgetStrainsIn.selectedItems()
 		for item in listItems:
 			eachItemIs = item.text()
-
 			self.UpdateSeq(eachItemIs,'False','Active')
 
 		if listRow>-1:

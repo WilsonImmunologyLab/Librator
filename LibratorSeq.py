@@ -475,8 +475,8 @@ def ClustalO(SeqDict, wrapLength, ordered, working_prefix, bin):
     MyInFiles = NameBase + 'In.fa'
     MyOutFiles = NameBase + 'Out.fa'
 
-    workingfilename = os.path.join(working_prefix, 'Temp', MyInFiles)
-    savefilename = os.path.join(working_prefix, 'Temp', MyOutFiles)
+    workingfilename = os.path.join(working_prefix, MyInFiles)
+    savefilename = os.path.join(working_prefix,  MyOutFiles)
 
     workingdir, filename = os.path.split(workingfilename)
 
