@@ -10279,8 +10279,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			elif subtype1 != cur_subtype:
 				QMessageBox.warning(self, 'Warning', "All candidate sequences should be same subtype!", QMessageBox.Ok,
 									QMessageBox.Ok)
-				error_code = 1
-				break
+				return
 
 			if len(SequenceAA[1]) > 0:
 				separator = "\n"
@@ -10293,6 +10292,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 			EachIn = (SeqName, Sequence, SequenceAA[0])
 			data_list.append(EachIn)
 
+		if subtype1 in Group1 or subtype1 in Group2:
+			pass
+		else:
+			QMessageBox.warning(self, 'Warning', "Our Gibson Clone Designer only supports HA for now!", QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
 
 		if error_code == 0:
 			data = pd.DataFrame(data_list)
