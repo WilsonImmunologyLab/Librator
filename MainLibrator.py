@@ -860,7 +860,6 @@ class updateSeqDialog(QtWidgets.QDialog):
 				cursor.setPosition(pos + 3, QTextCursor.KeepAnchor)
 				cursor.mergeCharFormat(format)
 
-
 class fusionDialog(QtWidgets.QDialog):
 	fusionSignal = pyqtSignal(list, str, bool, bool, bool)
 	fusionSeqSignal = pyqtSignal(str, str, int, int, int, int)
@@ -1715,7 +1714,6 @@ class fusionDialog(QtWidgets.QDialog):
 
 			CurPos += 1
 
-
 class basePathDialog(QtWidgets.QDialog):
 	def __init__(self):
 		super(basePathDialog, self).__init__()
@@ -2059,30 +2057,34 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 		active_tab = self.ui.tabWidget.currentIndex()
 		if active_tab == 0:
 			# send signal
-			selections = self.ui.selection.selectedItems()
 			joint_up = self.ui.jointUP.toPlainText()
 			joint_down = self.ui.jointDOWN.toPlainText()
 			db_path = [self.ui.dbpath.text()]
 			out_path = self.ui.outpath.text()
 
-			if len(selections) == 0:
-				QMessageBox.warning(self, 'Warning', 'Please select at least one sequence!', QMessageBox.Ok,
-									QMessageBox.Ok)
+			if joint_up == "" or joint_down == "": 		# OriPos
+				QMessageBox.warning(self, 'Warning',
+										'The joint region can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
 			else:
-				if joint_up == "" or joint_down == "": 		# OriPos
+				if out_path == "":
 					QMessageBox.warning(self, 'Warning',
-											'The joint region can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
+										'The output path can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
 				else:
-					if out_path == "":
+					# get selected sequence name
+					text = []
+					row_table = self.ui.selectionTable.rowCount()
+					for i in range(row_table):
+						cur_check_box = self.ui.selectionTable.cellWidget(i, 0)
+						if cur_check_box.isChecked():
+							text.append(cur_check_box.text())
+					if len(text) == 0:
 						QMessageBox.warning(self, 'Warning',
-											'The output path can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
-					else:
-						text = [i.text() for i in list(selections)]
-						text = '\n'.join(text)
-						self.gibsonSignal.emit(0, text, joint_up, joint_down, out_path, db_path, subtype, joint_plan)
+						                    'Please select at least one sequence!', QMessageBox.Ok, QMessageBox.Ok)
+						return
+					text = '\n'.join(text)
+					self.gibsonSignal.emit(0, text, joint_up, joint_down, out_path, db_path, subtype, joint_plan)
 		elif active_tab == 1:
 			# send signal
-			selections = self.ui.selection.selectedItems()
 			joint_up = self.ui.jointUP.toPlainText()
 			joint_down = self.ui.jointDOWN.toPlainText()
 			out_path = self.ui.outpath.text()
@@ -2094,11 +2096,6 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 			db_pass = self.ui.Passinput.text()
 
 			db_path = [server_ip, server_port, db_name, db_user, db_pass]
-
-			if len(selections) == 0:
-				QMessageBox.warning(self, 'Warning', 'Please select at least one sequence!', QMessageBox.Ok,
-									QMessageBox.Ok)
-				return
 
 			if joint_up == "" or joint_down == "": 		# OriPos
 				QMessageBox.warning(self, 'Warning',
@@ -2115,7 +2112,17 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 				                    'The output path can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
 				return
 
-			text = [i.text() for i in list(selections)]
+			# get selected sequence name
+			text = []
+			row_table = self.ui.selectionTable.rowCount()
+			for i in range(row_table):
+				cur_check_box = self.ui.selectionTable.cellWidget(i, 0)
+				if cur_check_box.isChecked():
+					text.append(cur_check_box.text())
+			if len(text) == 0:
+				QMessageBox.warning(self, 'Warning',
+				                    'Please select at least one sequence!', QMessageBox.Ok, QMessageBox.Ok)
+				return
 			text = '\n'.join(text)
 
 			# save MYSQL setting
@@ -2127,8 +2134,6 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 			file_handle.close()
 
 			self.gibsonSignal.emit(1, text, joint_up, joint_down, out_path, db_path, subtype, joint_plan)
-
-
 
 class SequenceEditDialog(QtWidgets.QDialog):
 	seqEditSignal = pyqtSignal(int, str, str, str)  # user define signal
@@ -2825,7 +2830,6 @@ class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 			cursor.mergeCharFormat(format)
 
 			CurPos += 1
-
 
 class LibratorMain(QtWidgets.QMainWindow):
 	def __init__(self):  # , parent=None):
@@ -9478,17 +9482,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global joint_up
 		global H1_start, H1_end
 		global fragmentdb_path
+		global DBFilename
 
 		if self.ui.txtName.toPlainText() == "":
 			QMessageBox.warning(self, 'Warning', 'Please select a sequence first!', QMessageBox.Ok, QMessageBox.Ok)
 		else:
 			self.modalessGibsonDialog = gibsoncloneDialog()
-			# get active sequences from Qlist in main window
-			donor_num = self.ui.listWidgetStrainsIn.count()
-			donor_list = []
-			for i in range(donor_num):
-				donor_list.append(self.ui.listWidgetStrainsIn.item(i).text())
-			self.modalessGibsonDialog.ui.selection.addItems(donor_list)
 			self.modalessGibsonDialog.ui.jointUP.setText(joint_up)
 			self.modalessGibsonDialog.ui.jointDOWN.setText(joint_down)
 
@@ -9500,6 +9499,25 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessGibsonDialog.ui.F2_end.setText(str(H1_end[1]))
 			self.modalessGibsonDialog.ui.F3_end.setText(str(H1_end[2]))
 			self.modalessGibsonDialog.ui.F4_end.setText(str(H1_end[3]))
+
+			# fill the selection table
+			SQLStatement = 'SELECT SeqName,SubType FROM LibDB WHERE `Active` = "True"'
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			num_row = len(DataIn)
+			num_col = 2
+			self.modalessGibsonDialog.ui.selectionTable.setRowCount(num_row)
+			self.modalessGibsonDialog.ui.selectionTable.setColumnCount(num_col)
+			horizontalHeader = ['Name', 'Subtype']
+			self.modalessGibsonDialog.ui.selectionTable.setHorizontalHeaderLabels(horizontalHeader)
+			self.modalessGibsonDialog.ui.selectionTable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+
+			for row_index in range(num_row):
+				cell_checkBox = QCheckBox()
+				cell_checkBox.setText(DataIn[row_index][0])
+				cell_checkBox.setChecked(False)
+				self.modalessGibsonDialog.ui.selectionTable.setCellWidget(row_index, 0, cell_checkBox)
+				self.modalessGibsonDialog.ui.selectionTable.setItem(row_index, 1,
+				                            QTableWidgetItem(DataIn[row_index][1]))
 
 			self.modalessGibsonDialog.gibsonSignal.connect(self.GenerateGibson)
 
