@@ -88,41 +88,20 @@ global raxml_path
 global figtree_path
 global fragmentdb_path
 
+working_prefix = os.path.dirname(os.path.realpath(sys.argv[0])) + '/'
+temp_folder = os.path.join(working_prefix, '..', 'Resources', 'Temp')
+
 if os.path.exists(conf_file):   # if conf exist, read conf info from file
 	file_handle = open(conf_file, 'r')
 	settings = file_handle.readlines()
-	working_prefix = settings[0].strip('\n')
-
-	if os.path.exists(working_prefix):
-		temp_folder = settings[1].strip('\n')
-		muscle_path =  settings[2].strip('\n')
-		clustal_path =  settings[3].strip('\n')
-		pymol_path =  settings[4].strip('\n')
-		raxml_path =  settings[5].strip('\n')
-		figtree_path =  settings[6].strip('\n')
-		file_handle.close()
-		del settings
-	else:
-		working_prefix = os.path.dirname(os.path.realpath(sys.argv[0])) + '/'
-		temp_folder = os.path.join(working_prefix, '..', 'Resources', 'Temp')
-		muscle_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'muscle')
-		clustal_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'clustalo')
-		pymol_path = '/usr/local/bin/pymol'
-		raxml_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'raxml')
-		figtree_path = '/Applications/FigTree.app/Contents/MacOS/universalJavaApplicationStub'
-
-		file_handle = open(conf_file, 'w')
-		file_handle.write(working_prefix + '\n')
-		file_handle.write(temp_folder + '\n')
-		file_handle.write(muscle_path + '\n')
-		file_handle.write(clustal_path + '\n')
-		file_handle.write(pymol_path + '\n')
-		file_handle.write(raxml_path + '\n')
-		file_handle.write(figtree_path)
-		file_handle.close()
+	muscle_path =  settings[0].strip('\n')
+	clustal_path =  settings[1].strip('\n')
+	pymol_path =  settings[2].strip('\n')
+	raxml_path =  settings[3].strip('\n')
+	figtree_path =  settings[4].strip('\n')
+	file_handle.close()
+	del settings
 else:                           # if conf does not exist, initial conf info and write to file
-	working_prefix = os.path.dirname(os.path.realpath(sys.argv[0])) + '/'
-	temp_folder = os.path.join(working_prefix, '..', 'Resources', 'Temp')
 	muscle_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'muscle')
 	clustal_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'clustalo')
 	pymol_path = '/usr/local/bin/pymol'
@@ -130,8 +109,6 @@ else:                           # if conf does not exist, initial conf info and 
 	figtree_path = '/Applications/FigTree.app/Contents/MacOS/universalJavaApplicationStub'
 
 	file_handle = open(conf_file, 'w')
-	file_handle.write(working_prefix + '\n')
-	file_handle.write(temp_folder + '\n')
 	file_handle.write(muscle_path + '\n')
 	file_handle.write(clustal_path + '\n')
 	file_handle.write(pymol_path + '\n')
@@ -157,7 +134,7 @@ global joint_up
 global joint_down
 
 if os.path.exists(joint_file):   # if conf exist, read conf info from file
-	file_handle = open(conf_file, 'r')
+	file_handle = open(joint_file, 'r')
 	settings = file_handle.readlines()
 	joint_up = settings[0].strip('\n')
 	joint_down = settings[1].strip('\n')
@@ -1745,7 +1722,6 @@ class basePathDialog(QtWidgets.QDialog):
 		self.ui = Ui_basePathDialog()
 		self.ui.setupUi(self)
 
-		self.ui.browseBase.clicked.connect(self.browsebasedir)
 		self.ui.browseMuscle.clicked.connect(self.browsemuscledir)
 		self.ui.browseClustal.clicked.connect(self.browseclustaldir)
 		self.ui.browsePymol.clicked.connect(self.browsepymoldir)
@@ -1756,9 +1732,6 @@ class basePathDialog(QtWidgets.QDialog):
 		self.ui.yes.clicked.connect(self.accept)
 		self.ui.no.clicked.connect(self.reject)
 
-	def browsebasedir(self):  # browse and select path
-		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
-		self.ui.basePath.setText(out_dir)
 	def browsemuscledir(self):  # browse and select path
 		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
 		self.ui.musclePath.setText(out_dir)
@@ -1790,30 +1763,6 @@ class basePathDialog(QtWidgets.QDialog):
 		global fragmentdb_path
 		global conf_file
 		global ldb_file
-
-		tmp_working_prefix = self.ui.basePath.text()
-		tmp_working_prefix = tmp_working_prefix.rstrip('/') + '/'
-
-		# check if base path exist or not
-		if os.path.exists(tmp_working_prefix):
-			if os.path.exists(os.path.join(tmp_working_prefix, '..', 'Resources', 'Temp')) and os.path.exists(os.path.join(tmp_working_prefix, '..', 'Resources', 'PDB')):
-				temp_folder = os.path.join(tmp_working_prefix, '..', 'Resources', 'Temp')
-				pdb_folder = os.path.join(tmp_working_prefix, '..', 'Resources', 'PDB')
-				working_prefix = tmp_working_prefix
-			elif os.path.exists(tmp_working_prefix + 'Temp/') == False:
-				QMessageBox.warning(self, 'Warning',
-				                    'There is no TEMP folder under your base folder! Please create a TEMP folder under '
-				                    'your working folder first!', QMessageBox.Ok, QMessageBox.Ok)
-				return
-			else:
-				QMessageBox.warning(self, 'Warning',
-				                    'There is no PDB folder under your base folder! Please create a PDB folder under '
-				                    'your working folder and put all PDB files in it!', QMessageBox.Ok, QMessageBox.Ok)
-				return
-		else:
-			QMessageBox.warning(self, 'Warning',
-			                    'Your base folder does not exist! Check your input!', QMessageBox.Ok, QMessageBox.Ok)
-			return
 
 		# check if muscle path exist or not
 		if os.path.exists(self.ui.musclePath.text()):
@@ -1889,8 +1838,6 @@ class basePathDialog(QtWidgets.QDialog):
 
 		# save all changes to file
 		file_handle = open(conf_file, 'w')
-		file_handle.write(working_prefix + '\n')
-		file_handle.write(temp_folder + '\n')
 		file_handle.write(muscle_path + '\n')
 		file_handle.write(clustal_path + '\n')
 		file_handle.write(pymol_path + '\n')
@@ -3596,7 +3543,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			HAAA = Translator(HASeq.upper(),0)
 
-			items = ('H1N1', 'H3N2', "B", "Group 1", 'Group 2', 'Other')
+			items = ('H1','H2','H3','H4','H5','H6','H7','H8','H9','H10','H11','H12','H13','H14','H15','H16','H17',
+			         'H18','N1','N2','N3','N4','N5','N6','N7','N8','N9','N10','N11','B','Other')
 			title = 'Choose infleunza subtype:'
 			subtype = setItem(self, items, title)
 			self.ui.cmbSubtypes_Base.setCurrentText(subtype)
@@ -4034,10 +3982,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			Subtype = self.ui.cboSubtype.currentText()
 			self.ui.cboSubtype_2.setCurrentText(Subtype)
-			if Subtype == 'H3N2' or Subtype == 'Group 2' or Subtype == 'Other':
+			if Subtype in Group2 or Subtype == 'B' or Subtype == 'Other':
 				self.ui.btnH1Num.setChecked(False)
 				self.ui.btnH3Num.setChecked(True)
-			elif Subtype == 'H1N1' or Subtype == 'Group 1':
+			elif Subtype in Group1:
 				self.ui.btnH1Num.setChecked(True)
 				self.ui.btnH3Num.setChecked(False)
 
@@ -8380,16 +8328,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 		subtype = str(self.ui.cboSubtype.currentText())
 
 		# set 3D templates for different subtypes
-		if subtype == "H1N1":
+		if subtype in Group1:
 			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4jtv.pdb')
-		elif subtype == "H3N2":
+		elif subtype in Group2:
 			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4hmg.pdb')
 		elif subtype == "B":
 			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
-		elif subtype == "Group 1":
-			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4jtv.pdb')
-		elif subtype == "Group 2":
-			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4hmg.pdb')
 		else:
 			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
 
@@ -8713,19 +8657,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 
 			SubType = item[3]
-			if SubType == 'H3N2':
-				CurIndex = 0
-			if SubType == 'H1N1':
-				CurIndex = 1
-			if SubType == 'B':
-				CurIndex = 2
-			if SubType == 'Group 1':
-				CurIndex = 3
-			if SubType == 'Group 2':
-				CurIndex = 4
-			if SubType == 'Other':
-				CurIndex = 5
-
+			CurIndex = subtype_switch(SubType)
 			self.ui.cboSubtype.setCurrentIndex(CurIndex)
 
 			Form = item[4]
@@ -9061,7 +8993,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			# HAAA = Translator(HASeq.upper(), 0)
 			if StopAsking == 'No':
-				items = ('H1N1', 'H3N2', "B", "Group 1", 'Group 2', 'Other')
+				items = ('H1','H2','H3','H4','H5','H6','H7','H8','H9','H10','H11','H12','H13','H14','H15','H16','H17',
+				         'H18','N1','N2','N3','N4','N5','N6','N7','N8','N9','N10','N11','B','Other')
 				title = 'Choose infleunza subtype for ' + HAName
 				subtype = setItem(self, items, title)
 				# self.ui.cmbSubtypes_Base.setCurrentText(subtype)
@@ -9140,7 +9073,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			pml.write(text)
 
 			# highlight antigentic sites for H3N2 (A,B,C,D,E) and H1N1 (Ca1, Ca2, Cb, Sa, Sb)
-			if subtype == "H1N1" or subtype == "Group1":
+			if subtype in Group1:
 				text = "sel ABS-Ca1, chain A+C+E+G+I+K and (resi 142+143+144+145+146+147+172+173+174+175+176+209+210+211)\n" \
 						+ "sel ABS-Ca2, chain A+C+E+G+I+K and (resi 227+228+229)\n" \
 						+ "sel ABS-Cb, chain A+C+E+G+I+K and (resi 76+77+78+79+80+81)\n" \
@@ -9152,7 +9085,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 						+ "color chocolate, ABS-Sa\n" \
 						+ "color green, ABS-Sb\n"
 				pml.write(text)
-			elif subtype == "H3N2" or subtype == "Group2":
+			elif subtype in Group2:
 				text = "sel ABS-A, chain A+C+E+G+I+K and (resi 122+126+127+128+129+130+131+132+133+137+141+142+143+144)\n" \
 						+ "sel ABS-B, chain A+C+E+G+I+K and (resi 155+156+157+158+159+160+164+186+188+189+190+191+192+193+194+195+196+197+198+201)\n" \
 						+ "sel ABS-C, chain A+C+E+G+I+K and (resi 52+53+54+275+276)\n" \
@@ -9187,9 +9120,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 				# HA numbering
 				HANumbering(HAAA)
 
-				if subtype == "H1N1" or subtype == "Group1":
+				if subtype  in Group1:
 					numbering = H1Numbering
-				elif subtype == "H3N2" or subtype == "Group2":
+				elif subtype  in Group2:
 					numbering = H3Numbering
 				else:
 					QMessageBox.warning(self, 'Warning',
@@ -9260,16 +9193,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 		subtype = str(self.ui.cboSubtype.currentText())
 
 		# set 3D templates for different subtypes
-		if subtype == "H1N1":
+		if subtype in Group1:
 			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4jtv.pdb')
-		elif subtype == "H3N2":
+		elif subtype in Group2:
 			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4hmg.pdb')
 		elif subtype == "B":
 			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
-		elif subtype == "Group 1":
-			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4jtv.pdb')
-		elif subtype == "Group 2":
-			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4hmg.pdb')
 		else:
 			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
 
@@ -9318,8 +9247,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			# HA numbering
 			HANumbering(HAAA)
-			if subtype == "H1N1" or subtype == "Group 1":
+			if subtype in Group1:
 				numbering = H1Numbering
+			elif subtype in Group2:
+				numbering = H3Numbering
 			else:
 				numbering = H3Numbering
 
@@ -9544,6 +9475,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global joint_down
 		global joint_up
 		global H1_start, H1_end
+		global fragmentdb_path
 
 		if self.ui.txtName.toPlainText() == "":
 			QMessageBox.warning(self, 'Warning', 'Please select a sequence first!', QMessageBox.Ok, QMessageBox.Ok)
@@ -9591,6 +9523,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessGibsonDialog.ui.DBnameinput.setText(Setting[2])
 			self.modalessGibsonDialog.ui.Userinput.setText(Setting[3])
 			self.modalessGibsonDialog.ui.Passinput.setText(Setting[4])
+
+			self.modalessGibsonDialog.ui.dbpath.setText(fragmentdb_path)
 
 			self.modalessGibsonDialog.show()
 
@@ -9757,7 +9691,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global fragmentdb_path
 
 		self.modalessbaseDialog = basePathDialog()
-		self.modalessbaseDialog.ui.basePath.setText(working_prefix)
 		self.modalessbaseDialog.ui.musclePath.setText(muscle_path)
 		self.modalessbaseDialog.ui.clustaloPath.setText(clustal_path)
 		self.modalessbaseDialog.ui.pymolPath.setText(pymol_path)
@@ -11322,6 +11255,46 @@ def Translator(Sequence, frame):
 # 'W':204.23, 'Y':181.19, 'V':117.15, 'X':0.0,    '-':0.0,    '*':0.0,
 # '?':0.0}
 
+global Group1, Group3
+Group1 = ['H1','H2','H5','H6','H8','H9','H11','H12','H13','H16','H17','H18']
+Group2 = ['H3','H4','H7','H10','H14','H15']
+
+def subtype_switch(subtype):
+    subtypes = {
+	    'H1': 0,
+	    'H2': 1,
+	    'H3': 2,
+	    'H4': 3,
+	    'H5': 4,
+	    'H6': 5,
+	    'H7': 6,
+	    'H8': 7,
+	    'H9': 8,
+	    'H10': 9,
+	    'H11': 10,
+	    'H12': 11,
+	    'H13': 12,
+	    'H14': 13,
+	    'H15': 14,
+	    'H16': 15,
+	    'H17': 16,
+	    'H18': 17,
+	    'N1': 18,
+	    'N2': 19,
+	    'N3': 20,
+	    'N4': 21,
+	    'N5': 22,
+	    'N6': 23,
+	    'N7': 24,
+	    'N8': 25,
+	    'N9': 26,
+	    'N10': 27,
+	    'N11': 28,
+	    'B': 29,
+	    'Other': 30
+    }
+    value = subtypes.get(subtype, 30)
+    return value
 
 global H3template
 global H3template_seq

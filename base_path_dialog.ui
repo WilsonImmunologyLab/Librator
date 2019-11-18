@@ -34,88 +34,10 @@
       </font>
      </property>
      <property name="title">
-      <string>Path Setting</string>
+      <string>Tool Path Setting</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0" colspan="2">
-       <widget class="QLabel" name="label">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Your current base path is: (Only change this when you know what you're doning)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLineEdit" name="basePath">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="browseBase">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Browse</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Your current muscle path is:</string>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="0">
-       <widget class="QLineEdit" name="musclePath">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QPushButton" name="browseMuscle">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Browse</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Your current Clustal Omega path is:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
        <widget class="QLineEdit" name="clustaloPath">
         <property name="font">
          <font>
@@ -124,7 +46,7 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
+      <item row="3" column="1">
        <widget class="QPushButton" name="browseClustal">
         <property name="font">
          <font>
@@ -136,7 +58,16 @@
         </property>
        </widget>
       </item>
-      <item row="6" column="0">
+      <item row="5" column="0">
+       <widget class="QLineEdit" name="pymolPath">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
        <widget class="QLabel" name="label_5">
         <property name="font">
          <font>
@@ -148,16 +79,7 @@
         </property>
        </widget>
       </item>
-      <item row="7" column="0">
-       <widget class="QLineEdit" name="pymolPath">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="1">
+      <item row="5" column="1">
        <widget class="QPushButton" name="browsePymol">
         <property name="font">
          <font>
@@ -169,7 +91,73 @@
         </property>
        </widget>
       </item>
-      <item row="8" column="0">
+      <item row="7" column="0">
+       <widget class="QLineEdit" name="RaxmlPath">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0">
+       <widget class="QLineEdit" name="FigtreePath">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Your current muscle path is:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Your current Clustal Omega path is:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <widget class="QPushButton" name="browseFigtree">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Browse</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="browseMuscle">
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Browse</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
        <widget class="QLabel" name="label_6">
         <property name="font">
          <font>
@@ -181,8 +169,8 @@
         </property>
        </widget>
       </item>
-      <item row="9" column="0">
-       <widget class="QLineEdit" name="RaxmlPath">
+      <item row="1" column="0">
+       <widget class="QLineEdit" name="musclePath">
         <property name="font">
          <font>
           <pointsize>14</pointsize>
@@ -190,7 +178,7 @@
         </property>
        </widget>
       </item>
-      <item row="9" column="1">
+      <item row="7" column="1">
        <widget class="QPushButton" name="browseRaxml">
         <property name="font">
          <font>
@@ -202,7 +190,7 @@
         </property>
        </widget>
       </item>
-      <item row="10" column="0">
+      <item row="8" column="0">
        <widget class="QLabel" name="label_12">
         <property name="font">
          <font>
@@ -211,27 +199,6 @@
         </property>
         <property name="text">
          <string>Your current FigTree path is:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="11" column="0">
-       <widget class="QLineEdit" name="FigtreePath">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-       </widget>
-      </item>
-      <item row="11" column="1">
-       <widget class="QPushButton" name="browseFigtree">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Browse</string>
         </property>
        </widget>
       </item>

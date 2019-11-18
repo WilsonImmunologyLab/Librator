@@ -1165,31 +1165,156 @@
                   <item row="5" column="1">
                    <widget class="QComboBox" name="cboSubtype">
                     <property name="currentText">
-                     <string>H3N2</string>
+                     <string>H1</string>
                     </property>
                     <item>
                      <property name="text">
-                      <string>H3N2</string>
+                      <string>H1</string>
                      </property>
                     </item>
                     <item>
                      <property name="text">
-                      <string>H1N1</string>
+                      <string>H2</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H3</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H4</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H5</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H6</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H7</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H8</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H9</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H10</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H11</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H12</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H13</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H14</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H15</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H16</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H17</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H18</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N1</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N2</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N3</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N4</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N5</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N6</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N7</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N8</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N9</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N10</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N11</string>
                      </property>
                     </item>
                     <item>
                      <property name="text">
                       <string>B</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Group 1</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Group 2</string>
                      </property>
                     </item>
                     <item>
