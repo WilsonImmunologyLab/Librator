@@ -3982,7 +3982,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			Subtype = self.ui.cboSubtype.currentText()
 			self.ui.cboSubtype_2.setCurrentText(Subtype)
-			if Subtype in Group2 or Subtype == 'B' or Subtype == 'Other':
+			if Subtype in Group2 or Subtype in GroupNA or Subtype == 'B' or Subtype == 'Other':
 				self.ui.btnH1Num.setChecked(False)
 				self.ui.btnH3Num.setChecked(True)
 			elif Subtype in Group1:
@@ -8332,6 +8332,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4jtv.pdb')
 		elif subtype in Group2:
 			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4hmg.pdb')
+		elif subtype in GroupNA:
+			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
 		elif subtype == "B":
 			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
 		else:
@@ -9097,6 +9099,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 						+ "color chocolate, ABS-D\n" \
 						+ "color green, ABS-E\n"
 				pml.write(text)
+			else:
+				QMessageBox.warning(self, 'Warning', 'We only support HA structure now!', QMessageBox.Ok, QMessageBox.Ok)
 
 			# highlight mutations in red on the 3D structure
 			if mutation != "none":
@@ -9126,7 +9130,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 					numbering = H3Numbering
 				else:
 					QMessageBox.warning(self, 'Warning',
-					                    'We will support FLU B later!', QMessageBox.Ok, QMessageBox.Ok)
+					                    'We will support NA and FLU B later!', QMessageBox.Ok, QMessageBox.Ok)
 					return
 
 				# for HA1 mutations:
@@ -9197,6 +9201,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4jtv.pdb')
 		elif subtype in Group2:
 			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4hmg.pdb')
+		elif subtype in GroupNA:
+			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
 		elif subtype == "B":
 			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
 		else:
@@ -11255,9 +11261,10 @@ def Translator(Sequence, frame):
 # 'W':204.23, 'Y':181.19, 'V':117.15, 'X':0.0,    '-':0.0,    '*':0.0,
 # '?':0.0}
 
-global Group1, Group3
+global Group1, Group3, GroupNA
 Group1 = ['H1','H2','H5','H6','H8','H9','H11','H12','H13','H16','H17','H18']
 Group2 = ['H3','H4','H7','H10','H14','H15']
+GroupNA = ['N1','N2','N3','N4','N5','N6','N7','N8','N9','N10','N11']
 
 def subtype_switch(subtype):
     subtypes = {
