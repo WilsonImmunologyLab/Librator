@@ -10495,9 +10495,30 @@ class LibratorMain(QtWidgets.QMainWindow):
 			data_list.append(EachIn)
 
 		if subtype1 in Group1 or subtype1 in Group2:
-			pass
+			if subtype1 in Group1 and subtype == 'H3':
+				QMessageBox.warning(self, 'Warning', "Your joint design is for H3/Group2, your sequences are " + subtype1 + '(Group1)!',
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+				return
+			if subtype1 in Group2 and subtype == 'H1':
+				QMessageBox.warning(self, 'Warning', "Your joint design is for H3/Group2, your sequences are " + subtype1 + '(Group1)!',
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+				return
+			if subtype == 'NA':
+				QMessageBox.warning(self, 'Warning', "Your joint design is for NA, your sequences are " + subtype1 + '(HA)!',
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+				return
 		elif subtype1 in GroupNA:
-			subtype = subtype1
+			if subtype == 'H3' or subtype == 'H1':
+				QMessageBox.warning(self, 'Warning',
+				                    "Your joint design is for HA, your sequences are " + subtype1 + '(NA)!',
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+				return
+			else:
+				subtype = subtype1
 		else:
 			QMessageBox.warning(self, 'Warning', "Our Gibson Clone Designer only supports HA for now!", QMessageBox.Ok,
 			                    QMessageBox.Ok)
