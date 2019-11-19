@@ -435,17 +435,14 @@ class GibsonMSADialog(QtWidgets.QDialog):
 			F1_seqs = fragment_data['F_AA_1_origin'].tolist()
 			F2_seqs = fragment_data['F_AA_2_origin'].tolist()
 			F3_seqs = fragment_data['F_AA_3_origin'].tolist()
-			F4_seqs = fragment_data['F_AA_4_origin'].tolist()
 
 			F1_seq_text = '\n'.join(F1_seqs) + '\n'
 			F2_seq_text = '\n'.join(F2_seqs) + '\n'
 			F3_seq_text = '\n'.join(F3_seqs) + '\n'
-			F4_seq_text = '\n'.join(F4_seqs) + '\n'
 
 			self.ui.seqEditF1.setText(F1_seq_text)
 			self.ui.seqEditF2.setText(F2_seq_text)
 			self.ui.seqEditF3.setText(F3_seq_text)
-			self.ui.seqEditF4.setText(F4_seq_text)
 
 			# color text for F1, F2, F3, F4
 			num_seq = len(seq_names)
@@ -504,9 +501,10 @@ class GibsonMSADialog(QtWidgets.QDialog):
 				cursor3.setPosition(CurPos + 9, QTextCursor.KeepAnchor)
 				cursor3.mergeCharFormat(format)
 
-				cursor3.setPosition(CurPos + len_f3 - 9)
-				cursor3.setPosition(CurPos + len_f3, QTextCursor.KeepAnchor)
-				cursor3.mergeCharFormat(format)
+				if self.num_frag == 4:
+					cursor3.setPosition(CurPos + len_f3 - 9)
+					cursor3.setPosition(CurPos + len_f3, QTextCursor.KeepAnchor)
+					cursor3.mergeCharFormat(format)
 				CurPos += len_f3 + 1
 
 			text = self.ui.seqEditF3.toPlainText()
@@ -516,24 +514,29 @@ class GibsonMSADialog(QtWidgets.QDialog):
 					cursor3.setPosition(pos)
 					cursor3.setPosition(pos + 1, QTextCursor.KeepAnchor)
 					cursor3.mergeCharFormat(format_hyphen)
-			# F4
-			cursor4 = self.ui.seqEditF4.textCursor()
-			len_f4 = len(F4_seqs[0])
-			CurPos = 0
-			for i in range(0, num_seq):
-				format.setForeground(QBrush(QColor("red")))
-				cursor4.setPosition(CurPos + 0)
-				cursor4.setPosition(CurPos + 9, QTextCursor.KeepAnchor)
-				cursor4.mergeCharFormat(format)
-				CurPos += len_f4 + 1
 
-			text = self.ui.seqEditF4.toPlainText()
-			list = [i.start() for i in re.finditer('-', text)]
-			if len(list) > 0:
-				for pos in list:
-					cursor4.setPosition(pos)
-					cursor4.setPosition(pos + 1, QTextCursor.KeepAnchor)
-					cursor4.mergeCharFormat(format_hyphen)
+			if self.num_frag == 4:
+				F4_seqs = fragment_data['F_AA_4_origin'].tolist()
+				F4_seq_text = '\n'.join(F4_seqs) + '\n'
+				self.ui.seqEditF4.setText(F4_seq_text)
+				# F4
+				cursor4 = self.ui.seqEditF4.textCursor()
+				len_f4 = len(F4_seqs[0])
+				CurPos = 0
+				for i in range(0, num_seq):
+					format.setForeground(QBrush(QColor("red")))
+					cursor4.setPosition(CurPos + 0)
+					cursor4.setPosition(CurPos + 9, QTextCursor.KeepAnchor)
+					cursor4.mergeCharFormat(format)
+					CurPos += len_f4 + 1
+
+				text = self.ui.seqEditF4.toPlainText()
+				list = [i.start() for i in re.finditer('-', text)]
+				if len(list) > 0:
+					for pos in list:
+						cursor4.setPosition(pos)
+						cursor4.setPosition(pos + 1, QTextCursor.KeepAnchor)
+						cursor4.mergeCharFormat(format_hyphen)
 
 			self.ui.notice.setText('"-" in sequences will be removed before generating Fragments')
 		else:
@@ -544,17 +547,17 @@ class GibsonMSADialog(QtWidgets.QDialog):
 			F1_seqs = fragment_data['F_NT_1'].tolist()
 			F2_seqs = fragment_data['F_NT_2'].tolist()
 			F3_seqs = fragment_data['F_NT_3'].tolist()
-			F4_seqs = fragment_data['F_NT_4'].tolist()
 
 			F1_seq_text = self.joint[0] + joint_up_str.join(F1_seqs) + '\n'
 			F2_seq_text = '\n'.join(F2_seqs) + '\n'
-			F3_seq_text = '\n'.join(F3_seqs) + '\n'
-			F4_seq_text = joint_down_str.join(F4_seqs) + joint_down_str
+			if self.num_frag == 4:
+				F3_seq_text = '\n'.join(F3_seqs) + '\n'
+			else:
+				F3_seq_text = joint_down_str.join(F3_seqs) + joint_down_str
 
 			self.ui.seqEditF1.setText(F1_seq_text)
 			self.ui.seqEditF2.setText(F2_seq_text)
 			self.ui.seqEditF3.setText(F3_seq_text)
-			self.ui.seqEditF4.setText(F4_seq_text)
 
 			# color text for F1, F2, F3, F4
 			num_seq = len(seq_names)
@@ -594,31 +597,40 @@ class GibsonMSADialog(QtWidgets.QDialog):
 			cursor3 = self.ui.seqEditF3.textCursor()
 			CurPos = 0
 			for i in range(0, num_seq):
-				cur_len = len(F3_seqs[i])
 				format.setForeground(QBrush(QColor("red")))
 				cursor3.setPosition(CurPos + 0)
 				cursor3.setPosition(CurPos + 25, QTextCursor.KeepAnchor)
 				cursor3.mergeCharFormat(format)
 
-				cursor3.setPosition(CurPos + cur_len - 25)
+				if self.num_frag == 4:
+					cur_len = len(F3_seqs[i])
+					cursor3.setPosition(CurPos + cur_len - 25)
+				else:
+					cur_len = len(F3_seqs[i]) + len(self.joint[1])
+					cursor3.setPosition(CurPos + cur_len - len(self.joint[1]))
 				cursor3.setPosition(CurPos + cur_len, QTextCursor.KeepAnchor)
 				cursor3.mergeCharFormat(format)
 				CurPos += cur_len + 1
 
-			# F4
-			cursor4 = self.ui.seqEditF4.textCursor()
-			CurPos = 0
-			for i in range(0, num_seq):
-				cur_len = len(F4_seqs[i]) + len(self.joint[1])
-				format.setForeground(QBrush(QColor("red")))
-				cursor4.setPosition(CurPos + 0)
-				cursor4.setPosition(CurPos + 25, QTextCursor.KeepAnchor)
-				cursor4.mergeCharFormat(format)
+			if self.num_frag == 4:
+				F4_seqs = fragment_data['F_NT_4'].tolist()
+				F4_seq_text = joint_down_str.join(F4_seqs) + joint_down_str
+				self.ui.seqEditF4.setText(F4_seq_text)
 
-				cursor4.setPosition(CurPos + cur_len - len(self.joint[1]))
-				cursor4.setPosition(CurPos + cur_len, QTextCursor.KeepAnchor)
-				cursor4.mergeCharFormat(format)
-				CurPos += cur_len + 1
+				# F4
+				cursor4 = self.ui.seqEditF4.textCursor()
+				CurPos = 0
+				for i in range(0, num_seq):
+					cur_len = len(F4_seqs[i]) + len(self.joint[1])
+					format.setForeground(QBrush(QColor("red")))
+					cursor4.setPosition(CurPos + 0)
+					cursor4.setPosition(CurPos + 25, QTextCursor.KeepAnchor)
+					cursor4.mergeCharFormat(format)
+
+					cursor4.setPosition(CurPos + cur_len - len(self.joint[1]))
+					cursor4.setPosition(CurPos + cur_len, QTextCursor.KeepAnchor)
+					cursor4.mergeCharFormat(format)
+					CurPos += cur_len + 1
 
 			self.ui.notice.setText('NT fragments have same AA sequence will be merged')
 
@@ -685,25 +697,26 @@ class GibsonMSADialog(QtWidgets.QDialog):
 
 			CurPos += len(text_list[i]) + 1
 
-		# F4
-		cursor = self.ui.seqEditF4.textCursor()
-		text = self.ui.seqEditF4.toPlainText()
+		if self.num_frag == 4:
+			# F4
+			cursor = self.ui.seqEditF4.textCursor()
+			text = self.ui.seqEditF4.toPlainText()
 
-		text_list = text.split('\n')
-		CurPos = 0
-		for i in range(0, len(ColorMap)):
-			valueIs = ColorMap[i]
+			text_list = text.split('\n')
+			CurPos = 0
+			for i in range(0, len(ColorMap)):
+				valueIs = ColorMap[i]
 
-			if valueIs == '0':
-				format.setBackground(QBrush(QColor("white")))
-			elif valueIs == '7':
-				format.setBackground(QBrush(QColor("lightGray")))
+				if valueIs == '0':
+					format.setBackground(QBrush(QColor("white")))
+				elif valueIs == '7':
+					format.setBackground(QBrush(QColor("lightGray")))
 
-			cursor.setPosition(CurPos)
-			cursor.setPosition(CurPos + len(text_list[i]), QTextCursor.KeepAnchor)
-			cursor.mergeCharFormat(format)
+				cursor.setPosition(CurPos)
+				cursor.setPosition(CurPos + len(text_list[i]), QTextCursor.KeepAnchor)
+				cursor.mergeCharFormat(format)
 
-			CurPos += len(text_list[i]) + 1
+				CurPos += len(text_list[i]) + 1
 
 	def DecorateAASeq(self, ColorMap, Len):
 		cursor1 = self.ui.seqEditF1.textCursor()
@@ -782,27 +795,28 @@ class GibsonMSADialog(QtWidgets.QDialog):
 				cursor3.setPosition(pos + 1, QTextCursor.KeepAnchor)
 				cursor3.mergeCharFormat(format_hyphen)
 
-		# F4
-		CurPos = 0
-		for valueIs in ColorMap:
-			if valueIs == '0':
-				format.setBackground(QBrush(QColor("white")))
-			elif valueIs == '7':
-				format.setBackground(QBrush(QColor("lightGray")))
+		if self.num_frag == 4:
+			# F4
+			CurPos = 0
+			for valueIs in ColorMap:
+				if valueIs == '0':
+					format.setBackground(QBrush(QColor("white")))
+				elif valueIs == '7':
+					format.setBackground(QBrush(QColor("lightGray")))
 
-			cursor4.setPosition(CurPos)
-			cursor4.setPosition(CurPos + Len[3], QTextCursor.KeepAnchor)
-			cursor4.mergeCharFormat(format)
+				cursor4.setPosition(CurPos)
+				cursor4.setPosition(CurPos + Len[3], QTextCursor.KeepAnchor)
+				cursor4.mergeCharFormat(format)
 
-			CurPos += Len[3] + 1
+				CurPos += Len[3] + 1
 
-		text = self.ui.seqEditF4.toPlainText()
-		list = [i.start() for i in re.finditer('-', text)]
-		if len(list) > 0:
-			for pos in list:
-				cursor4.setPosition(pos)
-				cursor4.setPosition(pos + 1, QTextCursor.KeepAnchor)
-				cursor4.mergeCharFormat(format_hyphen)
+			text = self.ui.seqEditF4.toPlainText()
+			list = [i.start() for i in re.finditer('-', text)]
+			if len(list) > 0:
+				for pos in list:
+					cursor4.setPosition(pos)
+					cursor4.setPosition(pos + 1, QTextCursor.KeepAnchor)
+					cursor4.mergeCharFormat(format_hyphen)
 
 class deleteDialog(QtWidgets.QDialog):
 	deleteSignal = pyqtSignal(list)
@@ -8975,8 +8989,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def ImportSeqs(self):
-
-
 		SeqInfoPacket = []
 		filename = openFile(self, 'FASTA')
 		if filename is None:
@@ -9016,7 +9028,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		for item in HA_Read:
 			HAName = item[0]
-			HASeq = item[1]
+			HASeq = item[1].upper()
 
 			# HAAA = Translator(HASeq.upper(), 0)
 			if StopAsking == 'No':
@@ -10337,7 +10349,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				pass
 				#error_code = 1
 				#break
-			EachIn = (SeqName, Sequence, SequenceAA[0])
+			EachIn = (SeqName, SequenceNT, SequenceAA[0])
 			data_list.append(EachIn)
 
 		if subtype1 in Group1 or subtype1 in Group2:
@@ -10617,9 +10629,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 			cursor3.setPosition(CurPos + 9, QTextCursor.KeepAnchor)
 			cursor3.mergeCharFormat(format)
 
-			cursor3.setPosition(CurPos + len_f3 - 9)
-			cursor3.setPosition(CurPos + len_f3, QTextCursor.KeepAnchor)
-			cursor3.mergeCharFormat(format)
+			if num_fragment == 4:
+				cursor3.setPosition(CurPos + len_f3 - 9)
+				cursor3.setPosition(CurPos + len_f3, QTextCursor.KeepAnchor)
+				cursor3.mergeCharFormat(format)
 			CurPos += len_f3 + 1
 
 		text = self.modalessGibsonMSADialog.ui.seqEditF3.toPlainText()
@@ -10653,6 +10666,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 					cursor4.mergeCharFormat(format_hyphen)
 		else:
 			len_f4 = 0
+			self.modalessGibsonMSADialog.ui.tabWidget.removeTab(3)
 
 		# link data
 		self.modalessGibsonMSADialog.fragment_data = fragment_data
