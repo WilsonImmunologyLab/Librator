@@ -3212,6 +3212,18 @@ class LibratorMain(QtWidgets.QMainWindow):
 		horizontalHeader = ['Name', 'Segment', 'Fragment', 'Subtype', 'ID', 'Template', 'AA seq', 'NT seq', 'In stock']
 		self.ui.tableWidget.setHorizontalHeaderLabels(horizontalHeader)
 		self.ui.tableWidget.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+		self.ui.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Fixed)
+		self.ui.tableWidget.horizontalHeader().setSectionResizeMode(1,QtWidgets.QHeaderView.Fixed)
+		self.ui.tableWidget.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Fixed)
+		self.ui.tableWidget.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.Fixed)
+		self.ui.tableWidget.horizontalHeader().setSectionResizeMode(4, QtWidgets.QHeaderView.Fixed)
+		self.ui.tableWidget.horizontalHeader().setSectionResizeMode(8, QtWidgets.QHeaderView.Fixed)
+		self.ui.tableWidget.setColumnWidth(1, 60)
+		self.ui.tableWidget.setColumnWidth(1, 60)
+		self.ui.tableWidget.setColumnWidth(2, 60)
+		self.ui.tableWidget.setColumnWidth(3, 60)
+		self.ui.tableWidget.setColumnWidth(4, 50)
+		self.ui.tableWidget.setColumnWidth(8, 60)
 
 		for row_index in range(num_row):
 			for col_index in range(num_col):
@@ -4025,11 +4037,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			Subtype = self.ui.cboSubtype.currentText()
 			self.ui.cboSubtype_2.setCurrentText(Subtype)
-			if Subtype in Group2 or Subtype in GroupNA or Subtype == 'B' or Subtype == 'Other':
+			if Subtype in Group2:
 				self.ui.btnH1Num.setChecked(False)
 				self.ui.btnH3Num.setChecked(True)
 			elif Subtype in Group1:
 				self.ui.btnH1Num.setChecked(True)
+				self.ui.btnH3Num.setChecked(False)
+			elif Subtype in GroupNA or Subtype == 'B' or Subtype == 'Other':
+				self.ui.btnH1Num.setChecked(False)
+				self.ui.btnH3Num.setChecked(False)
+			else:
+				self.ui.btnH1Num.setChecked(False)
 				self.ui.btnH3Num.setChecked(False)
 
 			self.CheckDecorations()
@@ -4769,16 +4787,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def CheckDecorations(self):
+		Subtype = self.ui.cboSubtype.currentText()
 		Decorations = []
 		Decorations.clear()
 
-
 		if self.ui.btnH3Num.isChecked():
 			Decorations.append('H3Num')
-
 		if self.ui.btnH1Num.isChecked():
 			Decorations.append('H1Num')
-
 		if self.ui.btnMuts.isChecked():
 			Decorations.append('Muts')
 		if self.ui.btnDonReg.isChecked():
@@ -4786,20 +4802,27 @@ class LibratorMain(QtWidgets.QMainWindow):
 		if len(Decorations) == 0:
 			Decorations.append('None')
 
-		ItemsList = self.ui.listWidgetStrainsIn.count()
+		if Subtype in Group2 or Subtype in Group1:
+			ItemsList = self.ui.listWidgetStrainsIn.count()
+			AASeqIs = ''
+			if ItemsList > 0:
+				AASeqIs = self.ui.textAA.toPlainText()
+				HANumbering(AASeqIs)
+			else:
+				return
+			cursor = self.ui.txtAASeq.textCursor()
+			self.Decorate(Decorations, cursor)
+		elif Subtype in GroupNA or Subtype == 'B' or Subtype == 'Other':
+			ItemsList = self.ui.listWidgetStrainsIn.count()
+			AASeqIs = ''
+			if ItemsList > 0:
+				AASeqIs = self.ui.textAA.toPlainText()
+			else:
+				return
+			cursor = self.ui.txtAASeq.textCursor()
+			self.DecorateNoneHA(Decorations, cursor)
 
-		AASeqIs = ''
 
-		if ItemsList > 0:
-			AASeqIs = self.ui.textAA.toPlainText()
-			HANumbering(AASeqIs)
-
-		else:
-			return
-
-		cursor = self.ui.txtAASeq.textCursor()
-
-		self.Decorate(Decorations, cursor)
 
 	@pyqtSlot()
 	def DecorateSingle(self):
@@ -5447,6 +5470,133 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ShowVGenesTextEditLegend(legend_text, legend_color,window_id)
 
 	@pyqtSlot()
+	def DecorateNoneHA(self, Decorations, cursor):
+		MutsOn = False
+		DonRegOn = False
+		AASeq = ''
+		AAColorMap = ''
+		AAPos = ''
+		AAPosColorMap = ''
+
+		for Decoration in Decorations:
+			if Decoration == 'DonReg':
+				DomainsLine = ''
+				DonRegOn = True
+			if Decoration == 'Muts':
+				MutsLine = ''
+				MutsOn = True
+
+		AAKey = 'Sequence elements:  Mutations \n'
+		AAKeyC = '0000000000000000000EEEEEEEEEEE\n'
+
+		PosKey = 'Position:           Donor Region \n'
+		PosKeyC = '0000000000000000000DDDDDDDDDDDDDD\n'
+
+		SeqName = self.ui.txtSeqName2.toPlainText() + '\n'
+		LenSeqName = len(SeqName)
+		AASeq = self.ui.textAA.toPlainText()
+		AAColorMap = '0' * len(AASeq)
+		AAPos = MakeRuler(1, len(AASeq), 5, 'nt')
+		AAPosColorMap = '0' * len(AAPos)
+
+		if DonRegOn == True or MutsOn == True:
+			WhereState = "SeqName = " + '"' + self.ui.txtSeqName2.toPlainText() + '"'
+			SQLStatement = 'SELECT `Donor`, `Mutations` FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			donor_info = DataIn[0][0]
+			mutation_info = DataIn[0][1]
+
+		Sequence = SeqName + '\n'
+		ColorMap = ''
+		ColorMap += '0' * LenSeqName + '\n'
+
+		if MutsOn == True:
+			if mutation_info == "none":
+				pass
+			else:
+				mutation_info = mutation_info.rstrip(',')
+				mutation_info = mutation_info.split(',')
+		if DonRegOn == True:
+			if donor_info == 'none':
+				pass
+
+		for i in range(0, len(AASeq), 60):
+			AASeqSeg = AASeq[i:i + 60]
+			AAColorSeg = AAColorMap[i:i + 60]
+			AAPosSeg = AAPos[i:i + 60]
+			AAPosColorSeg = AAPosColorMap[i:i + 60]
+
+			if DonRegOn == True:
+				if donor_info != 'none':
+					donor_start, donor_end = donor_info.split('-')
+					donor_start = int(donor_start) - 1
+					donor_end = int(donor_end)
+
+					cur_start = i
+					cur_end = i + 60
+					# case 1
+					if cur_start > donor_end:
+						pass
+					# case 2
+					if cur_start <= donor_end and cur_start >= donor_start and donor_end <= cur_end:
+						cur_donor_start = 0
+						cur_donor_end = donor_end - cur_start
+						AAPosColorSeg = 'D' * cur_donor_end + AAPosColorSeg[cur_donor_end:]
+					# case 3
+					if cur_start <= donor_start and cur_end >= donor_end:
+						cur_donor_start = donor_start - cur_start
+						cur_donor_end = donor_end - cur_start
+						AAPosColorSeg = AAPosColorSeg[:cur_donor_start] + 'D' * (cur_donor_end - cur_donor_start) + \
+						                AAPosColorSeg[cur_donor_end:]
+					# case 4
+					if cur_end <= donor_end and cur_end >= donor_start and donor_start >= cur_start:
+						cur_donor_start = donor_start - cur_start
+						cur_donor_end = cur_end - cur_start
+						AAPosColorSeg = AAPosColorSeg[:cur_donor_start] + 'D' * \
+						                (cur_donor_end - cur_donor_start)
+					# case 5
+					if cur_start >= donor_start and cur_end <= donor_end:
+						AAPosColorSeg = 'D' * 60
+					# case 6
+					if donor_start > cur_end:
+						pass
+
+			AAPosSeg = '    Position: ' + AAPosSeg + '\n'
+			AAPosColorSeg = '00000000000000' + AAPosColorSeg + '\n'
+
+			Sequence += AAPosSeg
+			ColorMap += AAPosColorSeg
+
+			if MutsOn == True:
+				cur_start = i
+				cur_end = i + 60
+
+				if mutation_info != "none":
+					for x in mutation_info:
+						mutation_pos = re.findall(r"\d+", x)
+						mutation_pos = int(mutation_pos[0]) - 1
+
+						if mutation_pos in range(cur_start, cur_end):
+							AAColorSeg = list(AAColorSeg)
+							AAColorSeg[mutation_pos - cur_start] = 'E'
+							AAColorSeg = ''.join(AAColorSeg)
+
+			AASeqSeg = '    Sequence: ' + AASeqSeg + '\n\n'
+			AAColorSeg = '00000000000000' + AAColorSeg + '\n\n'
+
+			Sequence += AASeqSeg
+			ColorMap += AAColorSeg
+
+		Sequence += ' \n'
+		ColorMap += '0\n'
+
+		Sequence += AAKey + PosKey
+		ColorMap += AAKeyC + PosKeyC
+		# Add note at begining that HA1 is black andHA2 is grey or
+		self.ui.txtAASeq.setText(Sequence)
+		self.DecorateText(ColorMap, cursor)
+
+	@pyqtSlot()
 	def Decorate(self, Decorations, cursor):
 		AAColorMap = ''
 
@@ -5467,6 +5617,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		for Decoration in Decorations:
 			if Decoration == 'None':
+				continue
 				# Setup the desired format for matches
 				format = QTextCharFormat()
 				format.setForeground(QBrush(QColor("black")))
@@ -5481,21 +5632,15 @@ class LibratorMain(QtWidgets.QMainWindow):
 				for pos in range(1, len(H3Numbering)):
 					residue = H3Numbering[pos]
 					AA = residue[1]
-
 					AASeq += AA
-
 					resPos = str(pos)
-
-
 					tesResNP = pos / 5
 					if resPos == 1:
 						NumLine += str(pos)
 						AAPosColorMap += '0'
-
 					elif tesResNP.is_integer():  # is divisible by 5
 						ResTP = str(pos)
 						LenResP = len(ResTP)
-
 						if NumberingMap['H3HA1end'] > (pos + LenResP + 1):
 							ResDownP = LenResP
 							NumLine += ResTP[LenResP - ResDownP]
@@ -5513,9 +5658,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 						else:
 							NumLine += '.'
 							AAPosColorMap += '0'
-
 					region = residue[0]
-
 					if region == 'HA1':
 						NextC = '0'
 						InHA1 = True
@@ -5531,13 +5674,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 						TrimK = True
 					else:
 						NextC = '0'
-
 					if AA == '*':
 						NextC = '1'
 						StopK = True
-
 					AAColorMap += NextC
-
 				break
 
 			if Decoration == 'H3Num':
@@ -9547,6 +9687,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			horizontalHeader = ['Name', 'Subtype']
 			self.modalessGibsonDialog.ui.selectionTable.setHorizontalHeaderLabels(horizontalHeader)
 			self.modalessGibsonDialog.ui.selectionTable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+			self.modalessGibsonDialog.ui.selectionTable.horizontalHeader().setSectionResizeMode(1,QtWidgets.QHeaderView.Fixed)
+			self.modalessGibsonDialog.ui.selectionTable.setColumnWidth(1,60)
 
 			for row_index in range(num_row):
 				cell_checkBox = QCheckBox()
