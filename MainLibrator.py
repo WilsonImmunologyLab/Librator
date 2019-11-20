@@ -1,7 +1,7 @@
 # Librator by Patrick Wilson
 from PyQt5.QtCore import pyqtSlot, QTimer, QDateTime, Qt, QSortFilterProxyModel, QModelIndex, QEventLoop, pyqtSignal,\
 	QEventLoop, QUrl, QSize
-from PyQt5 import QtWidgets, QtPrintSupport
+from PyQt5 import QtWidgets, QtPrintSupport, QtGui
 from PyQt5.QtWidgets import *
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QCursor
@@ -2873,6 +2873,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.browseFragmentDB.clicked.connect(self.determineFile)
 		self.ui.connectFragmentDB.clicked.connect(self.connectDB)
 		self.ui.FragmentTab.currentChanged['int'].connect(self.clearTable)
+		self.ui.EditLock.clicked.connect(self.ChangeEditMode)
 
 		self.ui.cboRole.last_value = ''
 		self.ui.cboForm.last_value = ''
@@ -2886,6 +2887,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.fig = 0
 		self.html = 0
+
+
 
 		self.ui.HTMLview1 = ResizeWidget(self)
 		self.ui.HTMLview1.id = 1
@@ -2916,6 +2919,18 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.HTMLview1.resizeSignal.connect(self.resizeHTML)
 		self.ui.HTMLview2.resizeSignal.connect(self.resizeHTML)
 		self.ui.HTMLview3.resizeSignal.connect(self.resizeHTML)
+
+	def ChangeEditMode(self):
+		if self.ui.SeqTable.editTriggers() == QtWidgets.QAbstractItemView.NoEditTriggers:
+			unlock_icon = QtGui.QIcon()
+			unlock_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/unlocked.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			self.ui.EditLock.setIcon(unlock_icon)
+			self.ui.SeqTable.setEditTriggers(QtWidgets.QAbstractItemView.DoubleClicked)
+		else:
+			lock_icon = QtGui.QIcon()
+			lock_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/locked.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			self.ui.EditLock.setIcon(lock_icon)
+			self.ui.SeqTable.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
 	def reloadHTML(self):
 		if self.ui.HTMLview3.h != 0:
@@ -3991,6 +4006,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global DBFilename
 		global temp_folder
 		global working_prefix
+		global MoveNotChange
+
 		AlignIn = []
 		EachIn = ()
 
@@ -4040,6 +4057,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				return
 
 			Subtype = self.ui.cboSubtype.currentText()
+
+
 			self.ui.cboSubtype_2.setCurrentText(Subtype)
 			if Subtype in Group2:
 				self.ui.btnH1Num.setChecked(False)
@@ -4055,6 +4074,53 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.btnH3Num.setChecked(False)
 
 			self.CheckDecorations()
+
+		elif self.ui.tabWidget.currentIndex() == 3:
+			if self.ui.SeqTable.columnCount() > 0:
+				self.ui.SeqTable.itemChanged.disconnect(self.EditTableItem)
+			self.ui.SeqTable.setColumnCount(0)
+			self.ui.SeqTable.setRowCount(0)
+
+			if DBFilename != '' and DBFilename != 'none':
+				SQLStatement = 'SELECT * FROM LibDB ORDER BY SeqName DESC'
+				DataIn = RunSQL(DBFilename, SQLStatement)
+
+				num_row = len(DataIn)
+				num_col = 13
+				self.ui.SeqTable.setRowCount(num_row)
+				self.ui.SeqTable.setColumnCount(num_col)
+
+				horizontalHeader = ['SeqName', 'Sequence', 'SeqLen', 'Subtype', 'Form', 'VFrom', 'VTo', 'Active',
+				                    'Role','Donor','Mutations','ID','Base']
+				self.ui.SeqTable.setHorizontalHeaderLabels(horizontalHeader)
+				self.ui.SeqTable.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Fixed)
+				self.ui.SeqTable.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.Fixed)
+				self.ui.SeqTable.horizontalHeader().setSectionResizeMode(4, QtWidgets.QHeaderView.Fixed)
+				self.ui.SeqTable.horizontalHeader().setSectionResizeMode(5, QtWidgets.QHeaderView.Fixed)
+				self.ui.SeqTable.horizontalHeader().setSectionResizeMode(6, QtWidgets.QHeaderView.Fixed)
+				self.ui.SeqTable.horizontalHeader().setSectionResizeMode(7, QtWidgets.QHeaderView.Fixed)
+				self.ui.SeqTable.horizontalHeader().setSectionResizeMode(8, QtWidgets.QHeaderView.Fixed)
+				self.ui.SeqTable.horizontalHeader().setSectionResizeMode(11, QtWidgets.QHeaderView.Fixed)
+				self.ui.SeqTable.setColumnWidth(2, 60)
+				self.ui.SeqTable.setColumnWidth(3, 80)
+				self.ui.SeqTable.setColumnWidth(4, 60)
+				self.ui.SeqTable.setColumnWidth(5, 60)
+				self.ui.SeqTable.setColumnWidth(6, 50)
+				self.ui.SeqTable.setColumnWidth(7, 60)
+				self.ui.SeqTable.setColumnWidth(8, 100)
+				self.ui.SeqTable.setColumnWidth(11, 40)
+
+				for row_index in range(num_row):
+					for col_index in range(num_col):
+						unit = QTableWidgetItem(DataIn[row_index][col_index])
+						unit.last_name = DataIn[row_index][col_index]
+						self.ui.SeqTable.setItem(row_index, col_index,unit)
+
+				# show sort indicator
+				self.ui.SeqTable.horizontalHeader().setSortIndicatorShown(True)
+				# connect sort indicator to slot function
+				self.ui.SeqTable.horizontalHeader().sectionClicked.connect(self.sortTable)
+				self.ui.SeqTable.itemChanged.connect(self.EditTableItem)
 
 		elif self.ui.tabWidget.currentIndex() == 4:
 			if DBFilename == 'none':
@@ -4135,7 +4201,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 				gridlayout_fig3.addWidget(self.F, 2, 0, 10, 0)
 
 				self.fig = 1
-
 		elif self.ui.tabWidget.currentIndex() == 5:
 			if DBFilename == 'none':
 				return
@@ -4296,6 +4361,124 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			self.ui.dbpath.setText(fragmentdb_path)
 
+	def EditTableItem(self,item):
+		global MoveNotChange
+		if MoveNotChange:
+			return
+
+		row = item.row()
+		col = item.column()
+		CurVal = item.text()
+
+		horizontalHeader = ['SeqName', 'Sequence', 'SeqLen', 'Subtype', 'Form', 'VFrom', 'VTo', 'Active',
+		                    'Role', 'Donor', 'Mutations', 'ID', 'Base']
+		col_name = horizontalHeader[col]
+		SeqName = self.ui.SeqTable.item(row, 0).text()
+		if col == 0:    #  update sequence name
+			SeqName = item.last_name
+			try:
+				self.UpdateSeq(SeqName, CurVal, col_name)
+				item.last_name = CurVal
+			except:
+				MoveNotChange = True
+				self.ui.SeqTable.item(row,col).setText(SeqName)
+				MoveNotChange = False
+				QMessageBox.warning(self, 'Warning',
+				                    'The name:\n' + CurVal + '\nhas been taken! Please choose another name!',
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+		elif col == 3:
+			sub_type_list = ['H1','H2','H3','H4','H5','H6','H7','H8','H9','H10','H11','H12','H13','H14','H15',
+			                 'H16','H17','H18','N1','N2','N3','N4','N5','N6','N7','N8','N9','N10','N11','B','Other']
+			if CurVal in sub_type_list:
+				self.UpdateSeq(SeqName, CurVal, col_name)
+				item.last_name = CurVal
+			else:
+				MoveNotChange = True
+				item.setText(item.last_name)
+				MoveNotChange = False
+				QMessageBox.warning(self, 'Warning',
+				                    'The subtype:\n' + CurVal + '\nis not a valid subtype!\n' + 'Please choose from \n' + '\n'.join(sub_type_list),
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+
+		elif col == 4:
+			form_list = ['Full HA', 'Probe HA', 'Full NA', 'Probe NA', 'Other']
+			if CurVal in form_list:
+				self.UpdateSeq(SeqName, CurVal, col_name)
+				item.last_name = CurVal
+			else:
+				MoveNotChange = True
+				item.setText(item.last_name)
+				MoveNotChange = False
+				QMessageBox.warning(self, 'Warning',
+				                    'The Form:\n' + CurVal + '\nis not a valid Form!\n' + 'Please choose from \n' + '\n'.join(form_list),
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+		elif col == 5:
+			try:
+				CurVal = int(CurVal)
+				if CurVal > 0:
+					self.UpdateSeq(SeqName, str(CurVal), col_name)
+					item.last_name = str(CurVal)
+			except:
+				MoveNotChange = True
+				item.setText(item.last_name)
+				MoveNotChange = False
+				QMessageBox.warning(self, 'Warning',
+				                    'The value:\n' + str(CurVal) + '\nis not a valid int number!',
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+		elif col == 6:
+			try:
+				CurVal = int(CurVal)
+				if CurVal > 0:
+					self.UpdateSeq(SeqName, str(CurVal), col_name)
+					item.last_name = str(CurVal)
+			except:
+				MoveNotChange = True
+				item.setText(item.last_name)
+				MoveNotChange = False
+				QMessageBox.warning(self, 'Warning',
+				                    'The value:\n' + str(CurVal) + '\nis not a valid int number!',
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+		elif col == 7:
+			active_list = ['False', 'True']
+			if CurVal in active_list:
+				self.UpdateSeq(SeqName, CurVal, col_name)
+				item.last_name = CurVal
+			else:
+				MoveNotChange = True
+				item.setText(item.last_name)
+				MoveNotChange = False
+				QMessageBox.warning(self, 'Warning',
+				                    'The value:\n' + CurVal + '\nis not valid!\n The value only can be True or False!',
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+		elif col == 8:
+			role_list = ['Unassigned', 'Generated','Reference']
+			if CurVal in role_list:
+				self.UpdateSeq(SeqName, CurVal, col_name)
+				item.last_name = CurVal
+			elif CurVal == 'BaseSeq':
+				MoveNotChange = True
+				item.setText(item.last_name)
+				MoveNotChange = False
+				QMessageBox.warning(self, 'Warning',
+				                    'You can not determine Base Sequence here! Please use Main tab!',
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+			else:
+				MoveNotChange = True
+				item.setText(item.last_name)
+				MoveNotChange = False
+				QMessageBox.warning(self, 'Warning',
+				                    'The value:\n' + CurVal + '\nis not valid!\n The value only can be Unassigned, Generated or Reference!',
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+		else:
+			self.UpdateSeq(SeqName, CurVal, col_name)
 
 	def FigChange(self):
 		sip.delete(self.F)
