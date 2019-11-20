@@ -14,7 +14,7 @@
    <string>Gibson Clone Fragments Design</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_6">
-   <item row="11" column="0" colspan="3">
+   <item row="12" column="0" colspan="3">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>Subtype</string>
@@ -47,21 +47,14 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Your selections:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="2">
+   <item row="11" column="2">
     <widget class="QPushButton" name="browse">
      <property name="text">
       <string>Browse</string>
      </property>
     </widget>
    </item>
-   <item row="13" column="0" colspan="3">
+   <item row="14" column="0" colspan="3">
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="5">
       <widget class="QLineEdit" name="F2_start">
@@ -177,27 +170,27 @@
      </item>
     </layout>
    </item>
-   <item row="10" column="0" colspan="2">
+   <item row="11" column="0" colspan="2">
     <widget class="QLineEdit" name="outpath"/>
    </item>
-   <item row="3" column="0">
+   <item row="4" column="0">
     <widget class="QLabel" name="label_3">
      <property name="text">
       <string>Joint region for upstream end  (Gibson cloning into the vector):</string>
      </property>
     </widget>
    </item>
-   <item row="9" column="0">
+   <item row="10" column="0">
     <widget class="QLabel" name="label_4">
      <property name="text">
       <string>Gibson clone fragments files output path:</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="0" colspan="3">
+   <item row="3" column="0" colspan="3">
     <widget class="QTableWidget" name="selectionTable"/>
    </item>
-   <item row="12" column="0" colspan="3">
+   <item row="13" column="0" colspan="3">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
       <string>Joint Region Design</string>
@@ -235,14 +228,14 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="0">
+   <item row="8" column="0">
     <widget class="QLabel" name="label_6">
      <property name="text">
       <string>Fragments Database:</string>
      </property>
     </widget>
    </item>
-   <item row="14" column="1" colspan="2">
+   <item row="15" column="1" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="yes">
@@ -263,14 +256,14 @@
      </item>
     </layout>
    </item>
-   <item row="5" column="0">
+   <item row="6" column="0">
     <widget class="QLabel" name="label_5">
      <property name="text">
       <string>Joint region for 3' end  (instead of transmembrane region):</string>
      </property>
     </widget>
    </item>
-   <item row="6" column="0" colspan="3">
+   <item row="7" column="0" colspan="3">
     <widget class="QTextEdit" name="jointDOWN">
      <property name="maximumSize">
       <size>
@@ -280,7 +273,14 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="0" colspan="3">
+   <item row="1" column="0">
+    <widget class="QCheckBox" name="checkBoxAll">
+     <property name="text">
+      <string>Select All</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0" colspan="3">
     <widget class="QTabWidget" name="tabWidget">
      <property name="maximumSize">
       <size>
@@ -374,7 +374,7 @@
      </widget>
     </widget>
    </item>
-   <item row="4" column="0" colspan="3">
+   <item row="5" column="0" colspan="3">
     <widget class="QTextEdit" name="jointUP">
      <property name="maximumSize">
       <size>

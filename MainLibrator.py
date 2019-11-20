@@ -1967,6 +1967,15 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 		self.ui.radioButtonNA.clicked.connect(self.setJoint)
 		self.ui.radioButtonDefault.clicked.connect(self.setJoint)
 		self.ui.radioButtonUser.clicked.connect(self.setJoint)
+		self.ui.checkBoxAll.stateChanged.connect(self.checkAll)
+	def checkAll(self):
+		rows = self.ui.selectionTable.rowCount()
+		if self.ui.checkBoxAll.isChecked():
+			for row in range(rows):
+				self.ui.selectionTable.cellWidget(row,0).setChecked(True)
+		else:
+			for row in range(rows):
+				self.ui.selectionTable.cellWidget(row,0).setChecked(False)
 
 	def browse(self):  # browse and select path
 		global temp_folder
@@ -11617,7 +11626,6 @@ def HANumbering(AASeq):
 	os.remove(SavedFile)
 	os.remove(workingfilename)
 
-
 def ReadFASTA(outfilename):
 	ReadFile = []
 	# ReadFile.clear
@@ -11665,7 +11673,6 @@ def SequenceCheck(sequence, type):
 		Msg = ','.join(strange_residues)
 
 	return Msg
-
 
 def Translator(Sequence, frame):
         # Translate sequence into a list of codons
