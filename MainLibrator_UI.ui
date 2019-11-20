@@ -495,7 +495,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-307</y>
+             <y>0</y>
              <width>928</width>
              <height>1144</height>
             </rect>
@@ -868,43 +868,10 @@
                <enum>QFrame::Raised</enum>
               </property>
               <layout class="QGridLayout" name="gridLayout_5">
-               <item row="2" column="0">
-                <widget class="QListWidget" name="listWidgetStrains">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>150</height>
-                  </size>
-                 </property>
-                 <property name="dragDropMode">
-                  <enum>QAbstractItemView::DragOnly</enum>
-                 </property>
-                 <property name="defaultDropAction">
-                  <enum>Qt::IgnoreAction</enum>
-                 </property>
-                 <property name="selectionMode">
-                  <enum>QAbstractItemView::ExtendedSelection</enum>
-                 </property>
-                </widget>
-               </item>
                <item row="0" column="2">
                 <widget class="QLabel" name="label_29">
                  <property name="text">
                   <string>Active sequences:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QPushButton" name="btnImport">
-                 <property name="text">
-                  <string>Import Sequences</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="2">
-                <widget class="QPushButton" name="btnClearAll">
-                 <property name="text">
-                  <string>Reset active sequence data</string>
                  </property>
                 </widget>
                </item>
@@ -939,6 +906,46 @@
                  </property>
                 </widget>
                </item>
+               <item row="2" column="0">
+                <widget class="QListWidget" name="listWidgetStrains">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>150</height>
+                  </size>
+                 </property>
+                 <property name="dragDropMode">
+                  <enum>QAbstractItemView::DragOnly</enum>
+                 </property>
+                 <property name="defaultDropAction">
+                  <enum>Qt::IgnoreAction</enum>
+                 </property>
+                 <property name="selectionMode">
+                  <enum>QAbstractItemView::ExtendedSelection</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="2">
+                <widget class="QPushButton" name="btnClearAll">
+                 <property name="text">
+                  <string>Reset active sequence data</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QPushButton" name="btnDelete">
+                 <property name="text">
+                  <string>Delete</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QPushButton" name="btnImport">
+                 <property name="text">
+                  <string>Import Sequences</string>
+                 </property>
+                </widget>
+               </item>
                <item row="0" column="0">
                 <widget class="QLabel" name="label_28">
                  <property name="text">
@@ -970,13 +977,6 @@
                    </widget>
                   </item>
                  </layout>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QPushButton" name="btnDelete">
-                 <property name="text">
-                  <string>Delete</string>
-                 </property>
                 </widget>
                </item>
               </layout>
@@ -2602,6 +2602,9 @@
              <property name="editTriggers">
               <set>QAbstractItemView::NoEditTriggers</set>
              </property>
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>50</number>
+             </attribute>
             </widget>
            </item>
           </layout>

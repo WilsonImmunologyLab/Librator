@@ -2874,6 +2874,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.connectFragmentDB.clicked.connect(self.connectDB)
 		self.ui.FragmentTab.currentChanged['int'].connect(self.clearTable)
 
+		self.ui.cboRole.last_value = ''
+		self.ui.cboForm.last_value = ''
+		self.ui.cboSubtype.last_value = ''
+
 		self.UpdateRecent()
 		self.modalessMutationDialog = None
 		self.modalessSeqEditDialog = None
@@ -8173,22 +8177,110 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def FormChanged(self):
-
-		CurName = self.ui.txtName.toPlainText()
+		global MoveNotChange
+		if MoveNotChange:
+			return
+		selections = self.ui.listWidgetStrainsIn.selectedItems()
+		name_selections = []
+		for item in selections:
+			name_selections.append(item.text())
 		CurrVal = self.ui.cboForm.currentText()
 
-		self.UpdateSeq(CurName, CurrVal,'Form')
+		question = 'You will change Form information to: ' + CurrVal + '\nfor the following sequences:\n\n'
+		question += '\n'.join(name_selections)
+		question += '\n\nAre you sure?'
+		buttons = 'YN'
+		answer = questionMessage(self, question, buttons)
+		if answer == 'Yes':
+			for seq in name_selections:
+				self.UpdateSeq(seq, CurrVal, 'Form')
+				self.ui.cboForm.last_value = CurrVal
+		else:
+			MoveNotChange = True
+			self.ui.cboForm.setCurrentText(self.ui.cboForm.last_value)
+			MoveNotChange = False
+			return
 
 	@pyqtSlot()
 	def SubTypeChanged(self):
-
-		CurName = self.ui.txtName.toPlainText()
+		global MoveNotChange
+		if MoveNotChange:
+			return
+		selections = self.ui.listWidgetStrainsIn.selectedItems()
+		name_selections = []
+		for item in selections:
+			name_selections.append(item.text())
 		CurrVal = self.ui.cboSubtype.currentText()
 
-		self.UpdateSeq(CurName, CurrVal, 'SubType')
+		question = 'You will change SubType information to: ' + CurrVal + '\nfor the following sequences:\n\n'
+		question += '\n'.join(name_selections)
+		question += '\n\nAre you sure?'
+		buttons = 'YN'
+		answer = questionMessage(self, question, buttons)
+		if answer == 'Yes':
+			for seq in name_selections:
+				self.UpdateSeq(seq, CurrVal, 'SubType')
+				self.ui.cboSubtype.last_value = CurrVal
+		else:
+			MoveNotChange = True
+			self.ui.cboSubtype.setCurrentText(self.ui.cboSubtype.last_value)
+			MoveNotChange = False
+			return
 
+	@pyqtSlot()
+	def RoleChanged(self):
+		global BaseSeq
+		global MoveNotChange
+		if MoveNotChange:
+			return
 
-
+		selections = self.ui.listWidgetStrainsIn.selectedItems()
+		name_selections = []
+		for item in selections:
+			name_selections.append(item.text())
+		CurrVal = self.ui.cboRole.currentText()
+		CurName = self.ui.txtName.toPlainText()
+		if CurrVal == 'BaseSeq':
+			if len(name_selections) > 1:
+				Msg = 'You can not set multiple sequences as Base Sequence because it is unique!!'
+				QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+				return
+			if BaseSeq != CurName and BaseSeq != '':
+				question = BaseSeq + ':\n\n is already denoted as the Base sequence and there can only be one.\n' \
+				                     ' Reassign the Base sequence to:\n\n' + CurName + '?'
+				buttons = 'YN'
+				answer = questionMessage(self, question, buttons)
+				if answer == 'Yes':
+					self.UpdateSeq(BaseSeq, 'Unassigned', 'Role')
+					BaseSeq = CurName
+					self.UpdateSeq(BaseSeq, 'BaseSeq', 'Role')
+					self.ui.lblBaseName.setText(BaseSeq)
+					self.ui.cboRole.last_value = BaseSeq
+				else:
+					MoveNotChange = True
+					self.ui.cboRole.setCurrentText(self.ui.cboRole.last_value)
+					MoveNotChange = False
+					return
+			else:
+				BaseSeq = CurName
+				self.UpdateSeq(BaseSeq, 'BaseSeq', 'Role')
+				self.ui.lblBaseName.setText(BaseSeq)
+		# self.ui.cboRole.setEnabled(False)
+		else:
+			question = 'You will change Role information to: ' + CurrVal + '\nfor the following sequences:\n\n'
+			question += '\n'.join(name_selections)
+			question += '\n\nAre you sure?'
+			buttons = 'YN'
+			answer = questionMessage(self, question, buttons)
+			if answer == 'Yes':
+				for seq in name_selections:
+					self.UpdateSeq(seq, CurrVal, 'Role')
+					self.ui.cboRole.last_value = self.ui.cboRole.currentText()
+			else:
+				MoveNotChange = True
+				self.ui.cboRole.setCurrentText(self.ui.cboRole.last_value)
+				MoveNotChange = False
+				return
 
 	@pyqtSlot()
 	def SetActive(self,IsActive):
@@ -8200,8 +8292,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			CurrVal = False
 
 		self.UpdateSeq(CurName, CurrVal, 'Active')
-
-
 
 
 	@pyqtSlot()
@@ -8349,38 +8439,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			QMessageBox.warning(self, 'Warning', 'Modifying Mutation info is prohibited! \nIf you '
 											 'believe the information is wrong, \nplease re-generate'
 											 ' new sequence with correct mutation!', QMessageBox.Ok, QMessageBox.Ok)
-
-
-	@pyqtSlot()
-	def RoleChanged(self):
-		global BaseSeq
-		global DataIs
-		NoChange = False
-		answer  = 'No'
-		CurName = self.ui.txtName.toPlainText()
-		CurrVal = self.ui.cboRole.currentText()
-		if CurrVal == 'BaseSeq':
-			if BaseSeq != CurName and BaseSeq != '':
-				question = BaseSeq + ':\n\n is already denoted as the Base sequence and there can only be one.\n' \
-									 ' Reassign the Base sequence to:\n\n' + CurName + '?'
-				buttons = 'YN'
-				answer = questionMessage(self, question, buttons)
-				if answer == 'Yes':
-					self.UpdateSeq(BaseSeq, 'Unassigned', 'Role')
-					BaseSeq = CurName
-					self.UpdateSeq(BaseSeq, 'BaseSeq', 'Role')
-					self.ui.lblBaseName.setText(BaseSeq)
-				else:
-					NoChange = True
-			else:
-				BaseSeq = CurName
-				self.UpdateSeq(BaseSeq, 'BaseSeq', 'Role')
-				self.ui.lblBaseName.setText(BaseSeq)
-		# self.ui.cboRole.setEnabled(False)
-		else:
-			if NoChange == False:
-				self.UpdateSeq(CurName, CurrVal, 'Role')
-				#self.UpdateSeq(CurName, "Donor", 'Role')
 
 
 	@pyqtSlot()
@@ -8585,7 +8643,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 				new_records.append(x[0])
 			self.ui.listWidgetStrainsIn.addItems(new_records)
 
-
 			# check if the database have base sequence
 			SQLStatement = 'SELECT * FROM LibDB WHERE `Role` = "BaseSeq"'
 			data_fetch = RunSQL(DBFilename, SQLStatement)
@@ -8779,9 +8836,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def ListItemChanged(self):
-		# self.ui.listWidgetStrainsIn.event
 		global DataIs
-		# self.ui.cboActive.clear()
 		listItems = self.ui.listWidgetStrainsIn.selectedItems()
 		if len(listItems) == 0:
 			return
@@ -8836,11 +8891,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 				CurIndex = 0
 
 			self.ui.cboRole.setCurrentIndex(CurIndex)
+			self.ui.cboRole.last_value = Role
 
 
 			SubType = item[3]
 			CurIndex = subtype_switch(SubType)
 			self.ui.cboSubtype.setCurrentIndex(CurIndex)
+			self.ui.cboSubtype.last_value = self.ui.cboSubtype.currentText()
 
 			Form = item[4]
 			if Form == 'Full HA':
@@ -8856,6 +8913,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 
 			self.ui.cboForm.setCurrentIndex(CurIndex)
+			self.ui.cboForm.last_value = Form
 			self.ui.txtDonorRegions.setText(item[9])
 
 			self.ui.txtInsert_Base.setText(item[10])
@@ -9278,6 +9336,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				pml.write(text)
 			else:
 				QMessageBox.warning(self, 'Warning', 'We only support HA structure now!', QMessageBox.Ok, QMessageBox.Ok)
+				return
 
 			# highlight mutations in red on the 3D structure
 			if mutation != "none":
