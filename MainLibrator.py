@@ -2863,6 +2863,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.setupUi(self)
 
 		self.ui.listWidgetStrainsIn.itemClicked['QListWidgetItem*'].connect(self.ListItemChanged)
+		self.ui.listWidgetStrainsIn.itemDoubleClicked.connect(self.removeSel)
 		self.ui.listWidgetStrainsIn.itemSelectionChanged.connect(self.ListItemChanged)
 		self.ui.cboRole.currentTextChanged['QString'].connect(self.RoleChanged)
 		self.ui.cboForm.currentTextChanged['QString'].connect(self.FormChanged)
@@ -8419,6 +8420,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			MoveNotChange = False
 			return
 
+		self.rebuildTree()
+
 	@pyqtSlot()
 	def RoleChanged(self):
 		global BaseSeq
@@ -8816,16 +8819,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.PopulateCombos()
 			self.UpdateRecentFilelist(DBFilename)
 
-			# refresh the list - all sequence list
-			self.ui.listWidgetStrains.clear()
-			self.ui.listWidgetStrainsIn.clear()
-			SQLStatement = 'SELECT `SeqName` FROM LibDB'
-			records = RunSQL(DBFilename, SQLStatement)
-			new_records = []
-			for x in records:
-				new_records.append(x[0])
-			self.ui.listWidgetStrains.addItems(new_records)
-
 			# refresh the list - active sequence list
 			self.ui.listWidgetStrainsIn.clear()
 			SQLStatement = 'SELECT `SeqName` FROM LibDB WHERE Active = "True"'
@@ -8852,6 +8845,121 @@ class LibratorMain(QtWidgets.QMainWindow):
 			else:
 				BaseSeq = ''
 				self.ui.lblBaseName.setText('Sequence Name')
+
+			self.rebuildTree()
+
+	def rebuildTree(self):
+		# test tree
+		self.ui.treeWidget.clear()
+		self.ui.treeWidget.setColumnCount(1)
+		self.ui.treeWidget.setHeaderHidden(True)
+		root = QtWidgets.QTreeWidgetItem(self.ui.treeWidget)
+		root.setText(0, 'All Sequences')
+
+		SQLStatement = 'SELECT `SeqName`,`SubType`,`Active` FROM LibDB WHERE `Role` = "BaseSeq"'
+		data_fetch = RunSQL(DBFilename, SQLStatement)
+		if len(data_fetch) > 0:
+			subtype = data_fetch[0][1]
+			cur_name = data_fetch[0][0]
+			base_node = QtWidgets.QTreeWidgetItem(root)
+			base_node.setText(0, 'Base Sequence')
+			base_node.setFlags(base_node.flags() | Qt.ItemIsUserCheckable)
+
+			cur_node = QtWidgets.QTreeWidgetItem(base_node)
+			cur_node.setText(0, cur_name)
+			seq_icon = QtGui.QIcon()
+			if subtype[0] == 'H':
+				seq_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/HA.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			elif subtype[0] == 'N':
+				seq_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/NA.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			else:
+				seq_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/Seq.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			cur_node.setIcon(0, seq_icon)
+			cur_node.setFlags(cur_node.flags() | Qt.ItemIsUserCheckable)
+			if data_fetch[0][2] == 'True':
+				cur_node.setCheckState(0, Qt.Checked)
+				base_node.setCheckState(0, Qt.Checked)
+			else:
+				cur_node.setCheckState(0, Qt.Unchecked)
+				base_node.setCheckState(0, Qt.Unchecked)
+
+		SQLStatement = 'SELECT `SeqName`,`SubType`,`Active` FROM LibDB WHERE `Role` <> "BaseSeq" ORDER BY `SubType` ASC'
+		records = RunSQL(DBFilename, SQLStatement)
+		subtype = ''
+		subtype_node = ''
+		for record in records:
+			cur_name = record[0]
+			cur_subtype = record[1]
+			if cur_subtype != subtype:
+				subtype_node = QtWidgets.QTreeWidgetItem(root)
+				subtype_node.setText(0, cur_subtype)
+				subtype_node.setFlags(subtype_node.flags() | Qt.ItemIsUserCheckable)
+				subtype_node.setCheckState(0, Qt.Unchecked)
+				subtype = cur_subtype
+				seq_icon = QtGui.QIcon()
+				if subtype[0] == 'H':
+					seq_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/HA.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+				elif subtype[0] == 'N':
+					seq_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/NA.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+				else:
+					seq_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/Seq.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+			cur_node = QtWidgets.QTreeWidgetItem(subtype_node)
+			cur_node.setText(0, cur_name)
+			cur_node.setIcon(0, seq_icon)
+			cur_node.setFlags(cur_node.flags() | Qt.ItemIsUserCheckable)
+			if record[2] == 'True':
+				cur_node.setCheckState(0, Qt.Checked)
+			else:
+				cur_node.setCheckState(0, Qt.Unchecked)
+
+		self.ui.treeWidget.itemClicked['QTreeWidgetItem*', 'int'].connect(self.TreeItemClicked)
+		self.ui.treeWidget.expandAll()
+
+
+	def TreeItemClicked(self, item, column):
+		if item.checkState(0):
+			if item.childCount() > 0:
+				for i in range(item.childCount()):
+					cur_child = item.child(i)
+					cur_child.setCheckState(0, Qt.Checked)
+		else:
+			if item.childCount() > 0:
+				for i in range(item.childCount()):
+					cur_child = item.child(i)
+					cur_child.setCheckState(0, Qt.Unchecked)
+		self.updateSelection()
+
+	def updateSelection(self):
+		global DBFilename
+		root = self.ui.treeWidget.invisibleRootItem()
+		root = root.child(0)
+
+		self.ui.listWidgetStrainsIn.clear()
+		selections = []
+		unselections = []
+
+		num_subtype = root.childCount()
+		for i in range(num_subtype):
+			node_subtype = root.child(i)
+			num_seq = node_subtype.childCount()
+			for j in range(num_seq):
+				node_seq = node_subtype.child(j)
+				if node_seq.checkState(0):
+					selections.append(node_seq.text(0))
+				else:
+					unselections.append(node_seq.text(0))
+
+		# update MySQL
+		Where = '("' + '","'.join(selections) + '")'
+		SQLStatement = 'UPDATE LibDB SET `Active` = "True" WHERE `SeqName` in ' + Where
+		RunInsertion(DBFilename, SQLStatement)
+
+		Where = '("' + '","'.join(unselections) + '")'
+		SQLStatement = 'UPDATE LibDB SET `Active` = "False" WHERE `SeqName` in ' + Where
+		RunInsertion(DBFilename, SQLStatement)
+		# updata interface
+		self.ui.listWidgetStrainsIn.addItems(selections)
 
 
 	@pyqtSlot()
@@ -9244,19 +9352,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def removeSel(self):
-		# self.ui.listWidgetStrainsIn.setCurrentRow(-1)
-
 		listRow = self.ui.listWidgetStrainsIn.currentRow()
 		listItems = self.ui.listWidgetStrainsIn.selectedItems()
 		for item in listItems:
 			eachItemIs = item.text()
 			self.UpdateSeq(eachItemIs,'False','Active')
-
 		if listRow>-1:
 			self.ui.listWidgetStrainsIn.takeItem(listRow)
-
-		# if not listRow: return
-		# self.ui.listWidgetStrainsIn.takeItem(listRow)
+		self.rebuildTree()
 
 
 
@@ -9269,21 +9372,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		listItems = self.ui.listWidgetStrainsIn.selectedItems()
 		for item in listItems:
 			eachItemIs = item.text()
-
 			self.UpdateSeq(eachItemIs,'False','Active')
-
-
 		self.ui.listWidgetStrainsIn.clear()
-
-
-
-		# itemIs  = self.ui.listWidgetStrainsIn.changeEvent()
-
-
-		# self.ui.listWidgetStrainsIn.takeItem(itemIndex)
-			# ItemInd = self.listWidgetStrainsIn.row(item)
-			# textis  = item.
-			# self.ui.listWidgetStrainsIn.sel
+		self.rebuildTree()
 
 	@pyqtSlot()
 	def on_listWidgetStrainsIn_changeEvent(self):
@@ -9474,12 +9565,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 	def PopulateCombos(self):
 		DataIs = RunSQL(DBFilename, 'None')
 		global BaseSeq
+
+		# refresh left part
+		self.rebuildTree()
+		# refresh right part
 		self.ui.listWidgetStrainsIn.clear()
-		self.ui.listWidgetStrains.clear()
 		for item in DataIs:
 			SeqName = item[0]
-			# self.ui.cmbListBase.addItem(SeqName)
-			self.ui.listWidgetStrains.addItem(SeqName)
 			if item[7] == 'True':
 				self.ui.listWidgetStrainsIn.addItem(SeqName)
 			if item[8] == 'Base':
@@ -9751,7 +9843,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				else:
 					# add new sequence information into listWidgetStrainsIn
 					self.ui.listWidgetStrainsIn.addItem(seq_name)
-					self.ui.listWidgetStrains.addItem(seq_name)
+					self.rebuildTree()
+
 					if self.modalessMutationDialog != None:
 						self.modalessMutationDialog.close()
 			elif mode == "H1H3pos":
@@ -9896,8 +9989,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			donor_list = []
 			for i in range(donor_num):
 				donor_list.append(self.ui.listWidgetStrainsIn.item(i).text())
-			for i in range(self.ui.listWidgetStrains.count()):
-				donor_list.append(self.ui.listWidgetStrains.item(i).text())
+			#for i in range(self.ui.listWidgetStrains.count()):
+			#	donor_list.append(self.ui.listWidgetStrains.item(i).text())
 
 			self.modalessMutationDialog.active_sequence = donor_list
 			self.modalessMutationDialog.ui.SeqName.setText(self.ui.txtName.toPlainText())
@@ -10000,12 +10093,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessUpdateDialog.close()
 
 	def open_delete_dialog(self):
-		delete = self.ui.listWidgetStrains.selectedItems()
-		delete1 = self.ui.listWidgetStrainsIn.selectedItems()
-		if len(delete) == 0 and len(delete1) == 0:
-			return
-		elif len(delete) == 0 and len(delete1) > 0:
-			delete = delete1
+		delete = self.ui.listWidgetStrainsIn.selectedItems()
 
 		list = []
 		for item in delete:
@@ -10033,13 +10121,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		deleterecords(DBFilename, SQLStatement)
 
 		# refresh the list - all sequence list
-		self.ui.listWidgetStrains.clear()
-		SQLStatement = 'SELECT `SeqName` FROM LibDB'
-		records = RunSQL(DBFilename, SQLStatement)
-		new_records = []
-		for x in records:
-			new_records.append(x[0])
-		self.ui.listWidgetStrains.addItems(new_records)
+		self.rebuildTree()
 
 		# refresh the list - active sequence list
 		self.ui.listWidgetStrainsIn.clear()
@@ -10257,7 +10339,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		else:
 			# add new sequence information into listWidgetStrainsIn
 			self.ui.listWidgetStrainsIn.addItem(seq_name)
-			self.ui.listWidgetStrains.addItem(seq_name)
+			self.rebuildTree()
 			if self.modalessFusionDialog != None:
 				self.modalessFusionDialog.close()
 
@@ -10946,11 +11028,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 				nt_fragment_aa = Translator(nt_fragment,0)
 				nt_fragment_aa = nt_fragment_aa[0]
 				if nt_fragment_aa != fragment1:
-					Msg = 'AA seq for current fragment is:\n'
-					Msg += fragment1 + '\n'
-					Msg += 'AA seq translated from current NT fragment is:\n'
-					Msg += nt_fragment_aa + '\n'
-					Msg += 'The two sequences do not match!'
+					Msg = 'AA seq for current fragment is:\n\n'
+					Msg += fragment1 + '\n\n'
+					Msg += 'AA seq translated from current NT fragment is:\n\n'
+					Msg += nt_fragment_aa + '\n\n'
+					Msg += 'The two sequences do not match!\n'
 					Msg += 'Please chekc your original NT sequences to make sure there are no strange nucleotide!'
 					QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 					#return

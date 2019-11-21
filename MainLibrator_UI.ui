@@ -7,7 +7,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>999</width>
+    <width>1104</width>
     <height>1175</height>
    </rect>
   </property>
@@ -496,12 +496,524 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>928</width>
-             <height>1144</height>
+             <width>1033</width>
+             <height>1256</height>
             </rect>
            </property>
-           <layout class="QGridLayout" name="gridLayout_14">
-            <item row="5" column="0">
+           <layout class="QGridLayout" name="gridLayout_6">
+            <item row="0" column="0">
+             <widget class="QFrame" name="frame_6">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::NoFrame</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_5">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_28">
+                 <property name="text">
+                  <string>Available sequences:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLabel" name="label_29">
+                 <property name="text">
+                  <string>Active sequences:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QTreeWidget" name="treeWidget">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>300</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>15</pointsize>
+                  </font>
+                 </property>
+                 <property name="headerHidden">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QListWidget" name="listWidgetStrainsIn">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>300</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>15</pointsize>
+                  </font>
+                 </property>
+                 <property name="dragDropMode">
+                  <enum>QAbstractItemView::InternalMove</enum>
+                 </property>
+                 <property name="defaultDropAction">
+                  <enum>Qt::IgnoreAction</enum>
+                 </property>
+                 <property name="selectionMode">
+                  <enum>QAbstractItemView::ExtendedSelection</enum>
+                 </property>
+                 <property name="movement">
+                  <enum>QListView::Free</enum>
+                 </property>
+                 <property name="isWrapping" stdset="0">
+                  <bool>false</bool>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                 <property name="sortingEnabled">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QPushButton" name="btnImport">
+                 <property name="text">
+                  <string>Import Sequences</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="Resources/VgenesResources.qrc">
+                   <normaloff>:/PNG-Icons/plus.png</normaloff>:/PNG-Icons/plus.png</iconset>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QPushButton" name="btnClearAll">
+                 <property name="text">
+                  <string>Reset active sequence data</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="Resources/VgenesResources.qrc">
+                   <normaloff>:/PNG-Icons/refresh.png</normaloff>:/PNG-Icons/refresh.png</iconset>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QPlainTextEdit" name="txtName">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Arial</family>
+                <pointsize>14</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="toolTip">
+               <string>Double click name to edit</string>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QFrame" name="frame_12">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>175</height>
+               </size>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::NoFrame</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_10">
+               <item row="1" column="4">
+                <widget class="QLabel" name="label_16">
+                 <property name="text">
+                  <string>Donor regions:</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="4">
+                <widget class="QTextEdit" name="txtDonorRegions">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>125</height>
+                  </size>
+                 </property>
+                 <property name="readOnly">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="5">
+                <widget class="QTextEdit" name="txtInsert_Base">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>125</height>
+                  </size>
+                 </property>
+                 <property name="readOnly">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="5">
+                <widget class="QLabel" name="label_63">
+                 <property name="text">
+                  <string>Mutations:</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="3">
+                <widget class="QFrame" name="frame_5">
+                 <property name="maximumSize">
+                  <size>
+                   <width>200</width>
+                   <height>150</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout">
+                  <item row="3" column="1">
+                   <widget class="QComboBox" name="cboForm">
+                    <item>
+                     <property name="text">
+                      <string>Full HA</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Probe HA</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Full NA</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Probe NA</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Other</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QComboBox" name="cboRole">
+                    <item>
+                     <property name="text">
+                      <string>Unassigned</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>BaseSeq</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Reference</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Generated</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="lblRole">
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>25</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Role:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="0">
+                   <widget class="QLabel" name="label_64">
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>25</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Form:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="5" column="0">
+                   <widget class="QLabel" name="label_66">
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>25</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Subtype:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="5" column="1">
+                   <widget class="QComboBox" name="cboSubtype">
+                    <property name="currentText">
+                     <string>H1</string>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>H1</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H2</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H3</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H4</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H5</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H6</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H7</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H8</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H9</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H10</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H11</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H12</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H13</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H14</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H15</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H16</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H17</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>H18</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N1</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N2</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N3</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N4</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N5</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N6</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N7</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N8</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N9</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N10</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>N11</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>B</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Other</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="1" column="3">
+                <widget class="QPushButton" name="btnDelete">
+                 <property name="text">
+                  <string>Delete Records</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="Resources/VgenesResources.qrc">
+                   <normaloff>:/PNG-Icons/bin.png</normaloff>:/PNG-Icons/bin.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>20</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="3" column="0">
              <widget class="QFrame" name="frame_13">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -851,507 +1363,6 @@
                 </widget>
                </item>
               </layout>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QFrame" name="frame_6">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_5">
-               <item row="0" column="2">
-                <widget class="QLabel" name="label_29">
-                 <property name="text">
-                  <string>Active sequences:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="2">
-                <widget class="QListWidget" name="listWidgetStrainsIn">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>150</height>
-                  </size>
-                 </property>
-                 <property name="dragDropMode">
-                  <enum>QAbstractItemView::InternalMove</enum>
-                 </property>
-                 <property name="defaultDropAction">
-                  <enum>Qt::IgnoreAction</enum>
-                 </property>
-                 <property name="selectionMode">
-                  <enum>QAbstractItemView::ExtendedSelection</enum>
-                 </property>
-                 <property name="movement">
-                  <enum>QListView::Free</enum>
-                 </property>
-                 <property name="isWrapping" stdset="0">
-                  <bool>false</bool>
-                 </property>
-                 <property name="wordWrap">
-                  <bool>true</bool>
-                 </property>
-                 <property name="sortingEnabled">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QListWidget" name="listWidgetStrains">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>150</height>
-                  </size>
-                 </property>
-                 <property name="dragDropMode">
-                  <enum>QAbstractItemView::DragOnly</enum>
-                 </property>
-                 <property name="defaultDropAction">
-                  <enum>Qt::IgnoreAction</enum>
-                 </property>
-                 <property name="selectionMode">
-                  <enum>QAbstractItemView::ExtendedSelection</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="2">
-                <widget class="QPushButton" name="btnClearAll">
-                 <property name="text">
-                  <string>Reset active sequence data</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QPushButton" name="btnDelete">
-                 <property name="text">
-                  <string>Delete</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QPushButton" name="btnImport">
-                 <property name="text">
-                  <string>Import Sequences</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_28">
-                 <property name="text">
-                  <string>Available sequences:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QFrame" name="frame_8">
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_5">
-                  <item>
-                   <widget class="QPushButton" name="btnSeqIn">
-                    <property name="text">
-                     <string>-&gt;</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QPushButton" name="btnClearStrain">
-                    <property name="text">
-                     <string>&lt;-</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="4" column="0">
-             <widget class="QFrame" name="frame_12">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>175</height>
-               </size>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_10">
-               <item row="1" column="4">
-                <widget class="QLabel" name="label_16">
-                 <property name="text">
-                  <string>Donor regions:</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="4">
-                <widget class="QTextEdit" name="txtDonorRegions">
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>125</height>
-                  </size>
-                 </property>
-                 <property name="readOnly">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="5">
-                <widget class="QTextEdit" name="txtInsert_Base">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>125</height>
-                  </size>
-                 </property>
-                 <property name="readOnly">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="5">
-                <widget class="QLabel" name="label_63">
-                 <property name="text">
-                  <string>Mutations:</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="3">
-                <widget class="QFrame" name="frame_5">
-                 <property name="maximumSize">
-                  <size>
-                   <width>200</width>
-                   <height>150</height>
-                  </size>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <layout class="QGridLayout" name="gridLayout">
-                  <item row="3" column="1">
-                   <widget class="QComboBox" name="cboForm">
-                    <item>
-                     <property name="text">
-                      <string>Full HA</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Probe HA</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Full NA</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Probe NA</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Other</string>
-                     </property>
-                    </item>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QComboBox" name="cboRole">
-                    <item>
-                     <property name="text">
-                      <string>Unassigned</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>BaseSeq</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Reference</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Generated</string>
-                     </property>
-                    </item>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="lblRole">
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>25</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>Role:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="3" column="0">
-                   <widget class="QLabel" name="label_64">
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>25</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>Form:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="5" column="0">
-                   <widget class="QLabel" name="label_66">
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>25</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>Subtype:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="5" column="1">
-                   <widget class="QComboBox" name="cboSubtype">
-                    <property name="currentText">
-                     <string>H1</string>
-                    </property>
-                    <item>
-                     <property name="text">
-                      <string>H1</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>H2</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>H3</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>H4</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>H5</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>H6</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>H7</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>H8</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>H9</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>H10</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>H11</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>H12</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>H13</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>H14</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>H15</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>H16</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>H17</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>H18</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>N1</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>N2</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>N3</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>N4</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>N5</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>N6</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>N7</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>N8</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>N9</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>N10</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>N11</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>B</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Other</string>
-                     </property>
-                    </item>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QPlainTextEdit" name="txtName">
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>30</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <family>Arial</family>
-                <pointsize>14</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="toolTip">
-               <string>Double click name to edit</string>
-              </property>
-              <property name="readOnly">
-               <bool>true</bool>
-              </property>
              </widget>
             </item>
            </layout>
@@ -2311,7 +2322,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>999</width>
+     <width>1104</width>
      <height>22</height>
     </rect>
    </property>
@@ -3057,38 +3068,5 @@
   <include location="Resources/VgenesResources.qrc"/>
   <include location="Resources/VgenesResources.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>listWidgetStrains</sender>
-   <signal>doubleClicked(QModelIndex)</signal>
-   <receiver>btnSeqIn</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>378</x>
-     <y>234</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>504</x>
-     <y>266</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>listWidgetStrainsIn</sender>
-   <signal>doubleClicked(QModelIndex)</signal>
-   <receiver>btnClearStrain</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>810</x>
-     <y>279</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>529</x>
-     <y>329</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

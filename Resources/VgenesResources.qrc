@@ -1,5 +1,8 @@
 <RCC>
   <qresource prefix="PNG-Icons">
+    <file>Seq.png</file>
+    <file>HA.png</file>
+    <file>NA.png</file>
     <file>Mutation.png</file>
     <file>EditSeq.png</file>
     <file>Fusion.png</file>
