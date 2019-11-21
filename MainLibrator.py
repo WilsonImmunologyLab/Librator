@@ -1746,18 +1746,28 @@ class basePathDialog(QtWidgets.QDialog):
 
 	def browsemuscledir(self):  # browse and select path
 		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
+		if out_dir == '':
+			return
 		self.ui.musclePath.setText(out_dir)
 	def browseclustaldir(self):  # browse and select path
 		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
+		if out_dir == '':
+			return
 		self.ui.clustaloPath.setText(out_dir)
 	def browsepymoldir(self):  # browse and select path
 		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
+		if out_dir == '':
+			return
 		self.ui.pymolPath.setText(out_dir)
 	def browsefigtreedir(self):  # browse and select path
 		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
+		if out_dir == '':
+			return
 		self.ui.FigtreePath.setText(out_dir)
 	def browseraxmldir(self):  # browse and select path
 		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
+		if out_dir == '':
+			return
 		self.ui.RaxmlPath.setText(out_dir)
 	def browsesqlitedir(self):
 		out_dir, _ = QFileDialog.getOpenFileName(self, "select existing fragment DB", temp_folder,
@@ -1981,6 +1991,7 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 		global temp_folder
 		out_dir = QFileDialog.getExistingDirectory(self, "select files", temp_folder)
 		self.ui.outpath.setText(out_dir)
+
 	def setJoint(self):
 		global H1_start, H1_end, H3_start, H3_end, NA_start, NA_end
 		global H3_start_user, H3_end_user, H1_start_user, H1_end_user, NA_end_user, NA_start_user
@@ -2041,6 +2052,8 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 		global temp_folder
 		out_dir, _ = QFileDialog.getOpenFileName(self, "select existing fragment DB", temp_folder,"Librator database Files (*.ldb);;All Files (*)")
 		# check if this is the right DB
+		if out_dir == '':
+			return
 		SQLStatement = 'SELECT * FROM Fragments ORDER BY Name DESC LIMIT 1 '
 		try:
 			DataIn = RunSQL(out_dir, SQLStatement)
@@ -9266,9 +9279,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 			fields = ['SeqName', 'Sequence', 'Length', 'Subtype', 'Form', 'From', 'To', 'Active', 'Role', 'Donor regions',
 			          'Mutations']
 			# SQLStatement = VGenesSQL.MakeSQLStatement(self, fields, data[0])
+			if len(DataIs) == 0:
+				return
 			for data in DataIs:
 				DataIn = [data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10]]
-
 
 			Document = ''
 			i = 0
@@ -9280,7 +9294,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			Document += self.windowTitle()
 			font.setPointSize(10)
 			font.setFamily('Lucida Grande')
-
 
 		elif self.ui.tabWidget.currentIndex() == 1:
 			# return
