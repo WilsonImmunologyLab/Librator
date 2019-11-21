@@ -1772,6 +1772,8 @@ class basePathDialog(QtWidgets.QDialog):
 	def browsesqlitedir(self):
 		out_dir, _ = QFileDialog.getOpenFileName(self, "select existing fragment DB", temp_folder,
 		                                         "Librator database Files (*.ldb);;All Files (*)")
+		if out_dir == '':
+			return
 		self.ui.FragmentDB_path.setText(out_dir)
 
 	def accept(self):  # redo accept method
@@ -10003,13 +10005,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 			cur_seq_name = self.ui.txtName.toPlainText()
 			self.modalessMutationDialog = MutationDialog()
 			self.modalessMutationDialog.ui.CurSeq.setText(cur_seq_name)
+			# check sequence subtype
+			if self.ui.cboSubtype.currentText() in Group1 or self.ui.cboSubtype.currentText() in Group2:
+				pass
+			else:
+				self.modalessMutationDialog.ui.tabWidget.removeTab(1)
+
 			# get active sequences from Qlist in main window
 			donor_num = self.ui.listWidgetStrainsIn.count()
 			donor_list = []
 			for i in range(donor_num):
 				donor_list.append(self.ui.listWidgetStrainsIn.item(i).text())
-			#for i in range(self.ui.listWidgetStrains.count()):
-			#	donor_list.append(self.ui.listWidgetStrains.item(i).text())
 
 			self.modalessMutationDialog.active_sequence = donor_list
 			self.modalessMutationDialog.ui.SeqName.setText(self.ui.txtName.toPlainText())
@@ -11859,7 +11865,7 @@ def Translator(Sequence, frame):
 # 'W':204.23, 'Y':181.19, 'V':117.15, 'X':0.0,    '-':0.0,    '*':0.0,
 # '?':0.0}
 
-global Group1, Group3, GroupNA
+global Group1, Group2, GroupNA
 Group1 = ['H1','H2','H5','H6','H8','H9','H11','H12','H13','H16','H17','H18']
 Group2 = ['H3','H4','H7','H10','H14','H15']
 GroupNA = ['N1','N2','N3','N4','N5','N6','N7','N8','N9','N10','N11']
