@@ -9470,6 +9470,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def ImportSeqs(self):
+		global DBFilename
+		if DBFilename == 'none':
+			Msg = 'Please open or create a sequence database first!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
+
 		SeqInfoPacket = []
 		filename = openFile(self, 'FASTA')
 		if filename is None:
@@ -10005,8 +10011,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global fragmentdb_path
 		global DBFilename
 
-		if self.ui.txtName.toPlainText() == "":
-			QMessageBox.warning(self, 'Warning', 'Please select a sequence first!', QMessageBox.Ok, QMessageBox.Ok)
+
+		if self.ui.listWidgetStrainsIn.count() == 0:
+			QMessageBox.warning(self, 'Warning', 'Please active some sequences first!', QMessageBox.Ok, QMessageBox.Ok)
 		else:
 			self.modalessGibsonDialog = gibsoncloneDialog()
 			self.modalessGibsonDialog.ui.jointUP.setText(joint_up)
