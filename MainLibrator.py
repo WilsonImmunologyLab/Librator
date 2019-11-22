@@ -10117,6 +10117,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ListItemChanged()
 		# close the dialog
 		self.modalessUpdateDialog.close()
+		self.ui.spnFrom.setValue(1)
 
 	def open_delete_dialog(self):
 		delete = self.ui.listWidgetStrainsIn.selectedItems()
