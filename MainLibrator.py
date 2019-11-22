@@ -2969,11 +2969,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.EditLock.clicked.connect(self.ChangeEditMode)
 		self.ui.groupCombo.currentTextChanged.connect(self.rebuildTree)
 
-		#layout = QGridLayout(self.ui.testGB)
-		#view = QWebEngineView()
-		#view.load(QUrl("file:///Users/leil/Documents/Projects/Librator/Librator/test.html"))
-		#view.show()
-		#layout.addWidget(view)
+		layout = QGridLayout(self.ui.testGB)
+		view = QWebEngineView()
+		view.load(QUrl("file:///Users/leil/Documents/Projects/Librator/Librator/test.html"))
+		view.show()
+		layout.addWidget(view)
 
 		self.ui.cboRole.last_value = ''
 		self.ui.cboForm.last_value = ''
