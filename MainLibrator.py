@@ -2969,6 +2969,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.EditLock.clicked.connect(self.ChangeEditMode)
 		self.ui.groupCombo.currentTextChanged.connect(self.rebuildTree)
 
+		#layout = QGridLayout(self.ui.testGB)
+		#view = QWebEngineView()
+		#view.load(QUrl("file:///Users/leil/Documents/Projects/Librator/Librator/test.html"))
+		#view.show()
+		#layout.addWidget(view)
+
 		self.ui.cboRole.last_value = ''
 		self.ui.cboForm.last_value = ''
 		self.ui.cboSubtype.last_value = ''
@@ -8936,7 +8942,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.rebuildTree()
 
 	def rebuildTree(self):
-		# test tree
+		global DBFilename
+
+		if DBFilename == 'none':
+			return
+
+		# clear tree
 		self.ui.treeWidget.clear()
 
 		orderBy = self.ui.groupCombo.currentText()
