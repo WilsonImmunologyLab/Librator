@@ -8632,6 +8632,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				# self.UpdateSeq(eachItemIs, 'True', 'Active')
 			self.UpdateFields()
 		SeqMove = False
+		self.rebuildTree()
 
 	@pyqtSlot()
 	def Mutations(self):
