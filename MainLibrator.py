@@ -2899,6 +2899,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.connectFragmentDB.clicked.connect(self.connectDB)
 		self.ui.FragmentTab.currentChanged['int'].connect(self.clearTable)
 		self.ui.EditLock.clicked.connect(self.ChangeEditMode)
+		self.ui.groupCombo.currentTextChanged.connect(self.rebuildTree)
 
 		self.ui.cboRole.last_value = ''
 		self.ui.cboForm.last_value = ''
@@ -8408,6 +8409,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.ui.cboForm.setCurrentText(self.ui.cboForm.last_value)
 			MoveNotChange = False
 			return
+		self.rebuildTree()
 
 	@pyqtSlot()
 	def SubTypeChanged(self):
@@ -8491,6 +8493,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.cboRole.setCurrentText(self.ui.cboRole.last_value)
 				MoveNotChange = False
 				return
+		self.rebuildTree()
 
 	@pyqtSlot()
 	def SetActive(self,IsActive):
@@ -8866,12 +8869,15 @@ class LibratorMain(QtWidgets.QMainWindow):
 	def rebuildTree(self):
 		# test tree
 		self.ui.treeWidget.clear()
+
+		orderBy = self.ui.groupCombo.currentText()
 		self.ui.treeWidget.setColumnCount(1)
 		self.ui.treeWidget.setHeaderHidden(True)
 		root = QtWidgets.QTreeWidgetItem(self.ui.treeWidget)
 		root.setText(0, 'All Sequences')
-
-		SQLStatement = 'SELECT `SeqName`,`SubType`,`Active` FROM LibDB WHERE `Role` = "BaseSeq"'
+		
+		# set up base seq
+		SQLStatement = 'SELECT `SeqName`,`SubType`,`Active`,`Role`,`Form` FROM LibDB WHERE `Role` = "BaseSeq"'
 		data_fetch = RunSQL(DBFilename, SQLStatement)
 		if len(data_fetch) > 0:
 			subtype = data_fetch[0][1]
@@ -8898,28 +8904,46 @@ class LibratorMain(QtWidgets.QMainWindow):
 				cur_node.setCheckState(0, Qt.Unchecked)
 				base_node.setCheckState(0, Qt.Unchecked)
 
-		SQLStatement = 'SELECT `SeqName`,`SubType`,`Active` FROM LibDB WHERE `Role` <> "BaseSeq" ORDER BY `SubType` ASC'
-		records = RunSQL(DBFilename, SQLStatement)
-		subtype = ''
-		subtype_node = ''
+		# list all sequences by specific group factor
+		if orderBy == 'SubType':
+			SQLStatement = 'SELECT `SeqName`,`SubType`,`Active`,`Role`,`Form` FROM LibDB WHERE `Role` <> "BaseSeq" ORDER BY `SubType` ASC'
+			records = RunSQL(DBFilename, SQLStatement)
+			subtype_index = 1
+			group_index = 1
+		elif orderBy == 'Role':
+			SQLStatement = 'SELECT `SeqName`,`SubType`,`Active`,`Role`,`Form` FROM LibDB WHERE `Role` <> "BaseSeq" ORDER BY `Role` ASC'
+			records = RunSQL(DBFilename, SQLStatement)
+			subtype_index = 1
+			group_index = 3
+		elif orderBy == 'Form':
+			SQLStatement = 'SELECT `SeqName`,`SubType`,`Active`,`Role`,`Form` FROM LibDB WHERE `Role` <> "BaseSeq" ORDER BY `Form` ASC'
+			records = RunSQL(DBFilename, SQLStatement)
+			subtype_index = 1
+			group_index = 4
+		else:
+			return
+
+		group = ''
+		group_node = ''
 		for record in records:
 			cur_name = record[0]
-			cur_subtype = record[1]
-			if cur_subtype != subtype:
-				subtype_node = QtWidgets.QTreeWidgetItem(root)
-				subtype_node.setText(0, cur_subtype)
-				subtype_node.setFlags(subtype_node.flags() | Qt.ItemIsUserCheckable)
-				subtype_node.setCheckState(0, Qt.Unchecked)
-				subtype = cur_subtype
-				seq_icon = QtGui.QIcon()
-				if subtype[0] == 'H':
-					seq_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/HA.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-				elif subtype[0] == 'N':
-					seq_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/NA.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-				else:
-					seq_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/Seq.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			cur_group = record[group_index]
+			cur_subtype = record[subtype_index]
+			if cur_group != group:
+				group_node = QtWidgets.QTreeWidgetItem(root)
+				group_node.setText(0, cur_group)
+				group_node.setFlags(group_node.flags() | Qt.ItemIsUserCheckable)
+				group_node.setCheckState(0, Qt.Unchecked)
+				group = cur_group
 
-			cur_node = QtWidgets.QTreeWidgetItem(subtype_node)
+			seq_icon = QtGui.QIcon()
+			if cur_subtype[0] == 'H':
+				seq_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/HA.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			elif cur_subtype[0] == 'N':
+				seq_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/NA.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			else:
+				seq_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/Seq.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+			cur_node = QtWidgets.QTreeWidgetItem(group_node)
 			cur_node.setText(0, cur_name)
 			cur_node.setIcon(0, seq_icon)
 			cur_node.setFlags(cur_node.flags() | Qt.ItemIsUserCheckable)
