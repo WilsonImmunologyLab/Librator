@@ -1910,6 +1910,25 @@ class basePathDialog(QtWidgets.QDialog):
 				else:
 					fragmentdb_path = self.ui.FragmentDB_path.text()
 
+
+
+		# save MYSQL setting
+		# test if MySQL DB exists
+		server_ip = self.ui.IPinput.text()
+		server_port = self.ui.Portinput.text()
+		db_name = self.ui.DBnameinput.text()
+		db_user = self.ui.Userinput.text()
+		db_pass = self.ui.Passinput.text()
+
+		db_path = [server_ip, server_port, db_name, db_user, db_pass]
+		SQLCommand = "SELECT * FROM Fragments LIMIT 1"
+		try:
+			fetch_results = RunMYSQL(db_path, SQLCommand)
+		except:
+			QMessageBox.warning(self, 'Warning', "Can not connect to the MySQL DB or No Fragments table in your DB!",
+			                    QMessageBox.Ok, QMessageBox.Ok)
+			return
+
 		# save all changes to file
 		file_handle = open(conf_file, 'w')
 		file_handle.write(muscle_path + '\n')
@@ -1923,7 +1942,6 @@ class basePathDialog(QtWidgets.QDialog):
 		file_handle.write(fragmentdb_path)
 		file_handle.close()
 
-		# save MYSQL setting
 		mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
 		file_handle = open(mysql_setting_file, 'w')
 		my_info = self.ui.IPinput.text() + ',' + self.ui.Portinput.text() + ',' + self.ui.DBnameinput.text() + \
