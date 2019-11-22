@@ -10954,7 +10954,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				                    QMessageBox.Ok)
 				return
 			if subtype1 in Group2 and subtype == 'H1':
-				QMessageBox.warning(self, 'Warning', "Your joint design is for H3/Group2, your sequences are " + subtype1 + '(Group1)!',
+				QMessageBox.warning(self, 'Warning', "Your joint design is for H1/Group1, your sequences are " + subtype1 + '(Group2)!',
 				                    QMessageBox.Ok,
 				                    QMessageBox.Ok)
 				return
