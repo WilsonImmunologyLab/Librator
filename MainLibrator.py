@@ -846,6 +846,22 @@ class updateSeqDialog(QtWidgets.QDialog):
 		self.ui.confirmButton.clicked.connect(self.accept)
 		self.ui.cancelButton.clicked.connect(self.reject)
 		self.ui.textEdit.textChanged.connect(self.updateAA)
+		self.ui.searchBtn.clicked.connect(self.searchFun)
+		self.ui.RFstart.valueChanged.connect(self.highRegion)
+		self.ui.RFend.valueChanged.connect(self.highRegion)
+
+	def searchFun(self):
+		pattern = self.ui.SearchText.text().upper()
+		self.markPattern(pattern)
+
+	def highRegion(self):
+		start = self.ui.RFstart.value() - 1
+		end = self.ui.RFend.value() - 1
+		if start < 0:
+			start = 0
+		if start < end:
+			self.markRegion(start, end)
+			self.updateAA()
 
 	def accept(self):
 		SeqName = self.ui.lineEdit.text()
@@ -854,24 +870,52 @@ class updateSeqDialog(QtWidgets.QDialog):
 		self.updateSignal.emit(SeqName,Seq)
 
 	def updateAA(self):
+		start = self.ui.RFstart.value() - 1
+		end = self.ui.RFend.value() - 1
+		if start < 0:
+			start = 0
 		text_nt = self.ui.textEdit.toPlainText()
+		text_nt = text_nt[start:end]
 		aa_seq = Translator(text_nt,0)
 		aa_seq = aa_seq[0]
 
 		self.ui.textEditAA.setText(aa_seq)
 
-	def markATG(self):
+	def markRegion(self, start, end):
 		text = self.ui.textEdit.toPlainText()
+		if end > len(text):
+			end = len(text)
+
 		cursor = self.ui.textEdit.textCursor()
 		format = QTextCharFormat()
-		format.setBackground(QBrush(QColor("red")))
-		format.setForeground(QBrush(QColor("white")))
+		format.setBackground(QBrush(QColor("white")))
+		cursor.setPosition(0)
+		cursor.setPosition(len(text), QTextCursor.KeepAnchor)
+		cursor.mergeCharFormat(format)
 
-		pos_list = [i.start() for i in re.finditer('ATG', text)]
+		format.setBackground(QBrush(QColor("lightGray")))
+		cursor.setPosition(start)
+		cursor.setPosition(end, QTextCursor.KeepAnchor)
+		cursor.mergeCharFormat(format)
+
+	def markPattern(self, pattern):
+		text = self.ui.textEdit.toPlainText().upper()
+		cursor = self.ui.textEdit.textCursor()
+		format = QTextCharFormat()
+
+		# reset all font color
+		format.setForeground(QBrush(QColor("black")))
+		cursor.setPosition(0)
+		cursor.setPosition(len(text), QTextCursor.KeepAnchor)
+		cursor.mergeCharFormat(format)
+
+		# highlight pattern
+		format.setForeground(QBrush(QColor("red")))
+		pos_list = [i.start() for i in re.finditer(pattern, text)]
 		if len(pos_list) > 0:
 			for pos in pos_list:
 				cursor.setPosition(pos)
-				cursor.setPosition(pos + 3, QTextCursor.KeepAnchor)
+				cursor.setPosition(pos + len(pattern), QTextCursor.KeepAnchor)
 				cursor.mergeCharFormat(format)
 
 class fusionDialog(QtWidgets.QDialog):
@@ -9523,16 +9567,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 		HA_Read = ReadFASTA(filename)
 		SequenceFiltered = []
 		# check if any sequence have strange nt
-		ErrMsg = 'The following sequences will not be imported due to unlawful nucleotide:\n'
+		ErrMsg = 'The following sequences will not be imported due to unlawful nucleotide more than 5%:\n\n'
 		ErrSign = False
 		pattern = re.compile(r'[^ATCGUatcgu]')
 		for element in HA_Read:
 			cur_name = element[0]
 			cur_seq = element[1]
 			cur_strange = pattern.findall(cur_seq)
-			if len(cur_strange) > 0:
+			if len(cur_strange) > int(0.05 * len(cur_seq)):
 				cur_strange = list(set(cur_strange))
-				ErrMsg += cur_name + ': ' + ','.join(cur_strange) + '\n'
+				ErrMsg += cur_name + ':\n\nUnlawful nucleotide are: ' + ','.join(cur_strange) + '\n'
 				ErrSign = True
 			else:
 				SequenceFiltered.append(element)
@@ -10131,8 +10175,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			#
 			self.modalessUpdateDialog.ui.lineEdit.setText(self.ui.txtName.toPlainText())
 			self.modalessUpdateDialog.ui.textEdit.setText(self.ui.textSeq.toPlainText())
+			self.modalessUpdateDialog.highRegion()
 			self.modalessUpdateDialog.updateSignal.connect(self.updateNTseq)
-			self.modalessUpdateDialog.markATG()
 			self.modalessUpdateDialog.show()
 
 	def updateNTseq(self,SeqName,Seq):
