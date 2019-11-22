@@ -1833,76 +1833,82 @@ class basePathDialog(QtWidgets.QDialog):
 		global ldb_file
 
 		# check if muscle path exist or not
-		if os.path.exists(self.ui.musclePath.text()):
-			muscle_path = self.ui.musclePath.text()
-		else:
-			question = 'The path for muscle you typed seems not exist, do you still want to continue?'
-			buttons = 'YN'
-			answer = questionMessage(self, question, buttons)
-			if answer == 'No':
-				return
-			else:
+		if self.ui.musclePath.text() != '':
+			if os.path.exists(self.ui.musclePath.text()):
 				muscle_path = self.ui.musclePath.text()
+			else:
+				question = 'The path for muscle you typed seems not exist, do you still want to continue?'
+				buttons = 'YN'
+				answer = questionMessage(self, question, buttons)
+				if answer == 'No':
+					return
+				else:
+					muscle_path = self.ui.musclePath.text()
 
 		# check if clustal omega path exist or not
-		if os.path.exists(self.ui.clustaloPath.text()):
-			clustal_path = self.ui.clustaloPath.text()
-		else:
-			question = 'The path for clustal omega you typed seems not exist, do you still want to continue?'
-			buttons = 'YN'
-			answer = questionMessage(self, question, buttons)
-			if answer == 'No':
-				return
-			else:
+		if self.ui.clustaloPath.text() != '':
+			if os.path.exists(self.ui.clustaloPath.text()):
 				clustal_path = self.ui.clustaloPath.text()
+			else:
+				question = 'The path for clustal omega you typed seems not exist, do you still want to continue?'
+				buttons = 'YN'
+				answer = questionMessage(self, question, buttons)
+				if answer == 'No':
+					return
+				else:
+					clustal_path = self.ui.clustaloPath.text()
 
 		# check if PyMOL path exist or not
-		if os.path.exists(self.ui.pymolPath.text()):
-			pymol_path = self.ui.pymolPath.text()
-		else:
-			question = 'The path for PyMOL you typed seems not exist, do you still want to continue?'
-			buttons = 'YN'
-			answer = questionMessage(self, question, buttons)
-			if answer == 'No':
-				return
-			else:
+		if self.ui.pymolPath.text() != '':
+			if os.path.exists(self.ui.pymolPath.text()):
 				pymol_path = self.ui.pymolPath.text()
+			else:
+				question = 'The path for PyMOL you typed seems not exist, do you still want to continue?'
+				buttons = 'YN'
+				answer = questionMessage(self, question, buttons)
+				if answer == 'No':
+					return
+				else:
+					pymol_path = self.ui.pymolPath.text()
 
 		# check if FigTree path exist or not
-		if os.path.exists(self.ui.FigtreePath.text()):
-			figtree_path = self.ui.FigtreePath.text()
-		else:
-			question = 'The path for FigTree you typed seems not exist, do you still want to continue?'
-			buttons = 'YN'
-			answer = questionMessage(self, question, buttons)
-			if answer == 'No':
-				return
-			else:
+		if self.ui.FigtreePath.text() != '':
+			if os.path.exists(self.ui.FigtreePath.text()):
 				figtree_path = self.ui.FigtreePath.text()
+			else:
+				question = 'The path for FigTree you typed seems not exist, do you still want to continue?'
+				buttons = 'YN'
+				answer = questionMessage(self, question, buttons)
+				if answer == 'No':
+					return
+				else:
+					figtree_path = self.ui.FigtreePath.text()
 
 		# check if RAxML path exist or not
-		if os.path.exists(self.ui.RaxmlPath.text()):
-			raxml_path = self.ui.RaxmlPath.text()
-		else:
-			question = 'The path for RAxML you typed seems not exist, do you still want to continue?'
-			buttons = 'YN'
-			answer = questionMessage(self, question, buttons)
-			if answer == 'No':
-				return
-			else:
+		if self.ui.RaxmlPath.text() != '':
+			if os.path.exists(self.ui.RaxmlPath.text()):
 				raxml_path = self.ui.RaxmlPath.text()
+			else:
+				question = 'The path for RAxML you typed seems not exist, do you still want to continue?'
+				buttons = 'YN'
+				answer = questionMessage(self, question, buttons)
+				if answer == 'No':
+					return
+				else:
+					raxml_path = self.ui.RaxmlPath.text()
 
 		# check if LDB path exist or not
-		if os.path.exists(self.ui.FragmentDB_path.text()):
-			fragmentdb_path = self.ui.FragmentDB_path.text()
-		else:
-			question = 'The path for local Fragment DB you typed seems not exist, do you still want to continue?'
-			buttons = 'YN'
-			answer = questionMessage(self, question, buttons)
-			if answer == 'No':
-				return
-			else:
+		if self.ui.FragmentDB_path.text() != '':
+			if os.path.exists(self.ui.FragmentDB_path.text()):
 				fragmentdb_path = self.ui.FragmentDB_path.text()
+			else:
+				question = 'The path for local Fragment DB you typed seems not exist, do you still want to continue?'
+				buttons = 'YN'
+				answer = questionMessage(self, question, buttons)
+				if answer == 'No':
+					return
+				else:
+					fragmentdb_path = self.ui.FragmentDB_path.text()
 
 		# save all changes to file
 		file_handle = open(conf_file, 'w')
