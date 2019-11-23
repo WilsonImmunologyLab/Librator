@@ -1,23 +1,28 @@
 <!DOCTYPE html>
+<head>
+<script src="jquery.js"></script>
+</head>
 <html>
 
 <style>
 .unit {
   position: relative;
   display: inline-block;
-  border: 1px dotted gray;
-  width: 40px;
+  width: 36px;
   height: 20px;
   text-align: center;
+  padding: 0px;
+  margin: 0px;
+  font-size: 16px;
 }
 
 .ntunit {
   position: relative;
   display: inline-block;
-  border: 1px dotted black;
-  width: 40px;
+  width: 36px;
   height: 20px;
   text-align: center;
+  font-size: 16px;
 }
 
 .unit .unit_tip {
@@ -28,6 +33,7 @@
   text-align: center;
   border-radius: 6px;
   padding: 5px 0;
+  font-size: 16px;
 
   /* Position the tooltip */
   position: absolute;
@@ -40,10 +46,12 @@
 
 .line {
 	margin-top: 2px;
+	font-size: 0px;
 }
 .name {
 	width: 150px;
 	display: inline-block;
+	font-size: 16px;
 }
 
 .abs1 {
@@ -62,21 +70,24 @@
 </style>
 
 <script type="text/javascript">
-function show(){
-	document.getElementByID('qq').style.visibility='hidden'
-
-	var doms = document.getElementsByClassName('unit')
-	for (var i = doms.length - 1; i >= 0; i--) {
-		doms[i].style.visibility='hidden'
-	}
-}
+$(document).ready(function(){
+	$("#btn").click(function(){
+		$(".line_nt").hide()
+		$(".unit").css('width','20px')
+	});
+	$("#btn1").click(function(){
+		$(".line_nt").show()
+		$(".unit").css('width','36px')
+	});
+});
 </script>
 
 <body>
 
-<button id="btn" οnclick="show()">Shown NT</button>
+<button id="btn1">Shown NT</button>
+<button id="btn">Hide NT</button>
 
-<div class="line">
+<div class="line line_h1">
 	<span class="name">H1 numbering:</span>
 	<span class="unit">-
 		<span class ="unit_tip">H1 numbering -</span>
@@ -115,7 +126,7 @@ function show(){
 		<span class ="unit_tip">H1 numbering 7</span>
 	</span> 
 </div>
-<div class="line">
+<div class="line line_pos">
 	<span class="name">Position:</span>
 	<span class="unit">.
 		<span class ="unit_tip">Original position 1</span>
@@ -154,7 +165,7 @@ function show(){
 		<span class ="unit_tip">Original position 12</span>
 	</span> 
 </div>
-<div class="line">
+<div class="line line_aa">
 	<span class="name">A/HK/4801/2014</span>
 	<span class="unit" id="qq">M</span> 
 	<span class="unit">T</span> 
@@ -169,7 +180,7 @@ function show(){
 	<span class="unit">Q</span> 
 	<span class="unit">I</span> 
 </div>
-<div class="line">
+<div class="line line_nt">
 	<span class="name"></span>
 	<span class="ntunit">AAC</span> 
 	<span class="ntunit">CCC</span> 
@@ -184,7 +195,7 @@ function show(){
 	<span class="ntunit">ACA</span> 
 	<span class="ntunit">ACC</span> 
 </div>
-<div class="line">
+<div class="line line_aa">
 	<span class="name">A/TX/50/2013</span>
 	<span class="unit">M</span> 
 	<span class="unit">T</span> 
@@ -199,7 +210,7 @@ function show(){
 	<span class="unit">Q</span> 
 	<span class="unit">I</span> 
 </div>
-<div class="line">
+<div class="line line_nt">
 	<span class="name"></span>
 	<span class="ntunit">AAC</span> 
 	<span class="ntunit">CCC</span> 
@@ -214,7 +225,7 @@ function show(){
 	<span class="ntunit">ACA</span> 
 	<span class="ntunit">ACC</span> 
 </div>
-<div class="line">
+<div class="line line_aa">
 	<span class="name">A/SGP/XXXX/2016</span>
 	<span class="unit">M</span> 
 	<span class="unit">T</span> 
@@ -229,7 +240,7 @@ function show(){
 	<span class="unit">Q</span> 
 	<span class="unit">I</span> 
 </div>
-<div class="line">
+<div class="line line_nt">
 	<span class="name"></span>
 	<span class="ntunit">AAC</span> 
 	<span class="ntunit">CCC</span> 
