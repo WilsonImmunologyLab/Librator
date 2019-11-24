@@ -52,10 +52,11 @@
 	margin-top: 2px;
 	font-size: 0px;
 	height: 20px;
+	margin-left: 12px;
 }
 
 .name {
-	width: 150px;
+	width: 250px;
 	display: inline-block;
 	font-size: 16px;
 }
@@ -77,6 +78,77 @@
 
 </style>
 
+<style>
+/* The container */
+.container {
+  display: inline-block;
+  position: relative;
+  padding-left: 35px;
+  margin-left: 12px;
+  margin-right: 35px;
+  cursor: pointer;
+  font-size: 16px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 16px;
+  width: 16px;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+</style>
+
 <script type="text/javascript">
 $(document).ready(function(){
 	$("#btn").click(function(){
@@ -89,208 +161,263 @@ $(document).ready(function(){
 		$(".con_nt").show()
 		$(".insert").show()
 	});
+	$("#aa").click(function(){
+		if($("#aa").is(':checked')){
+			$(".line_aa").show()
+			$(".con_aa").show()
+		} else {
+			$(".line_aa").hide()
+			$(".con_aa").hide()
+		}
+	});
+	$("#nt").click(function(){
+		if($("#nt").is(':checked')){
+			$(".line_nt").show()
+			$(".con_nt").show()
+			$(".insert").show()
+		} else {
+			$(".line_nt").hide()
+			$(".con_nt").hide()
+			$(".insert").hide()
+		}
+	});
+	$("#h1").click(function(){
+		if($("#h1").is(':checked')){
+			$(".line_h1").show()
+		} else {
+			$(".line_h1").hide()
+		}
+	});
+	$("#h3").click(function(){
+		if($("#h3").is(':checked')){
+			$(".line_h3").show()
+		} else {
+			$(".line_h3").hide()
+		}
+	});
 });
+
+
 </script>
 
 <body>
 
-<button id="btn1">Shown NT</button>
-<button id="btn">Hide NT</button>
-
-<div class="line line_pos_aa">
-	<span class="name">Position AA:</span>
-	<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 1</span></span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 2</span></span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 3</span></span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 4</span></span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">5<span class ="unit_tip">Original position 5</span></span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 6</span></span><span class="insert">&nbsp;</span>
-	<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 7</span></span><span class="insert">&nbsp;</span>
-	<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 8</span></span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 9</span></span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">10<span class ="unit_tip">Original position 10</span></span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 11</span></span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 12</span></span><span class="insert">&nbsp;</span> 
-</div>
-<div class="line line_h1">
-	<span class="name">H1 numbering:</span>
-	<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H1 numbering -</span></span><span class="insert">&nbsp;</span>
-	<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H1 numbering -</span></span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H1 numbering -</span></span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H1 numbering -</span></span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H1 numbering -</span></span><span class="insert">&nbsp;</span> 
-	<span class="insert abs1">&nbsp;</span><span class="unit abs1">.<span class ="unit_tip">H1 numbering 1</span></span><span class="insert abs1">&nbsp;</span>
-	<span class="insert abs1">&nbsp;</span><span class="unit abs1">.<span class ="unit_tip">H1 numbering 2</span></span><span class="insert abs1">&nbsp;</span> 
-	<span class="insert abs1">&nbsp;</span><span class="unit abs1">.<span class ="unit_tip">H1 numbering 3</span></span><span class="insert abs1">&nbsp;</span> 
-	<span class="insert abs2">&nbsp;</span><span class="unit abs2">.<span class ="unit_tip">H1 numbering 4</span></span><span class="insert abs2">&nbsp;</span> 
-	<span class="insert abs2">&nbsp;</span><span class="unit abs2">5<span class ="unit_tip">H1 numbering 5</span></span><span class="insert abs2">&nbsp;</span> 
-	<span class="insert abs3">&nbsp;</span><span class="unit abs3">.<span class ="unit_tip">H1 numbering 6</span></span><span class="insert abs3">&nbsp;</span> 
-	<span class="insert abs4">&nbsp;</span><span class="unit abs4">.<span class ="unit_tip">H1 numbering 7</span></span><span class="insert abs4">&nbsp;</span> 
-</div>
-<div class="line line_h3">
-	<span class="name">H3 numbering:</span>
-	<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H3 numbering -</span></span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H3 numbering -</span></span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H3 numbering -</span></span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H3 numbering -</span></span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H3 numbering -</span></span><span class="insert">&nbsp;</span> 
-	<span class="insert abs1">&nbsp;</span><span class="unit abs1">.<span class ="unit_tip">H3 numbering 1</span></span><span class="insert abs1">&nbsp;</span>
-	<span class="insert abs1">&nbsp;</span><span class="unit abs1">.<span class ="unit_tip">H3 numbering 2</span></span><span class="insert abs1">&nbsp;</span> 
-	<span class="insert abs1">&nbsp;</span><span class="unit abs1">.<span class ="unit_tip">H3 numbering 3</span></span><span class="insert abs1">&nbsp;</span> 
-	<span class="insert abs2">&nbsp;</span><span class="unit abs2">.<span class ="unit_tip">H3 numbering 4</span></span><span class="insert abs2">&nbsp;</span> 
-	<span class="insert abs2">&nbsp;</span><span class="unit abs2">5<span class ="unit_tip">H3 numbering 5</span></span><span class="insert abs2">&nbsp;</span> 
-	<span class="insert abs3">&nbsp;</span><span class="unit abs3">.<span class ="unit_tip">H3 numbering 6</span></span><span class="insert abs3">&nbsp;</span> 
-	<span class="insert abs4">&nbsp;</span><span class="unit abs4">.<span class ="unit_tip">H3 numbering 7</span></span><span class="insert abs4">&nbsp;</span> 
-</div>
-<div class="line line_nt">
-	<span class="name">Consensus AA:</span>
-	<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span>
-	<span class="insert">&nbsp;</span><span class="unit">T</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">K</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">C</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">R</span><span class="insert">&nbsp;</span>
-	<span class="insert">&nbsp;</span><span class="unit">A</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">T</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">I</span><span class="insert">&nbsp;</span> 
-</div>
-<div class="line line_nt">
-	<span class="name">Position NT:</span>
-	<span class="unit">.<span class ="unit_tip">Original position 1</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 2</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 3</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 4</span></span>
-	<span class="unit">5<span class ="unit_tip">Original position 5</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 6</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 7</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 8</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 9</span></span>
-	<span class="unit">10<span class ="unit_tip">Original position 10</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 11</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 12</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 13</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 14</span></span>
-	<span class="unit">15<span class ="unit_tip">Original position 15</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 16</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 17</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 18</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 19</span></span>
-	<span class="unit">20<span class ="unit_tip">Original position 20</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 21</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 22</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 23</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 24</span></span>
-	<span class="unit">25<span class ="unit_tip">Original position 25</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 26</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 27</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 28</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 29</span></span>
-	<span class="unit">30<span class ="unit_tip">Original position 30</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 31</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 32</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 33</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 34</span></span>
-	<span class="unit">35<span class ="unit_tip">Original position 35</span></span>
-	<span class="unit">.<span class ="unit_tip">Original position 36</span></span>
-	
-</div>
-<div class="line con_nt">
-	<span class="name">Consensus NT:</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+<div style="padding:5px;border:1px solid #96c2f1;background:#eff7ff; width:450px;border-radius:5px;">
+	<h3 style="margin-left:12px;margin-top:5px;">Options:</h3>
+	<label class="container">AA
+	  <input id = 'aa' type="checkbox" checked="checked">
+	  <span class="checkmark"></span>
+	</label>
+	<label class="container">NT
+	  <input id = 'nt' type="checkbox" checked="checked">
+	  <span class="checkmark"></span>
+	</label>
+	<label class="container">H1
+	  <input id = 'h1' type="checkbox"  checked="checked">
+	  <span class="checkmark"></span>
+	</label>
+	<label class="container">H3
+	  <input id = 'h3' type="checkbox"  checked="checked">
+	  <span class="checkmark"></span>
+	</label>
 </div>
 
-<div class="line line_aa">
-	<span class="name">A/HK/4801/2014</span>
-	<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span>
-	<span class="insert">&nbsp;</span><span class="unit">T</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">K</span><span class="insert">&nbsp;</span>
-	<span class="insert">&nbsp;</span><span class="unit">C</span><span class="insert">&nbsp;</span>
-	<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">R</span><span class="insert">&nbsp;</span>
-	<span class="insert">&nbsp;</span><span class="unit">A</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">T</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">I</span><span class="insert">&nbsp;</span> 
-</div>
-<div class="line line_nt">
-	<span class="name"></span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-</div>
-<div class="line line_aa">
-	<span class="name">A/TX/50/2013</span>
-	<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span>
-	<span class="insert">&nbsp;</span><span class="unit">T</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">K</span><span class="insert">&nbsp;</span>
-	<span class="insert">&nbsp;</span><span class="unit">C</span><span class="insert">&nbsp;</span>
-	<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">R</span><span class="insert">&nbsp;</span>
-	<span class="insert">&nbsp;</span><span class="unit">A</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">T</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">I</span><span class="insert">&nbsp;</span> 
-</div>
-<div class="line line_nt">
-	<span class="name"></span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
-</div>
-<div class="line line_aa">
-	<span class="name">A/SGP/XXXX/2016</span>
-	<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span>
-	<span class="insert">&nbsp;</span><span class="unit">T</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">K</span><span class="insert">&nbsp;</span>
-	<span class="insert">&nbsp;</span><span class="unit">C</span><span class="insert">&nbsp;</span>
-	<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">R</span><span class="insert">&nbsp;</span>
-	<span class="insert">&nbsp;</span><span class="unit">A</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">T</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
-	<span class="insert">&nbsp;</span><span class="unit">I</span><span class="insert">&nbsp;</span> 
-</div>
-<div class="line line_nt">
-	<span class="name"></span>
-	<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+<div style="padding:5px;border:1px solid #9bdf70;background:#f0fbeb; width:1050px;border-radius:5px;margin-top:10px;">
+	<div class="line line_aa">
+		<span class="name">Position AA:</span>
+		<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 1</span></span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 2</span></span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 3</span></span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 4</span></span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">5<span class ="unit_tip">Original position 5</span></span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 6</span></span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 7</span></span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 8</span></span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 9</span></span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">10<span class ="unit_tip">Original position 10</span></span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 11</span></span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 12</span></span><span class="insert">&nbsp;</span> 
+	</div>
+	<div class="line line_h1">
+		<span class="name">H1 numbering:</span>
+		<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H1 numbering -</span></span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H1 numbering -</span></span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H1 numbering -</span></span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H1 numbering -</span></span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H1 numbering -</span></span><span class="insert">&nbsp;</span> 
+		<span class="insert abs1">&nbsp;</span><span class="unit abs1">.<span class ="unit_tip">H1 numbering 1</span></span><span class="insert abs1">&nbsp;</span>
+		<span class="insert abs1">&nbsp;</span><span class="unit abs1">.<span class ="unit_tip">H1 numbering 2</span></span><span class="insert abs1">&nbsp;</span> 
+		<span class="insert abs1">&nbsp;</span><span class="unit abs1">.<span class ="unit_tip">H1 numbering 3</span></span><span class="insert abs1">&nbsp;</span> 
+		<span class="insert abs2">&nbsp;</span><span class="unit abs2">.<span class ="unit_tip">H1 numbering 4</span></span><span class="insert abs2">&nbsp;</span> 
+		<span class="insert abs2">&nbsp;</span><span class="unit abs2">5<span class ="unit_tip">H1 numbering 5</span></span><span class="insert abs2">&nbsp;</span> 
+		<span class="insert abs3">&nbsp;</span><span class="unit abs3">.<span class ="unit_tip">H1 numbering 6</span></span><span class="insert abs3">&nbsp;</span> 
+		<span class="insert abs4">&nbsp;</span><span class="unit abs4">.<span class ="unit_tip">H1 numbering 7</span></span><span class="insert abs4">&nbsp;</span> 
+	</div>
+	<div class="line line_h3">
+		<span class="name">H3 numbering:</span>
+		<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H3 numbering -</span></span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H3 numbering -</span></span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H3 numbering -</span></span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H3 numbering -</span></span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">-<span class ="unit_tip">H3 numbering -</span></span><span class="insert">&nbsp;</span> 
+		<span class="insert abs1">&nbsp;</span><span class="unit abs1">.<span class ="unit_tip">H3 numbering 1</span></span><span class="insert abs1">&nbsp;</span>
+		<span class="insert abs1">&nbsp;</span><span class="unit abs1">.<span class ="unit_tip">H3 numbering 2</span></span><span class="insert abs1">&nbsp;</span> 
+		<span class="insert abs1">&nbsp;</span><span class="unit abs1">.<span class ="unit_tip">H3 numbering 3</span></span><span class="insert abs1">&nbsp;</span> 
+		<span class="insert abs2">&nbsp;</span><span class="unit abs2">.<span class ="unit_tip">H3 numbering 4</span></span><span class="insert abs2">&nbsp;</span> 
+		<span class="insert abs2">&nbsp;</span><span class="unit abs2">5<span class ="unit_tip">H3 numbering 5</span></span><span class="insert abs2">&nbsp;</span> 
+		<span class="insert abs3">&nbsp;</span><span class="unit abs3">.<span class ="unit_tip">H3 numbering 6</span></span><span class="insert abs3">&nbsp;</span> 
+		<span class="insert abs4">&nbsp;</span><span class="unit abs4">.<span class ="unit_tip">H3 numbering 7</span></span><span class="insert abs4">&nbsp;</span> 
+	</div>
+	<div class="line con_aa">
+		<span class="name">Consensus AA:</span>
+		<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">T</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">K</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">C</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">R</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">A</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">T</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">I</span><span class="insert">&nbsp;</span> 
+	</div>
+	<div class="line line_nt">
+		<span class="name">Position NT:</span>
+		<span class="unit">.<span class ="unit_tip">Original position 1</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 2</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 3</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 4</span></span>
+		<span class="unit">5<span class ="unit_tip">Original position 5</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 6</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 7</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 8</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 9</span></span>
+		<span class="unit">10<span class ="unit_tip">Original position 10</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 11</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 12</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 13</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 14</span></span>
+		<span class="unit">15<span class ="unit_tip">Original position 15</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 16</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 17</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 18</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 19</span></span>
+		<span class="unit">20<span class ="unit_tip">Original position 20</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 21</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 22</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 23</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 24</span></span>
+		<span class="unit">25<span class ="unit_tip">Original position 25</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 26</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 27</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 28</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 29</span></span>
+		<span class="unit">30<span class ="unit_tip">Original position 30</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 31</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 32</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 33</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 34</span></span>
+		<span class="unit">35<span class ="unit_tip">Original position 35</span></span>
+		<span class="unit">.<span class ="unit_tip">Original position 36</span></span>
+		
+	</div>
+	<div class="line con_nt">
+		<span class="name">Consensus NT:</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+	</div>
+
+	<div class="line line_aa">
+		<span class="name">A/HK/4801/2014	(AA)</span>
+		<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">T</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">K</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">C</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">R</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">A</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">T</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">I</span><span class="insert">&nbsp;</span> 
+	</div>
+	<div class="line line_nt">
+		<span class="name">A/HK/4801/2014	(NT)</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+	</div>
+	<div class="line line_aa">
+		<span class="name">A/TX/50/2013	(AA)</span>
+		<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">T</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">K</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">C</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">R</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">A</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">T</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">I</span><span class="insert">&nbsp;</span> 
+	</div>
+	<div class="line line_nt">
+		<span class="name">A/TX/50/2013	(NT)</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+	</div>
+	<div class="line line_aa">
+		<span class="name">A/SGP/XXXX/2016	(AA)</span>
+		<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">T</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">K</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">C</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">R</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">A</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">T</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">M</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">I</span><span class="insert">&nbsp;</span> 
+	</div>
+	<div class="line line_nt">
+		<span class="name">A/SGP/XXXX/2016	(NT)</span>
+		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+	</div>
 </div>
 </body>
 </html>
