@@ -9,6 +9,7 @@ added_files = [
              ('/Users/leil/Documents/Projects/Librator/Resources/Data/H3_PCT.csv','Data'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Data/NA_AAVI.csv','Data'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Data/NA_PCT.csv','Data'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Data/template.html','Data'),
              ('/Users/leil/Documents/Projects/Librator/Resources/PDB/3hto.pdb','PDB'),
              ('/Users/leil/Documents/Projects/Librator/Resources/PDB/4hmg.pdb','PDB'),
              ('/Users/leil/Documents/Projects/Librator/Resources/PDB/4jtv.pdb','PDB'),
@@ -21,7 +22,8 @@ added_files = [
              ('/Users/leil/Documents/Projects/Librator/Resources/Tools/raxml','Tools'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Tools/muscle','Tools'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Tools/clustalo','Tools'),
-             ('/Users/leil/Documents/Projects/Librator/Resources/Js/echarts.min.js','Js')
+             ('/Users/leil/Documents/Projects/Librator/Resources/Js/echarts.min.js','Js'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Js/jquery.js','Js')
              ]
 
 

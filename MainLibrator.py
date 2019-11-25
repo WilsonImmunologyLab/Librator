@@ -19,6 +19,7 @@ from platform import system
 import os, sys, re, time, string, sip, csv
 import pandas as pd
 import numpy as np
+import shutil
 
 import matplotlib
 matplotlib.use("Qt5Agg")
@@ -2969,12 +2970,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.EditLock.clicked.connect(self.ChangeEditMode)
 		self.ui.groupCombo.currentTextChanged.connect(self.rebuildTree)
 
-		layout = QGridLayout(self.ui.testGB)
-		view = QWebEngineView()
-		view.load(QUrl("file:///Users/leil/Documents/Projects/Librator/Librator/test.html"))
-		view.show()
-		layout.addWidget(view)
-
 		self.ui.cboRole.last_value = ''
 		self.ui.cboForm.last_value = ''
 		self.ui.cboSubtype.last_value = ''
@@ -4460,6 +4455,48 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.Passinput.setText(Setting[4])
 
 			self.ui.dbpath.setText(fragmentdb_path)
+		elif self.ui.tabWidget.currentIndex() == 7:
+			# load data
+			AlignIn = []
+			listItems = self.ui.listWidgetStrainsIn.selectedItems()
+			# if not listItems: return
+			WhereState = ''
+			NumSeqs = len(listItems)
+			i = 1
+			if len(listItems) == 0:
+				QMessageBox.warning(self, 'Warning', 'Please select sequence from active sequence panel!',
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+				return
+			for item in listItems:
+				eachItemIs = item.text()
+				WhereState += 'SeqName = "' + eachItemIs + '"'
+				if NumSeqs > i:
+					WhereState += ' OR '
+				i += 1
+
+			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+
+			for item in DataIn:
+				SeqName = item[0]
+				Sequence = item[1]
+				VFrom = int(item[2]) - 1
+				if VFrom == -1: VFrom = 0
+
+				VTo = int(item[3])
+				Sequence = Sequence[VFrom:VTo]
+				Sequence = Sequence.upper()
+				EachIn = (SeqName, Sequence)
+				AlignIn.append(EachIn)
+			# make HTML
+			html_file = AlignSequencesHTML(AlignIn)
+			# display
+			layout = QGridLayout(self.ui.testGB)
+			view = QWebEngineView()
+			view.load(QUrl("file://" + html_file))
+			view.show()
+			layout.addWidget(view)
 
 	def EditTableItem(self,item):
 		global MoveNotChange
@@ -11872,6 +11909,285 @@ def ReadFASTA(outfilename):
 
 		# Returns a list of seqname and sequences, but now aligned
 		return ReadFile
+
+def MakeDivNT(class_name, line_name, data):
+	div_content = '<div class="' + class_name + '">'
+	div_content += '<span class="name">' + line_name + '</span>'
+	for i in range(len(data)):
+		div_content += '<span class="unit">' + data[i] + '</span>'
+	div_content += '</div>'
+	return div_content
+
+def MakeDivAA(class_name, line_name, data):
+	div_content = '<div class="' + class_name + '">'
+	div_content += '<span class="name">' + line_name + '</span>'
+	for i in range(len(data)):
+		div_content += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + data[i] + '</span><span class="insert">&nbsp;</span></span>'
+	div_content += '</div>'
+	return div_content
+
+def MakeDivPosAA(class_name, line_name, tip_text, data):
+	div_content = '<div class="' + class_name + '">'
+	div_content += '<span class="name">' + line_name + '</span>'
+	for i in range(len(data[0])):
+		if data[0][i] != '-':
+			if int(data[0][i]) % 5 == 0:
+				div_content += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + str(data[0][i]) + \
+				               '<span class ="unit_tip">' + tip_text + str(data[1][i]) + \
+				               '</span></span><span class="insert">&nbsp;</span></span>'
+			else:
+				div_content += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + '.' + \
+				               '<span class ="unit_tip">' + tip_text + str(data[1][i]) + \
+				               '</span></span><span class="insert">&nbsp;</span></span>'
+		else:
+			div_content += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + str(data[0][i]) + \
+			               '<span class ="unit_tip">' + tip_text + str(data[1][i]) + \
+			               '</span></span><span class="insert">&nbsp;</span></span>'
+	div_content += '</div>'
+
+	return div_content
+
+def MakeDivH1N3(class_name, line_name, tip_text, data):
+	div_content = '<div class="' + class_name + '">'
+	div_content += '<span class="name">' + line_name + '</span>'
+	for i in range(len(data)):
+		if data[i][2] == '':
+			if data[i][0] != '-':
+				if int(data[i][0]) % 5.0 == 0:
+					div_content += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + str(data[i][0]) + \
+					               '<span class ="unit_tip">' + tip_text + str(data[i][1]) + \
+					               '</span></span><span class="insert">&nbsp;</span></span>'
+				else:
+					div_content += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + '.' + \
+					               '<span class ="unit_tip">' + tip_text + str(data[i][1]) + \
+					               '</span></span><span class="insert">&nbsp;</span></span>'
+			else:
+				div_content += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + str(data[i][0]) + \
+				               '<span class ="unit_tip">' + tip_text + str(data[i][1]) + \
+				               '</span></span><span class="insert">&nbsp;</span></span>'
+		else:
+			if data[i][0] != '-':
+				if int(data[i][0]) % 5.0 == 0:
+					div_content += '<span class="unit_pack"><span class="insert ' + data[i][2] + '">&nbsp;</span><span class="unit ' + \
+					               data[i][2] + '">' + str(data[i][0]) + \
+					               '<span class ="unit_tip">' + tip_text + str(data[i][1]) + \
+					               '</span></span><span class="insert ' + data[i][2] + '">&nbsp;</span></span>'
+				else:
+					div_content += '<span class="unit_pack"><span class="insert ' + data[i][2] + '">&nbsp;</span><span class="unit ' + \
+					               data[i][2] + '">' + '.' + \
+					               '<span class ="unit_tip">' + tip_text + str(data[i][1]) + \
+					               '</span></span><span class="insert ' + data[i][2] + '">&nbsp;</span></span>'
+			else:
+				div_content += '<span class="unit_pack"><span class="insert ' + data[i][2] + '">&nbsp;</span><span class="unit ' + \
+				               data[i][2] + '">' + str(data[i][0]) + \
+				               '<span class ="unit_tip">' + tip_text + str(data[i][1]) + \
+				               '</span></span><span class="insert ' + data[i][2] + '">&nbsp;</span></span>'
+	div_content += '</div>'
+
+	return div_content
+
+def MakeDivPosNT(class_name, line_name, tip_text, data):
+	div_content = '<div class="' + class_name + '">'
+	div_content += '<span class="name">' + line_name + '</span>'
+	for i in range(len(data[0])):
+		if data[0][i] % 5.0 == 0:
+			div_content += '<span class="unit">' + str(data[0][i]) + '<span class ="unit_tip">' + tip_text + \
+			               str(data[1][i]) +  '</span></span>'
+		else:
+			div_content += '<span class="unit">' + '.' + '<span class ="unit_tip">' + tip_text + str(data[1][i]) +  '</span></span>'
+	div_content += '</div>'
+	return div_content
+
+def AlignSequencesHTML(DataSet):
+	# import tempfile
+	import os
+	TupData = ()
+	global GLMsg
+	global working_prefix
+	global clustal_path
+	global temp_folder
+	global VGenesTextWindows
+
+	# align selected sequences using ClustalOmega
+	outfilename = ''
+	try:
+		if len(DataSet) == 1:
+			time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+			outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
+			out_handle = open(outfilename,'w')
+			out_handle.write('>' + DataSet[0][0] + '\n')
+			out_handle.write(DataSet[0][1])
+			out_handle.close()
+		else:
+			if os.path.exists(clustal_path):
+				outfilename = LibratorSeq.ClustalO(DataSet, 80, True, temp_folder, clustal_path)
+			else:
+				QMessageBox.warning(self, 'Warning',
+				                    'The Clustal Omega does not exist! Check your path!', QMessageBox.Ok, QMessageBox.Ok)
+				return
+		each = ()
+		all = []
+		SeqName = ''
+		# read alignment file, make alignment NT and AA sequences
+		if os.path.isfile(outfilename):
+			with open(outfilename, 'r') as currentfile:
+				for line in currentfile:
+					Readline = line.replace('\n', '').replace('\r', '')
+					Readline = Readline.strip()
+					if Readline[0] == '>':
+						all.append(each)
+						SeqName = Readline[1:] + ':'
+					else:
+						AASeq, ErMessage = LibratorSeq.Translator(Readline, 0)
+						peptide = ''
+						for res in AASeq:
+							peptide += (' ' + res + ' ')
+						peptide = peptide[0:len(Readline)]
+						each = (SeqName, Readline, peptide)
+			all.append(each)
+		else:
+			return
+	# todo add header that says what germline based on
+	except:
+		print('no')
+	finally:
+		if os.path.exists(outfilename):
+			os.remove(outfilename)
+
+	all = all[1:]
+	# generate consnesus sequences (AA and NT)
+	if len(all) == 1:
+		consensusDNA = all[0][1]
+		consensusAA = all[0][2]
+	else:
+		firstOne = all[0]
+		seqlen = len(firstOne[1])
+
+		consensusDNA = ''
+		tester = ''
+		for i in range(seqlen):
+			tester = ''
+			Cnuc = ''
+			for item in all:
+				seq = item[1]
+				tester += seq[i]
+
+			frequencies = [(c, tester.count(c)) for c in set(tester)]
+			Cnuc = max(frequencies, key=lambda x: x[1])[0]
+			consensusDNA += Cnuc
+
+		consensusAA = ''
+		firstOne = all[1]
+		seqlen = len(firstOne[1])
+		for i in range(seqlen):
+			tester = ''
+			Caa = ''
+			for item in all:
+				seq = item[2]
+				tester += seq[i]
+
+			frequencies = [(c, tester.count(c)) for c in set(tester)]
+			Caa = max(frequencies, key=lambda x: x[1])[0]
+			consensusAA += Caa
+
+	# align consensus AA sequence with template to generate H1 and H3 numbering
+	compact_consensusAA = consensusAA.replace(' ', '')
+	HANumbering(compact_consensusAA)
+
+	# prepare H1 data
+	pos_h1_data = []
+	for i in range(1, len(H1Numbering) + 1):
+		cur_data = H1Numbering[i]
+		if cur_data[4] in ['Ca1','Ca2','Cb','Sa','Sb','Stalk-MN']:
+			if cur_data[2] == '-':
+				unit = (cur_data[2], cur_data[2], cur_data[4])
+			else:
+				if cur_data[0] == 'HA1':
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
+				else:
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
+		else:
+			if cur_data[2] == '-':
+				unit = (cur_data[2], cur_data[2], '')
+			else:
+				if cur_data[0] == 'HA1':
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+				else:
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
+		pos_h1_data.append(unit)
+	# prepare H3 data
+	b = H3Numbering
+	pos_h3_data = []
+	for i in range(1, len(H3Numbering) + 1):
+		cur_data = H3Numbering[i]
+		if cur_data[4] in ['A','B','C','D','E','Stalk-MN']:
+			if cur_data[2] == '-':
+				unit = (cur_data[2], cur_data[2], cur_data[4])
+			else:
+				if cur_data[0] == 'HA1':
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
+				else:
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
+		else:
+			if cur_data[2] == '-':
+				unit = (cur_data[2], cur_data[2], '')
+			else:
+				if cur_data[0] == 'HA1':
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+				else:
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
+		pos_h3_data.append(unit)
+
+	# make header HTML
+	pos_aa_data = [list(range(1,len(compact_consensusAA)+1)),list(range(1,len(compact_consensusAA)+1))]
+	div_pos_aa = MakeDivPosAA('line line_pos_aa', 'Position AA:', 'Original AA position: ', pos_aa_data)
+	div_h1 = MakeDivH1N3('line line_h1', 'H1 numbering', 'H1 numbering: ', pos_h1_data)
+	div_h3 = MakeDivH1N3('line line_h3', 'H3 numbering', 'H3 numbering: ', pos_h3_data)
+	div_con_aa = MakeDivAA('line con_aa', 'Consensus AA:', compact_consensusAA)
+	pos_nt_data = [list(range(1, len(consensusDNA) + 1)), list(range(1, len(consensusDNA) + 1))]
+	div_pos_nt = MakeDivPosNT('line line_pos_nt', 'Position NT:', 'Original NT position: ', pos_nt_data)
+	div_con_nt = MakeDivNT('line con_nt', 'Consensus NT:', consensusDNA)
+
+	# initial and open HTML file
+	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+	out_html_file = os.path.join(temp_folder, time_stamp + '.html')
+	header_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'template.html')
+	shutil.copyfile(header_file, out_html_file)
+	out_file_handle = open(out_html_file, 'a')
+	# write header section
+	out_file_handle.write(div_pos_aa + '\n')
+	out_file_handle.write(div_h1 + '\n')
+	out_file_handle.write(div_h3 + '\n')
+	out_file_handle.write(div_con_aa + '\n')
+	out_file_handle.write(div_pos_nt + '\n')
+	out_file_handle.write(div_con_nt + '\n')
+
+	# make sequence section HTML
+	for seq in all:
+		seq_nt = seq[1]
+		seq_aa = seq[2].replace(' ', '')
+		con_nt = MakeConSeq(seq_nt, consensusDNA)
+		con_aa = MakeConSeq(seq_aa, compact_consensusAA)
+
+		div_aa = MakeDivAA('line line_aa', seq[0], seq_aa)
+		div_aa_mut = MakeDivAA('line line_con_aa', seq[0], con_aa)
+		div_nt = MakeDivNT('line line_nt', seq[0], seq_nt)
+		div_nt_mut = MakeDivNT('line line_con_nt', seq[0], con_nt)
+		# write sequence section
+		out_file_handle.write(div_aa + '\n')
+		out_file_handle.write(div_aa_mut + '\n')
+		out_file_handle.write(div_nt + '\n')
+		out_file_handle.write(div_nt_mut + '\n')
+
+	out_file_handle.write('\n</div>\n</body>\n</html>')
+	out_file_handle.close()
+	return out_html_file
+
+def MakeConSeq(seq, con):
+	for i in range(len(seq)):
+		if seq[i] == con[i]:
+			seq = seq[:i] + '.' + seq[i+1:]
+	return seq
 
 def SequenceCheck(sequence, type):
 	Msg = 'none'
