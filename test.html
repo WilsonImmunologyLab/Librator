@@ -76,6 +76,22 @@
 	background-color: yellow
 }
 
+.line_con_aa {
+	display: none;
+}
+
+.line_con_nt {
+	display: none;
+}
+
+.con_nt {
+	display: none;
+}
+
+.con_aa {
+	display: none;
+}
+
 </style>
 
 <style>
@@ -151,58 +167,80 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-	$("#btn").click(function(){
-		$(".line_nt").hide()
-		$(".con_nt").hide()
-		$(".insert").hide()
-	});
-	$("#btn1").click(function(){
-		$(".line_nt").show()
-		$(".con_nt").show()
-		$(".insert").show()
-	});
 	$("#aa").click(function(){
-		if($("#aa").is(':checked')){
-			$(".line_aa").show()
-			$(".con_aa").show()
-		} else {
-			$(".line_aa").hide()
-			$(".con_aa").hide()
-		}
+		selectionChange()
 	});
 	$("#nt").click(function(){
-		if($("#nt").is(':checked')){
-			$(".line_nt").show()
-			$(".con_nt").show()
-			$(".insert").show()
-		} else {
-			$(".line_nt").hide()
-			$(".con_nt").hide()
-			$(".insert").hide()
-		}
+		selectionChange()
 	});
 	$("#h1").click(function(){
-		if($("#h1").is(':checked')){
-			$(".line_h1").show()
-		} else {
-			$(".line_h1").hide()
-		}
+		selectionChange()
 	});
 	$("#h3").click(function(){
-		if($("#h3").is(':checked')){
-			$(".line_h3").show()
-		} else {
-			$(".line_h3").hide()
-		}
+		selectionChange()
+	});
+	$("#con").click(function(){
+		selectionChange()
 	});
 });
 
+function selectionChange() {
+	if($("#nt").is(':checked')){
+		$(".insert").show()
+		$(".line_pos_nt").show()
+		if($("#con").is(':checked')){
+			$(".con_nt").show()
+			$(".line_con_nt").show()
+			$(".line_nt").hide()
+		} else {
+			$(".line_nt").show()
+			$(".con_nt").hide()
+			$(".line_con_nt").hide()
+		}
+	} else {
+		$(".line_nt").hide()
+		$(".con_nt").hide()
+		$(".insert").hide()
+		$(".line_pos_nt").hide()
+		$(".line_con_nt").hide()
+	}
+
+	if($("#aa").is(':checked')){
+		$(".line_pos_aa").show()
+		if($("#con").is(':checked')){
+			$(".con_aa").show()
+			$(".line_con_aa").show()
+			$(".line_aa").hide()
+		} else {
+			$(".line_aa").show()
+			$(".con_aa").hide()
+			$(".line_con_aa").hide()
+		}
+	} else {
+		$(".line_aa").hide()
+		$(".con_aa").hide()
+		$(".line_pos_aa").hide()
+		$(".line_con_aa").hide()
+	}
+
+	if($("#h1").is(':checked')){
+		$(".line_h1").show()
+	} else {
+		$(".line_h1").hide()
+	}
+
+	if($("#h3").is(':checked')){
+		$(".line_h3").show()
+	} else {
+		$(".line_h3").hide()
+	}
+}
 
 </script>
 
 <body>
 
-<div style="padding:5px;border:1px solid #96c2f1;background:#eff7ff; width:450px;border-radius:5px;">
+<div style="padding:5px;border:1px solid #96c2f1;background:#eff7ff; width:1000px;border-radius:5px;">
 	<h3 style="margin-left:12px;margin-top:5px;">Options:</h3>
 	<label class="container">AA
 	  <input id = 'aa' type="checkbox" checked="checked">
@@ -220,10 +258,14 @@ $(document).ready(function(){
 	  <input id = 'h3' type="checkbox"  checked="checked">
 	  <span class="checkmark"></span>
 	</label>
+	<label class="container">Consensus
+	  <input id = 'con' type="checkbox">
+	  <span class="checkmark"></span>
+	</label>
 </div>
 
-<div style="padding:5px;border:1px solid #9bdf70;background:#f0fbeb; width:1050px;border-radius:5px;margin-top:10px;">
-	<div class="line line_aa">
+<div style="padding:5px;border:1px solid #9bdf70;background:#f0fbeb; width:1000px;border-radius:5px;margin-top:10px;">
+	<div class="line line_pos_aa">
 		<span class="name">Position AA:</span>
 		<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 1</span></span><span class="insert">&nbsp;</span> 
 		<span class="insert">&nbsp;</span><span class="unit">.<span class ="unit_tip">Original position 2</span></span><span class="insert">&nbsp;</span> 
@@ -283,7 +325,7 @@ $(document).ready(function(){
 		<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
 		<span class="insert">&nbsp;</span><span class="unit">I</span><span class="insert">&nbsp;</span> 
 	</div>
-	<div class="line line_nt">
+	<div class="line line_pos_nt">
 		<span class="name">Position NT:</span>
 		<span class="unit">.<span class ="unit_tip">Original position 1</span></span>
 		<span class="unit">.<span class ="unit_tip">Original position 2</span></span>
@@ -354,6 +396,21 @@ $(document).ready(function(){
 		<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
 		<span class="insert">&nbsp;</span><span class="unit">I</span><span class="insert">&nbsp;</span> 
 	</div>
+	<div class="line line_con_aa">
+		<span class="name">A/HK/4801/2014	(AA)</span>
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+	</div>
 	<div class="line line_nt">
 		<span class="name">A/HK/4801/2014	(NT)</span>
 		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
@@ -368,6 +425,21 @@ $(document).ready(function(){
 		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
 		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
 		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+	</div>
+	<div class="line line_con_nt">
+		<span class="name">A/HK/4801/2014	(NT)</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">C</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">C</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">C</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">C</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">C</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
 	</div>
 	<div class="line line_aa">
 		<span class="name">A/TX/50/2013	(AA)</span>
@@ -384,6 +456,21 @@ $(document).ready(function(){
 		<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
 		<span class="insert">&nbsp;</span><span class="unit">I</span><span class="insert">&nbsp;</span> 
 	</div>
+	<div class="line line_con_aa">
+		<span class="name">A/TX/50/2013	(AA)</span>
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+	</div>
 	<div class="line line_nt">
 		<span class="name">A/TX/50/2013	(NT)</span>
 		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
@@ -398,6 +485,21 @@ $(document).ready(function(){
 		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
 		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
 		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+	</div>
+	<div class="line line_con_nt">
+		<span class="name">A/TX/50/2013	(NT)</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">C</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">C</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">C</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">C</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">C</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
 	</div>
 	<div class="line line_aa">
 		<span class="name">A/SGP/XXXX/2016	(AA)</span>
@@ -414,9 +516,39 @@ $(document).ready(function(){
 		<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
 		<span class="insert">&nbsp;</span><span class="unit">I</span><span class="insert">&nbsp;</span> 
 	</div>
+	<div class="line line_con_aa">
+		<span class="name">A/SGP/XXXX/2016	(AA)</span>
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">Q</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span>
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+		<span class="insert">&nbsp;</span><span class="unit">.</span><span class="insert">&nbsp;</span> 
+	</div>
 	<div class="line line_nt">
 		<span class="name">A/SGP/XXXX/2016	(NT)</span>
 		<span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span><span class="unit">A</span><span class="unit">C</span><span class="unit">C</span>
+	</div>
+	<div class="line line_con_nt">
+		<span class="name">A/SGP/XXXX/2016	(NT)</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">C</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">C</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">C</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">C</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">C</span>
+		<span class="unit">.</span><span class="unit">.</span><span class="unit">.</span>
 	</div>
 </div>
 </body>
