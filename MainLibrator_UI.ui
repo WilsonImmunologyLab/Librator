@@ -2365,20 +2365,6 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_6">
-       <attribute name="title">
-        <string>Test</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_7">
-        <item row="0" column="0">
-         <widget class="QGroupBox" name="testGB">
-          <property name="title">
-           <string>GroupBox</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
      </widget>
     </item>
    </layout>
@@ -2520,6 +2506,7 @@
    <addaction name="actionNTTree"/>
    <addaction name="actionTree"/>
    <addaction name="separator"/>
+   <addaction name="actionAlignmentHTML"/>
    <addaction name="actionMultiple_Alignement"/>
    <addaction name="actionDNA"/>
    <addaction name="actionAA"/>
@@ -3127,6 +3114,21 @@
    </property>
    <property name="text">
     <string>GibsonClone Setting</string>
+   </property>
+  </action>
+  <action name="actionAlignmentHTML">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Resources/VgenesResources.qrc">
+     <normaloff>:/PNG-Icons/Seq.png</normaloff>:/PNG-Icons/Seq.png</iconset>
+   </property>
+   <property name="text">
+    <string>Alignment Viewer</string>
+   </property>
+   <property name="autoRepeat">
+    <bool>true</bool>
    </property>
   </action>
  </widget>

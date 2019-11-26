@@ -41,6 +41,7 @@ from deletedialog import Ui_deleteDialog
 from treedialog import Ui_treeDialog
 from gibsonalignmentdialog import Ui_GibsonMSADialog
 from jointdialog import Ui_JointDialog
+from htmldialog import Ui_htmlDialog
 
 from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText
 from VgenesTextEdit import VGenesTextMain
@@ -2938,6 +2939,12 @@ class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 
 			CurPos += 1
 
+class htmlDialog(QtWidgets.QDialog):
+	def __init__(self):
+		super(htmlDialog, self).__init__()
+		self.ui = Ui_htmlDialog()
+		self.ui.setupUi(self)
+
 class LibratorMain(QtWidgets.QMainWindow):
 	def __init__(self):  # , parent=None):
 		global VGenesTextWindows
@@ -4053,44 +4060,29 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_actionMultiple_Alignement_triggered(self):
-
+		print('run 222 \n')
 		global DataIs
 		global DBFilename
-		# global DataIs
-		# self.ui.cboActive.clear()
+
 		AlignIn = []
 		listItems = self.ui.listWidgetStrainsIn.selectedItems()
 		# if not listItems: return
 		WhereState = ''
 		NumSeqs = len(listItems)
 		i = 1
-
 		if len(listItems) == 0:
 			QMessageBox.warning(self, 'Warning', 'Please select sequence from active sequence panel!', QMessageBox.Ok,
 								QMessageBox.Ok)
 			return
-		elif len(listItems) == 1:
-			# QMessageBox.warning(self, 'Warning', 'Please select multiple sequence from active sequence panel!',
-			# 					QMessageBox.Ok, QMessageBox.Ok)
-			# return
-
-			# self.DecorateSingle()
-			# return
-
-			pass
 		for item in listItems:
-
 			eachItemIs = item.text()
 			WhereState += 'SeqName = "' + eachItemIs + '"'
 			if NumSeqs > i:
 				WhereState += ' OR '
-
 			i += 1
 
-		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState  # SeqName = "327_Cl15_H1" OR SeqName = "327_Cl16_H1" OR SeqName = "327_Cl17_H1"'
-		# SQLStatement = 'SELECT * FROM LibDB WHERE SeqName = "' + eachItemIs + '"'
+		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
 		DataIn = RunSQL(DBFilename, SQLStatement)
-
 		for item in DataIn:
 			SeqName = item[0]
 			Sequence = item[1]
@@ -4105,6 +4097,65 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		Notes = ''
 		self.AlignSequences(AlignIn, Notes)
+
+	@pyqtSlot()
+	def on_actionAlignmentHTML_triggered(self):
+		print('run 111 \n')
+		global VGenesTextWindows
+
+		# load data
+		AlignIn = []
+		listItems = self.ui.listWidgetStrainsIn.selectedItems()
+
+		WhereState = ''
+		NumSeqs = len(listItems)
+		i = 1
+		if len(listItems) == 0:
+			QMessageBox.warning(self, 'Warning', 'Please select sequence from active sequence panel!',
+			                    QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+		for item in listItems:
+			eachItemIs = item.text()
+			WhereState += 'SeqName = "' + eachItemIs + '"'
+			if NumSeqs > i:
+				WhereState += ' OR '
+			i += 1
+
+		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+
+		for item in DataIn:
+			SeqName = item[0]
+			Sequence = item[1]
+			VFrom = int(item[2]) - 1
+			if VFrom == -1: VFrom = 0
+
+			VTo = int(item[3])
+			Sequence = Sequence[VFrom:VTo]
+			Sequence = Sequence.upper()
+			EachIn = (SeqName, Sequence)
+			AlignIn.append(EachIn)
+		# make HTML
+		html_file = AlignSequencesHTML(AlignIn)
+		# delete close window objects
+		del_list = []
+		for id, obj in VGenesTextWindows.items():
+			if obj.isVisible() == False:
+				del_list.append(id)
+		for id in del_list:
+			del_obj = VGenesTextWindows.pop(id)
+
+		# display
+		window_id = int(time.time() * 100)
+		VGenesTextWindows[window_id] = htmlDialog()
+		VGenesTextWindows[window_id].id = window_id
+		layout = QGridLayout(VGenesTextWindows[window_id])
+		view = QWebEngineView(self)
+		view.load(QUrl("file://" + html_file))
+		view.show()
+		layout.addWidget(view)
+		VGenesTextWindows[window_id].show()
 
 	@pyqtSlot()
 	def FillAlignmentTab(self):
