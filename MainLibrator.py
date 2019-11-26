@@ -11921,92 +11921,104 @@ def ReadFASTA(outfilename):
 		return ReadFile
 
 def MakeDivNT(class_name, line_name, data):
-	div_content = '<div class="' + class_name + '">'
-	div_content += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
+	div_name = 	'<div class="' + class_name + '">'
+	div_name += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
+	div_name += '</div>'
+	div_seq = '<div class="' + class_name + '">'
 	for i in range(len(data)):
-		div_content += '<span class="unit">' + data[i] + '</span>'
-	div_content += '</div>'
-	return div_content
+		div_seq += '<span class="unit">' + data[i] + '</span>'
+	div_seq += '</div>'
+
+	return div_name, div_seq
 
 def MakeDivAA(class_name, line_name, data):
-	div_content = '<div class="' + class_name + '">'
-	div_content += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
+	div_name = '<div class="' + class_name + '">'
+	div_name += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
+	div_name += '</div>'
+	div_seq = '<div class="' + class_name + '">'
 	for i in range(len(data)):
-		div_content += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + data[i] + '</span><span class="insert">&nbsp;</span></span>'
-	div_content += '</div>'
-	return div_content
+		div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + data[i] + '</span><span class="insert">&nbsp;</span></span>'
+	div_seq += '</div>'
+
+	return div_name, div_seq
 
 def MakeDivPosAA(class_name, line_name, tip_text, data):
-	div_content = '<div class="' + class_name + '">'
-	div_content += '<span class="name">' + line_name + '</span>'
+	div_name = '<div class="' + class_name + '">'
+	div_name += '<span class="name">' + line_name + '</span>'
+	div_name += '</div>'
+	div_seq = '<div class="' + class_name + '">'
 	for i in range(len(data[0])):
 		if data[0][i] != '-':
 			if int(data[0][i]) % 5 == 0:
-				div_content += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + str(data[0][i]) + \
+				div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + str(data[0][i]) + \
 				               '<span class ="unit_tip">' + tip_text + str(data[1][i]) + \
 				               '</span></span><span class="insert">&nbsp;</span></span>'
 			else:
-				div_content += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + '.' + \
+				div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + '.' + \
 				               '<span class ="unit_tip">' + tip_text + str(data[1][i]) + \
 				               '</span></span><span class="insert">&nbsp;</span></span>'
 		else:
-			div_content += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + str(data[0][i]) + \
+			div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + str(data[0][i]) + \
 			               '<span class ="unit_tip">' + tip_text + str(data[1][i]) + \
 			               '</span></span><span class="insert">&nbsp;</span></span>'
-	div_content += '</div>'
+	div_seq += '</div>'
 
-	return div_content
+	return div_name, div_seq
 
 def MakeDivH1N3(class_name, line_name, tip_text, data):
-	div_content = '<div class="' + class_name + '">'
-	div_content += '<span class="name">' + line_name + '</span>'
+	div_name = '<div class="' + class_name + '">'
+	div_name += '<span class="name">' + line_name + '</span>'
+	div_name += '</div>'
+	div_seq = '<div class="' + class_name + '">'
 	for i in range(len(data)):
 		if data[i][2] == '':
 			if data[i][0] != '-':
 				if int(data[i][0]) % 5.0 == 0:
-					div_content += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + str(data[i][0]) + \
+					div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + str(data[i][0]) + \
 					               '<span class ="unit_tip">' + tip_text + str(data[i][1]) + \
 					               '</span></span><span class="insert">&nbsp;</span></span>'
 				else:
-					div_content += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + '.' + \
+					div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + '.' + \
 					               '<span class ="unit_tip">' + tip_text + str(data[i][1]) + \
 					               '</span></span><span class="insert">&nbsp;</span></span>'
 			else:
-				div_content += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + str(data[i][0]) + \
+				div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + str(data[i][0]) + \
 				               '<span class ="unit_tip">' + tip_text + str(data[i][1]) + \
 				               '</span></span><span class="insert">&nbsp;</span></span>'
 		else:
 			if data[i][0] != '-':
 				if int(data[i][0]) % 5.0 == 0:
-					div_content += '<span class="unit_pack"><span class="insert ' + data[i][2] + '">&nbsp;</span><span class="unit ' + \
+					div_seq += '<span class="unit_pack"><span class="insert ' + data[i][2] + '">&nbsp;</span><span class="unit ' + \
 					               data[i][2] + '">' + str(data[i][0]) + \
 					               '<span class ="unit_tip">' + tip_text + str(data[i][1]) + \
 					               '</span></span><span class="insert ' + data[i][2] + '">&nbsp;</span></span>'
 				else:
-					div_content += '<span class="unit_pack"><span class="insert ' + data[i][2] + '">&nbsp;</span><span class="unit ' + \
+					div_seq += '<span class="unit_pack"><span class="insert ' + data[i][2] + '">&nbsp;</span><span class="unit ' + \
 					               data[i][2] + '">' + '.' + \
 					               '<span class ="unit_tip">' + tip_text + str(data[i][1]) + \
 					               '</span></span><span class="insert ' + data[i][2] + '">&nbsp;</span></span>'
 			else:
-				div_content += '<span class="unit_pack"><span class="insert ' + data[i][2] + '">&nbsp;</span><span class="unit ' + \
+				div_seq += '<span class="unit_pack"><span class="insert ' + data[i][2] + '">&nbsp;</span><span class="unit ' + \
 				               data[i][2] + '">' + str(data[i][0]) + \
 				               '<span class ="unit_tip">' + tip_text + str(data[i][1]) + \
 				               '</span></span><span class="insert ' + data[i][2] + '">&nbsp;</span></span>'
-	div_content += '</div>'
+	div_seq += '</div>'
 
-	return div_content
+	return div_name, div_seq
 
 def MakeDivPosNT(class_name, line_name, tip_text, data):
-	div_content = '<div class="' + class_name + '">'
-	div_content += '<span class="name">' + line_name + '</span>'
+	div_name = '<div class="' + class_name + '">'
+	div_name += '<span class="name">' + line_name + '</span>'
+	div_name += '</div>'
+	div_seq = '<div class="' + class_name + '">'
 	for i in range(len(data[0])):
 		if data[0][i] % 5.0 == 0:
-			div_content += '<span class="unit">' + str(data[0][i]) + '<span class ="unit_tip">' + tip_text + \
+			div_seq += '<span class="unit">' + str(data[0][i]) + '<span class ="unit_tip">' + tip_text + \
 			               str(data[1][i]) +  '</span></span>'
 		else:
-			div_content += '<span class="unit">' + '.' + '<span class ="unit_tip">' + tip_text + str(data[1][i]) +  '</span></span>'
-	div_content += '</div>'
-	return div_content
+			div_seq += '<span class="unit">' + '.' + '<span class ="unit_tip">' + tip_text + str(data[1][i]) +  '</span></span>'
+	div_seq += '</div>'
+	return div_name, div_seq
 
 def AlignSequencesHTML(DataSet):
 	# import tempfile
@@ -12164,14 +12176,22 @@ def AlignSequencesHTML(DataSet):
 	header_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'template.html')
 	shutil.copyfile(header_file, out_html_file)
 	out_file_handle = open(out_html_file, 'a')
-	# write header section
-	out_file_handle.write(div_pos_aa + '\n')
-	out_file_handle.write(div_h1 + '\n')
-	out_file_handle.write(div_h3 + '\n')
-	out_file_handle.write(div_con_aa + '\n')
-	out_file_handle.write(div_pos_nt + '\n')
-	out_file_handle.write(div_con_nt + '\n')
 
+	name_div = '<div class="name_div">\n'
+	seq_div = '<div class = "seq_div">\n'
+	# write header section
+	name_div += div_pos_aa[0] + '\n'
+	seq_div += div_pos_aa[1] + '\n'
+	name_div += div_h1[0] + '\n'
+	seq_div += div_h1[1] + '\n'
+	name_div += div_h3[0] + '\n'
+	seq_div += div_h3[1] + '\n'
+	name_div += div_con_aa[0] + '\n'
+	seq_div += div_con_aa[1] + '\n'
+	name_div += div_pos_nt[0] + '\n'
+	seq_div += div_pos_nt[1] + '\n'
+	name_div += div_con_nt[0] + '\n'
+	seq_div += div_con_nt[1] + '\n'
 	# make sequence section HTML
 	for seq in all:
 		seq_nt = seq[1]
@@ -12184,11 +12204,19 @@ def AlignSequencesHTML(DataSet):
 		div_nt = MakeDivNT('line line_nt', seq[0], seq_nt)
 		div_nt_mut = MakeDivNT('line line_con_nt', seq[0], con_nt)
 		# write sequence section
-		out_file_handle.write(div_aa + '\n')
-		out_file_handle.write(div_aa_mut + '\n')
-		out_file_handle.write(div_nt + '\n')
-		out_file_handle.write(div_nt_mut + '\n')
+		name_div += div_aa[0] + '\n'
+		seq_div += div_aa[1] + '\n'
+		name_div += div_aa_mut[0] + '\n'
+		seq_div += div_aa_mut[1] + '\n'
+		name_div += div_nt[0] + '\n'
+		seq_div += div_nt[1] + '\n'
+		name_div += div_nt_mut[0] + '\n'
+		seq_div += div_nt_mut[1] + '\n'
 
+	name_div += '</div>\n'
+	seq_div += '</div>\n'
+	out_file_handle.write(name_div)
+	out_file_handle.write(seq_div)
 	out_file_handle.write('\n</div>\n</body>\n</html>')
 	out_file_handle.close()
 	return out_html_file
