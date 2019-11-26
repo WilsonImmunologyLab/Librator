@@ -970,6 +970,11 @@
                  <property name="headerHidden">
                   <bool>true</bool>
                  </property>
+                 <column>
+                  <property name="text">
+                   <string notr="true">1</string>
+                  </property>
+                 </column>
                 </widget>
                </item>
                <item row="1" column="1">
@@ -2507,6 +2512,7 @@
    <addaction name="actionTree"/>
    <addaction name="separator"/>
    <addaction name="actionAlignmentHTML"/>
+   <addaction name="separator"/>
    <addaction name="actionMultiple_Alignement"/>
    <addaction name="actionDNA"/>
    <addaction name="actionAA"/>
@@ -2516,9 +2522,11 @@
    <addaction name="actionDecrease_font_size"/>
    <addaction name="separator"/>
    <addaction name="actionClean"/>
+   <addaction name="separator"/>
    <addaction name="actionPreferences"/>
    <addaction name="separator"/>
    <addaction name="action_Help"/>
+   <addaction name="separator"/>
   </widget>
   <action name="action_Open">
    <property name="icon">
@@ -3122,7 +3130,7 @@
    </property>
    <property name="icon">
     <iconset resource="Resources/VgenesResources.qrc">
-     <normaloff>:/PNG-Icons/Seq.png</normaloff>:/PNG-Icons/Seq.png</iconset>
+     <normaloff>:/PNG-Icons/MSA.png</normaloff>:/PNG-Icons/MSA.png</iconset>
    </property>
    <property name="text">
     <string>Alignment Viewer</string>

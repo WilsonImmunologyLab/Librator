@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="PNG-Icons">
+    <file>MSA.png</file>
     <file>Seq.png</file>
     <file>HA.png</file>
     <file>NA.png</file>
