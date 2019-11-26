@@ -3307,7 +3307,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 		SQLStatement = 'SELECT * FROM Fragments ORDER BY Name DESC'
 		if self.ui.FragmentTab.currentIndex() == 0:     # connect to local sqLite DB
 			F_db_name = self.ui.dbpath.text()
-			DataIn = RunSQL(F_db_name, SQLStatement)
+			try:
+				DataIn = RunSQL(F_db_name, SQLStatement)
+			except:
+				Msg = 'Can not connect to the Fragment DB! Please chekc your input!'
+				QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+				return
 		else:                                           # connect to remote MySQL DB
 			server_ip = self.ui.IPinput.text()
 			server_port = self.ui.Portinput.text()
@@ -3316,7 +3321,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 			db_pass = self.ui.Passinput.text()
 
 			db_config = [server_ip, server_port, db_name, db_user, db_pass]
-			DataIn = RunMYSQL(db_config, SQLStatement)
+			try:
+				DataIn = RunMYSQL(db_config, SQLStatement)
+			except:
+				Msg = 'Can not connect to the Fragment DB! Please chekc your input!'
+				QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+				return
 
 		num_row = len(DataIn)
 		num_col = 9
