@@ -11912,7 +11912,7 @@ def ReadFASTA(outfilename):
 
 def MakeDivNT(class_name, line_name, data):
 	div_content = '<div class="' + class_name + '">'
-	div_content += '<span class="name">' + line_name + '</span>'
+	div_content += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
 	for i in range(len(data)):
 		div_content += '<span class="unit">' + data[i] + '</span>'
 	div_content += '</div>'
@@ -11920,7 +11920,7 @@ def MakeDivNT(class_name, line_name, data):
 
 def MakeDivAA(class_name, line_name, data):
 	div_content = '<div class="' + class_name + '">'
-	div_content += '<span class="name">' + line_name + '</span>'
+	div_content += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
 	for i in range(len(data)):
 		div_content += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + data[i] + '</span><span class="insert">&nbsp;</span></span>'
 	div_content += '</div>'
