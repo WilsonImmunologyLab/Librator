@@ -3349,7 +3349,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.tableWidget.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.Fixed)
 		self.ui.tableWidget.horizontalHeader().setSectionResizeMode(4, QtWidgets.QHeaderView.Fixed)
 		self.ui.tableWidget.horizontalHeader().setSectionResizeMode(8, QtWidgets.QHeaderView.Fixed)
-		self.ui.tableWidget.setColumnWidth(1, 60)
+		self.ui.tableWidget.setColumnWidth(0, 100)
 		self.ui.tableWidget.setColumnWidth(1, 60)
 		self.ui.tableWidget.setColumnWidth(2, 60)
 		self.ui.tableWidget.setColumnWidth(3, 60)
@@ -4100,9 +4100,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_actionAlignmentHTML_triggered(self):
-		print('run 111 \n')
 		global VGenesTextWindows
-
 		# load data
 		AlignIn = []
 		listItems = self.ui.listWidgetStrainsIn.selectedItems()
