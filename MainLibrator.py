@@ -11974,8 +11974,15 @@ def MakeDivNT(class_name, line_name, data):
 	div_name += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
 	div_name += '</div>'
 	div_seq = '<div class="' + class_name + '">'
+	count = 0
 	for i in range(len(data)):
+		if count == 0:
+			div_seq += '<span class="unit_pack">'
+		elif count%3 == 0:
+			div_seq += '</span><span class="unit_pack">'
 		div_seq += '<span class="unit">' + data[i] + '</span>'
+		count += 1
+	div_seq += '</span>'
 	div_seq += '</div>'
 
 	return div_name, div_seq
@@ -12060,12 +12067,31 @@ def MakeDivPosNT(class_name, line_name, tip_text, data):
 	div_name += '<span class="name">' + line_name + '</span>'
 	div_name += '</div>'
 	div_seq = '<div class="' + class_name + '">'
+	count = 0
 	for i in range(len(data[0])):
-		if data[0][i] % 5.0 == 0:
-			div_seq += '<span class="unit">' + str(data[0][i]) + '<span class ="unit_tip">' + tip_text + \
-			               str(data[1][i]) +  '</span></span>'
+		if count == 0:
+			div_seq += '<span class="unit_pack">'
+			if data[0][i] % 5.0 == 0:
+				div_seq += '<span class="unit">' + str(data[0][i]) + '<span class ="unit_tip">' + tip_text + \
+				               str(data[1][i]) + ' - ' + str(int(data[1][i]) + 2) +  '</span></span>'
+			else:
+				div_seq += '<span class="unit">' + '.' + '<span class ="unit_tip">' + tip_text + str(data[1][i]) + \
+				           ' - ' + str(int(data[1][i]) + 2) +  '</span></span>'
+		elif count % 3 == 0:
+			div_seq += '</span><span class="unit_pack">'
+			if data[0][i] % 5.0 == 0:
+				div_seq += '<span class="unit">' + str(data[0][i]) + '<span class ="unit_tip">' + tip_text + \
+				               str(data[1][i])  + ' - ' + str(int(data[1][i]) + 2) +  '</span></span>'
+			else:
+				div_seq += '<span class="unit">' + '.' + '<span class ="unit_tip">' + tip_text + str(data[1][i]) + \
+				           ' - ' + str(int(data[1][i]) + 2) +  '</span></span>'
 		else:
-			div_seq += '<span class="unit">' + '.' + '<span class ="unit_tip">' + tip_text + str(data[1][i]) +  '</span></span>'
+			if data[0][i] % 5.0 == 0:
+				div_seq += '<span class="unit">' + str(data[0][i]) + '</span>'
+			else:
+				div_seq += '<span class="unit">' + '.' + '</span>'
+		count += 1
+	div_seq += '</span>'
 	div_seq += '</div>'
 	return div_name, div_seq
 
