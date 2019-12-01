@@ -12078,69 +12078,89 @@ def AlignSequencesHTML(DataSet):
 	global clustal_path
 	global temp_folder
 	global VGenesTextWindows
+	global muscle_path
 
-	# align selected sequences using ClustalOmega
-	outfilename = ''
-	try:
-		if len(DataSet) == 1:
-			time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
-			outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
-			out_handle = open(outfilename,'w')
-			out_handle.write('>' + DataSet[0][0] + '\n')
-			out_handle.write(DataSet[0][1])
-			out_handle.close()
-		else:
-			if os.path.exists(clustal_path):
-				outfilename = LibratorSeq.ClustalO(DataSet, 80, True, temp_folder, clustal_path)
-			else:
-				QMessageBox.warning(self, 'Warning',
-				                    'The Clustal Omega does not exist! Check your path!', QMessageBox.Ok, QMessageBox.Ok)
-				return
-		each = ()
-		all = []
-		SeqName = ''
-		# read alignment file, make alignment NT and AA sequences
-		if os.path.isfile(outfilename):
-			with open(outfilename, 'r') as currentfile:
-				for line in currentfile:
-					Readline = line.replace('\n', '').replace('\r', '')
-					Readline = Readline.strip()
-					if Readline[0] == '>':
-						all.append(each)
-						SeqName = Readline[1:] + ':'
-					else:
-						AASeq, ErMessage = LibratorSeq.Translator(Readline, 0)
-						peptide = ''
-						for res in AASeq:
-							peptide += (' ' + res + ' ')
-						peptide = peptide[0:len(Readline)]
-						each = (SeqName, Readline, peptide)
-			all.append(each)
-		else:
+	# align selected sequences (AA) using muscle
+	all = dict()
+	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+	outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
+	aafilename = os.path.join(temp_folder, "in-" + time_stamp + ".fas")
+	if len(DataSet) == 1:
+		SeqName = DataSet[0][0].replace('\n', '').replace('\r', '')
+		SeqName = SeqName.strip()
+		NTseq = DataSet[0][1]
+		AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
+		all[SeqName] = [NTseq, AAseq]
+
+		out_handle = open(outfilename,'w')
+		out_handle.write('>' + SeqName + '\n')
+		out_handle.write(AAseq)
+		out_handle.close()
+	else:
+		aa_handle = open(aafilename,'w')
+		for record in DataSet:
+			SeqName = record[0].replace('\n', '').replace('\r', '')
+			SeqName = SeqName.strip()
+			NTseq = record[1]
+			AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
+			AAseq = AAseq.replace('*','X').replace('~','Z').replace('.','J')
+			all[SeqName] = [NTseq, AAseq]
+			aa_handle.write('>' + SeqName + '\n')
+			aa_handle.write(AAseq + '\n')
+		aa_handle.close()
+
+		cmd = muscle_path
+		cmd += " -in " + aafilename + " -out " + outfilename
+		try:
+			os.system(cmd)
+		except:
+			QMessageBox.warning(self, 'Warning', 'Fail to run muscle! Check your muscle path!', QMessageBox.Ok,
+			                    QMessageBox.Ok)
 			return
-	# todo add header that says what germline based on
-	except:
-		print('no')
-	finally:
-		if os.path.exists(outfilename):
-			os.remove(outfilename)
 
-	all = all[1:]
+	# read alignment file, make alignment NT and AA sequences
+	SeqName = ''
+	AAseq = ''
+	if os.path.isfile(outfilename):
+		currentfile = open(outfilename, 'r')
+		lines = currentfile.readlines()
+		for line in lines:
+			Readline = line.replace('\n', '').replace('\r', '')
+			Readline = Readline.strip()
+			if Readline[0] == '>':
+				if SeqName != '':
+					AAseq, NTseq = BuildNTalignment(AAseq, all[SeqName][0])
+					all[SeqName] = [NTseq, AAseq]
+				SeqName = Readline[1:]
+				AAseq = ''
+			else:
+				AAseq += Readline
+		AAseq, NTseq = BuildNTalignment(AAseq, all[SeqName][0])
+		all[SeqName] = [NTseq, AAseq]
+	else:
+		return
+
+	if os.path.exists(outfilename):
+		os.remove(outfilename)
+	if os.path.exists(aafilename):
+		os.remove(aafilename)
+
 	# generate consnesus sequences (AA and NT)
 	if len(all) == 1:
-		consensusDNA = all[0][1]
-		consensusAA = all[0][2]
+		for key in all:
+			consensusDNA = all[key][0]
+			consensusAA = all[key][1]
 	else:
-		firstOne = all[0]
-		seqlen = len(firstOne[1])
+		firstOne = all[SeqName]
+		seqlen = len(firstOne[0])
 
 		consensusDNA = ''
 		tester = ''
 		for i in range(seqlen):
 			tester = ''
 			Cnuc = ''
-			for item in all:
-				seq = item[1]
+			for key in all:
+				seq = all[key][0]
 				tester += seq[i]
 
 			frequencies = [(c, tester.count(c)) for c in set(tester)]
@@ -12148,13 +12168,13 @@ def AlignSequencesHTML(DataSet):
 			consensusDNA += Cnuc
 
 		consensusAA = ''
-		firstOne = all[1]
+		firstOne = all[SeqName]
 		seqlen = len(firstOne[1])
 		for i in range(seqlen):
 			tester = ''
 			Caa = ''
-			for item in all:
-				seq = item[2]
+			for key in all:
+				seq = all[key][1]
 				tester += seq[i]
 
 			frequencies = [(c, tester.count(c)) for c in set(tester)]
@@ -12242,16 +12262,16 @@ def AlignSequencesHTML(DataSet):
 	name_div += div_con_nt[0] + '\n'
 	seq_div += div_con_nt[1] + '\n'
 	# make sequence section HTML
-	for seq in all:
-		seq_nt = seq[1]
-		seq_aa = seq[2].replace(' ', '')
+	for key in all:
+		seq_nt = all[key][0]
+		seq_aa = all[key][1]
 		con_nt = MakeConSeq(seq_nt, consensusDNA)
 		con_aa = MakeConSeq(seq_aa, compact_consensusAA)
 
-		div_aa = MakeDivAA('line line_aa', seq[0], seq_aa)
-		div_aa_mut = MakeDivAA('line line_con_aa', seq[0], con_aa)
-		div_nt = MakeDivNT('line line_nt', seq[0], seq_nt)
-		div_nt_mut = MakeDivNT('line line_con_nt', seq[0], con_nt)
+		div_aa = MakeDivAA('line line_aa', key, seq_aa)
+		div_aa_mut = MakeDivAA('line line_con_aa', key, con_aa)
+		div_nt = MakeDivNT('line line_nt', key, seq_nt)
+		div_nt_mut = MakeDivNT('line line_con_nt', key, con_nt)
 		# write sequence section
 		name_div += div_aa[0] + '\n'
 		seq_div += div_aa[1] + '\n'
@@ -12275,6 +12295,30 @@ def MakeConSeq(seq, con):
 		if seq[i] == con[i]:
 			seq = seq[:i] + '.' + seq[i+1:]
 	return seq
+
+def BuildNTalignment(aa, nt):
+	pos = 0
+	new_nt = ''
+	for i in range(len(aa)):
+		cur_aa = aa[i]
+		if cur_aa == '-':
+			new_nt += '---'
+		elif cur_aa == 'X':
+			new_nt += nt[pos:pos + 3]
+			aa = aa[:i] + '*' + aa[i+1:]
+			pos = pos + 3
+		elif cur_aa == 'Z':
+			new_nt += nt[pos:] + '-'*(3 - len(nt[pos:]))
+			aa = aa[:i] + '~' + aa[i + 1:]
+			pos = pos + 3
+		elif cur_aa == 'J':
+			new_nt += nt[pos:pos + 3]
+			pos = pos + 3
+		else:
+			new_nt += nt[pos:pos + 3]
+			pos = pos + 3
+	a = 1
+	return aa, new_nt
 
 def SequenceCheck(sequence, type):
 	Msg = 'none'
