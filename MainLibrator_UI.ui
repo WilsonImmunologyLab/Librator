@@ -2005,7 +2005,7 @@
       </widget>
       <widget class="QWidget" name="tabAlignment">
        <attribute name="title">
-        <string>Alignment</string>
+        <string>Alignment(RTF)</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_16">
         <item row="0" column="0">
@@ -2247,7 +2247,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="tab_4">
               <attribute name="title">
@@ -2366,6 +2366,20 @@
             </widget>
            </item>
           </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_6">
+       <attribute name="title">
+        <string>Alignment(HTML)</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_7">
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="MSAgroupBox">
+          <property name="title">
+           <string>Multiple Sequence Alignment</string>
+          </property>
          </widget>
         </item>
        </layout>

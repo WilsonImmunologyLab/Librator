@@ -4522,11 +4522,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 			WhereState = ''
 			NumSeqs = len(listItems)
 			i = 1
+
 			if len(listItems) == 0:
-				QMessageBox.warning(self, 'Warning', 'Please select sequence from active sequence panel!',
-				                    QMessageBox.Ok,
-				                    QMessageBox.Ok)
+				layout = self.ui.MSAgroupBox.layout()
+				if layout == None:
+					layout = QGridLayout(self.ui.MSAgroupBox)
+				else:
+					for i in range(layout.count()):
+						layout.removeWidget(layout.itemAt(i).widget())
 				return
+
 			for item in listItems:
 				eachItemIs = item.text()
 				WhereState += 'SeqName = "' + eachItemIs + '"'
@@ -4551,10 +4556,15 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# make HTML
 			html_file = AlignSequencesHTML(AlignIn)
 			# display
-			layout = QGridLayout(self.ui.testGB)
 			view = QWebEngineView()
 			view.load(QUrl("file://" + html_file))
 			view.show()
+
+			layout = self.ui.MSAgroupBox.layout()
+			if layout == None:
+				layout = QGridLayout(self.ui.MSAgroupBox)
+			for i in range(layout.count()):
+				layout.removeWidget(layout.itemAt(i).widget())
 			layout.addWidget(view)
 
 	def EditTableItem(self,item):
@@ -4681,7 +4691,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.Stat_fig()
 		#self.ui.groupBox3.layout().itemAt(2).widget().deleteLater()
 		self.ui.groupBox3.layout().addWidget(self.F, 2, 0, 10, 0)
-
 
 	def Stat_fig(self):
 		global H1_start, H1_end, H3_start, H3_end, NA_start, NA_end, working_prefix
@@ -5088,7 +5097,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 							self.PopulateCombos()
 							return
 
-
 	@pyqtSlot()
 	def on_actionDelete_record_triggered(self):
 		# fields = ['SeqName', 'ID']
@@ -5142,7 +5150,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# 		AASeq = Translator(HASeq.upper(), 0)
 			# 		AASeqIs = AASeq[0]
 			# 	self.HANumbering(AASeqIs)
-
 
 	@pyqtSlot()
 	def on_btnH1Num_clicked(self):
@@ -5204,8 +5211,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 				return
 			cursor = self.ui.txtAASeq.textCursor()
 			self.DecorateNoneHA(Decorations, cursor)
-
-
 
 	@pyqtSlot()
 	def DecorateSingle(self):
@@ -6843,7 +6848,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			CurPos += 1
 
-
 	def AlignSequencesFusion(self, DataIn, Notes, dnaCheck, aaCheck, posCheck):
 		# import tempfile
 		import os
@@ -7401,7 +7405,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.ui.txtSeqAlignment.setText(alignmentText)
 
 		QApplication.restoreOverrideCursor()
-
 
 	@pyqtSlot()
 	def AlignSequences(self, DataIn, Notes):
@@ -8026,12 +8029,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		QApplication.restoreOverrideCursor()
 
-		# for item in Aligned:
-
-		# print('done')
-
-	# do lengthy process
-
 	def MakeRuler(self, pos1, pos2, step, mode):
 		ErrMsg = ""
 		if len(str(pos2)) > step - 1:
@@ -8479,14 +8476,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		QApplication.restoreOverrideCursor()
 
-
-
-		# for item in Aligned:
-
-		# print('done')
-
-	# do lengthy process
-
 	@pyqtSlot()
 	def on_action_Save_triggered(self):
 		# SeqName, Sequence, SeqLen, SubType, Form, VFrom, VTo, Active, Role, Donor, Mutations, ID
@@ -8550,9 +8539,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		for item in listSaves:
 
 			self.UpdateSeq(SeqName, item[0], item[1])
-
-
-
 
 	@pyqtSlot()
 	def FormChanged(self):
@@ -8676,7 +8662,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.UpdateSeq(CurName, CurrVal, 'Active')
 
-
 	@pyqtSlot()
 	def SeqFrom(self):
 		CurName = self.ui.txtName.toPlainText()
@@ -8687,7 +8672,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.UpdateSeq(CurName, str(CurrVal), 'VFrom')
 
 		self.ListItemChanged()
-
 
 	@pyqtSlot()
 	def SeqTo(self):
@@ -8724,7 +8708,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.UpdateSeq(CurName, Sequence, 'Sequence')
 			self.UpdateSeq(CurName, SeqLen, 'SeqLen')
 			MoveNotChange = False
-
 
 	@pyqtSlot()
 	def UpdateSequences(self):
@@ -8824,13 +8807,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 											 'believe the information is wrong, \nplease re-generate'
 											 ' new sequence with correct mutation!', QMessageBox.Ok, QMessageBox.Ok)
 
-
 	@pyqtSlot()
 	def UpdateSeq(self, ID, ItemValue, FieldName):
 		global DBFilename
 		# ID = item[0]
 		UpdateField(ID, ItemValue, FieldName, DBFilename)
-
 
 	@pyqtSlot()
 	def ShowVGenesTextEdit(self, textToShow, style, ColorMap, window_id):
@@ -8969,7 +8950,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 	@pyqtSlot()
 	def on_actionGibsonClone_triggered(self):
 		self.open_gibson_dialog()
-
 
 	@pyqtSlot()
 	def on_action_Open_triggered(self):  # how to activate menu and toolbar actions!!!
@@ -9131,7 +9111,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.treeWidget.itemClicked['QTreeWidgetItem*', 'int'].connect(self.TreeItemClicked)
 		self.ui.treeWidget.expandAll()
 
-
 	def TreeItemClicked(self, item, column):
 		if item.checkState(0):
 			if item.childCount() > 0:
@@ -9176,7 +9155,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# updata interface
 		self.ui.listWidgetStrainsIn.addItems(selections)
 
-
 	@pyqtSlot()
 	def OpenRecent(self):  # how to activate menu and toolbar actions!!!
 		#need to simply get database name and populate list views
@@ -9200,7 +9178,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.UpdateRecent()
 				QMessageBox.warning(self, 'Warning', 'This DB file does not exist!',
 				                    QMessageBox.Ok, QMessageBox.Ok)
-
 
 	@pyqtSlot()
 	def UpdateRecentFilelist(self, DBFilename):
@@ -9233,7 +9210,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			file_handle.close()
 			self.ui.cboRecent.addItem(DBFilename)
 
-	# actionHANumbering
 	@pyqtSlot()
 	def on_btnCopyRecords_clicked(self):
 		global DBFilename
@@ -9363,7 +9339,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		DataIs = RunSQL(DBFilename, SQLStatement)
 		# 	 SeqName , Sequence , SeqLen, SubType , Form , Placeholder, ID
 		self.UpdateFields()
-
 
 	@pyqtSlot()
 	def UpdateFields(self):
