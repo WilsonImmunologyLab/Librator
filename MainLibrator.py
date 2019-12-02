@@ -4563,8 +4563,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			layout = self.ui.MSAgroupBox.layout()
 			if layout == None:
 				layout = QGridLayout(self.ui.MSAgroupBox)
-			for i in range(layout.count()):
-				layout.removeWidget(layout.itemAt(i).widget())
+			else:
+				for i in range(layout.count()):
+					layout.removeWidget(layout.itemAt(i).widget())
 			layout.addWidget(view)
 
 	def EditTableItem(self,item):
@@ -9551,8 +9552,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.ui.listWidgetStrainsIn.takeItem(listRow)
 		self.rebuildTree()
 
-
-
 	@pyqtSlot()
 	def removeAll(self):
 		# listRow = self.ui.listWidgetStrainsIn.currentRow()
@@ -9609,10 +9608,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# if os.path.isfile(DBFilename):
 			# 	self.LoadDB(DBFilename)
 		self.ui.cboRecent.setCurrentIndex(0)
-		# else:
-		# 	self.hide()
-		# 	self.ApplicationStarted()
-
 
 	@pyqtSlot()
 	def on_actionImportLei_triggered(self):
@@ -9644,8 +9639,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		with open(SavedFile, 'w') as currentFile:
 			currentFile.write(FASTA)
 
-
-	# action_Import
 	@pyqtSlot()
 	def on_action_Import_triggered(self):
 		self.ImportSeqs()
@@ -10145,6 +10138,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 						self.ui.listWidgetStrainsIn.addItem(seq_name)
 						if self.modalessMutationDialog != None:
 							self.modalessMutationDialog.close()
+
 	def generate_mutation_sequence_pre(self, numbering, template_name, seq_name, mutation1, mutation2, mode):
 		if mode == 'single':
 			self.generate_mutation_sequence(numbering, template_name, seq_name, mutation1, mutation2)
@@ -10170,8 +10164,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 					if x != '':
 						seq_name1 = template_name + '-' + x + '(HA2)'
 						self.generate_mutation_sequence(numbering, template_name, seq_name1, '', x)
-
-
 
 	def open_mutation_dialog(self):
 		if self.ui.txtName.toPlainText() == "":
@@ -10982,7 +10974,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		elif editing_mode == 3:
 			pass
 
-
 	def GenerateGibson(self, mode, selections, joint_up_str, joint_down_str, out_dir, db_file, subtype, joint_plan):
 		listItems = selections.split("\n")
 		WhereState = ''
@@ -11380,7 +11371,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessGibsonMSADialog.gibson_msa_Signal.connect(self.GibsonConfirm)
 		# show dialog
 		self.modalessGibsonMSADialog.show()
-
 
 	def GibsonConfirm(self, fragment_data, mode, db_file, out_dir, joint, subtype, num_fragment):
 		new_fragment_name_list = []
