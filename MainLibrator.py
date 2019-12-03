@@ -2335,112 +2335,96 @@ class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 
 		DataSet = DataIn
 
-		# align selected sequences using ClustalOmega
-		outfilename = ''
-		try:
-			if len(DataSet) == 1:
-				time_stamp = str(int(time.time() * 100))
-				outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
-				out_handle = open(outfilename, 'w')
-				out_handle.write('>' + DataSet[0][0] + '\n')
-				out_handle.write(DataSet[0][1])
-				out_handle.close()
-			else:
-				if os.path.exists(clustal_path):
-					outfilename = LibratorSeq.ClustalO(DataSet, 80, True, temp_folder, clustal_path)
-				else:
-					QMessageBox.warning(self, 'Warning',
-					                    'The Clustal Omega does not exist! Check your path!', QMessageBox.Ok,
-					                    QMessageBox.Ok)
-					return
+		lenName = 0
+		longestName = 0
 
-			lenName = 0
-			longestName = 0
-			alignmentText = ''
-			ColorMap = ''
-			germseq = ''
-			germpeptide = ''
+		alignmentText = ''
+		ColorMap = ''
+		germseq = ''
+		germpeptide = ''
 
-			each = ()
-			all = []
-			longestName = 10
+		each = ()
+		all = []
 
-			peptide = ''
-			SeqName = ''
-			StartAll = False
+		# align selected sequences (AA) using muscle
+		all_dict = dict()
+		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+		outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
+		aafilename = os.path.join(temp_folder, "in-" + time_stamp + ".fas")
+		if len(DataSet) == 1:
+			SeqName = DataSet[0][0].replace('\n', '').replace('\r', '')
+			SeqName = SeqName.strip()
+			NTseq = DataSet[0][1]
+			AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
+			all_dict[SeqName] = [NTseq, AAseq]
 
-			# read alignment file, make alignment NT and AA sequences
-			if os.path.isfile(outfilename):
-				with open(outfilename, 'r') as currentfile:
-					for line in currentfile:
-						Readline = line.replace('\n', '').replace('\r', '').replace('-', '.')
-						Readline = Readline.strip()
-						if Readline[0] == '>':
-							if StartAll == True:
-								all.append(each)
-							StartAll = True
-							SeqName = Readline[1:] + ':'
-							lenName = len(SeqName)
-							if lenName > longestName:
-								longestName = lenName + 2
-						else:
-							AASeq, ErMessage = LibratorSeq.Translator(Readline, 0)
-							# Position, Amino Acid, H1-segment (HA1 or HA2), H1Number, A/California/4/2009-residue, H1-antigenic-region
+			out_handle = open(outfilename, 'w')
+			out_handle.write('>' + SeqName + '\n')
+			out_handle.write(AAseq)
+			out_handle.close()
+		else:
+			aa_handle = open(aafilename, 'w')
+			for record in DataSet:
+				SeqName = record[0].replace('\n', '').replace('\r', '')
+				SeqName = SeqName.strip()
+				NTseq = record[1]
+				AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
+				AAseq = AAseq.replace('*', 'X').replace('~', 'Z').replace('.', 'J')
+				all_dict[SeqName] = [NTseq, AAseq]
+				aa_handle.write('>' + SeqName + '\n')
+				aa_handle.write(AAseq + '\n')
+			aa_handle.close()
 
-							if DataIn == 'RF':
-								AASeq2, ErMessage = LibratorSeq.Translator(Readline, 1)
-								AASeq3, ErMessage = LibratorSeq.Translator(Readline, 2)
-							peptide = ''
-							if DataIn == 'RF':
-								peptide2 = ''
-								peptide3 = ''
-
-							for res in AASeq:
-								peptide += (' ' + res + ' ')
-
-							if DataIn == 'RF':
-								for res in AASeq2:
-									peptide2 += (' ' + res + ' ')
-								for res in AASeq3:
-									peptide3 += (' ' + res + ' ')
-
-							peptide = peptide[0:len(Readline)]
-
-							if DataIn == 'RF':
-								peptide = peptide[1:]
-								peptide2 = peptide2[0:len(Readline)]
-
-							if DataIn == 'RF':
-								peptide3 = peptide3[0:len(Readline)]
-								peptide3 = ' ' + peptide3
-
-							if SeqName != 'Germline:':
-								if DataIn == 'RF':
-									each = (SeqName, Readline, peptide, peptide2, peptide3)
-								else:
-									each = (SeqName, Readline, peptide)
-							else:
-								germseq = Readline
-								germpeptide = peptide
-								StartAll = False
-				if StartAll == True:
-					all.append(each)
-			else:
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+			try:
+				os.system(cmd)
+			except:
+				QMessageBox.warning(self, 'Warning', 'Fail to run muscle! Check your muscle path!', QMessageBox.Ok,
+				                    QMessageBox.Ok)
 				return
-		# todo add header that says what germline based on
-		except:
-			print('no')
 
-		finally:
-			if os.path.exists(outfilename):
-				os.remove(outfilename)
+		# read alignment file, make alignment NT and AA sequences
+		SeqName = ''
+		AAseq = ''
+		if os.path.isfile(outfilename):
+			currentfile = open(outfilename, 'r')
+			lines = currentfile.readlines()
+			for line in lines:
+				Readline = line.replace('\n', '').replace('\r', '')
+				Readline = Readline.strip()
+				if Readline[0] == '>':
+					if SeqName != '':
+						lenName = len(SeqName)
+						if lenName > longestName:
+							longestName = lenName + 2
+						AAseq, NTseq = BuildNTalignment(AAseq, all_dict[SeqName][0])
+						each = (SeqName, NTseq, SparseSeq(AAseq))
+						all.append(each)
+					SeqName = Readline[1:]
+					AAseq = ''
+				else:
+					AAseq += Readline
+			lenName = len(SeqName)
+			if lenName > longestName:
+				longestName = lenName + 2
+			AAseq, NTseq = BuildNTalignment(AAseq, all_dict[SeqName][0])
+			each = (SeqName, NTseq, SparseSeq(AAseq))
+			all.append(each)
+		else:
+			return
+
+		if os.path.exists(outfilename):
+			os.remove(outfilename)
+		if os.path.exists(aafilename):
+			os.remove(aafilename)
 
 		# generate consnesus sequences (AA and NT)
 		if len(all) == 1:
 			consensusDNA = all[0][1]
 			consensusAA = all[0][2]
 		else:
-			firstOne = all[1]
+			firstOne = all[0]
 			seqlen = len(firstOne[1])
 
 			consensusDNA = ''
@@ -2457,8 +2441,8 @@ class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 				consensusDNA += Cnuc
 
 			consensusAA = ''
-			firstOne = all[1]
-			seqlen = len(firstOne[1])
+			firstOne = all[0]
+			seqlen = len(firstOne[2])
 			for i in range(0, seqlen - 1):
 				tester = ''
 				Caa = ''
@@ -4060,7 +4044,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_actionMultiple_Alignement_triggered(self):
-		print('run 222 \n')
 		global DataIs
 		global DBFilename
 
@@ -7420,171 +7403,98 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global temp_folder
 		global VGenesTextWindows
 
-		if self.ui.actionDNA.isChecked() == False and self.ui.actionAA.isChecked() == False:
-			QMessageBox.warning(self, 'Warning', 'Neither DNA nor AA has been selected! Will generate DNA alignment!',
-								QMessageBox.Ok, QMessageBox.Ok)
-			self.ui.actionDNA.setChecked(True)
+		DataSet = DataIn
 
-		if DataIn == 'RF':  #can use this part for reading frames
-			fields = ['SeqName', 'Sequence']
-			# checkedProjects, checkedGroups, checkedSubGroups, checkedkids = getTreeChecked()
-			# SQLStatement = LibratorSQL.MakeSQLStatement(self, fields, data[0])
-			#
-			#
-			# DataIs = VGenesSQL.RunSQL(DBFilename, SQLStatement)  # returns list of tuples where seqname is first
+		lenName = 0
+		longestName = 0
 
-			# SeqName = self.ui.txtName.toPlainText()
-			SeqName = 'Current'
-			DNASeq = self.ui.textSeq.toPlainText()
-			# GermSeq = DNASeq
-			TupData  = (SeqName, DNASeq)
-			DataSet.append(TupData)
+		alignmentText = ''
+		ColorMap = ''
+		germseq = ''
+		germpeptide = ''
 
-			global GLMsg
-			if len(DataSet) == 1:
-				GLMsg = False
-				self.ui.actionBA.setChecked(True)
-				self.ui.actionAA.setChecked(True)
-				GLMsg = True
-				GermSeq = DNASeq
-				Germline = ('Germline', GermSeq)
-				DataSet.append(Germline)
-			else:
-				if self.ui.actionBA.isChecked() == True:
-					GLMsg = True
-					GermSeq = DNASeq
-					Germline = ('Germline', GermSeq)
-					DataSet.append(Germline)
-		elif DataIn == 'edit':
-			DataIn = 'none'
-			# DataIs = []
+		each = ()
+		all = []
 
-			# SeqName = data[0]
+		# align selected sequences (AA) using muscle
+		all_dict = dict()
+		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+		outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
+		aafilename = os.path.join(temp_folder, "in-" + time_stamp + ".fas")
+		if len(DataSet) == 1:
+			SeqName = DataSet[0][0].replace('\n', '').replace('\r', '')
+			SeqName = SeqName.strip()
+			NTseq = DataSet[0][1]
+			AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
+			all_dict[SeqName] = [NTseq, AAseq]
 
-			# DNAseq = self.ui.txtDNASeq.toPlainText()
-			# Sequence = (SeqName, DNAseq)
-			# DataSet.append(Sequence)
-
-
-			if len(DataSet) == 1:
-				GLMsg = False
-				self.ui.actionBA.setChecked(True)
-				self.ui.actionAA.setChecked(True)
-				GLMsg = True
-				GermSeq = self.ui.textSeq.toPlainText()
-				Germline = ('Germline', GermSeq)
-				DataSet.append(Germline)
+			out_handle = open(outfilename, 'w')
+			out_handle.write('>' + SeqName + '\n')
+			out_handle.write(AAseq)
+			out_handle.close()
 		else:
-			DataSet = DataIn
+			aa_handle = open(aafilename, 'w')
+			for record in DataSet:
+				SeqName = record[0].replace('\n', '').replace('\r', '')
+				SeqName = SeqName.strip()
+				NTseq = record[1]
+				AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
+				AAseq = AAseq.replace('*', 'X').replace('~', 'Z').replace('.', 'J')
+				all_dict[SeqName] = [NTseq, AAseq]
+				aa_handle.write('>' + SeqName + '\n')
+				aa_handle.write(AAseq + '\n')
+			aa_handle.close()
 
-		# align selected sequences using ClustalOmega
-		outfilename = ''
-		try:
-			if len(DataSet) == 1:
-				time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
-				outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
-				out_handle = open(outfilename,'w')
-				out_handle.write('>' + DataSet[0][0] + '\n')
-				out_handle.write(DataSet[0][1])
-				out_handle.close()
-			else:
-				if os.path.exists(clustal_path):
-					outfilename = LibratorSeq.ClustalO(DataSet, 80, True, temp_folder, clustal_path)
-				else:
-					QMessageBox.warning(self, 'Warning',
-					                    'The Clustal Omega does not exist! Check your path!', QMessageBox.Ok, QMessageBox.Ok)
-					return
-
-			lenName = 0
-			longestName = 0
-			alignmentText = ''
-			ColorMap = ''
-			germseq = ''
-			germpeptide = ''
-
-			each = ()
-			all = []
-			if self.ui.actionBA.isChecked() == False:
-				longestName = 11
-			else:
-				longestName = 10
-
-			peptide = ''
-			SeqName = ''
-			StartAll = False
-
-			# read alignment file, make alignment NT and AA sequences
-			if os.path.isfile(outfilename):
-				with open(outfilename, 'r') as currentfile:
-					for line in currentfile:
-						Readline = line.replace('\n', '').replace('\r', '').replace('-', '.')
-						Readline = Readline.strip()
-						if Readline[0] == '>':
-							if StartAll == True:
-								all.append(each)
-							StartAll = True
-							SeqName = Readline[1:] + ':'
-							lenName = len(SeqName)
-							if lenName > longestName:
-								longestName = lenName + 2
-						else:
-							AASeq, ErMessage = LibratorSeq.Translator(Readline, 0)
-							#Position, Amino Acid, H1-segment (HA1 or HA2), H1Number, A/California/4/2009-residue, H1-antigenic-region
-
-							if DataIn == 'RF':
-								AASeq2, ErMessage = LibratorSeq.Translator(Readline, 1)
-								AASeq3, ErMessage = LibratorSeq.Translator(Readline, 2)
-							peptide = ''
-							if DataIn == 'RF':
-								peptide2 = ''
-								peptide3 = ''
-
-							for res in AASeq:
-								peptide += (' ' + res + ' ')
-
-							if DataIn == 'RF':
-								for res in AASeq2:
-									peptide2 += (' ' + res + ' ')
-								for res in AASeq3:
-									peptide3 += (' ' + res + ' ')
-
-							peptide = peptide[0:len(Readline)]
-
-							if DataIn == 'RF':
-								peptide = peptide[1:]
-								peptide2 = peptide2[0:len(Readline)]
-
-							if DataIn == 'RF':
-								peptide3 = peptide3[0:len(Readline)]
-								peptide3 = ' ' + peptide3
-
-							if SeqName != 'Germline:':
-								if DataIn == 'RF':
-									each = (SeqName, Readline, peptide, peptide2, peptide3)
-								else:
-									each = (SeqName, Readline, peptide)
-							else:
-								germseq = Readline
-								germpeptide = peptide
-								StartAll = False
-				if StartAll == True:
-					all.append(each)
-			else:
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+			try:
+				os.system(cmd)
+			except:
+				QMessageBox.warning(self, 'Warning', 'Fail to run muscle! Check your muscle path!', QMessageBox.Ok,
+				                    QMessageBox.Ok)
 				return
-		# todo add header that says what germline based on
-		except:
-			print('no')
 
-		finally:
-			if os.path.exists(outfilename):
-				os.remove(outfilename)
+		# read alignment file, make alignment NT and AA sequences
+		SeqName = ''
+		AAseq = ''
+		if os.path.isfile(outfilename):
+			currentfile = open(outfilename, 'r')
+			lines = currentfile.readlines()
+			for line in lines:
+				Readline = line.replace('\n', '').replace('\r', '')
+				Readline = Readline.strip()
+				if Readline[0] == '>':
+					if SeqName != '':
+						lenName = len(SeqName)
+						if lenName > longestName:
+							longestName = lenName + 2
+						AAseq, NTseq = BuildNTalignment(AAseq, all_dict[SeqName][0])
+						each = (SeqName, NTseq, SparseSeq(AAseq))
+						all.append(each)
+					SeqName = Readline[1:]
+					AAseq = ''
+				else:
+					AAseq += Readline
+			lenName = len(SeqName)
+			if lenName > longestName:
+				longestName = lenName + 2
+			AAseq, NTseq = BuildNTalignment(AAseq, all_dict[SeqName][0])
+			each = (SeqName, NTseq, SparseSeq(AAseq))
+			all.append(each)
+		else:
+			return
+
+		if os.path.exists(outfilename):
+			os.remove(outfilename)
+		if os.path.exists(aafilename):
+			os.remove(aafilename)
 
 		# generate consnesus sequences (AA and NT)
 		if len(all) == 1:
 			consensusDNA = all[0][1]
 			consensusAA = all[0][2]
 		else:
-			firstOne = all[1]
+			firstOne = all[0]
 			seqlen = len(firstOne[1])
 
 			consensusDNA = ''
@@ -7601,8 +7511,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				consensusDNA += Cnuc
 
 			consensusAA = ''
-			firstOne = all[1]
-			seqlen = len(firstOne[1])
+			firstOne = all[0]
+			seqlen = len(firstOne[2])
 			for i in range(0, seqlen - 1):
 				tester = ''
 				Caa = ''
@@ -12285,6 +12195,11 @@ def MakeConSeq(seq, con):
 	for i in range(len(seq)):
 		if seq[i] == con[i]:
 			seq = seq[:i] + '.' + seq[i+1:]
+	return seq
+
+def SparseSeq(seq):
+	tmp = list(seq)
+	seq = ' ' + '  '.join(tmp) + ' '
 	return seq
 
 def BuildNTalignment(aa, nt):
