@@ -2078,7 +2078,21 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tabProtein">
+      <widget class="QWidget" name="tabAliHTML">
+       <attribute name="title">
+        <string>Alignment(HTML)</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_7">
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="MSAgroupBox">
+          <property name="title">
+           <string>Multiple Sequence Alignment</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabSeqDB">
        <attribute name="title">
         <string>SequenceDB</string>
        </attribute>
@@ -2130,7 +2144,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab">
+      <widget class="QWidget" name="tabSummary">
        <attribute name="title">
         <string>Summary</string>
        </attribute>
@@ -2173,9 +2187,9 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="tabHTML">
        <attribute name="title">
-        <string>HTML</string>
+        <string>Summary(HTML)</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_4">
         <item row="0" column="0">
@@ -2216,7 +2230,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_3">
+      <widget class="QWidget" name="tabFragment">
        <attribute name="title">
         <string>FragmentDB</string>
        </attribute>
@@ -2366,20 +2380,6 @@
             </widget>
            </item>
           </layout>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="tab_6">
-       <attribute name="title">
-        <string>Alignment(HTML)</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_7">
-        <item row="0" column="0">
-         <widget class="QGroupBox" name="MSAgroupBox">
-          <property name="title">
-           <string>Multiple Sequence Alignment</string>
-          </property>
          </widget>
         </item>
        </layout>

@@ -4169,7 +4169,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		AlignIn = []
 		EachIn = ()
 
-		if self.ui.tabWidget.currentIndex() == 2:
+		if self.ui.tabWidget.currentIndex() == 2:   # Alignment(rtf)
 			self.ui.actionAA.setChecked(True)
 			self.ui.actionDNA.setChecked(True)
 			self.ui.actionBA.setChecked(False)
@@ -4207,8 +4207,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 				Notes = 'Tab'
 				self.AlignSequences(AlignIn, Notes)
-
-		elif self.ui.tabWidget.currentIndex() == 1:
+		elif self.ui.tabWidget.currentIndex() == 1: # Sequence
 			#displays all info about the selected sequence
 			selection = self.ui.listWidgetStrainsIn.selectedItems()
 			if len(selection) == 0:
@@ -4232,8 +4231,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.btnH3Num.setChecked(False)
 
 			self.CheckDecorations()
-
-		elif self.ui.tabWidget.currentIndex() == 3:
+		elif self.ui.tabWidget.currentIndex() == 4: # SequenceDB
 			if self.ui.SeqTable.columnCount() > 0:
 				self.ui.SeqTable.itemChanged.disconnect(self.EditTableItem)
 			self.ui.SeqTable.setColumnCount(0)
@@ -4279,8 +4277,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				# connect sort indicator to slot function
 				self.ui.SeqTable.horizontalHeader().sectionClicked.connect(self.sortTable)
 				self.ui.SeqTable.itemChanged.connect(self.EditTableItem)
-
-		elif self.ui.tabWidget.currentIndex() == 4:
+		elif self.ui.tabWidget.currentIndex() == 5: # Summary
 			if DBFilename == 'none':
 				return
 			#  plot stat for subtype
@@ -4359,7 +4356,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				gridlayout_fig3.addWidget(self.F, 2, 0, 10, 0)
 
 				self.fig = 1
-		elif self.ui.tabWidget.currentIndex() == 5:
+		elif self.ui.tabWidget.currentIndex() == 6: # Summary
 			if DBFilename == 'none':
 				return
 			if self.ui.HTMLview1.h != 0:
@@ -4493,7 +4490,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				# show local HTML
 				self.ui.HTMLview3.load(QUrl('file://' + html_path))
 				self.ui.HTMLview3.show()
-		elif self.ui.tabWidget.currentIndex() == 6:
+		elif self.ui.tabWidget.currentIndex() == 7: # Fragment DB
 			mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
 
 			if os.path.exists(mysql_setting_file):
@@ -4518,7 +4515,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.Passinput.setText(Setting[4])
 
 			self.ui.dbpath.setText(fragmentdb_path)
-		elif self.ui.tabWidget.currentIndex() == 7:
+		elif self.ui.tabWidget.currentIndex() == 3: # Alignment(HTML)
 			# load data
 			AlignIn = []
 			listItems = self.ui.listWidgetStrainsIn.selectedItems()
