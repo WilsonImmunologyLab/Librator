@@ -2310,6 +2310,28 @@ class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 		self.aaAct.changed.connect(self.reformat)
 		self.baAct.changed.connect(self.reformat)
 
+	def print_(self):
+		# adjust font size to fit print paper
+		FontIs = self.textEdit.currentFont()
+		font = QFont(FontIs)
+		FontSize = int(font.pointSize())
+		FontFam = font.family()
+		FontSize = 7
+		font.setPointSize(FontSize)
+		font.setFamily(FontFam)
+		self.textEdit.setFont(font)
+
+		document = self.textEdit.document()
+		printer = QPrinter()
+
+		dlg = QPrintDialog(printer, self)
+		if dlg.exec_() != QDialog.Accepted:
+			return
+
+		document.print_(printer)
+
+		self.statusBar().showMessage("Ready", 2000)
+
 	def reformat(self):
 		if self.type == 'RF':
 			return
@@ -2418,7 +2440,6 @@ class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 			os.remove(outfilename)
 		if os.path.exists(aafilename):
 			os.remove(aafilename)
-
 		# generate consnesus sequences (AA and NT)
 		if len(all) == 1:
 			consensusDNA = all[0][1]
