@@ -9421,13 +9421,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			font.setFamily('Courier New')
 			self.ui.txtAASeq.setFont(font)
 
-			return
-			# Document += ('DNA: ' + self.ui.txtDNASeq.toPlainText() + '\n')
-			# Document += ('Protein: ' + self.ui.txtAASeq.toPlainText() + '\n')
-			# Document += ('\n' + self.windowTitle())
-			# font.setPointSize(10)
-			# font.setFamily('Lucida Grande')
-
 		elif self.ui.tabWidget.currentIndex() == 2:
 			Document = self.ui.txtName.toPlainText() + '\n'
 			Document += self.ui.txtSeqAlignment.toPlainText()
@@ -9435,13 +9428,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 			font.setPointSize(7)
 			font.setFamily('Courier New')
 
-		elif self.ui.tabWidget.currentIndex() == 3:
+		else:
 			return
 
 		self.TextEdit.textEdit.setFont(font)
-
-		#self.TextEdit.show()
-
 		self.TextEdit.textEdit.setText(Document)
 
 		document = self.TextEdit.textEdit.document()

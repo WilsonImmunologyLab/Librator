@@ -2526,7 +2526,6 @@
    <addaction name="actionTree"/>
    <addaction name="separator"/>
    <addaction name="actionAlignmentHTML"/>
-   <addaction name="separator"/>
    <addaction name="actionMultiple_Alignement"/>
    <addaction name="actionDNA"/>
    <addaction name="actionAA"/>
@@ -2535,12 +2534,11 @@
    <addaction name="actionIncrease_font_size"/>
    <addaction name="actionDecrease_font_size"/>
    <addaction name="separator"/>
-   <addaction name="actionClean"/>
-   <addaction name="separator"/>
    <addaction name="actionPreferences"/>
    <addaction name="separator"/>
-   <addaction name="action_Help"/>
+   <addaction name="actionClean"/>
    <addaction name="separator"/>
+   <addaction name="action_Help"/>
   </widget>
   <action name="action_Open">
    <property name="icon">
