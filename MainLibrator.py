@@ -8840,7 +8840,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_action_Help_triggered(self):
-		Msg = 'Librator was developed and supported by Wilson Lab. Please refer to http://Wilsonlab.uchicago.edu ' \
+		Msg = 'Librator was developed and supported by Wilson Lab. Please refer to \nhttp://Wilsonlab.uchicago.edu\n' \
 		      'for more information'
 		QMessageBox.information(self, 'information', Msg, QMessageBox.Ok,
 		                        QMessageBox.Ok)

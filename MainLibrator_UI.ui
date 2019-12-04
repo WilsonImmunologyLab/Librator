@@ -260,6 +260,9 @@
        <attribute name="title">
         <string>Main</string>
        </attribute>
+       <attribute name="toolTip">
+        <string>Main page, this page is printable</string>
+       </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QFrame" name="frame_7">
@@ -1410,6 +1413,9 @@
        <attribute name="title">
         <string>Sequence</string>
        </attribute>
+       <attribute name="toolTip">
+        <string>Sequence page, this page is printable</string>
+       </attribute>
        <layout class="QGridLayout" name="gridLayout_17">
         <item row="6" column="0">
          <widget class="QLabel" name="lblAAseq">
@@ -1989,6 +1995,9 @@
        <attribute name="title">
         <string>Alignment(RTF)</string>
        </attribute>
+       <attribute name="toolTip">
+        <string>Alignement (RTF) page, this page is printable</string>
+       </attribute>
        <layout class="QGridLayout" name="gridLayout_16">
         <item row="0" column="0">
          <widget class="QLabel" name="lblAlignment">
@@ -2064,6 +2073,9 @@
        <attribute name="title">
         <string>Alignment(HTML)</string>
        </attribute>
+       <attribute name="toolTip">
+        <string>Alignement (HTML) page</string>
+       </attribute>
        <layout class="QGridLayout" name="gridLayout_7">
         <item row="0" column="0">
          <widget class="QGroupBox" name="MSAgroupBox">
@@ -2077,6 +2089,9 @@
       <widget class="QWidget" name="tabSeqDB">
        <attribute name="title">
         <string>SequenceDB</string>
+       </attribute>
+       <attribute name="toolTip">
+        <string>Sequence Database page</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_21">
         <item row="0" column="0">
@@ -2130,6 +2145,9 @@
        <attribute name="title">
         <string>Summary</string>
        </attribute>
+       <attribute name="toolTip">
+        <string>Summary of current Sequence Database</string>
+       </attribute>
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
          <widget class="QGroupBox" name="groupBox1">
@@ -2173,6 +2191,9 @@
        <attribute name="title">
         <string>Summary(HTML)</string>
        </attribute>
+       <attribute name="toolTip">
+        <string>Summary (HTML) of current Sequence Database </string>
+       </attribute>
        <layout class="QGridLayout" name="gridLayout_4">
         <item row="0" column="0">
          <widget class="QGroupBox" name="groupBoxHTML1">
@@ -2215,6 +2236,9 @@
       <widget class="QWidget" name="tabFragment">
        <attribute name="title">
         <string>FragmentDB</string>
+       </attribute>
+       <attribute name="toolTip">
+        <string>Fragment Sequence Database page</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_22">
         <item row="0" column="0">
