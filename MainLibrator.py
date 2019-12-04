@@ -8613,8 +8613,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		CurName = self.ui.txtName.toPlainText()
 		CurrVal = self.ui.spnFrom.value()
 
-
-
 		self.UpdateSeq(CurName, str(CurrVal), 'VFrom')
 
 		self.ListItemChanged()
@@ -9351,8 +9349,15 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.ui.cboForm.setCurrentIndex(CurIndex)
 			self.ui.cboForm.last_value = Form
 			self.ui.txtDonorRegions.setText(item[9])
-
 			self.ui.txtInsert_Base.setText(item[10])
+			if item[10] != 'none':
+				self.ui.spnFrom.setDisabled(True)
+				self.ui.spnTo.setDisabled(True)
+				self.ui.btnEditSequence.setDisabled(True)
+			else:
+				self.ui.spnFrom.setDisabled(False)
+				self.ui.spnTo.setDisabled(False)
+				self.ui.btnEditSequence.setDisabled(False)
 
 		MoveNotChange = False
 
