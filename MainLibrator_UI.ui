@@ -253,6 +253,10 @@
        <bool>true</bool>
       </property>
       <widget class="QWidget" name="tabMain">
+       <attribute name="icon">
+        <iconset resource="Resources/VgenesResources.qrc">
+         <normaloff>:/PNG-Icons/print.png</normaloff>:/PNG-Icons/print.png</iconset>
+       </attribute>
        <attribute name="title">
         <string>Main</string>
        </attribute>
@@ -1399,6 +1403,10 @@
        </layout>
       </widget>
       <widget class="QWidget" name="tabSequence">
+       <attribute name="icon">
+        <iconset resource="Resources/VgenesResources.qrc">
+         <normaloff>:/PNG-Icons/print.png</normaloff>:/PNG-Icons/print.png</iconset>
+       </attribute>
        <attribute name="title">
         <string>Sequence</string>
        </attribute>
@@ -1974,6 +1982,10 @@
        <zorder>label</zorder>
       </widget>
       <widget class="QWidget" name="tabAlignment">
+       <attribute name="icon">
+        <iconset resource="Resources/VgenesResources.qrc">
+         <normaloff>:/PNG-Icons/print.png</normaloff>:/PNG-Icons/print.png</iconset>
+       </attribute>
        <attribute name="title">
         <string>Alignment(RTF)</string>
        </attribute>
