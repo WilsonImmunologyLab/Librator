@@ -9402,9 +9402,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			font.setFamily('Lucida Grande')
 
 		elif self.ui.tabWidget.currentIndex() == 1:
-			# return
-			# self.ui.txtAASeq.setFont(font)
-			# self.ui.txtAA.setText(Document)
 			font.setPointSize(10)
 			font.setFamily('Courier New')
 			self.ui.txtAASeq.setFont(font)
@@ -9420,14 +9417,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 			font.setPointSize(14)
 			font.setFamily('Courier New')
 			self.ui.txtAASeq.setFont(font)
-
+			return
 		elif self.ui.tabWidget.currentIndex() == 2:
 			Document = self.ui.txtName.toPlainText() + '\n'
 			Document += self.ui.txtSeqAlignment.toPlainText()
 			Document += ('\n' + self.windowTitle())
 			font.setPointSize(7)
 			font.setFamily('Courier New')
-
 		else:
 			return
 

@@ -2633,6 +2633,12 @@
    <property name="text">
     <string>Multiple Alignement</string>
    </property>
+   <property name="iconText">
+    <string>Multiple Sequence Alignement Viewer (RTF)</string>
+   </property>
+   <property name="toolTip">
+    <string>Multiple Sequence Alignement Viewer (RTF)</string>
+   </property>
   </action>
   <action name="actionImportLei">
    <property name="icon">
@@ -2656,6 +2662,9 @@
    </property>
    <property name="text">
     <string>Preferences</string>
+   </property>
+   <property name="toolTip">
+    <string>Parameter Settings</string>
    </property>
   </action>
   <action name="actionPrint">
@@ -2743,6 +2752,9 @@
    </property>
    <property name="text">
     <string>&amp;Help</string>
+   </property>
+   <property name="iconText">
+    <string>Help</string>
    </property>
   </action>
   <action name="actionTop">
@@ -2915,7 +2927,7 @@
     <string>DNA</string>
    </property>
    <property name="toolTip">
-    <string>Include DNA sequence in multiple alignment</string>
+    <string>Include DNA sequence in multiple alignment (RTF)</string>
    </property>
   </action>
   <action name="actionAA">
@@ -2926,7 +2938,7 @@
     <string>AA</string>
    </property>
    <property name="toolTip">
-    <string>Show amino acids on multiple alignment</string>
+    <string>Show amino acids on multiple alignment  (RTF)</string>
    </property>
   </action>
   <action name="actionBA">
@@ -2937,7 +2949,7 @@
     <string>BA</string>
    </property>
    <property name="toolTip">
-    <string>Align relative to the germline sequence of currently selected</string>
+    <string>Align with H1/H3 numbering  (RTF)</string>
    </property>
   </action>
   <action name="actionIsotypes">
@@ -3146,6 +3158,12 @@
    </property>
    <property name="text">
     <string>Alignment Viewer</string>
+   </property>
+   <property name="iconText">
+    <string>Multiple Sequence Alignment Viewer (HTML)</string>
+   </property>
+   <property name="toolTip">
+    <string>Multiple Sequence Alignment Viewer (HTML)</string>
    </property>
    <property name="autoRepeat">
     <bool>true</bool>
