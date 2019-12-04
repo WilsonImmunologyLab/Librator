@@ -451,36 +451,6 @@
                <string>Make Secreted Probe</string>
               </property>
              </item>
-             <item>
-              <property name="text">
-               <string>Make Secreted</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>FASTA Nucleotide file</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>FASTA Amino Acid file</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Sequence summary</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Comma seperated values (.csv)</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Custom report</string>
-              </property>
-             </item>
             </widget>
            </item>
           </layout>

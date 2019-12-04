@@ -2312,14 +2312,14 @@ class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 
 	def print_(self):
 		# adjust font size to fit print paper
-		FontIs = self.textEdit.currentFont()
-		font = QFont(FontIs)
-		FontSize = int(font.pointSize())
-		FontFam = font.family()
-		FontSize = 7
-		font.setPointSize(FontSize)
-		font.setFamily(FontFam)
-		self.textEdit.setFont(font)
+		# FontIs = self.textEdit.currentFont()
+		# font = QFont(FontIs)
+		# FontSize = int(font.pointSize())
+		# FontFam = font.family()
+		# FontSize = 7
+		# font.setPointSize(FontSize)
+		# font.setFamily(FontFam)
+		# self.textEdit.setFont(font)
 
 		document = self.textEdit.document()
 		printer = QPrinter()
@@ -5059,7 +5059,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 				NewAASeq = ''
 				NewSeqName = ''
 				SeqInfoPacket = []
-				if SubType == 'H3N2':
+				a = H3Numbering
+				if SubType == 'H3':
+					Mutations = 'none'
 					for i in range(1, len(H3Numbering)):
 						residue = H3Numbering[i]
 						region = residue[0]
@@ -5067,6 +5069,19 @@ class LibratorMain(QtWidgets.QMainWindow):
 						H3Num = residue[2]
 						H3res = residue[3]
 						H3Ag = residue[4]
+
+						# idenfity Y98 and make Y98F
+						if H3Num == 98 and region == 'HA1':
+							if AA != 'Y':
+								Msg = 'H3 numbering 98 of this sequence\n' + SeqName + '\nis not Y!'
+								QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+								break
+							else:
+								# make mutation Y98F
+								Start = (i - 1) * 3
+								End = i * 3
+								Sequence = Sequence[:Start] + 'TTT' + Sequence[End:]
+								Mutations = 'Y' + str(i) + 'F'
 
 						if region == 'TM':
 							StartTrimer = (i * 3) -3
@@ -5077,14 +5092,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 							NewAASeq = NewAASeq[:StopAT+1]
 
 							NewSeqName = SeqName + '-Probe'
-							form = 'Probe'
+							form = 'Probe HA'
 							Active = 'True'
 							Role = 'Unassigned'
 							Donor = 'none'
-							Mutations = 'Y98F,'
-							VFrom = 1
 
-							# todo add code to mutate Y98F or incorporate mutations automatically
+							VFrom = 1
 
 							ItemIn = [NewSeqName, NewSeq, str(len(NewSeq)), SubType, form, VFrom, str(len(NewSeq)), Active, Role, Donor, Mutations, 0]
 							SeqInfoPacket.clear()
@@ -5097,7 +5110,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 							# self.HANumbering(AASeqWas) #changes Numbering back to original
 							self.ui.listWidgetStrainsIn.setCurrentRow(0)
 							self.PopulateCombos()
-							return
+							break
+				else:
+					Msg = 'Make Probe function only works for H3!'
+					QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+					return
 
 	@pyqtSlot()
 	def on_actionDelete_record_triggered(self):
