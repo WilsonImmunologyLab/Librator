@@ -8986,7 +8986,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.lblBaseName.setText(CurName)
 			else:
 				BaseSeq = ''
-				self.ui.lblBaseName.setText('Sequence Name')
+				self.ui.lblBaseName.setText('')
 
 			self.rebuildTree()
 
@@ -9301,8 +9301,18 @@ class LibratorMain(QtWidgets.QMainWindow):
 	@pyqtSlot()
 	def ListItemChanged(self):
 		global DataIs
+		global SeqMove
 		listItems = self.ui.listWidgetStrainsIn.selectedItems()
 		if len(listItems) == 0:
+			SeqMove = True
+			self.ui.txtName.clear()
+			self.ui.txtDonorRegions.clear()
+			self.ui.txtInsert_Base.clear()
+			self.ui.spnFrom.setValue(1)
+			self.ui.spnTo.setValue(5000)
+			self.ui.txtSearch.clear()
+			self.ui.textSeq.clear()
+			self.ui.textAA.clear()
 			return
 		# if not listItems: return
 		for item in listItems:
