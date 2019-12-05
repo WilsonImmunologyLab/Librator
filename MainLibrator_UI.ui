@@ -2430,7 +2430,10 @@
      <string>Tools</string>
     </property>
     <addaction name="actionHANumbering"/>
+    <addaction name="separator"/>
     <addaction name="actionMultiple_Alignement"/>
+    <addaction name="actionAlignmentHTML"/>
+    <addaction name="separator"/>
     <addaction name="actionNTTree"/>
     <addaction name="actionTree"/>
    </widget>
@@ -2637,7 +2640,7 @@
      <normaloff>:/PNG-Icons/Muli.png</normaloff>:/PNG-Icons/Muli.png</iconset>
    </property>
    <property name="text">
-    <string>Multiple Alignement</string>
+    <string>Multiple Alignement (RTF)</string>
    </property>
    <property name="iconText">
     <string>Multiple Sequence Alignement Viewer (RTF)</string>
@@ -2996,7 +2999,7 @@
      <normaloff>:/PNG-Icons/treeAA.png</normaloff>:/PNG-Icons/treeAA.png</iconset>
    </property>
    <property name="text">
-    <string>Generate AA Tree</string>
+    <string>Generate Maximum Likelihood Tree (Amino Acid)</string>
    </property>
    <property name="toolTip">
     <string>Generate Maximum Likelihood Tree (Using Amino Acid sequences)</string>
@@ -3074,7 +3077,7 @@
      <normaloff>:/PNG-Icons/treeNT.png</normaloff>:/PNG-Icons/treeNT.png</iconset>
    </property>
    <property name="text">
-    <string>Generate NT Tree</string>
+    <string>Generate Maximum Likelihood Tree (nucleotide)</string>
    </property>
    <property name="toolTip">
     <string>Generate Maximum Likelihood Tree (Using nucleotide sequences)</string>
@@ -3163,7 +3166,7 @@
      <normaloff>:/PNG-Icons/MSA.png</normaloff>:/PNG-Icons/MSA.png</iconset>
    </property>
    <property name="text">
-    <string>Alignment Viewer</string>
+    <string>Multiple Alignment (HTML)</string>
    </property>
    <property name="iconText">
     <string>Multiple Sequence Alignment Viewer (HTML)</string>
