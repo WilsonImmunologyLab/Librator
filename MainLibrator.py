@@ -832,11 +832,13 @@ class deleteDialog(QtWidgets.QDialog):
 
 	def accept(self):
 		selItems = self.ui.listWidget.selectedItems()
-		del_list = []
-		for item in selItems:
-			del_list.append(item.text())
-
-		self.deleteSignal.emit(del_list)
+		if len(selItems) > 0:
+			del_list = []
+			for item in selItems:
+				del_list.append(item.text())
+			self.deleteSignal.emit(del_list)
+		else:
+			self.reject()
 
 class updateSeqDialog(QtWidgets.QDialog):
 	updateSignal = pyqtSignal(str, str)
@@ -5094,7 +5096,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 							NewSeqName = SeqName + '-Probe'
 							form = 'Probe HA'
 							Active = 'True'
-							Role = 'Unassigned'
+							Role = 'Generated'
 							Donor = 'none'
 
 							VFrom = 1
