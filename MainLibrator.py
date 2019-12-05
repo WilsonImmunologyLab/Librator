@@ -3695,7 +3695,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_btnEditSequence_clicked(self):
-		self.open_update_dialog()
+		if len(self.ui.listWidgetStrainsIn.selectedItems()) > 0:
+			self.open_update_dialog()
+		else:
+			Msg = 'Please select at least one sequence!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
 
 	@pyqtSlot()
 	def on_btnImportBase_clicked(self):
@@ -3763,7 +3768,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_btnReadingFrames_clicked(self):
-		self.AlignSequencesRF('RF', 'none')
+		if len(self.ui.listWidgetStrainsIn.selectedItems()) > 0:
+			self.AlignSequencesRF('RF', 'none')
+		else:
+			Msg = 'Please select at least one sequence!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
 
 	@pyqtSlot()
 	def on_textSeq_cursorPositionChanged(self):
@@ -5117,6 +5127,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 					Msg = 'Make Probe function only works for H3!'
 					QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 					return
+		else:
+			Msg = 'Please select a H3 sequence!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
 
 	@pyqtSlot()
 	def on_actionDelete_record_triggered(self):
@@ -8494,6 +8508,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		if MoveNotChange:
 			return
 		selections = self.ui.listWidgetStrainsIn.selectedItems()
+		if len(selections) == 0:
+			return
+
 		name_selections = []
 		for item in selections:
 			name_selections.append(item.text())
@@ -8521,6 +8538,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		if MoveNotChange:
 			return
 		selections = self.ui.listWidgetStrainsIn.selectedItems()
+		if len(selections) == 0:
+			return
+
 		name_selections = []
 		for item in selections:
 			name_selections.append(item.text())
@@ -8551,6 +8571,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			return
 
 		selections = self.ui.listWidgetStrainsIn.selectedItems()
+		if len(selections) == 0:
+			return
+
 		name_selections = []
 		for item in selections:
 			name_selections.append(item.text())
@@ -8612,21 +8635,25 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def SeqFrom(self):
-		CurName = self.ui.txtName.toPlainText()
-		CurrVal = self.ui.spnFrom.value()
+		if len(self.ui.listWidgetStrainsIn.selectedItems()) > 0:
+			CurName = self.ui.txtName.toPlainText()
+			CurrVal = self.ui.spnFrom.value()
 
-		self.UpdateSeq(CurName, str(CurrVal), 'VFrom')
-
-		self.ListItemChanged()
+			self.UpdateSeq(CurName, str(CurrVal), 'VFrom')
+			self.ListItemChanged()
+		else:
+			return
 
 	@pyqtSlot()
 	def SeqTo(self):
-		CurName = self.ui.txtName.toPlainText()
-		CurrVal = self.ui.spnTo.value()
+		if len(self.ui.listWidgetStrainsIn.selectedItems()) > 0:
+			CurName = self.ui.txtName.toPlainText()
+			CurrVal = self.ui.spnTo.value()
 
-
-		self.UpdateSeq(CurName, str(CurrVal), 'VTo')
-		self.ListItemChanged()
+			self.UpdateSeq(CurName, str(CurrVal), 'VTo')
+			self.ListItemChanged()
+		else:
+			return
 
 	@pyqtSlot()
 	def SeqChanged(self):
