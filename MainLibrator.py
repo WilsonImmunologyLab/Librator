@@ -2990,6 +2990,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.FragmentTab.currentChanged['int'].connect(self.clearTable)
 		self.ui.EditLock.clicked.connect(self.ChangeEditMode)
 		self.ui.groupCombo.currentTextChanged.connect(self.rebuildTree)
+		self.ui.treeWidget.itemClicked['QTreeWidgetItem*', 'int'].connect(self.TreeItemClicked)
 
 		self.ui.cboRole.last_value = ''
 		self.ui.cboForm.last_value = ''
@@ -9116,10 +9117,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 			else:
 				cur_node.setCheckState(0, Qt.Unchecked)
 
-		self.ui.treeWidget.itemClicked['QTreeWidgetItem*', 'int'].connect(self.TreeItemClicked)
 		self.ui.treeWidget.expandAll()
 
 	def TreeItemClicked(self, item, column):
+		#self.ui.listWidgetStrainsIn.clearSelection()
 		if item.checkState(0):
 			if item.childCount() > 0:
 				for i in range(item.childCount()):
@@ -9137,7 +9138,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		root = self.ui.treeWidget.invisibleRootItem()
 		root = root.child(0)
 
-		self.ui.listWidgetStrainsIn.clear()
+
 		selections = []
 		unselections = []
 
@@ -9161,6 +9162,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		SQLStatement = 'UPDATE LibDB SET `Active` = "False" WHERE `SeqName` in ' + Where
 		RunInsertion(DBFilename, SQLStatement)
 		# updata interface
+		self.ui.listWidgetStrainsIn.clear()
 		self.ui.listWidgetStrainsIn.addItems(selections)
 
 	@pyqtSlot()
