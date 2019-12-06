@@ -1777,6 +1777,9 @@ class fusionDialog(QtWidgets.QDialog):
 			CurPos += 1
 
 class basePathDialog(QtWidgets.QDialog):
+	ldbSignal = pyqtSignal(str)
+	mysqlSignal = pyqtSignal(list)
+
 	def __init__(self):
 		super(basePathDialog, self).__init__()
 		self.ui = Ui_basePathDialog()
@@ -1905,6 +1908,7 @@ class basePathDialog(QtWidgets.QDialog):
 		if self.ui.FragmentDB_path.text() != '':
 			if os.path.exists(self.ui.FragmentDB_path.text()):
 				fragmentdb_path = self.ui.FragmentDB_path.text()
+				self.ldbSignal.emit(fragmentdb_path)
 			else:
 				question = 'The path for local Fragment DB you typed seems not exist, do you still want to continue?'
 				buttons = 'YN'
@@ -1913,7 +1917,7 @@ class basePathDialog(QtWidgets.QDialog):
 					return
 				else:
 					fragmentdb_path = self.ui.FragmentDB_path.text()
-
+					self.ldbSignal.emit(fragmentdb_path)
 
 
 		# save MYSQL setting
@@ -1940,6 +1944,7 @@ class basePathDialog(QtWidgets.QDialog):
 			          ',' + self.ui.Userinput.text() + ',' + self.ui.Passinput.text()
 			file_handle.write(my_info)
 			file_handle.close()
+			self.mysqlSignal.emit([server_ip,server_port,db_name,db_user,db_pass])
 
 		# save all changes to file
 		file_handle = open(conf_file, 'w')
@@ -2976,6 +2981,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.txtInsert_Base.selectionChanged.connect(self.MutationsDialog)
 		self.ui.txtName.cursorPositionChanged.connect(self.EditSeqName)
 		self.ui.tabWidget.currentChanged['int'].connect(self.FillAlignmentTab)
+		self.ui.FragmentTab.currentChanged['int'].connect(self.loadFragmentInfo)
 		self.ui.rdoDNA.clicked.connect(self.resetSearch)
 		self.ui.rdoAA.clicked.connect(self.resetSearch)
 		self.ui.SearchButton.clicked.connect(self.searchPattern)
@@ -4581,6 +4587,34 @@ class LibratorMain(QtWidgets.QMainWindow):
 				for i in range(layout.count()):
 					layout.removeWidget(layout.itemAt(i).widget())
 			layout.addWidget(view)
+
+	def loadFragmentInfo(self):
+		global working_prefix
+		global fragmentdb_path
+
+		mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
+		if os.path.exists(mysql_setting_file):
+			my_open = open(mysql_setting_file, 'r')
+			my_info = my_open.readlines()
+			my_open.close()
+			my_info = my_info[0]
+		else:
+			file_handle = open(mysql_setting_file, 'w')
+			my_info = ',,,,'
+			file_handle.write(my_info)
+			file_handle.close()
+
+		my_info = my_info.strip('\n')
+		if my_info != '':
+			Setting = my_info.split(',')
+
+			self.ui.IPinput.setText(Setting[0])
+			self.ui.Portinput.setText(Setting[1])
+			self.ui.DBnameinput.setText(Setting[2])
+			self.ui.Userinput.setText(Setting[3])
+			self.ui.Passinput.setText(Setting[4])
+
+		self.ui.dbpath.setText(fragmentdb_path)
 
 	def EditTableItem(self,item):
 		global MoveNotChange
@@ -9298,6 +9332,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		if AASeq != '':
 			Numbering = HANumbering(AASeq)
 			self.ui.tabWidget.setCurrentIndex(1)
+		else:
+			QMessageBox.warning(self, 'Warning', 'Please select at least one sequence from avtive sequence panel!',
+			                    QMessageBox.Ok, QMessageBox.Ok)
 
 	@pyqtSlot()
 	def ListItemChanged(self):
@@ -10423,7 +10460,20 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessbaseDialog.ui.Userinput.setText(Setting[3])
 		self.modalessbaseDialog.ui.Passinput.setText(Setting[4])
 
+		self.modalessbaseDialog.ldbSignal.connect(self.setldbpath)
+		self.modalessbaseDialog.mysqlSignal.connect(self.setmysql)
+
 		self.modalessbaseDialog.show()
+
+	def setldbpath(self, Setting):
+		self.ui.dbpath.setText(Setting)
+
+	def setmysql(self, Setting):
+		self.ui.IPinput.setText(Setting[0])
+		self.ui.Portinput.setText(Setting[1])
+		self.ui.DBnameinput.setText(Setting[2])
+		self.ui.Userinput.setText(Setting[3])
+		self.ui.Passinput.setText(Setting[4])
 
 	def showhumbering(self, Data, Note, dnaCheck, aaCheck, posCheck):
 		for item in Data:
