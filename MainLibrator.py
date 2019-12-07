@@ -2966,7 +2966,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui = Ui_MainLibrator()
 		self.ui.setupUi(self)
 
-		self.ui.listWidgetStrainsIn.itemClicked['QListWidgetItem*'].connect(self.ListItemChanged)
 		self.ui.listWidgetStrainsIn.itemDoubleClicked.connect(self.removeSel)
 		self.ui.listWidgetStrainsIn.itemSelectionChanged.connect(self.ListItemChanged)
 		self.ui.cboRole.currentTextChanged['QString'].connect(self.RoleChanged)
@@ -9028,7 +9027,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	def rebuildTree(self):
 		global DBFilename
-
+		global MoveNotChange
+		if MoveNotChange:
+			return
 		if DBFilename == 'none':
 			return
 
@@ -9135,6 +9136,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	def updateSelection(self):
 		global DBFilename
+		global MoveNotChange
 		root = self.ui.treeWidget.invisibleRootItem()
 		root = root.child(0)
 
@@ -9162,8 +9164,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 		SQLStatement = 'UPDATE LibDB SET `Active` = "False" WHERE `SeqName` in ' + Where
 		RunInsertion(DBFilename, SQLStatement)
 		# updata interface
+		MoveNotChange = True
 		self.ui.listWidgetStrainsIn.clear()
 		self.ui.listWidgetStrainsIn.addItems(selections)
+		MoveNotChange = False
 
 	@pyqtSlot()
 	def OpenRecent(self):  # how to activate menu and toolbar actions!!!
