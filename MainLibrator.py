@@ -5167,6 +5167,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 			return
 
+		Msg = 'Probe sequence for sequence\n' + SeqName + '\nhas been generated. The name of Probe sequences is\n' +\
+		      NewSeqName
+		QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
+
 	@pyqtSlot()
 	def on_actionDelete_record_triggered(self):
 		# fields = ['SeqName', 'ID']
