@@ -8964,15 +8964,20 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# set 3D templates for different subtypes
 		if subtype in Group1:
-			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4jtv.pdb')
+			#pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4jtv.pdb')
+			pdb_path = '4jtv'
 		elif subtype in Group2:
-			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4hmg.pdb')
+			#pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4hmg.pdb')
+			pdb_path = '4hmg'
 		elif subtype in GroupNA:
-			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
+			#pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
+			pdb_path = '3hto'
 		elif subtype == "B":
-			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
+			#pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
+			pdb_path = '3hto'
 		else:
-			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
+			#pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
+			pdb_path = '3hto'
 
 		self.show3Dstructure(mutation, pdb_path, pymol_path, subtype)
 
@@ -9814,7 +9819,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		pml_path = os.path.join(temp_folder, time_stamp)
 		with open(pml_path , "w") as pml:
 			# write pml script
-			text = "load " + pdbPath + "\n"
+			text = 'set assembly, 1\n'
+			text += "fetch " + pdbPath + ", async=0\n"
 			pml.write(text)
 			text = "as cartoon\n" \
 					+ "show mesh\n" \
@@ -9947,15 +9953,20 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# set 3D templates for different subtypes
 		if subtype in Group1:
-			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4jtv.pdb')
+			# pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4jtv.pdb')
+			pdb_path = '4jtv'
 		elif subtype in Group2:
-			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4hmg.pdb')
+			# pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4hmg.pdb')
+			pdb_path = '4hmg'
 		elif subtype in GroupNA:
-			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
+			# pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
+			pdb_path = '3hto'
 		elif subtype == "B":
-			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
+			# pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
+			pdb_path = '3hto'
 		else:
-			pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
+			# pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
+			pdb_path = '3hto'
 
 		self.show3Dstructure(mutation, pdb_path, pymol_path, subtype)
 
