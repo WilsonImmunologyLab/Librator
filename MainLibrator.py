@@ -11268,6 +11268,28 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			fragment_data.append(cur_seq_fragment_data)
 
+		# Chekc AA fragments and remove '-' in consensus sequence
+		fragment_data
+		for fragment in range(num_fragment):
+			cur_col = (fragment * 3) + 1
+			hyphe_pos_all = []
+			for row in range(len(fragment_data)):
+				cur_seq = fragment_data[row][cur_col]
+				hyphe_pos_cur = [m.start() for m in re.finditer(r'-', cur_seq)]
+				hyphe_pos_all.append(hyphe_pos_cur)
+			if len(fragment_data) > 1:
+				Pos_set = set(hyphe_pos_all[0]).intersection(*hyphe_pos_all[1:])
+			else:
+				Pos_set = set(hyphe_pos_all[0])
+			if len(Pos_set) > 0:
+				# trim all AA fragments
+				for row in range(len(fragment_data)):
+					cur_seq = fragment_data[row][cur_col]
+					for pos in Pos_set:
+						cur_seq = cur_seq[:pos] + '#' + cur_seq[pos+1:]
+					cur_seq = cur_seq.replace('#', '')
+					fragment_data[row][cur_col] = cur_seq
+
 		# make col name
 		col_name = ["Name"]
 		for i in range(num_fragment):
@@ -11367,11 +11389,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 				cursor3.setPosition(pos)
 				cursor3.setPosition(pos + 1, QTextCursor.KeepAnchor)
 				cursor3.mergeCharFormat(format_hyphen)
+		# F4
 		if num_fragment == 4:
 			F4_seqs = fragment_data['F_AA_4_origin'].tolist()
 			F4_seq_text = '\n'.join(F4_seqs) + '\n'
 			self.modalessGibsonMSADialog.ui.seqEditF4.setText(F4_seq_text)
-			# F4
+
 			cursor4 = self.modalessGibsonMSADialog.ui.seqEditF4.textCursor()
 			len_f4 = len(F4_seqs[0])
 			CurPos = 0
