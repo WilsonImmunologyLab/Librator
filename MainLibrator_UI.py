@@ -204,7 +204,7 @@ class Ui_MainLibrator(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollArea_2.setObjectName("scrollArea_2")
         self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, -368, 1033, 1274))
+        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 1033, 1274))
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
         self.gridLayout_6 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_2)
         self.gridLayout_6.setObjectName("gridLayout_6")
@@ -1228,7 +1228,6 @@ class Ui_MainLibrator(object):
         self.menuSequences.addAction(self.actionExport)
         self.menuTools.addAction(self.actionHANumbering)
         self.menuTools.addSeparator()
-        self.menuTools.addAction(self.actionMultiple_Alignement)
         self.menuTools.addAction(self.actionAlignmentHTML)
         self.menuTools.addSeparator()
         self.menuTools.addAction(self.actionNTTree)
@@ -1271,10 +1270,6 @@ class Ui_MainLibrator(object):
         self.toolBar.addAction(self.actionTree)
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.actionAlignmentHTML)
-        self.toolBar.addAction(self.actionMultiple_Alignement)
-        self.toolBar.addAction(self.actionDNA)
-        self.toolBar.addAction(self.actionAA)
-        self.toolBar.addAction(self.actionBA)
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.actionIncrease_font_size)
         self.toolBar.addAction(self.actionDecrease_font_size)
@@ -1287,7 +1282,7 @@ class Ui_MainLibrator(object):
 
         self.retranslateUi(MainLibrator)
         self.tabWidget.setCurrentIndex(0)
-        self.FragmentTab.setCurrentIndex(0)
+        self.FragmentTab.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainLibrator)
 
     def retranslateUi(self, MainLibrator):

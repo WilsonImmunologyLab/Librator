@@ -472,7 +472,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-368</y>
+             <y>0</y>
              <width>1033</width>
              <height>1274</height>
             </rect>
@@ -2272,7 +2272,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="tab_4">
               <attribute name="title">
@@ -2436,7 +2436,6 @@
     </property>
     <addaction name="actionHANumbering"/>
     <addaction name="separator"/>
-    <addaction name="actionMultiple_Alignement"/>
     <addaction name="actionAlignmentHTML"/>
     <addaction name="separator"/>
     <addaction name="actionNTTree"/>
@@ -2540,10 +2539,6 @@
    <addaction name="actionTree"/>
    <addaction name="separator"/>
    <addaction name="actionAlignmentHTML"/>
-   <addaction name="actionMultiple_Alignement"/>
-   <addaction name="actionDNA"/>
-   <addaction name="actionAA"/>
-   <addaction name="actionBA"/>
    <addaction name="separator"/>
    <addaction name="actionIncrease_font_size"/>
    <addaction name="actionDecrease_font_size"/>
