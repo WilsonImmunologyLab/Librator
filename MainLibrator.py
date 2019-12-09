@@ -103,6 +103,23 @@ if os.path.exists(conf_file):   # if conf exist, read conf info from file
 	figtree_path =  settings[4].strip('\n')
 	file_handle.close()
 	del settings
+
+	if os.path.exists(muscle_path):
+		pass
+	else:	# if muscle_path does not exist, initial conf info and write to file
+		muscle_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'muscle')
+		clustal_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'clustalo')
+		pymol_path = '/usr/local/bin/pymol'
+		raxml_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'raxml')
+		figtree_path = '/Applications/FigTree.app/Contents/MacOS/universalJavaApplicationStub'
+
+		file_handle = open(conf_file, 'w')
+		file_handle.write(muscle_path + '\n')
+		file_handle.write(clustal_path + '\n')
+		file_handle.write(pymol_path + '\n')
+		file_handle.write(raxml_path + '\n')
+		file_handle.write(figtree_path)
+		file_handle.close()
 else:                           # if conf does not exist, initial conf info and write to file
 	muscle_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'muscle')
 	clustal_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'clustalo')
