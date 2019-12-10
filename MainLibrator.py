@@ -8992,10 +8992,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global DataIs
 		global BaseSeq
 
-		DBFilename = openFile(self, 'ldb')
-		if DBFilename == None or DBFilename == 'none':
+		tmp_name = openFile(self, 'ldb')
+		if tmp_name == None or tmp_name == 'none':
 			return
-		self.open_db(DBFilename)
+		self.open_db(tmp_name)
 
 	def open_db(self, infile):  # how to activate menu and toolbar actions!!!
 		#need to simply get database name and populate list views
@@ -9003,17 +9003,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global DataIs
 		global BaseSeq
 
-		DBFilename = infile
-
 		# check if this is the right DB
 		SQLStatement = 'SELECT * FROM LibDB ORDER BY SeqName DESC LIMIT 1 '
 		try:
-			DataIn = RunSQL(DBFilename, SQLStatement)
+			DataIn = RunSQL(infile, SQLStatement)
 		except:
 			QMessageBox.warning(self, 'Warning', 'There is no LibDB table in the selected database!',
 			                    QMessageBox.Ok,
 			                    QMessageBox.Ok)
 			return
+		DBFilename = infile
 
 		if isinstance(DBFilename, str):
 			titletext = 'Librator - ' + DBFilename
