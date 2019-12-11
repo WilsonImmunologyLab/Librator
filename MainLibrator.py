@@ -10023,6 +10023,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			if mode == "OriPos":
 				# create mutation dictionarys
 				mutations = mutation1.split(",")
+				mutation1 = ''
 				mutations_dic_oriAA = {}
 				mutations_dic_mutAA = {}
 				for ele in mutations:
@@ -10038,16 +10039,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 				for pos in sorted(mutations_dic_oriAA.keys()):
 					cur_oriAA = mutations_dic_oriAA[pos]
 					if cur_oriAA == numbering[pos][1]:
+						mutation1 += cur_oriAA + str(pos) + mutations_dic_mutAA[pos] + ','
 						pass
 					elif cur_oriAA == 'X':
-						mutation1 = numbering[pos][1] + mutation1[1:]
+						mutation1 += numbering[pos][1] + str(pos) + mutations_dic_mutAA[pos] + ','
 					else:
 						QMessageBox.warning(self, 'Warning', "On the AA sequence, position " + str(pos) + " (count from M) is "
 											+ numbering[pos][1] + ", not " + cur_oriAA
 											+ ". Please check your numbering carefully!",
 											QMessageBox.Ok, QMessageBox.Ok)
 						return
-
+				mutation1 = mutation1.strip(',')
 				# after all the mutations passed the check, we can start to add mutation into template sequence
 				for pos in sorted(mutations_dic_oriAA.keys()):
 					cur_mutAA = mutations_dic_mutAA[pos]
