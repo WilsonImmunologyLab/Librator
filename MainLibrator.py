@@ -10027,7 +10027,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				mutations_dic_mutAA = {}
 				for ele in mutations:
 					ele = ele.upper()
-					match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
+					match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRHX])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
 					if match_obj == None:
 						QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
 											QMessageBox.Ok, QMessageBox.Ok)
@@ -10039,6 +10039,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 					cur_oriAA = mutations_dic_oriAA[pos]
 					if cur_oriAA == numbering[pos][1]:
 						pass
+					elif cur_oriAA == 'X':
+						mutation1 = numbering[pos][1] + mutation1[1:]
 					else:
 						QMessageBox.warning(self, 'Warning', "On the AA sequence, position " + str(pos) + " (count from M) is "
 											+ numbering[pos][1] + ", not " + cur_oriAA
@@ -10095,7 +10097,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				else:
 					mutations_ha1 = mutation1.split(",")
 					for ele in mutations_ha1:
-						match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
+						match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRHX])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
 						if match_obj == None:
 							QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
 												QMessageBox.Ok, QMessageBox.Ok)
@@ -10111,7 +10113,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				else:
 					mutations_ha2 = mutation2.split(",")
 					for ele in mutations_ha2:
-						match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
+						match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRHX])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
 						if match_obj == None:
 							QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
 												QMessageBox.Ok, QMessageBox.Ok)
@@ -10126,10 +10128,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 				mutations_dic_oriAA = {}
 				mutations_dic_mutAA = {}
 				seprator = ','
-				mutation_text = seprator.join(mutations)
+				#mutation_text = seprator.join(mutations)
+				mutation_text = ''
 				for ele in mutations:
 					ele = ele.upper()
-					match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRH])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
+					match_obj = re.search(r'(^[GAVLIPFYWSTCMNQDEKRHX])(\d+)([GAVLIPFYWSTCMNQDEKRH])$', ele, re.M | re.I)
 					if match_obj == None:
 						QMessageBox.warning(self, 'Warning', 'The pattern \n' + ele + "\nis not in correct format!",
 											QMessageBox.Ok, QMessageBox.Ok)
@@ -10142,12 +10145,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 					cur_oriAA = mutations_dic_oriAA[pos]
 					if cur_oriAA == numbering[pos][1]:
 						contiune_run = 1
+						mutation_text += cur_oriAA + str(pos) + mutations_dic_mutAA[pos] + ','
+					elif cur_oriAA == 'X':
+						contiune_run = 1
+						mutation_text += numbering[pos][1] + str(pos) + mutations_dic_mutAA[pos] + ','
 					else:
 						QMessageBox.warning(self, 'Warning', "On the AA sequence, position " + str(pos) + " (count from M) is "
 											+ numbering[pos][1] + ", not " + cur_oriAA
 											+ ". Please check your numbering carefully!",
 											QMessageBox.Ok, QMessageBox.Ok)
 						contiune_run = 0
+				mutation_text = mutation_text.strip(',')
 
 				# after all the mutations passed the check, we can start to add mutation into template sequence
 				if contiune_run == 1:
