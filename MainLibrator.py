@@ -1,6 +1,6 @@
 # Librator by Patrick Wilson
-from PyQt5.QtCore import pyqtSlot, QTimer, QDateTime, Qt, QSortFilterProxyModel, QModelIndex, QEventLoop, pyqtSignal,\
-	QEventLoop, QUrl, QSize
+from PyQt5.QtCore import QObject, pyqtSlot, QTimer, QDateTime, Qt, QSortFilterProxyModel, QModelIndex, QEventLoop, pyqtSignal,\
+	QEventLoop, QUrl, QSize, pyqtProperty
 from PyQt5 import QtWidgets, QtPrintSupport, QtGui
 from PyQt5.QtWidgets import *
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
@@ -8,6 +8,7 @@ from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QC
 from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion, creatnewFragmentDB,\
 	CopyDatatoDB2, RunMYSQL, RunMYSQLInsertion
 from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtWebChannel import QWebChannel
 from pyecharts.charts import Bar, Pie, Line, Page, Grid
 from pyecharts import options as opts
 
@@ -165,6 +166,22 @@ else:
 	file_handle.write(joint_up + '\n')
 	file_handle.write(joint_down)
 	file_handle.close()
+
+
+class Myshared(QWidget):
+	finish = pyqtSignal(list)
+
+	def __init__(self):
+		super().__init__()
+
+	def PyQt52WebValue(self):
+		pass
+
+	def Web2PyQt5Value(self, str):
+		print(str)
+		#self.finish.emit(str)
+
+	value = pyqtProperty(str, fget=PyQt52WebValue, fset=Web2PyQt5Value)
 
 class MyFigure(FigureCanvas):
     def __init__(self,width=5, height=4, dpi=100):
@@ -941,7 +958,7 @@ class updateSeqDialog(QtWidgets.QDialog):
 
 class fusionDialog(QtWidgets.QDialog):
 	fusionSignal = pyqtSignal(list, str, bool, bool, bool)
-	fusionSeqSignal = pyqtSignal(str, str, int, int, int, int)
+	fusionSeqSignal = pyqtSignal(str, str, str, dict)
 	def __init__(self):
 		super(fusionDialog, self).__init__()
 		self.ui = Ui_fusionDialog()
@@ -949,6 +966,7 @@ class fusionDialog(QtWidgets.QDialog):
 
 		self.ui.confirmButton.clicked.connect(self.accept)
 		self.ui.cancelButton.clicked.connect(self.reject)
+		self.ui.apply.clicked.connect(self.updateReplacement)
 		#self.ui.showButton.clicked.connect(self.showalignment)
 		self.ui.selection.itemSelectionChanged.connect(self.displaySeq)
 
@@ -959,6 +977,99 @@ class fusionDialog(QtWidgets.QDialog):
 
 		self.base_len = 0
 		self.donor_len = 0
+		self.baseSeq = ''
+		self.baseSeqNT = ''
+		self.info = {}
+
+	def updateReplacement(self):
+		# get sequence editing information
+		del_start = self.ui.startBase.text()
+		del_end = self.ui.endBase.text()
+		add_start = self.ui.startDonor.text()
+		add_end = self.ui.endDonor.text()
+
+		# input check
+		try:
+			del_start = int(del_start)
+			del_end = int(del_end)
+			add_start = int(add_start)
+			add_end = int(add_end)
+
+		except ValueError:
+			QMessageBox.warning(self, 'Warning', 'Please type integer numbers in all four inputs! Check your input!',
+			                    QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+		else:
+			if del_start >= del_end or add_start >= add_end:
+				QMessageBox.warning(self, 'Warning',
+				                    'start position should be smaller than end position!', QMessageBox.Ok,
+				                    QMessageBox.Ok)
+				return
+
+		listItems = self.ui.selection.selectedItems()
+		donor_seq = ''
+		if len(listItems) == 0:
+			QMessageBox.warning(self, 'Warning', 'Please select sequence from active sequence panel!', QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+		for item in listItems:
+			eachItemIs = item.text()
+			donor_seq = eachItemIs
+
+		base_seq = self.ui.basename.text()
+
+		# check if current replacement is conflict with existing ones
+		if len(self.info) > 0:
+			for key in self.info:
+				cur_start = self.info[key][0]
+				cur_end = self.info[key][1]
+				if checkOverlap(cur_start,cur_end,del_start,del_end):
+					QMessageBox.warning(self, 'Warning',
+					                    'The replace region on Base sequence is conflict with existing replace region!', QMessageBox.Ok,
+					                    QMessageBox.Ok)
+					return
+
+		# get info
+		global DBFilename
+		# donor sequence
+		WhereState = 'SeqName = "' + donor_seq + '"'
+		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+		Sequence = DataIn[0][1]
+		VFrom = int(DataIn[0][2]) - 1
+		if VFrom == -1: VFrom = 0
+		VTo = int(DataIn[0][3])
+		Sequence = Sequence[VFrom:VTo]
+		Sequence = Sequence.upper()
+
+		add_start_nt = int((add_start - 1) * 3)
+		add_end_nt = int(add_end * 3)
+		if add_end_nt > len(Sequence):
+			QMessageBox.warning(self, 'Warning', 'Donor end position larger than donor sequence!', QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+		else:
+			add_sequence = Sequence[add_start_nt:add_end_nt]
+			add_sequence_aa,err = Translator(add_sequence,0)
+
+			key = len(self.info)
+			text = 'Inserted sequence comes from: ' + donor_seq + ', Amino acid ' + \
+			       str(add_start) + ' to ' +  str(add_end)
+			self.info[key] = [del_start,del_end,add_sequence_aa,add_sequence,text]
+
+			html_file = SequencesHTML(self.baseSeq, self.info)
+			# display
+			layout = self.ui.groupBox.layout()
+			for i in range(layout.count()):
+				view = layout.itemAt(i).widget()
+				view.load(QUrl("file://" + html_file))
+				view.show()
+
+			self.ui.startBase.setValue(0)
+			self.ui.endBase.setValue(0)
+			self.ui.startDonor.setValue(0)
+			self.ui.endDonor.setValue(0)
 
 	def highlight(self):
 		startBase = int(self.ui.startBase.text())
@@ -1018,43 +1129,13 @@ class fusionDialog(QtWidgets.QDialog):
 					self.Decorate(Decorations, self.ui.textEditDonor, mut_info)
 
 	def accept(self):
-		# get sequence editing information
-		del_start = self.ui.startBase.text()
-		del_end = self.ui.endBase.text()
-		add_start = self.ui.startDonor.text()
-		add_end = self.ui.endDonor.text()
-
-		# input check
-		try:
-			del_start = int(del_start)
-			del_end = int(del_end)
-			add_start = int(add_start)
-			add_end = int(add_end)
-
-		except ValueError:
-			QMessageBox.warning(self, 'Warning', 'Please type integer numbers in all four inputs! Check your input!', QMessageBox.Ok,
+		if len(self.info) == 0:
+			QMessageBox.warning(self, 'Warning', 'You did not make any change to the base sequence!',
+			                    QMessageBox.Ok,
 			                    QMessageBox.Ok)
 			return
-		else:
-			if del_start >= del_end or add_start >= add_end:
-				QMessageBox.warning(self, 'Warning',
-				                    'start position should be smaller than end position!', QMessageBox.Ok,
-				                    QMessageBox.Ok)
-				return
-
-		listItems = self.ui.selection.selectedItems()
-		donor_seq = ''
-		if len(listItems) == 0:
-			QMessageBox.warning(self, 'Warning', 'Please select sequence from active sequence panel!', QMessageBox.Ok,
-			                    QMessageBox.Ok)
-			return
-		for item in listItems:
-			eachItemIs = item.text()
-			donor_seq = eachItemIs
-
-		base_seq = self.ui.basename.text()
-
-		self.fusionSeqSignal.emit(base_seq, donor_seq, del_start, del_end, add_start, add_end)
+		base_name  = self.ui.basename.text()
+		self.fusionSeqSignal.emit(base_name, self.baseSeqNT, self.baseSeq, self.info)
 
 	def displaySeq(self):
 		global DBFilename
@@ -11362,9 +11443,40 @@ class LibratorMain(QtWidgets.QMainWindow):
 			for i in range(donor_num):
 				donor_list.append(self.ui.listWidgetStrainsIn.item(i).text())
 
+			# make HTML
+			WhereState = 'SeqName = "' + BaseSeq + '"'
+			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			Sequence = DataIn[0][1]
+			VFrom = int(DataIn[0][2]) - 1
+			if VFrom == -1: VFrom = 0
+			VTo = int(DataIn[0][3])
+			Sequence = Sequence[VFrom:VTo]
+			Sequence = Sequence.upper()
+			AA_Sequence = Translator(Sequence, 0)
+			AA_Sequence = AA_Sequence[0]
+
+
+			html_file = SequencesHTML(AA_Sequence,{})
+			# display
+			view = QWebEngineView()
+			channel = QWebChannel()
+			handler = Myshared()
+			channel.registerObject('connection', handler)
+			view.page().setWebChannel(channel)
+			view.load(QUrl("file://" + html_file))
+			view.show()
+
+			layout = self.modalessFusionDialog.ui.groupBox.layout()
+			layout.addWidget(view)
+
 			# remove the base seq from donor list
 			if BaseSeq in donor_list:
 				donor_list.remove(BaseSeq)
+
+			self.modalessFusionDialog.baseSeq = AA_Sequence
+			self.modalessFusionDialog.baseSeqNT = Sequence
+			self.modalessFusionDialog.info = {}
 			self.modalessFusionDialog.ui.selection.addItems(donor_list)
 			self.modalessFusionDialog.ui.basename.setText(BaseSeq)
 			self.modalessFusionDialog.fusionSignal.connect(self.showhumbering)
@@ -11434,66 +11546,49 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.AlignSequencesFusion(DataIn, Note, dnaCheck, aaCheck, posCheck)
 			time.sleep(0.1)
 
-	def fusionseq(self, base_seq, donor_seq, del_start, del_end, add_start, add_end):
+	def fusionseq(self, base_name, base_seq_nt, base_seq_aa, info):
 		global DBFilename
-		# donor sequence
-		WhereState = 'SeqName = "' + donor_seq + '"'
-		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
-		DataIn = RunSQL(DBFilename, SQLStatement)
-		Sequence = DataIn[0][1]
-		VFrom = int(DataIn[0][2]) - 1
-		if VFrom == -1: VFrom = 0
-		VTo = int(DataIn[0][3])
-		Sequence = Sequence[VFrom:VTo]
-		Sequence = Sequence.upper()
+		insertion_indicator = '0' * len(base_seq_aa)
+		seq_name = base_name + '-'
+		for key in info:
+			cur_start = int(info[key][0])
+			cur_end = int(info[key][1])
+			add_sequence_aa = info[key][2]
+			add_sequence = info[key][3]
+			add_indicator = '1' * len(add_sequence_aa)
 
-		add_start_nt = int((add_start - 1) * 3)
-		add_end_nt = int(add_end * 3)
-		if add_end_nt > len(Sequence):
-			QMessageBox.warning(self, 'Warning', 'Donor end position larger than donor sequence!', QMessageBox.Ok,
-			                    QMessageBox.Ok)
-			return
-		else:
-			add_sequence = Sequence[add_start_nt:add_end_nt]
+			del_start_nt = (cur_start - 1) * 3
+			del_end_nt = cur_end * 3
 
-		# base sequence
-		WhereState = 'SeqName = "' + base_seq + '"'
-		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
-		DataIn = RunSQL(DBFilename, SQLStatement)
-		Sequence = DataIn[0][1]
-		VFrom = int(DataIn[0][2]) - 1
-		if VFrom == -1: VFrom = 0
-		VTo = int(DataIn[0][3])
-		Sequence = Sequence[VFrom:VTo]
-		Sequence = Sequence.upper()
+			base_seq_nt = base_seq_nt[:del_start_nt] + add_sequence + base_seq_nt[del_end_nt:]
 
-		del_start_nt = (del_start - 1) * 3
-		del_end_nt = del_end * 3
-		del_sequence = Sequence[del_start_nt:del_end_nt]
+			base_seq_aa = base_seq_nt[:cur_start-1] + add_sequence_aa + base_seq_nt[cur_end:]
+			insertion_indicator = insertion_indicator[:cur_start-1] + add_indicator + insertion_indicator[cur_end:]
 
-		Sequence = Sequence[:del_start_nt] + add_sequence + Sequence[del_end_nt:]
+			seq_name += str(cur_start) + info[key][2] + str(cur_end) + ','
+
+		seq_name = seq_name.strip(',')
+
+		# mutations
+		mutations = []
+		for i in range(0,len(insertion_indicator)):
+			cur_indicator = insertion_indicator[i:i+1]
+			if cur_indicator == '1':
+				aa_pos = str(i + 1)
+				mutations.append('X' + aa_pos + base_seq_aa[i:i+1])
+
+		mutations = ','.join(mutations)
 
 		# insert into DB
+		WhereState = 'SeqName = "' + base_name + '"'
 		SQLStatement = 'SELECT * FROM LibDB WHERE ' + WhereState
 		DataIn = RunSQL(DBFilename, SQLStatement)
-
-		seq_name = base_seq + '(' + str(del_start) + '-' + str(del_end) + ')' + '+' + donor_seq + '(' + str(
-			add_start) + '-' + str(add_end) + ')'
-		AA_seq = Translator(add_sequence, 0)
-		i = 0
-		mutations = []
-		for aa in AA_seq[0]:
-			cur_pos = del_start + i
-			cur = 'X' + str(cur_pos) + aa
-			mutations.append(cur)
-			i += 1
-		mutations = ','.join(mutations)
 
 		SQLStatement = "INSERT INTO LibDB(`SeqName`, `Sequence`, `SeqLen`, `SubType`, `Form`, `VFrom`, `VTo`, `Active`, `Role`, " \
 		               "`Donor`, `Mutations`, `ID`, `Base`) VALUES('" \
 		               + seq_name + "','" \
-		               + Sequence + "','" \
-		               + str(len(Sequence)) + "','" \
+		               + base_seq_nt + "','" \
+		               + str(len(base_seq_nt)) + "','" \
 		               + DataIn[0][3] + "','" \
 		               + DataIn[0][4] + "','" \
 		               + "1" + "','" \
@@ -11503,7 +11598,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		               + "none" + "','" \
 		               + mutations + "','" \
 		               + "0" + "','" \
-		               + base_seq + "')"
+		               + base_name + "')"
 		response = RunInsertion(DBFilename, SQLStatement)
 		if (response == 1):
 			QMessageBox.warning(self, 'Warning', "Error happen when insert the new sequence!",
@@ -13060,6 +13155,135 @@ def MakeDivPosNT(class_name, line_name, tip_text, data):
 	div_seq += '</span>'
 	div_seq += '</div>'
 	return div_name, div_seq
+
+def MakeSeqWithInseetion(class_name,id,AAseq,info):
+	start_dict = {}
+	end_dict = {}
+	i = 0
+	if len(info) > 0:
+		for ele in info:
+			start_dict[info[ele][0]] = i
+			end_dict[info[ele][1]] = i
+			i += 1
+
+	div_seq = '<div class="' + class_name + '" id="' + id + '">'
+	i = 0
+	for aa in AAseq:
+		pos = i + 1
+		if end_dict.__contains__(pos):
+			div_seq += '<span class="unit">' + aa + '</span>'
+			div_seq += '<span class="insertion" style="margin-top: 10px;">' + info[end_dict[pos]][2] + '</span>'
+			div_seq += '</span>'
+			i += 1
+			continue
+		if start_dict.__contains__(pos):
+			div_seq += '<span class="replace" title="' + info[start_dict[pos]][4] + '">'
+			div_seq += '<span class="unit">' + aa + '</span>'
+			i += 1
+			continue
+		div_seq += '<span class="unit">' + aa + '</span>'
+		i += 1
+	div_seq += '</div>'
+
+	return div_seq
+
+def SequencesHTML(AAseq, info):
+	# import tempfile
+	import os
+	TupData = ()
+	global GLMsg
+	global working_prefix
+	global clustal_path
+	global temp_folder
+	global muscle_path
+
+	# align AA sequence with template to generate H1 and H3 numbering
+	HANumbering(AAseq)
+
+	# prepare H1 data
+	pos_h1_data = []
+	for i in range(1, len(H1Numbering) + 1):
+		cur_data = H1Numbering[i]
+		if cur_data[4] in ['Ca1','Ca2','Cb','Sa','Sb','Stalk-MN']:
+			if cur_data[2] == '-':
+				unit = (cur_data[2], cur_data[2], cur_data[4])
+			else:
+				if cur_data[0] == 'HA1':
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
+				else:
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
+		else:
+			if cur_data[2] == '-':
+				unit = (cur_data[2], cur_data[2], '')
+			else:
+				if cur_data[0] == 'HA1':
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+				else:
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
+		pos_h1_data.append(unit)
+	# prepare H3 data
+	#b = H3Numbering
+	pos_h3_data = []
+	for i in range(1, len(H3Numbering) + 1):
+		cur_data = H3Numbering[i]
+		if cur_data[4] in ['A','B','C','D','E','Stalk-MN']:
+			if cur_data[2] == '-':
+				unit = (cur_data[2], cur_data[2], cur_data[4])
+			else:
+				if cur_data[0] == 'HA1':
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
+				else:
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
+		else:
+			if cur_data[2] == '-':
+				unit = (cur_data[2], cur_data[2], '')
+			else:
+				if cur_data[0] == 'HA1':
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+				else:
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
+		pos_h3_data.append(unit)
+
+	# make header HTML
+	pos_aa_data = [list(range(1,len(AAseq)+1)),list(range(1,len(AAseq)+1))]
+	div_pos_aa = MakeDivPosAA('line line_pos_aa', 'Position AA:', 'Original AA position: ', pos_aa_data)
+	div_h1 = MakeDivH1N3('line line_h1', 'H1 numbering', 'H1 numbering: ', pos_h1_data)
+	div_h3 = MakeDivH1N3('line line_h3', 'H3 numbering', 'H3 numbering: ', pos_h3_data)
+	# make sequence section HTML
+	div_seq = MakeSeqWithInseetion('line line_aa','seq',AAseq,info)
+
+	# initial and open HTML file
+	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+	out_html_file = os.path.join(temp_folder, time_stamp + '.html')
+	header_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'template1.html')
+	shutil.copyfile(header_file, out_html_file)
+	out_file_handle = open(out_html_file, 'a')
+
+	seq_div = '<div class = "seq_div">\n'
+	# write header section
+	seq_div += div_pos_aa[1] + '\n'
+	seq_div += div_h1[1] + '\n'
+	seq_div += div_h3[1] + '\n'
+	seq_div += div_seq + '\n'
+
+	seq_div += '</div>\n'
+	out_file_handle.write(seq_div)
+	out_file_handle.write('\n</div>')
+	info_div = '<div class="info_div" style="margin-top: 300px;">\n<p id = "info">Insertion information</p>\n</div>'
+	out_file_handle.write(info_div)
+	out_file_handle.write('\n</body>\n</html>')
+	out_file_handle.close()
+	return out_html_file
+
+def checkOverlap(x1,y1,x2,y2):
+	a = range(x1,y1+1)
+	b = range(x2,y2+1)
+	inter = set(a).intersection(set(b))
+
+	if len(inter) > 0:
+		return True
+	else:
+		return False
 
 def AlignSequencesHTML(DataSet):
 	# import tempfile
