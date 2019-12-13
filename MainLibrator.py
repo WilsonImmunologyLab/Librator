@@ -1,6 +1,6 @@
 # Librator by Patrick Wilson
 from PyQt5.QtCore import QObject, pyqtSlot, QTimer, QDateTime, Qt, QSortFilterProxyModel, QModelIndex, QEventLoop, pyqtSignal,\
-	QEventLoop, QUrl, QSize, pyqtProperty
+	QEventLoop, QUrl, QSize
 from PyQt5 import QtWidgets, QtPrintSupport, QtGui
 from PyQt5.QtWidgets import *
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
@@ -967,6 +967,7 @@ class fusionDialog(QtWidgets.QDialog):
 		self.ui.confirmButton.clicked.connect(self.accept)
 		self.ui.cancelButton.clicked.connect(self.reject)
 		self.ui.apply.clicked.connect(self.updateReplacement)
+		self.ui.clear.clicked.connect(self.clearSelection)
 		#self.ui.showButton.clicked.connect(self.showalignment)
 		self.ui.selection.itemSelectionChanged.connect(self.displaySeq)
 
@@ -980,6 +981,16 @@ class fusionDialog(QtWidgets.QDialog):
 		self.baseSeq = ''
 		self.baseSeqNT = ''
 		self.info = {}
+
+	def clearSelection(self):
+		self.info = {}
+		html_file = SequencesHTML(self.baseSeq, self.info)
+		# display
+		layout = self.ui.groupBox.layout()
+		for i in range(layout.count()):
+			view = layout.itemAt(i).widget()
+			view.load(QUrl("file://" + html_file))
+			view.show()
 
 	def updateReplacement(self):
 		# get sequence editing information
@@ -1053,7 +1064,7 @@ class fusionDialog(QtWidgets.QDialog):
 			add_sequence = Sequence[add_start_nt:add_end_nt]
 			add_sequence_aa,err = Translator(add_sequence,0)
 
-			key = len(self.info)
+			key = int(time.time() * 100)
 			text = 'Inserted sequence comes from: ' + donor_seq + ', Amino acid ' + \
 			       str(add_start) + ' to ' +  str(add_end)
 			self.info[key] = [del_start,del_end,add_sequence_aa,add_sequence,text]
@@ -13159,12 +13170,10 @@ def MakeDivPosNT(class_name, line_name, tip_text, data):
 def MakeSeqWithInseetion(class_name,id,AAseq,info):
 	start_dict = {}
 	end_dict = {}
-	i = 0
 	if len(info) > 0:
 		for ele in info:
-			start_dict[info[ele][0]] = i
-			end_dict[info[ele][1]] = i
-			i += 1
+			start_dict[info[ele][0]] = ele
+			end_dict[info[ele][1]] = ele
 
 	div_seq = '<div class="' + class_name + '" id="' + id + '">'
 	i = 0
