@@ -12221,8 +12221,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 				aa_start = list(NA_start_user);
 				aa_end = list(NA_end_user);
 		else:
-			print("We only support FLU A for now! Please input Influenza A HA or NA!")
+			QMessageBox.warning(self, 'Warning', 'We only support FLU A for now! Please input Influenza A HA or NA!', QMessageBox.Ok, QMessageBox.Ok)
 			return
+		if len(aa_start) == 0:
+			QMessageBox.warning(self, 'Warning', 'The fragment design does not exist!', QMessageBox.Ok, QMessageBox.Ok)
+			return
+
 		# number of fragments
 		num_fragment = len(aa_start)
 
