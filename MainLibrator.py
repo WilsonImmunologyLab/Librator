@@ -13109,10 +13109,10 @@ def ReadFASTA(outfilename):
 		return ReadFile
 
 def MakeDivNT(class_name, line_name, data):
-	div_name = 	'<div class="' + class_name + '">'
+	div_name = 	'<div class="' + class_name + ' 1">'
 	div_name += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
 	div_name += '</div>'
-	div_seq = '<div class="' + class_name + '">'
+	div_seq = '<div class="' + class_name + ' 2">'
 	count = 0
 	for i in range(len(data)):
 		if count == 0:
@@ -13127,10 +13127,10 @@ def MakeDivNT(class_name, line_name, data):
 	return div_name, div_seq
 
 def MakeDivAA(class_name, line_name, data):
-	div_name = '<div class="' + class_name + '">'
+	div_name = '<div class="' + class_name + ' 1">'
 	div_name += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
 	div_name += '</div>'
-	div_seq = '<div class="' + class_name + '">'
+	div_seq = '<div class="' + class_name + ' 2">'
 	for i in range(len(data)):
 		div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + data[i] + '</span><span class="insert">&nbsp;</span></span>'
 	div_seq += '</div>'
@@ -13526,10 +13526,10 @@ def AlignSequencesHTML(DataSet):
 	div_pos_aa = MakeDivPosAA('line line_pos_aa', 'Position AA:', 'Original AA position: ', pos_aa_data)
 	div_h1 = MakeDivH1N3('line line_h1', 'H1 numbering', 'H1 numbering: ', pos_h1_data)
 	div_h3 = MakeDivH1N3('line line_h3', 'H3 numbering', 'H3 numbering: ', pos_h3_data)
-	div_con_aa = MakeDivAA('line con_aa', 'Consensus AA:', compact_consensusAA)
+	div_con_aa = MakeDivAA('line con_aa', 'Template AA:', compact_consensusAA)
 	pos_nt_data = [list(range(1, len(consensusDNA) + 1)), list(range(1, len(consensusDNA) + 1))]
 	div_pos_nt = MakeDivPosNT('line line_pos_nt', 'Position NT:', 'Original NT position: ', pos_nt_data)
-	div_con_nt = MakeDivNT('line con_nt', 'Consensus NT:', consensusDNA)
+	div_con_nt = MakeDivNT('line con_nt', 'Template NT:', consensusDNA)
 
 	# initial and open HTML file
 	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
@@ -13537,6 +13537,15 @@ def AlignSequencesHTML(DataSet):
 	header_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'template.html')
 	shutil.copyfile(header_file, out_html_file)
 	out_file_handle = open(out_html_file, 'a')
+
+	JSdata = '<script type="text/javascript">\n'
+	JSdata += 'var data = {\n'
+	JSarray = []
+	JStext = '"Seq0":["Consensus","' + compact_consensusAA + '","' + consensusDNA + '"]'
+	JSarray.append(JStext)
+
+	Optiondata = '<script type="text/javascript">\n'
+	Optiondata += '$("#option").append("<option value =\'Seq0\'>Consensus Sequence</option>");\n'
 
 	name_div = '<div class="name_div">\n'
 	seq_div = '<div class = "seq_div">\n'
@@ -13554,16 +13563,19 @@ def AlignSequencesHTML(DataSet):
 	name_div += div_con_nt[0] + '\n'
 	seq_div += div_con_nt[1] + '\n'
 	# make sequence section HTML
+	i = 1
 	for key in all:
+		seq_nick_name = 'Seq' + str(i)
+
 		seq_nt = all[key][0]
 		seq_aa = all[key][1]
 		con_nt = MakeConSeq(seq_nt, consensusDNA)
 		con_aa = MakeConSeq(seq_aa, compact_consensusAA)
 
-		div_aa = MakeDivAA('line line_aa', key, seq_aa)
-		div_aa_mut = MakeDivAA('line line_con_aa', key, con_aa)
-		div_nt = MakeDivNT('line line_nt', key, seq_nt)
-		div_nt_mut = MakeDivNT('line line_con_nt', key, con_nt)
+		div_aa = MakeDivAA('line line_aa ' + seq_nick_name, key, seq_aa)
+		div_aa_mut = MakeDivAA('line line_con_aa ' + seq_nick_name, key, con_aa)
+		div_nt = MakeDivNT('line line_nt ' + seq_nick_name, key, seq_nt)
+		div_nt_mut = MakeDivNT('line line_con_nt ' + seq_nick_name, key, con_nt)
 		# write sequence section
 		name_div += div_aa[0] + '\n'
 		seq_div += div_aa[1] + '\n'
@@ -13574,8 +13586,21 @@ def AlignSequencesHTML(DataSet):
 		name_div += div_nt_mut[0] + '\n'
 		seq_div += div_nt_mut[1] + '\n'
 
+		JStext = '"' + seq_nick_name + '":["' + key + '","' + seq_aa + '","' + seq_nt + '"]'
+		JSarray.append(JStext)
+		Optiondata += '$("#option").append("<option value =\'' + seq_nick_name + '\'>' + key + '</option>");\n'
+		i += 1
+
+	JSdata += ',\n'.join(JSarray)
+	JSdata += '\n}\n</script>\n'
+	Optiondata += '</script>\n'
+
 	name_div += '</div>\n'
 	seq_div += '</div>\n'
+
+	out_file_handle.write(JSdata)
+	out_file_handle.write(Optiondata)
+	out_file_handle.write('<div class="box">')
 	out_file_handle.write(name_div)
 	out_file_handle.write(seq_div)
 	out_file_handle.write('\n</div>\n</body>\n</html>')
