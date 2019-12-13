@@ -1099,20 +1099,26 @@ class fusionDialog(QtWidgets.QDialog):
 
 				base = self.ui.basename.text()
 				WhereState = 'SeqName = "' + base + '"'
-				SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+				SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo, Subtype FROM LibDB WHERE ' + WhereState
 				DataIn = RunSQL(DBFilename, SQLStatement)
 				Sequence = DataIn[0][1]
 				VFrom = int(DataIn[0][2]) - 1
 				if VFrom == -1: VFrom = 0
 				VTo = int(DataIn[0][3])
+				Subtype = DataIn[0][4]
 				Sequence = Sequence[VFrom:VTo]
 				Sequence = Sequence.upper()
 				AA_Sequence = Translator(Sequence, 0)
 				AA_Sequence = AA_Sequence[0]
 
-				HANumbering(AA_Sequence)
-				Decorations = ['H3Num', 'H1Num', 'Muts']
-				self.Decorate(Decorations, self.ui.textEditBase, mut_info)
+				if Subtype in Group1 or Subtype in Group2:
+					HANumbering(AA_Sequence)
+					Decorations = ['H3Num', 'H1Num', 'Muts']
+					self.Decorate(Decorations, self.ui.textEditBase, mut_info)
+				else:
+					HANumbering(AA_Sequence)
+					Decorations = ['Muts']
+					self.Decorate(Decorations, self.ui.textEditBase, mut_info)
 
 		startDonor = int(self.ui.startDonor.text())
 		endDonor = int(self.ui.endDonor.text())
@@ -1128,20 +1134,26 @@ class fusionDialog(QtWidgets.QDialog):
 				if len(donor) > 0:
 					donor = donor[0].text()
 					WhereState = 'SeqName = "' + donor + '"'
-					SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+					SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo, Subtype FROM LibDB WHERE ' + WhereState
 					DataIn = RunSQL(DBFilename, SQLStatement)
 					Sequence = DataIn[0][1]
 					VFrom = int(DataIn[0][2]) - 1
 					if VFrom == -1: VFrom = 0
 					VTo = int(DataIn[0][3])
+					Subtype = DataIn[0][4]
 					Sequence = Sequence[VFrom:VTo]
 					Sequence = Sequence.upper()
 					AA_Sequence = Translator(Sequence, 0)
 					AA_Sequence = AA_Sequence[0]
 
-					HANumbering(AA_Sequence)
-					Decorations = ['H3Num', 'H1Num', 'Muts']
-					self.Decorate(Decorations, self.ui.textEditDonor, mut_info)
+					if Subtype in Group1 or Subtype in Group2:
+						HANumbering(AA_Sequence)
+						Decorations = ['H3Num', 'H1Num', 'Muts']
+						self.Decorate(Decorations, self.ui.textEditDonor, mut_info)
+					else:
+						HANumbering(AA_Sequence)
+						Decorations = ['Muts']
+						self.Decorate(Decorations, self.ui.textEditDonor, mut_info)
 
 	def accept(self):
 		if len(self.info) == 0:
@@ -1161,20 +1173,26 @@ class fusionDialog(QtWidgets.QDialog):
 			# base sequence
 			base = self.ui.basename.text()
 			WhereState = 'SeqName = "' + base + '"'
-			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo, Subtype FROM LibDB WHERE ' + WhereState
 			DataIn = RunSQL(DBFilename, SQLStatement)
 			Sequence = DataIn[0][1]
 			VFrom = int(DataIn[0][2]) - 1
 			if VFrom == -1: VFrom = 0
 			VTo = int(DataIn[0][3])
+			Subtype = DataIn[0][4]
 			Sequence = Sequence[VFrom:VTo]
 			Sequence = Sequence.upper()
 			AA_Sequence = Translator(Sequence, 0)
 			AA_Sequence = AA_Sequence[0]
 
-			HANumbering(AA_Sequence)
-			Decorations = ['H3Num', 'H1Num','Muts']
-			self.Decorate(Decorations, self.ui.textEditBase, 'none')
+			if Subtype in Group1 or Subtype in Group2:
+				HANumbering(AA_Sequence)
+				Decorations = ['H3Num', 'H1Num', 'Muts']
+				self.Decorate(Decorations, self.ui.textEditBase, 'none')
+			else:
+				HANumbering(AA_Sequence)
+				Decorations = ['Muts']
+				self.Decorate(Decorations, self.ui.textEditBase, 'none')
 
 			self.ui.label_base.setText('Base Sequence: ' + base)
 			self.base_len = len(AA_Sequence)
@@ -1184,20 +1202,26 @@ class fusionDialog(QtWidgets.QDialog):
 		if len(donor) > 0:
 			donor = donor[0].text()
 			WhereState = 'SeqName = "' + donor + '"'
-			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo, Subtype FROM LibDB WHERE ' + WhereState
 			DataIn = RunSQL(DBFilename, SQLStatement)
 			Sequence = DataIn[0][1]
 			VFrom = int(DataIn[0][2]) - 1
 			if VFrom == -1: VFrom = 0
 			VTo = int(DataIn[0][3])
+			Subtype = DataIn[0][4]
 			Sequence = Sequence[VFrom:VTo]
 			Sequence = Sequence.upper()
 			AA_Sequence = Translator(Sequence, 0)
 			AA_Sequence = AA_Sequence[0]
 
-			HANumbering(AA_Sequence)
-			Decorations = ['H3Num', 'H1Num','Muts']
-			self.Decorate(Decorations, self.ui.textEditDonor, 'none')
+			if Subtype in Group1 or Subtype in Group2:
+				HANumbering(AA_Sequence)
+				Decorations = ['H3Num', 'H1Num','Muts']
+				self.Decorate(Decorations, self.ui.textEditDonor, 'none')
+			else:
+				HANumbering(AA_Sequence)
+				Decorations = ['Muts']
+				self.Decorate(Decorations, self.ui.textEditDonor, 'none')
 
 			self.ui.label_donor.setText('Donor Sequence: ' + donor)
 			self.donor_len = len(AA_Sequence)
@@ -1213,8 +1237,6 @@ class fusionDialog(QtWidgets.QDialog):
 			self.ui.startDonor.setDisabled(True)
 			self.ui.endDonor.setDisabled(True)
 			self.ui.label_donor.setText('Donor Sequence: ')
-
-
 
 	def showalignment(self):
 		global DBFilename
@@ -1722,6 +1744,18 @@ class fusionDialog(QtWidgets.QDialog):
 			H1Key = 'H1 Antigenic Sites:  Ca1    Ca2    Cb    Sa    Sb   Stalk-MN \n'
 			H1KeyCMap = '000000000000000000022222224444444777777333333666666AAAAAAAAAA\n'
 
+		if H1NumOn == False and H3NumOn == False:
+			for pos in range(1, len(H3Numbering)):
+				residue = H3Numbering[pos]
+				AA = residue[1]
+				AASeq += AA
+
+		AAColorMap = '0'*len(AASeq)
+		NumLine = MakeRuler(1, len(AASeq), 5, 'nt')
+		AAPosColorMap = '0'*len(NumLine)
+
+		AAKey = ''
+		AAKeyC = ''
 		SeqName = ''
 		LenSeqName = len(SeqName)
 
