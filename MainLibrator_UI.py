@@ -1220,6 +1220,8 @@ class Ui_MainLibrator(object):
         self.actionAlignmentHTML.setIcon(icon43)
         self.actionAlignmentHTML.setAutoRepeat(True)
         self.actionAlignmentHTML.setObjectName("actionAlignmentHTML")
+        self.actionVector_Joint_Setting = QtWidgets.QAction(MainLibrator)
+        self.actionVector_Joint_Setting.setObjectName("actionVector_Joint_Setting")
         self.menuFile.addAction(self.action_New)
         self.menuFile.addAction(self.action_Open)
         self.menuFile.addSeparator()
@@ -1570,4 +1572,5 @@ class Ui_MainLibrator(object):
         self.actionAlignmentHTML.setText(_translate("MainLibrator", "Multiple Alignment (HTML)"))
         self.actionAlignmentHTML.setIconText(_translate("MainLibrator", "Multiple Sequence Alignment Viewer (HTML)"))
         self.actionAlignmentHTML.setToolTip(_translate("MainLibrator", "Multiple Sequence Alignment Viewer (HTML)"))
+        self.actionVector_Joint_Setting.setText(_translate("MainLibrator", "Vector Joint Setting"))
 import VgenesResources_rc

@@ -3178,6 +3178,11 @@
     <bool>true</bool>
    </property>
   </action>
+  <action name="actionVector_Joint_Setting">
+   <property name="text">
+    <string>Vector Joint Setting</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="Resources/VgenesResources.qrc"/>

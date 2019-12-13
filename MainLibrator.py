@@ -2227,6 +2227,29 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 		self.ui.radioButtonDefault.clicked.connect(self.setJoint)
 		self.ui.radioButtonUser.clicked.connect(self.setJoint)
 		self.ui.checkBoxAll.stateChanged.connect(self.checkAll)
+		self.ui.saveConnector.clicked.connect(self.saveJoint)
+
+	def saveJoint(self):
+		global joint_file
+		global joint_up
+		global joint_down
+
+		up_str = self.ui.jointUP.toPlainText()
+		down_str = self.ui.jointDOWN.toPlainText()
+
+		if up_str != '' and down_str != '':
+			joint_up = up_str
+			joint_down = down_str
+			file_handle = open(joint_file, 'w')
+			file_handle.write(joint_up + '\n')
+			file_handle.write(joint_down)
+			file_handle.close()
+
+			Msg = 'Your setting have been saved!'
+			QMessageBox.information(self, 'information', Msg, QMessageBox.Ok,
+			                        QMessageBox.Ok)
+
+
 	def checkAll(self):
 		rows = self.ui.selectionTable.rowCount()
 		if self.ui.checkBoxAll.isChecked():
