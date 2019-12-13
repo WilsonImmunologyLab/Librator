@@ -7,8 +7,9 @@ from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QCursor
 from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion, creatnewFragmentDB,\
 	CopyDatatoDB2, RunMYSQL, RunMYSQLInsertion
-from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtWebChannel import QWebChannel
+from PyQt5.QtWebEngine import *
+from PyQt5.QtWebEngineWidgets import *
+from PyQt5.QtWebChannel import *
 from pyecharts.charts import Bar, Pie, Line, Page, Grid
 from pyecharts import options as opts
 
@@ -168,20 +169,19 @@ else:
 	file_handle.close()
 
 
-class Myshared(QWidget):
-	finish = pyqtSignal(list)
+class MyObjectCls(QObject):
+	updateSelectionSignal = pyqtSignal(str)
 
-	def __init__(self):
-		super().__init__()
+	def __init__(self, parent=None):
+		QObject.__init__(self, parent)
 
-	def PyQt52WebValue(self):
-		pass
+	@pyqtSlot(str)
+	def consolePrint(self, msg):
+		print(msg)
 
-	def Web2PyQt5Value(self, str):
-		print(str)
-		#self.finish.emit(str)
-
-	value = pyqtProperty(str, fget=PyQt52WebValue, fset=Web2PyQt5Value)
+	@pyqtSlot(str)
+	def updateSelection(self, msg):
+		self.updateSelectionSignal.emit(msg)
 
 class MyFigure(FigureCanvas):
     def __init__(self,width=5, height=4, dpi=100):
@@ -992,6 +992,10 @@ class fusionDialog(QtWidgets.QDialog):
 			view.load(QUrl("file://" + html_file))
 			view.show()
 
+	def deleteReplacement(self, id):
+		del self.info[int(id)]
+		print("signal received!")
+
 	def updateReplacement(self):
 		# get sequence editing information
 		del_start = self.ui.startBase.text()
@@ -1065,8 +1069,8 @@ class fusionDialog(QtWidgets.QDialog):
 			add_sequence_aa,err = Translator(add_sequence,0)
 
 			key = int(time.time() * 100)
-			text = 'Inserted sequence comes from: ' + donor_seq + ', Amino acid ' + \
-			       str(add_start) + ' to ' +  str(add_end)
+			text = 'Inserted sequence:' + add_sequence_aa + '(' + add_sequence + '), comes from: ' + \
+			       donor_seq + ', Amino acid ' + str(add_start) + ' to ' +  str(add_end)
 			self.info[key] = [del_start,del_end,add_sequence_aa,add_sequence,text]
 
 			html_file = SequencesHTML(self.baseSeq, self.info)
@@ -11471,10 +11475,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 			html_file = SequencesHTML(AA_Sequence,{})
 			# display
 			view = QWebEngineView()
-			channel = QWebChannel()
-			handler = Myshared()
-			channel.registerObject('connection', handler)
+			channel = QWebChannel(view.page())
+			my_object = MyObjectCls(view)
+			channel.registerObject('connection', my_object)
 			view.page().setWebChannel(channel)
+			my_object.updateSelectionSignal.connect(self.modalessFusionDialog.deleteReplacement)
+
 			view.load(QUrl("file://" + html_file))
 			view.show()
 
@@ -13186,7 +13192,7 @@ def MakeSeqWithInseetion(class_name,id,AAseq,info):
 			i += 1
 			continue
 		if start_dict.__contains__(pos):
-			div_seq += '<span class="replace" title="' + info[start_dict[pos]][4] + '">'
+			div_seq += '<span class="replace" id="' + str(start_dict[pos]) + '" title="' + info[start_dict[pos]][4] + '">'
 			div_seq += '<span class="unit">' + aa + '</span>'
 			i += 1
 			continue
