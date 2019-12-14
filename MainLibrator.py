@@ -38,6 +38,7 @@ from sequenceedit import Ui_SequenceEditDialog
 from gibsonclone import Ui_gibsoncloneDialog
 from base_path_dialog import Ui_basePathDialog
 from fusiondialog import Ui_fusionDialog
+from fusiondialogNarrow import Ui_fusionDialogNarrow
 from updatesequencedialog import Ui_UpdateSequenceDialog
 from deletedialog import Ui_deleteDialog
 from treedialog import Ui_treeDialog
@@ -961,9 +962,13 @@ class updateSeqDialog(QtWidgets.QDialog):
 class fusionDialog(QtWidgets.QDialog):
 	fusionSignal = pyqtSignal(list, str, bool, bool, bool)
 	fusionSeqSignal = pyqtSignal(str, str, str, dict)
-	def __init__(self):
+	def __init__(self, mode):
 		super(fusionDialog, self).__init__()
-		self.ui = Ui_fusionDialog()
+
+		if mode == 'wide':
+			self.ui = Ui_fusionDialog()
+		else:
+			self.ui = Ui_fusionDialogNarrow()
 		self.ui.setupUi(self)
 
 		self.ui.confirmButton.clicked.connect(self.accept)
@@ -3197,8 +3202,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.fig = 0
 		self.html = 0
-
-
 
 		self.ui.HTMLview1 = ResizeWidget(self)
 		self.ui.HTMLview1.id = 1
@@ -11521,7 +11524,127 @@ class LibratorMain(QtWidgets.QMainWindow):
 		if self.ui.lblBaseName.toPlainText() == "":
 			QMessageBox.warning(self, 'Warning', 'Please determine a base sequence first!', QMessageBox.Ok, QMessageBox.Ok)
 		else:
-			self.modalessFusionDialog = fusionDialog()
+			self.desktop = QApplication.desktop()
+			self.screenRect = self.desktop.screenGeometry()
+			self.height = self.screenRect.height()
+			self.width = self.screenRect.width()
+			if self.width > 1800:
+				self.modalessFusionDialog = fusionDialog('wide')
+			else:
+				self.modalessFusionDialog = fusionDialog('narrow')
+
+			# get active sequences from Qlist in main window
+			donor_num = self.ui.listWidgetStrainsIn.count()
+			donor_list = []
+			for i in range(donor_num):
+				donor_list.append(self.ui.listWidgetStrainsIn.item(i).text())
+
+			# make HTML
+			WhereState = 'SeqName = "' + BaseSeq + '"'
+			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			Sequence = DataIn[0][1]
+			VFrom = int(DataIn[0][2]) - 1
+			if VFrom == -1: VFrom = 0
+			VTo = int(DataIn[0][3])
+			Sequence = Sequence[VFrom:VTo]
+			Sequence = Sequence.upper()
+			AA_Sequence = Translator(Sequence, 0)
+			AA_Sequence = AA_Sequence[0]
+
+
+			html_file = SequencesHTML(AA_Sequence,{})
+			# display
+			view = QWebEngineView()
+			channel = QWebChannel(view.page())
+			my_object = MyObjectCls(view)
+			channel.registerObject('connection', my_object)
+			view.page().setWebChannel(channel)
+			my_object.updateSelectionSignal.connect(self.modalessFusionDialog.deleteReplacement)
+
+			view.load(QUrl("file://" + html_file))
+			view.show()
+
+			layout = self.modalessFusionDialog.ui.groupBox.layout()
+			layout.addWidget(view)
+
+			# remove the base seq from donor list
+			if BaseSeq in donor_list:
+				donor_list.remove(BaseSeq)
+
+			self.modalessFusionDialog.baseSeq = AA_Sequence
+			self.modalessFusionDialog.baseSeqNT = Sequence
+			self.modalessFusionDialog.info = {}
+			self.modalessFusionDialog.ui.selection.addItems(donor_list)
+			self.modalessFusionDialog.ui.basename.setText(BaseSeq)
+			self.modalessFusionDialog.fusionSignal.connect(self.showhumbering)
+			self.modalessFusionDialog.fusionSeqSignal.connect(self.fusionseq)
+			self.modalessFusionDialog.displaySeq()
+			self.modalessFusionDialog.show()
+
+	@pyqtSlot()
+	def on_actionFusion_High_resolution_triggered(self):
+		if self.ui.lblBaseName.toPlainText() == "":
+			QMessageBox.warning(self, 'Warning', 'Please determine a base sequence first!', QMessageBox.Ok, QMessageBox.Ok)
+		else:
+			self.modalessFusionDialog = fusionDialog('wide')
+
+			# get active sequences from Qlist in main window
+			donor_num = self.ui.listWidgetStrainsIn.count()
+			donor_list = []
+			for i in range(donor_num):
+				donor_list.append(self.ui.listWidgetStrainsIn.item(i).text())
+
+			# make HTML
+			WhereState = 'SeqName = "' + BaseSeq + '"'
+			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			Sequence = DataIn[0][1]
+			VFrom = int(DataIn[0][2]) - 1
+			if VFrom == -1: VFrom = 0
+			VTo = int(DataIn[0][3])
+			Sequence = Sequence[VFrom:VTo]
+			Sequence = Sequence.upper()
+			AA_Sequence = Translator(Sequence, 0)
+			AA_Sequence = AA_Sequence[0]
+
+
+			html_file = SequencesHTML(AA_Sequence,{})
+			# display
+			view = QWebEngineView()
+			channel = QWebChannel(view.page())
+			my_object = MyObjectCls(view)
+			channel.registerObject('connection', my_object)
+			view.page().setWebChannel(channel)
+			my_object.updateSelectionSignal.connect(self.modalessFusionDialog.deleteReplacement)
+
+			view.load(QUrl("file://" + html_file))
+			view.show()
+
+			layout = self.modalessFusionDialog.ui.groupBox.layout()
+			layout.addWidget(view)
+
+			# remove the base seq from donor list
+			if BaseSeq in donor_list:
+				donor_list.remove(BaseSeq)
+
+			self.modalessFusionDialog.baseSeq = AA_Sequence
+			self.modalessFusionDialog.baseSeqNT = Sequence
+			self.modalessFusionDialog.info = {}
+			self.modalessFusionDialog.ui.selection.addItems(donor_list)
+			self.modalessFusionDialog.ui.basename.setText(BaseSeq)
+			self.modalessFusionDialog.fusionSignal.connect(self.showhumbering)
+			self.modalessFusionDialog.fusionSeqSignal.connect(self.fusionseq)
+			self.modalessFusionDialog.displaySeq()
+			self.modalessFusionDialog.show()
+
+	@pyqtSlot()
+	def on_actionFusion_Low_reslution_triggered(self):
+		if self.ui.lblBaseName.toPlainText() == "":
+			QMessageBox.warning(self, 'Warning', 'Please determine a base sequence first!', QMessageBox.Ok, QMessageBox.Ok)
+		else:
+			self.modalessFusionDialog = fusionDialog('narrow')
+
 			# get active sequences from Qlist in main window
 			donor_num = self.ui.listWidgetStrainsIn.count()
 			donor_list = []

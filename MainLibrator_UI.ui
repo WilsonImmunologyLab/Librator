@@ -2466,8 +2466,12 @@
      <string>Edit Sequence</string>
     </property>
     <addaction name="actionMutation"/>
+    <addaction name="separator"/>
     <addaction name="actionEditing"/>
+    <addaction name="separator"/>
     <addaction name="actionFusion"/>
+    <addaction name="actionFusion_High_resolution"/>
+    <addaction name="actionFusion_Low_reslution"/>
    </widget>
    <widget class="QMenu" name="menuVisualization">
     <property name="title">
@@ -2481,6 +2485,7 @@
     </property>
     <addaction name="actionGibsonClone"/>
     <addaction name="actionGibsonClone_Setting"/>
+    <addaction name="actionVector_Joint_Setting"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSequences"/>
@@ -3181,6 +3186,16 @@
   <action name="actionVector_Joint_Setting">
    <property name="text">
     <string>Vector Joint Setting</string>
+   </property>
+  </action>
+  <action name="actionFusion_High_resolution">
+   <property name="text">
+    <string>Fusion (High resolution)</string>
+   </property>
+  </action>
+  <action name="actionFusion_Low_reslution">
+   <property name="text">
+    <string>Fusion (Low reslution)</string>
    </property>
   </action>
  </widget>
