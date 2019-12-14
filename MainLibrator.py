@@ -875,7 +875,7 @@ class deleteDialog(QtWidgets.QDialog):
 			self.reject()
 
 class updateSeqDialog(QtWidgets.QDialog):
-	updateSignal = pyqtSignal(str, str)
+	updateSignal = pyqtSignal(str, str, str, str)
 	def __init__(self):
 		super(updateSeqDialog, self).__init__()
 		self.ui = Ui_UpdateSequenceDialog()
@@ -904,8 +904,10 @@ class updateSeqDialog(QtWidgets.QDialog):
 	def accept(self):
 		SeqName = self.ui.lineEdit.text()
 		Seq = self.ui.textEdit.toPlainText()
+		start = str(self.ui.RFstart.value())
+		end = str(self.ui.RFend.value())
 
-		self.updateSignal.emit(SeqName,Seq)
+		self.updateSignal.emit(SeqName,Seq, start, end)
 
 	def updateAA(self):
 		start = self.ui.RFstart.value() - 1
@@ -11390,19 +11392,30 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessUpdateDialog = updateSeqDialog()
 			#
 			self.modalessUpdateDialog.ui.lineEdit.setText(self.ui.txtName.toPlainText())
-			self.modalessUpdateDialog.ui.textEdit.setText(self.ui.textSeq.toPlainText())
+			WhereState = 'SeqName = "' + self.ui.txtName.toPlainText() + '"'
+			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			Sequence = DataIn[0][1]
+			VFrom = int(DataIn[0][2])
+			VTo = int(DataIn[0][3])
+
+			self.modalessUpdateDialog.ui.textEdit.setText(Sequence)
+			self.modalessUpdateDialog.ui.RFstart.setValue(VFrom)
+			self.modalessUpdateDialog.ui.RFend.setValue(VTo)
 			self.modalessUpdateDialog.highRegion()
 			self.modalessUpdateDialog.updateSignal.connect(self.updateNTseq)
 			self.modalessUpdateDialog.show()
 
-	def updateNTseq(self,SeqName,Seq):
+	def updateNTseq(self,SeqName,Seq,VFrom,VTo):
 		# update the value in DB
 		self.UpdateSeq(SeqName, Seq, 'Sequence')
+		self.UpdateSeq(SeqName, VFrom, 'Vfrom')
+		self.UpdateSeq(SeqName, VTo, 'VTo')
+
 		# refresh the interface
 		self.ListItemChanged()
 		# close the dialog
 		self.modalessUpdateDialog.close()
-		self.ui.spnFrom.setValue(1)
 
 	def open_delete_dialog(self):
 		delete = self.ui.listWidgetStrainsIn.selectedItems()

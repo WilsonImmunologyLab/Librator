@@ -17,8 +17,7 @@ added_files = [
              ('/Users/leil/Documents/Projects/Librator/Resources/Tools/muscle','Tools'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Tools/clustalo','Tools'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Js/echarts.min.js','Js'),
-             ('/Users/leil/Documents/Projects/Librator/Resources/Js/jquery.js','Js'),
-             ('/Users/leil/Documents/Projects/Librator/Resources/Js/qwebchannel.js','Js')
+             ('/Users/leil/Documents/Projects/Librator/Resources/Js/jquery.js','Js')
              ]
 
 
