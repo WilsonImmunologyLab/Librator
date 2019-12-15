@@ -2451,7 +2451,7 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 			self.gibsonSignal.emit(1, text, joint_up, joint_down, out_path, db_path, subtype, joint_plan)
 
 class SequenceEditDialog(QtWidgets.QDialog):
-	seqEditSignal = pyqtSignal(int, str, str, str)  # user define signal
+	seqEditSignal = pyqtSignal(int, str, str, str, list)  # user define signal
 
 	def __init__(self):
 		super(SequenceEditDialog, self).__init__()
@@ -2460,16 +2460,105 @@ class SequenceEditDialog(QtWidgets.QDialog):
 
 		self.ui.GenerateSeq.clicked.connect(self.accept)
 		self.ui.Cancel.clicked.connect(self.reject)
+		self.ui.DonorList_tab2.itemSelectionChanged.connect(self.HTML_pre)
+		self.ui.ApplyDonorRegion.clicked.connect(self.HTML)
 
 		self.ui.GenerateSeq.setToolTip('Generate Sequences!')
 		self.ui.Cancel.setToolTip('Cancel!')
+
+	def HTML_pre(self):
+		donor_list = self.ui.DonorList_tab2.selectedItems()
+		for item in donor_list:
+			donor_name = item.text()
+
+		WhereState = 'SeqName = "' + donor_name + '"'
+		SQLStatement = 'SELECT SeqName, Donor FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+		
+		donor_region = DataIn[0][1]
+		if donor_region == "none":
+			self.ui.spinBoxFrom.setValue(0)
+			self.ui.spinBoxTo.setValue(5000)
+		else:
+			donor_start, donor_end = donor_region.split('-')
+			donor_start = int(donor_start)
+			donor_end = int(donor_end)
+
+			self.ui.spinBoxFrom.setValue(donor_start)
+			self.ui.spinBoxTo.setValue(donor_end)
+		
+		self.HTML()
+
+	def HTML(self):
+		donor_start = self.ui.spinBoxFrom.value()
+		donor_end = self.ui.spinBoxTo.value()
+		if donor_start >= donor_end:
+			QMessageBox.warning(self, 'Warning', 'Donor region Start should be smaller than End!', QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+		# get data
+		Dataset = []
+		base_name = self.ui.BaseSeqName.text()
+		donor_list = self.ui.DonorList_tab2.selectedItems()
+		for item in donor_list:
+			donor_name = item.text()
+
+		# load base seq
+		WhereState = 'SeqName = "' + base_name + '"'
+		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+
+		SeqName = DataIn[0][0]
+		Sequence = DataIn[0][1]
+		VFrom = int(DataIn[0][2]) - 1
+		if VFrom == -1: VFrom = 0
+
+		VTo = int(DataIn[0][3])
+		Sequence = Sequence[VFrom:VTo]
+		Sequence = Sequence.upper()
+		EachIn = (SeqName, Sequence)
+		Dataset.append(EachIn)
+
+		# load donor seq
+		WhereState = 'SeqName = "' + donor_name + '"'
+		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+
+		SeqName = DataIn[0][0]
+		Sequence = DataIn[0][1]
+		VFrom = int(DataIn[0][2]) - 1
+		if VFrom == -1: VFrom = 0
+
+		VTo = int(DataIn[0][3])
+		Sequence = Sequence[VFrom:VTo]
+		Sequence = Sequence.upper()
+		EachIn = (SeqName, Sequence)
+		Dataset.append(EachIn)
+
+		# get Donor region setting
+		donor_start = self.ui.spinBoxFrom.value()
+		donor_end = self.ui.spinBoxTo.value()
+
+		if donor_start == 0:
+			donor_start = 1
+		if donor_end == 0:
+			donor_end = 5000
+		donor_region = list(range(donor_start, donor_end+1))
+		# make HTML
+		html_file = EditSequencesHTML(Dataset, donor_region)
+		# load HTML
+		layout = self.ui.groupBoxSeqComp.layout()
+		for i in range(layout.count()):
+			view = layout.itemAt(i).widget()
+			view.load(QUrl("file://" + html_file))
+			view.show()
 
 	def accept(self):  # redo accept method
 		# send signal
 		active_tab = self.ui.ModeTab.currentIndex()
 		base_name = self.ui.BaseSeqName.text()
 
-		if active_tab == 0: 		# Base biased
+		if active_tab == 1: 		# Base biased
 			donor_list = self.ui.DonorList_tab1.selectedItems()
 			if len(donor_list) == 0:
 				QMessageBox.warning(self, 'Warning', 'Please select at least one donor sequence!', QMessageBox.Ok,
@@ -2478,7 +2567,7 @@ class SequenceEditDialog(QtWidgets.QDialog):
 				text = [i.text() for i in list(donor_list)]
 				text = '\t'.join(text)
 				self.seqEditSignal.emit(0, base_name, text, "")
-		elif active_tab == 1:		# Cocktail
+		elif active_tab == 0:		# Cocktail
 			donor_list = self.ui.DonorList_tab2.selectedItems()
 			if self.ui.radioButton_all.isChecked():
 				mutation_schema = "all"
@@ -2496,14 +2585,21 @@ class SequenceEditDialog(QtWidgets.QDialog):
 				DataIn = RunSQL(DBFilename, SQLStatement)
 				select_role = DataIn[0][0]
 				select_donor = DataIn[0][1]
-				if select_donor == "none":
-					reply = QMessageBox.question(self, 'Information', 'Your selected sequence do not have a donor region, will use full HA as donor region, is it OK？',
-												 QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-					if reply == QMessageBox.Yes:
-						self.seqEditSignal.emit(1, base_name, text, mutation_schema)
-
+				#if select_donor == "none":
+				#	reply = QMessageBox.question(self, 'Information', 'Your selected sequence do not have a donor region, will use full HA as donor region, is it OK？',
+				#								 QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+				#	if reply == QMessageBox.Yes:
+				#		self.seqEditSignal.emit(1, base_name, text, mutation_schema)
+				#else:
+				donor_start = self.ui.spinBoxFrom.value()
+				donor_end = self.ui.spinBoxTo.value()
+				if donor_start >= donor_end:
+					QMessageBox.warning(self, 'Warning', 'Donor region Start should be smaller than End!', QMessageBox.Ok,
+					                    QMessageBox.Ok)
+					return
 				else:
-					self.seqEditSignal.emit(1, base_name, text, mutation_schema)
+					donor_info = [donor_start, donor_end]
+					self.seqEditSignal.emit(1, base_name, text, mutation_schema, donor_info)
 		#self.hide()
 
 class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
@@ -11022,7 +11118,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			Role = DataIn[0][8]
 			Donor = DataIn[0][9]
 			existing_mutation = DataIn[0][10]
-			Base_seq = DataIs[0][12]
+			Base_seq = DataIn[0][12]
 
 			HASeq = HASeq[FromV:ToV]
 			# translate nt to aa
@@ -11826,6 +11922,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 		else:
 			self.modalessSeqEditDialog = SequenceEditDialog()
 			self.modalessSeqEditDialog.ui.BaseSeqName.setText(BaseSeq)
+			# add Qwebengine
+			view = QWebEngineView()
+			layout = self.modalessSeqEditDialog.ui.groupBoxSeqComp.layout()
+			layout.addWidget(view)
 			# get active sequences from Qlist in main window
 			donor_num = self.ui.listWidgetStrainsIn.count()
 			donor_list = []
@@ -11843,7 +11943,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessSeqEditDialog.seqEditSignal.connect(self.get_sequence_edit_info)
 			self.modalessSeqEditDialog.show()
 
-	def get_sequence_edit_info(self, editing_mode, base_sequence, donor_sequences, mutation_schema):  # For modaless dialog
+	def get_sequence_edit_info(self, editing_mode, base_sequence, donor_sequences, mutation_schema, donor_info):  # For modaless dialog
 		global muscle_path
 		# this function only process sequence editing within same subtype
 		if editing_mode == 0:   # base biased mode
@@ -12084,13 +12184,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 			donor_aa_seq = re.sub(r'\*.?', "", donor_aa_seq)
 			donor_aa_seq = re.sub(r'\~', "", donor_aa_seq)
 
-			if donor_donor == "none":
-				donor_start = 0
+			donor_start = donor_info[0]
+			donor_end = donor_info[1]
+			if donor_end > len(donor_aa_seq):
 				donor_end = len(donor_aa_seq)
-			else:
-				tmp = donor_donor.split('-')
-				donor_start = int(tmp[0])
-				donor_end = int(tmp[1])
 
 			if base_subtype != donor_subtype:
 				QMessageBox.warning(self, 'Warning', 'This Function only works for same subtype!',
@@ -13262,6 +13359,40 @@ def MakeDivNT(class_name, line_name, data):
 
 	return div_name, div_seq
 
+def MakeDivNTDonor(class_name, line_name, data, ori_seq, donor_region):
+	div_name = 	'<div class="' + class_name + ' 1">'
+	div_name += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
+	div_name += '</div>'
+	div_seq = '<div class="' + class_name + ' 2">'
+	cur_pos = 1
+	for i in range(len(data)):
+		if i == 0:
+			count = int(i/3)
+			if ori_seq[count] == "-":
+				div_seq += '<span class="unit_pack">'
+			else:
+				if cur_pos in donor_region:
+					div_seq += '<span class="unit_pack donor">'
+				else:
+					div_seq += '<span class="unit_pack">'
+				cur_pos += 1
+		elif i%3 == 0:
+			count = int(i / 3)
+			if ori_seq[count] == "-":
+				div_seq += '</span><span class="unit_pack">'
+			else:
+				if cur_pos in donor_region:
+					div_seq += '</span><span class="unit_pack donor">'
+				else:
+					div_seq += '</span><span class="unit_pack">'
+				cur_pos += 1
+
+		div_seq += '<span class="unit">' + data[i] + '</span>'
+	div_seq += '</span>'
+	div_seq += '</div>'
+
+	return div_name, div_seq
+
 def MakeDivAA(class_name, line_name, data):
 	div_name = '<div class="' + class_name + ' 1">'
 	div_name += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
@@ -13269,6 +13400,29 @@ def MakeDivAA(class_name, line_name, data):
 	div_seq = '<div class="' + class_name + ' 2">'
 	for i in range(len(data)):
 		div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + data[i] + '</span><span class="insert">&nbsp;</span></span>'
+	div_seq += '</div>'
+
+	return div_name, div_seq
+
+def MakeDivAADonor(class_name, line_name, data, ori_seq, donor_region):
+	div_name = '<div class="' + class_name + ' 1">'
+	div_name += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
+	div_name += '</div>'
+	div_seq = '<div class="' + class_name + ' 2">'
+	cur_pos = 1
+	for i in range(len(data)):
+		if ori_seq[i] == "-":
+			div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + \
+			           data[i] + '</span><span class="insert">&nbsp;</span></span>'
+		else:
+			if cur_pos in donor_region:
+				div_seq += '<span class="unit_pack donor"><span class="insert">&nbsp;</span><span class="unit">' + \
+			           data[i] + '</span><span class="insert">&nbsp;</span></span>'
+			else:
+				div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + \
+				           data[i] + '</span><span class="insert">&nbsp;</span></span>'
+			cur_pos += 1
+
 	div_seq += '</div>'
 
 	return div_name, div_seq
@@ -13736,6 +13890,193 @@ def AlignSequencesHTML(DataSet):
 
 	out_file_handle.write(JSdata)
 	out_file_handle.write(Optiondata)
+	out_file_handle.write('<div class="box">')
+	out_file_handle.write(name_div)
+	out_file_handle.write(seq_div)
+	out_file_handle.write('\n</div>\n</body>\n</html>')
+	out_file_handle.close()
+	return out_html_file
+
+def EditSequencesHTML(DataSet, donor_region):
+	# import tempfile
+	import os
+	TupData = ()
+	global GLMsg
+	global working_prefix
+	global temp_folder
+	global muscle_path
+
+	# base nane
+	base_name = DataSet[0][0].strip(' ')
+	donor_name = DataSet[1][0].strip(' ')
+	# align selected sequences (AA) using muscle
+	all = dict()
+	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+	outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
+	aafilename = os.path.join(temp_folder, "in-" + time_stamp + ".fas")
+	if len(DataSet) == 1:
+		SeqName = DataSet[0][0].replace('\n', '').replace('\r', '')
+		SeqName = SeqName.strip()
+		NTseq = DataSet[0][1]
+		AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
+		all[SeqName] = [NTseq, AAseq]
+
+		out_handle = open(outfilename,'w')
+		out_handle.write('>' + SeqName + '\n')
+		out_handle.write(AAseq)
+		out_handle.close()
+	else:
+		aa_handle = open(aafilename,'w')
+		for record in DataSet:
+			SeqName = record[0].replace('\n', '').replace('\r', '')
+			SeqName = SeqName.strip()
+			NTseq = record[1]
+			AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
+			AAseq = AAseq.replace('*','X').replace('~','Z').replace('.','J')
+			all[SeqName] = [NTseq, AAseq]
+			aa_handle.write('>' + SeqName + '\n')
+			aa_handle.write(AAseq + '\n')
+		aa_handle.close()
+
+		cmd = muscle_path
+		cmd += " -in " + aafilename + " -out " + outfilename
+		try:
+			os.system(cmd)
+		except:
+			QMessageBox.warning(self, 'Warning', 'Fail to run muscle! Check your muscle path!', QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+
+	# read alignment file, make alignment NT and AA sequences
+	SeqName = ''
+	AAseq = ''
+	if os.path.isfile(outfilename):
+		currentfile = open(outfilename, 'r')
+		lines = currentfile.readlines()
+		for line in lines:
+			Readline = line.replace('\n', '').replace('\r', '')
+			Readline = Readline.strip()
+			if Readline[0] == '>':
+				if SeqName != '':
+					AAseq, NTseq = BuildNTalignment(AAseq, all[SeqName][0])
+					all[SeqName] = [NTseq, AAseq]
+				SeqName = Readline[1:]
+				AAseq = ''
+			else:
+				AAseq += Readline
+		AAseq, NTseq = BuildNTalignment(AAseq, all[SeqName][0])
+		all[SeqName] = [NTseq, AAseq]
+	else:
+		return
+
+	if os.path.exists(outfilename):
+		os.remove(outfilename)
+	if os.path.exists(aafilename):
+		os.remove(aafilename)
+
+	# generate consnesus sequences (AA and NT)
+	consensusDNA = all[base_name][0]
+	compact_consensusAA = all[base_name][1]
+
+	donorDNA = all[donor_name][0]
+	donorAA = all[donor_name][1]
+
+	HANumbering(compact_consensusAA)
+
+	# prepare H1 data
+	pos_h1_data = []
+	for i in range(1, len(H1Numbering) + 1):
+		cur_data = H1Numbering[i]
+		if cur_data[4] in ['Ca1','Ca2','Cb','Sa','Sb','Stalk-MN']:
+			if cur_data[2] == '-':
+				unit = (cur_data[2], cur_data[2], cur_data[4])
+			else:
+				if cur_data[0] == 'HA1':
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
+				else:
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
+		else:
+			if cur_data[2] == '-':
+				unit = (cur_data[2], cur_data[2], '')
+			else:
+				if cur_data[0] == 'HA1':
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+				else:
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
+		pos_h1_data.append(unit)
+	# prepare H3 data
+	pos_h3_data = []
+	for i in range(1, len(H3Numbering) + 1):
+		cur_data = H3Numbering[i]
+		if cur_data[4] in ['A','B','C','D','E','Stalk-MN']:
+			if cur_data[2] == '-':
+				unit = (cur_data[2], cur_data[2], cur_data[4])
+			else:
+				if cur_data[0] == 'HA1':
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
+				else:
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
+		else:
+			if cur_data[2] == '-':
+				unit = (cur_data[2], cur_data[2], '')
+			else:
+				if cur_data[0] == 'HA1':
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+				else:
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
+		pos_h3_data.append(unit)
+
+	# make header HTML
+	pos_aa_data = [list(range(1,len(compact_consensusAA)+1)),list(range(1,len(compact_consensusAA)+1))]
+	pos_nt_data = [list(range(1, len(consensusDNA) + 1)), list(range(1, len(consensusDNA) + 1))]
+
+	div_pos_aa = MakeDivPosAA('line line_pos_aa', 'Position AA:', 'Original AA position: ', pos_aa_data)
+	div_h1 = MakeDivH1N3('line line_h1', 'H1 numbering', 'H1 numbering: ', pos_h1_data)
+	div_h3 = MakeDivH1N3('line line_h3', 'H3 numbering', 'H3 numbering: ', pos_h3_data)
+	div_pos_nt = MakeDivPosNT('line line_pos_nt', 'Position NT:', 'Original NT position: ', pos_nt_data)
+
+	# initial and open HTML file
+	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+	out_html_file = os.path.join(temp_folder, time_stamp + '.html')
+	header_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'template2.html')
+	shutil.copyfile(header_file, out_html_file)
+	out_file_handle = open(out_html_file, 'a')
+
+	name_div = '<div class="name_div">\n'
+	seq_div = '<div class = "seq_div">\n'
+	# write header section
+	name_div += div_pos_aa[0] + '\n'
+	seq_div += div_pos_aa[1] + '\n'
+	name_div += div_h1[0] + '\n'
+	seq_div += div_h1[1] + '\n'
+	name_div += div_h3[0] + '\n'
+	seq_div += div_h3[1] + '\n'
+	name_div += div_pos_nt[0] + '\n'
+	seq_div += div_pos_nt[1] + '\n'
+	# make sequence section HTML
+	# base seq
+	div_aa = MakeDivAA('line line_aa', base_name, compact_consensusAA)
+	div_nt = MakeDivNT('line line_nt', base_name, consensusDNA)
+
+	name_div += div_aa[0] + '\n'
+	seq_div += div_aa[1] + '\n'
+	name_div += div_nt[0] + '\n'
+	seq_div += div_nt[1] + '\n'
+	# donor seq
+	con_nt = MakeConSeq(donorDNA, consensusDNA)
+	con_aa = MakeConSeq(donorAA, compact_consensusAA)
+
+	div_aa_mut = MakeDivAADonor('line line_aa', donor_name, con_aa, donorAA, donor_region)
+	div_nt_mut = MakeDivNTDonor('line line_nt', donor_name, con_nt, donorAA, donor_region)
+
+	name_div += div_aa_mut[0] + '\n'
+	seq_div += div_aa_mut[1] + '\n'
+	name_div += div_nt_mut[0] + '\n'
+	seq_div += div_nt_mut[1] + '\n'
+
+	name_div += '</div>\n'
+	seq_div += '</div>\n'
+
 	out_file_handle.write('<div class="box">')
 	out_file_handle.write(name_div)
 	out_file_handle.write(seq_div)
