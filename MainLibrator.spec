@@ -11,6 +11,7 @@ added_files = [
              ('/Users/leil/Documents/Projects/Librator/Resources/Data/NA_PCT.csv','Data'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Data/template.html','Data'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Data/template1.html','Data'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Data/template2.html','Data'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Conf/db_record.txt','Conf'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Conf/db_record.txt','Temp'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Tools/raxml','Tools'),
