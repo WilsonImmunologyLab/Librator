@@ -122,33 +122,24 @@
      </property>
     </widget>
    </item>
+   <item row="8" column="0" colspan="2">
+    <widget class="QTextEdit" name="textEdit">
+     <property name="font">
+      <font>
+       <family>Courier New</family>
+       <pointsize>18</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="0" colspan="2">
     <widget class="QLabel" name="Title">
      <property name="text">
       <string>Please type your mutations below: e.g. R98Y, K141E</string>
      </property>
     </widget>
-   </item>
-   <item row="7" column="0" colspan="2">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QPushButton" name="addMutation">
-       <property name="text">
-        <string>Genearate Sequence </string>
-       </property>
-       <property name="default">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="cancel">
-       <property name="text">
-        <string>Cancel</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </item>
    <item row="2" column="0">
     <widget class="QLabel" name="CurSeqLab">
@@ -178,17 +169,39 @@
      </item>
     </layout>
    </item>
-   <item row="8" column="0" colspan="2">
-    <widget class="QTextEdit" name="textEdit">
-     <property name="font">
-      <font>
-       <family>Courier New</family>
-       <pointsize>18</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-    </widget>
+   <item row="9" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="addMutation">
+       <property name="text">
+        <string>Genearate Sequence </string>
+       </property>
+       <property name="default">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cancel">
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

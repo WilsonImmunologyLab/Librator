@@ -924,7 +924,7 @@ class Ui_MainLibrator(object):
         self.FragmentTab.addTab(self.tab_5, "")
         self.gridLayout_18.addWidget(self.FragmentTab, 0, 0, 1, 1)
         self.connectFragmentDB = QtWidgets.QPushButton(self.groupBox_2)
-        self.connectFragmentDB.setMaximumSize(QtCore.QSize(200, 32))
+        self.connectFragmentDB.setMaximumSize(QtCore.QSize(150, 32))
         self.connectFragmentDB.setLayoutDirection(QtCore.Qt.RightToLeft)
         self.connectFragmentDB.setObjectName("connectFragmentDB")
         self.gridLayout_18.addWidget(self.connectFragmentDB, 1, 0, 1, 1)

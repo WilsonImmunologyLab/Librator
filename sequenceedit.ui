@@ -146,7 +146,7 @@
            <widget class="QSpinBox" name="spinBoxTo">
             <property name="minimumSize">
              <size>
-              <width>60</width>
+              <width>100</width>
               <height>0</height>
              </size>
             </property>
@@ -162,7 +162,7 @@
            <widget class="QSpinBox" name="spinBoxFrom">
             <property name="minimumSize">
              <size>
-              <width>60</width>
+              <width>100</width>
               <height>0</height>
              </size>
             </property>

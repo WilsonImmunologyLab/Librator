@@ -2,9 +2,10 @@
 
 # Form implementation generated from reading ui file 'deletedialog.ui'
 #
-# Created by: PyQt5 UI code generator 5.12
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -27,6 +28,8 @@ class Ui_deleteDialog(object):
         self.cancelButton = QtWidgets.QPushButton(deleteDialog)
         self.cancelButton.setObjectName("cancelButton")
         self.horizontalLayout.addWidget(self.cancelButton)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem)
         self.gridLayout.addLayout(self.horizontalLayout, 3, 0, 1, 1)
         self.label = QtWidgets.QLabel(deleteDialog)
         font = QtGui.QFont()
@@ -50,5 +53,3 @@ class Ui_deleteDialog(object):
         self.cancelButton.setText(_translate("deleteDialog", "Cancel"))
         self.label.setText(_translate("deleteDialog", "Please confirm the delete list:"))
         self.listWidget.setSortingEnabled(True)
-
-
