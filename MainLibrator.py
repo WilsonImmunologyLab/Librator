@@ -10823,7 +10823,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_btnDelete_clicked(self):
-		self.open_delete_dialog()
+		selections = self.ui.listWidgetStrainsIn.selectedItems()
+		if len(selections) > 0:
+			self.open_delete_dialog()
 
 	@pyqtSlot()
 	def ImportSeqs(self):

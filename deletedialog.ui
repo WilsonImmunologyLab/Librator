@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>703</width>
+    <width>566</width>
     <height>601</height>
    </rect>
   </property>
@@ -57,16 +57,21 @@
       <widget class="QLabel" name="label">
        <property name="font">
         <font>
-         <pointsize>18</pointsize>
+         <pointsize>15</pointsize>
         </font>
        </property>
        <property name="text">
-        <string>Please confirm the delete list:</string>
+        <string>Please confirm the delete list by multiple selection:</string>
        </property>
       </widget>
      </item>
      <item row="1" column="0">
       <widget class="QListWidget" name="listWidget">
+       <property name="font">
+        <font>
+         <pointsize>15</pointsize>
+        </font>
+       </property>
        <property name="selectionMode">
         <enum>QAbstractItemView::MultiSelection</enum>
        </property>

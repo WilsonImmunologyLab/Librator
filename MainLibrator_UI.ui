@@ -472,7 +472,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>0</y>
+             <y>-433</y>
              <width>1033</width>
              <height>1270</height>
             </rect>
@@ -510,7 +510,7 @@
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
-                   <height>100</height>
+                   <height>50</height>
                   </size>
                  </property>
                  <property name="frameShape">
@@ -710,6 +710,12 @@
                    <height>40</height>
                   </size>
                  </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>40</height>
+                  </size>
+                 </property>
                  <property name="frameShape">
                   <enum>QFrame::NoFrame</enum>
                  </property>
@@ -736,6 +742,12 @@
                     <property name="icon">
                      <iconset resource="Resources/VgenesResources.qrc">
                       <normaloff>:/PNG-Icons/search.png</normaloff>:/PNG-Icons/search.png</iconset>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>16</width>
+                      <height>16</height>
+                     </size>
                     </property>
                    </widget>
                   </item>
