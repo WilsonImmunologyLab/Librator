@@ -2485,7 +2485,6 @@
     </property>
     <addaction name="actionGibsonClone"/>
     <addaction name="actionGibsonClone_Setting"/>
-    <addaction name="actionVector_Joint_Setting"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSequences"/>

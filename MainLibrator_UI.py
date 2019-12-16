@@ -1253,7 +1253,6 @@ class Ui_MainLibrator(object):
         self.menuVisualization.addAction(self.actionPyMOL)
         self.menuGibsonClone.addAction(self.actionGibsonClone)
         self.menuGibsonClone.addAction(self.actionGibsonClone_Setting)
-        self.menuGibsonClone.addAction(self.actionVector_Joint_Setting)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuSequences.menuAction())
         self.menubar.addAction(self.menuTools.menuAction())
