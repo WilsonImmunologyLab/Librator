@@ -2566,7 +2566,7 @@ class SequenceEditDialog(QtWidgets.QDialog):
 			else:
 				text = [i.text() for i in list(donor_list)]
 				text = '\t'.join(text)
-				self.seqEditSignal.emit(0, base_name, text, "")
+				self.seqEditSignal.emit(0, base_name, text, "", [])
 		elif active_tab == 0:		# Cocktail
 			donor_list = self.ui.DonorList_tab2.selectedItems()
 			if self.ui.radioButton_all.isChecked():
