@@ -17,6 +17,7 @@ class Ui_SequenceEditDialog(object):
         self.gridLayout = QtWidgets.QGridLayout(SequenceEditDialog)
         self.gridLayout.setObjectName("gridLayout")
         self.BaseSeqLabel = QtWidgets.QLabel(SequenceEditDialog)
+        self.BaseSeqLabel.setMaximumSize(QtCore.QSize(200, 16777215))
         self.BaseSeqLabel.setObjectName("BaseSeqLabel")
         self.gridLayout.addWidget(self.BaseSeqLabel, 0, 0, 1, 1)
         self.horizontalLayout = QtWidgets.QHBoxLayout()

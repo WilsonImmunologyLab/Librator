@@ -115,7 +115,7 @@ class Ui_MutationDialog(object):
         self.gridLayout_3.addWidget(self.textEdit, 8, 0, 1, 2)
 
         self.retranslateUi(MutationDialog)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MutationDialog)
 
     def retranslateUi(self, MutationDialog):
