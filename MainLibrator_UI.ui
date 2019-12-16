@@ -474,7 +474,7 @@
              <x>0</x>
              <y>0</y>
              <width>1033</width>
-             <height>1274</height>
+             <height>1262</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_6">
@@ -845,6 +845,20 @@
                <enum>QFrame::Raised</enum>
               </property>
               <layout class="QGridLayout" name="gridLayout_5">
+               <item row="2" column="0">
+                <widget class="QPushButton" name="btnImport">
+                 <property name="text">
+                  <string>Import Sequences</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="Resources/VgenesResources.qrc">
+                   <normaloff>:/PNG-Icons/plus.png</normaloff>:/PNG-Icons/plus.png</iconset>
+                 </property>
+                 <property name="flat">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
                <item row="0" column="0">
                 <layout class="QHBoxLayout" name="horizontalLayout_4">
                  <item>
@@ -853,6 +867,19 @@
                     <string>Available sequences:</string>
                    </property>
                   </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_2">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
                  </item>
                  <item>
                   <widget class="QLabel" name="label_5">
@@ -902,6 +929,19 @@
                     <string>Active sequences:</string>
                    </property>
                   </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
                  </item>
                  <item>
                   <widget class="QPushButton" name="btnDelete">
@@ -954,6 +994,20 @@
                  </column>
                 </widget>
                </item>
+               <item row="2" column="1">
+                <widget class="QPushButton" name="btnClearAll">
+                 <property name="text">
+                  <string>Reset active sequence data</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="Resources/VgenesResources.qrc">
+                   <normaloff>:/PNG-Icons/refresh.png</normaloff>:/PNG-Icons/refresh.png</iconset>
+                 </property>
+                 <property name="flat">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
                <item row="1" column="1">
                 <widget class="QListWidget" name="listWidgetStrainsIn">
                  <property name="minimumSize">
@@ -992,34 +1046,6 @@
                   <bool>true</bool>
                  </property>
                  <property name="sortingEnabled">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QPushButton" name="btnImport">
-                 <property name="text">
-                  <string>Import Sequences</string>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="Resources/VgenesResources.qrc">
-                   <normaloff>:/PNG-Icons/plus.png</normaloff>:/PNG-Icons/plus.png</iconset>
-                 </property>
-                 <property name="flat">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QPushButton" name="btnClearAll">
-                 <property name="text">
-                  <string>Reset active sequence data</string>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="Resources/VgenesResources.qrc">
-                   <normaloff>:/PNG-Icons/refresh.png</normaloff>:/PNG-Icons/refresh.png</iconset>
-                 </property>
-                 <property name="flat">
                   <bool>true</bool>
                  </property>
                 </widget>

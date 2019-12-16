@@ -10599,7 +10599,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_btnClearAll_clicked(self):
-		self.removeAll()
+		question = 'Do you want clear all the active sequences?'
+		buttons = 'YN'
+		answer = questionMessage(self, question, buttons)
+		if answer == 'No':
+			return
+		else:
+			self.removeAll()
 
 	@pyqtSlot()
 	def on_btnSeqIn_clicked(self):
