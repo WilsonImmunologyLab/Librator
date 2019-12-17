@@ -3272,7 +3272,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.spnTo.valueChanged['int'].connect(self.SeqTo)
 		self.ui.spnAlignFont.valueChanged['int'].connect(self.AlignFont)
 		self.ui.txtDonorRegions.selectionChanged.connect(self.DonorRegionsDialog)
-		self.ui.txtInsert_Base.selectionChanged.connect(self.MutationsDialog)
+		#self.ui.txtInsert_Base.selectionChanged.connect(self.MutationsDialog)
 		self.ui.txtName.cursorPositionChanged.connect(self.EditSeqName)
 		self.ui.tabWidget.currentChanged['int'].connect(self.FillAlignmentTab)
 		self.ui.FragmentTab.currentChanged['int'].connect(self.loadFragmentInfo)
