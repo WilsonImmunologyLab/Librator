@@ -2467,6 +2467,9 @@ class SequenceEditDialog(QtWidgets.QDialog):
 
 	def HTML_pre(self):
 		donor_list = self.ui.DonorList_tab2.selectedItems()
+		if len(donor_list) == 0:
+			return
+
 		for item in donor_list:
 			donor_name = item.text()
 
@@ -11359,7 +11362,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		else:
 			cur_seq_name = self.ui.txtName.toPlainText()
 			self.modalessMutationDialog = MutationDialog()
-			self.modalessMutationDialog.ui.CurSeq.setText(cur_seq_name)
+			self.modalessMutationDialog.ui.CurSeqLab.setText('Current Sequence: ' + cur_seq_name)
 			# check sequence subtype
 			if self.ui.cboSubtype.currentText() in Group1 or self.ui.cboSubtype.currentText() in Group2:
 				pass

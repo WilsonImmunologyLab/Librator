@@ -6,15 +6,43 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>882</width>
-    <height>785</height>
+    <width>926</width>
+    <height>799</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Generate mutated sequence</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
-   <item row="3" column="0" colspan="2">
+   <item row="0" column="0">
+    <widget class="QLabel" name="Title">
+     <property name="text">
+      <string>Please type your mutations below: e.g. R98Y, K141E</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>You can use &quot;X&quot; to represent any Amino acids: e.g. X102M</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="CurSeqLab">
+     <property name="text">
+      <string>Current Sequence: </string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLabel" name="CurSeq">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="maximumSize">
       <size>
@@ -98,57 +126,27 @@
      </widget>
     </widget>
    </item>
-   <item row="5" column="1">
-    <widget class="QLineEdit" name="SeqName"/>
-   </item>
-   <item row="2" column="1">
-    <widget class="QLabel" name="CurSeq">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
+   <item row="4" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QLabel" name="labelSeqName">
+       <property name="maximumSize">
+        <size>
+         <width>200</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>New SEQ Name: </string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="SeqName"/>
+     </item>
+    </layout>
    </item>
    <item row="5" column="0">
-    <widget class="QLabel" name="labelSeqName">
-     <property name="text">
-      <string>New SEQ Name</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>You can use &quot;X&quot; to represent any Amino acids: e.g. X102M</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="0" colspan="2">
-    <widget class="QTextEdit" name="textEdit">
-     <property name="font">
-      <font>
-       <family>Courier New</family>
-       <pointsize>18</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="2">
-    <widget class="QLabel" name="Title">
-     <property name="text">
-      <string>Please type your mutations below: e.g. R98Y, K141E</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="CurSeqLab">
-     <property name="text">
-      <string>Current Sequence: </string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QRadioButton" name="radioSingle">
@@ -169,7 +167,19 @@
      </item>
     </layout>
    </item>
-   <item row="9" column="0">
+   <item row="6" column="0">
+    <widget class="QTextEdit" name="textEdit">
+     <property name="font">
+      <font>
+       <family>Courier New</family>
+       <pointsize>18</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="addMutation">
