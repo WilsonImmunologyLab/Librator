@@ -169,7 +169,6 @@ else:
 	file_handle.write(joint_down)
 	file_handle.close()
 
-
 class MyObjectCls(QObject):
 	updateSelectionSignal = pyqtSignal(str)
 
@@ -3832,7 +3831,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		except Exception:
 			pass
 
-
 	@pyqtSlot()
 	def UpdateRecent(self):
 		global working_prefix
@@ -3948,7 +3946,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 				out_handle.write(element[1] + '\n')
 			out_handle.close()
 
-
 	@pyqtSlot()
 	def on_actionDecrease_font_size_triggered(self):
 
@@ -3968,17 +3965,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			# self.ui.txtDNASeq.setFont(font)
 			self.ui.txtAASeq.setFont(font)
-		# elif self.ui.tabWidget.currentIndex() == 1:
-		# 	FontIs = self.ui.tableView.font()
-		# 	font = QFont(FontIs)
-		#
-		# 	FontSize = int(font.pointSize())
-		# 	if FontSize > 7:
-		# 		FontSize -= 1
-		# 	font.setPointSize(FontSize)
-		# 	font.setFamily('Lucida Grande')
-		#
-		# 	self.ui.tableView.setFont(font)
 
 	@pyqtSlot()
 	def on_spnAlignFont_valueChanged(self, value):
@@ -4078,6 +4064,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 	@pyqtSlot()
 	def on_textSeq_cursorPositionChanged(self):
 		self.UpdatePositions()
+
 	@pyqtSlot()
 	def UpdatePositions(self):
 		StartP, EndP, LenSeq = self.get_text_selection()
@@ -4090,8 +4077,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 				EndP - StartP) + ' bases) ' ' selected of ' + str(LenSeq) + ' total nucleotides'
 
 		self.ui.lblDNA.setText(lblText)
-
-	# def ChangeListName(self):
 
 	@pyqtSlot()
 	def FindSeq(self, SeqFind):
@@ -4119,6 +4104,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# self.UpdatePositions()
 
 		return Found
+
 	@pyqtSlot()
 	def SeqButton(self, button):
 		global JustMoved
@@ -4142,14 +4128,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 		AAcursor.setPosition(AAStartSel)
 		AAcursor.setPosition(AAEndSel, QTextCursor.KeepAnchor)
 
-
 	@pyqtSlot()
 	def get_text_selection(self):
 		cursor = self.ui.textSeq.textCursor()
 		DNAseq = self.ui.textSeq.toPlainText()
 		lenSeq = len(DNAseq)
 		return cursor.selectionStart(), cursor.selectionEnd(), lenSeq
-
 
 	@pyqtSlot()
 	def on_textAA_cursorPositionChanged(self):
@@ -4278,7 +4262,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		seq_seqs.append(tmp_seq)
 
 		self.open_tree_dialog(seq_names, seq_seqs, this_folder)
-
 
 	@pyqtSlot()
 	def on_actionNTTree_triggered(self):
@@ -5338,7 +5321,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.F.axes.spines['bottom'].set_position(('data', 0))
 			self.F.axes.spines['left'].set_position(('data', 0))
 			self.F.fig.subplots_adjust(top=0.95, bottom=0.1, right=0.98, left=0.05, hspace=0, wspace=0)
-
 
 	@pyqtSlot()
 	def GenerateReport(self):
