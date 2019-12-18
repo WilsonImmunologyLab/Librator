@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Lei Li leil@uchicago.edu" />
+
+<meta name="date" content="2019-07-02" />
+
+<title>Librator: effcient and effective protein expression by using Gibson Cloning</title>
+<link rel="icon" type="image/x-icon" href="logo.ico"/>
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<style>
+div.navbox {
+    width: 20%;
+}
+
+.menu {
+  position: fixed;
+  right: 0px;
+  width: 10%;
+  background-color: silver;
+  height: 100%;
+  top: 56px;
+}
+
+.info {
+  position: absolute;
+  background-color: white;
+  left: 20%;
+  width: 80%;
+  height: 100%;
+  z-index: 999;
+  padding-left: 30px;
+}
+
+.img {
+  box-shadow: 10px 10px 5px #888888;
+}
+
+.left{
+  position: fixed;
+  left: 0px;
+  width: 20%;
+  background-color: #f5f5f5;
+  height: 100%;
+  top: 56px;
+}
+
+.author_name{display:block;color:#F36170;font-size:2em}
+.author_bio{font-size:1.2em;display:block}
+.author_job{display:block;color:#8d7edc;font-size:1.35em;font-weight:700;text-transform:uppercase;margin:5px auto 10px}
+
+.title {
+  background: #f0fbeb;
+  border: 1px solid #9bdf70;
+  border-radius: 5px;
+  display:block;
+  width: 90%;
+}
+
+a{
+  color: black;
+}
+
+li{
+  margin-top: 4px;
+}
+
+.text {
+  display: none;
+  width: 90%;
+}
+.img{
+  display: none;
+}
+
+.center {
+  vertical-align: middle;
+  text-align: center;
+  display: inline-block;
+  margin-top: 50%
+}
+
+.center span{
+  text-align: right;
+}
+
+</style>
+
+
+
+
+<script type="text/javascript"> 
+function showorhide(id)  
+{  
+  var mychar = document.getElementById(id).style.display;
+  if (mychar == "none") 
+  {
+    document.getElementById(id).style.display ="block";  
+  }
+  else
+  {
+    document.getElementById(id).style.display ="none";
+  }
+}
+</script> 
+
+<style type="text/css">
+  div.MysourceCode {
+    background-color: black; 
+    font-family: "Lucida Console", Monaco, monospace; 
+    color: #66FF00; 
+    font-weight: bold;
+    font-size: 15px;
+    border:2px solid #a1a1a1;
+    border-radius:10px;
+  }
+  div.MysourceCode p {
+    margin-left: 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+</style>
+
+</head>
+
+<body>
+
+
+<div class="navbox">
+<ul class="nav">
+  <li><a href="index.html">About</a></li>
+  <li><a class="active" href="install.html">Install</a></li>
+  <li><a href="tutorial.html">Tutorial</a></li>
+  <li><a href="contact.html">Contact</a></li>
+</ul>
+</div>
+
+<div class="row">
+
+  <div class="left">
+    <div class="center">
+      <img class="logo" src="img/logo.png" style="margin:auto;">
+      <span class="author_name">Librator: effcient and effective protein expression by using Gibson Cloning</span>
+      <span class="author_bio">Wilson Lab</span>
+      <span class="author_job">The University of Chicago </span>
+    </div>
+  </div>
+  <div class="info">
+    <div class="post-listing">
+      <div id="post">
+        <article class="post-content">
+          <div class="section level1">
+            <h1>Installation Instructions</h1>
+            <h3>Install Librator</h3>
+            <ul>
+              <li>Download DMG file from <a href="https://www.r-project.org/" target="_blank">Here</a></li>
+              <li>Double click the DMG file and then drag and drop "Librator" to "Applications" folder</li>
+              <img src="img/install1.png" style="width: 50%;">
+            </ul>
+          </div>
+          <h3>Install Dependencies</h3>
+          <span>This software require: </br>
+            <a href="https://www.drive5.com/muscle/" target="_blank">Muscle</a> (Required) </br>
+            <a href="http://www.clustal.org/omega/" target="_blank">Clustal Omega</a> (Required) </br>
+            <a href="http://www.exelixis-lab.org/software.html" target="_blank">RAxML</a> (Recommended, for phylogenetic tree) </br>
+            <a href="https://pymol.org/2/" target="_blank">PyMOL</a> (Recommended, for 3D visualization) </br>
+            <a href="http://tree.bio.ed.ac.uk/software/figtree/" target="_blank">FigTree</a> (Recommended, for phylogenetic tree visualization)
+          </span> </br></br>
+          <span>We already included <a href="https://www.drive5.com/muscle/" target="_blank">Muscle</a>, <a href="http://www.clustal.org/omega/" target="_blank">Clustal Omega</a> and <a href="http://www.exelixis-lab.org/software.html" target="_blank">RAxML</a> in Librator. If those pre-complied softwares don't work on your computer, you can download or complie from offical website and determine the path for those tools in Setting</span>
+          <br>
+
+          <span>Install PyMOL from the following way:</span>
+          <ul>
+            <li>Download from offcial website <a href="https://pymol.org/2/" target="_blank">PyMOL</a> (license required after 30 days free trail)</li>
+            <li>Install from anaconda</li>
+            <div class="MysourceCode">
+              <p>conda install -c schrodinger pymol</p>
+            </div>
+
+            <li>Install from homebrew</li>
+            <div class="MysourceCode">
+              <p>brew install brewsci/bio/pymol</p>
+            </div>
+
+            <li>Install from MacPorts</li>
+            <div class="MysourceCode">
+              <p>sudo port install pymol</p>
+            </div>
+
+            <li>Install from source</li>
+            <div class="MysourceCode">
+              <p>python setup.py --osx-frameworks install</p>
+            </div>
+
+          </ul>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
