@@ -4437,7 +4437,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			EachIn = (SeqName, Sequence)
 			AlignIn.append(EachIn)
 		# make HTML
-		html_file = AlignSequencesHTML(AlignIn)
+		html_file = AlignSequencesHTML(AlignIn, '')
 		# delete close window objects
 		del_list = []
 		for id, obj in VGenesTextWindows.items():
@@ -4852,7 +4852,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				EachIn = (SeqName, Sequence)
 				AlignIn.append(EachIn)
 			# make HTML
-			html_file = AlignSequencesHTML(AlignIn)
+			html_file = AlignSequencesHTML(AlignIn, '')
 			# display
 			view = QWebEngineView()
 			view.load(QUrl("file://" + html_file))
@@ -11367,8 +11367,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			if self.ui.cboSubtype.currentText() in Group1 or self.ui.cboSubtype.currentText() in Group2:
 				pass
 			else:
-				self.modalessMutationDialog.ui.tabWidget.removeTab(1)
 				self.modalessMutationDialog.ui.tabWidget.removeTab(2)
+				self.modalessMutationDialog.ui.tabWidget.removeTab(1)
 
 			# get active sequences from Qlist in main window
 			donor_num = self.ui.listWidgetStrainsIn.count()
@@ -11399,6 +11399,30 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessMutationDialog.ui.textEdit.setText(Sequence)
 			self.DecorateText(ColorMap, cursor)
 
+			# set HTML seq viewer
+			AlignIn = []
+			WhereState = 'SeqName = "' + cur_seq_name + '"'
+			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+
+			for item in DataIn:
+				SeqName = item[0]
+				Sequence = item[1]
+				VFrom = int(item[2]) - 1
+				if VFrom == -1: VFrom = 0
+
+				VTo = int(item[3])
+				Sequence = Sequence[VFrom:VTo]
+				Sequence = Sequence.upper()
+				EachIn = (SeqName, Sequence)
+				AlignIn.append(EachIn)
+			# make HTML
+			html_file = AlignSequencesHTML(AlignIn, 'template3')
+			layout = self.modalessMutationDialog.ui.gridLayoutHTML
+			view = QWebEngineView(self)
+			view.load(QUrl("file://" + html_file))
+			view.show()
+			layout.addWidget(view)
 			self.modalessMutationDialog.show()
 
 	def open_gibson_dialog(self):
@@ -13644,7 +13668,7 @@ def checkOverlap(x1,y1,x2,y2):
 	else:
 		return False
 
-def AlignSequencesHTML(DataSet):
+def AlignSequencesHTML(DataSet, template):
 	# import tempfile
 	import os
 	TupData = ()
@@ -13817,7 +13841,10 @@ def AlignSequencesHTML(DataSet):
 	# initial and open HTML file
 	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
 	out_html_file = os.path.join(temp_folder, time_stamp + '.html')
-	header_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'template.html')
+	if template == '':
+		header_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'template.html')
+	else:
+		header_file = os.path.join(working_prefix, '..', 'Resources', 'Data', template + '.html')
 	shutil.copyfile(header_file, out_html_file)
 	out_file_handle = open(out_html_file, 'a')
 

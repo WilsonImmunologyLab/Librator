@@ -472,7 +472,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-433</y>
+             <y>0</y>
              <width>1033</width>
              <height>1270</height>
             </rect>
@@ -2611,6 +2611,9 @@
    <addaction name="actionTree"/>
    <addaction name="separator"/>
    <addaction name="actionAlignmentHTML"/>
+   <addaction name="separator"/>
+   <addaction name="actionPyMOL"/>
+   <addaction name="actionGibsonClone"/>
    <addaction name="separator"/>
    <addaction name="actionIncrease_font_size"/>
    <addaction name="actionDecrease_font_size"/>
