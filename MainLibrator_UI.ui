@@ -941,6 +941,42 @@
                    </property>
                   </spacer>
                  </item>
+                 <item>
+                  <widget class="QLabel" name="label_6">
+                   <property name="text">
+                    <string>Highlight:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="comboBoxHighlight">
+                   <item>
+                    <property name="text">
+                     <string>None</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Unassigned</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>BaseSeq</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Reference</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Generated</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
                 </layout>
                </item>
                <item row="1" column="0">

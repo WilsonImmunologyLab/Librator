@@ -3263,6 +3263,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui = Ui_MainLibrator()
 		self.ui.setupUi(self)
 
+		self.ui.comboBoxHighlight.currentTextChanged.connect(self.highlightlist)
 		self.ui.listWidgetStrainsIn.itemDoubleClicked.connect(self.removeSel)
 		self.ui.listWidgetStrainsIn.itemSelectionChanged.connect(self.ListItemChanged)
 		self.ui.cboRole.currentTextChanged['QString'].connect(self.RoleChanged)
@@ -9924,6 +9925,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.UpdateFields()
 		SeqMove = False
 		self.rebuildTree()
+		self.highlightlist()
 
 	@pyqtSlot()
 	def Mutations(self):
@@ -10158,6 +10160,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.lblBaseName.setText('')
 
 			self.rebuildTree()
+			self.highlightlist()
 
 	def rebuildTree(self):
 		global DBFilename
@@ -10302,6 +10305,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.listWidgetStrainsIn.clear()
 		self.ui.listWidgetStrainsIn.addItems(selections)
 		MoveNotChange = False
+		self.highlightlist()
 
 	@pyqtSlot()
 	def OpenRecent(self):  # how to activate menu and toolbar actions!!!
@@ -10612,7 +10616,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			else:
 				self.ui.listWidgetStrainsIn.addItem(eachItemIs)
 				self.UpdateSeq(eachItemIs, 'True', 'Active')
-
+		self.highlightlist()
 			# self.FillAlignmentTab()
 
 	@pyqtSlot()
@@ -10927,6 +10931,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			if item[8] == 'Base':
 				BaseSeq = SeqName
 				self.ui.lblBaseName.setText(BaseSeq)
+		self.highlightlist()
 
 	def show3Dstructure(self, mutation, pdbPath, pymolPath, subtype):
 		global temp_folder
@@ -11204,6 +11209,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 					# add new sequence information into listWidgetStrainsIn
 					self.ui.listWidgetStrainsIn.addItem(seq_name)
 					self.rebuildTree()
+					self.highlightlist()
 
 					if self.modalessMutationDialog != None:
 						self.modalessMutationDialog.close()
@@ -11313,6 +11319,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 					else:
 						# add new sequence information into listWidgetStrainsIn
 						self.ui.listWidgetStrainsIn.addItem(seq_name)
+						self.highlightlist()
 						if self.modalessMutationDialog != None:
 							self.modalessMutationDialog.close()
 
@@ -11572,6 +11579,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		for x in records:
 			new_records.append(x[0])
 		self.ui.listWidgetStrainsIn.addItems(new_records)
+		self.highlightlist()
 
 		self.modalessDeleteDialog.close()
 
@@ -11930,6 +11938,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# add new sequence information into listWidgetStrainsIn
 			self.ui.listWidgetStrainsIn.addItem(seq_name)
 			self.rebuildTree()
+			self.highlightlist()
 			if self.modalessFusionDialog != None:
 				self.modalessFusionDialog.close()
 
@@ -12981,6 +12990,31 @@ class LibratorMain(QtWidgets.QMainWindow):
 				os.system(cmd)
 			except ValueError:
 				pass
+
+	@pyqtSlot()
+	def highlightlist(self):
+		global DBFilename
+
+		target = self.ui.comboBoxHighlight.currentText()
+		if target == 'None':
+			for index in range(self.ui.listWidgetStrainsIn.count()):
+				cur_item = self.ui.listWidgetStrainsIn.item(index)
+				cur_item.setForeground(QColor('black'))
+		else:
+			WhereState = 'Role = "' + target + '"'
+			SQLStatement = 'SELECT SeqName FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			candidate_list = []
+			for item in DataIn:
+				candidate_list.append(item[0])
+			
+			for index in range(self.ui.listWidgetStrainsIn.count()):
+				cur_item = self.ui.listWidgetStrainsIn.item(index)
+				if cur_item.text() in candidate_list:
+					cur_item.setForeground(QColor('red'))
+				else:
+					cur_item.setForeground(QColor('black'))
+
 
 def MakeRuler(pos1, pos2, step, mode):
 	ErrMsg = ""
