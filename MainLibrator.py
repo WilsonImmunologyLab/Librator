@@ -11372,7 +11372,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		else:
 			cur_seq_name = self.ui.txtName.toPlainText()
 			self.modalessMutationDialog = MutationDialog()
-			self.modalessMutationDialog.ui.CurSeqLab.setText('Current Sequence: ' + cur_seq_name)
+			self.modalessMutationDialog.ui.CurSeq.setText(cur_seq_name)
 			# check sequence subtype
 			if self.ui.cboSubtype.currentText() in Group1 or self.ui.cboSubtype.currentText() in Group2:
 				pass
@@ -13017,7 +13017,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 					cur_item.setForeground(QColor('red'))
 				else:
 					cur_item.setForeground(QColor('black'))
-
 
 def MakeRuler(pos1, pos2, step, mode):
 	ErrMsg = ""
