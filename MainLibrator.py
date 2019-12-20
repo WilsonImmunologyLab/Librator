@@ -4560,7 +4560,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.SeqTable.horizontalHeader().setSectionResizeMode(11, QtWidgets.QHeaderView.Fixed)
 				self.ui.SeqTable.setColumnWidth(2, 60)
 				self.ui.SeqTable.setColumnWidth(3, 80)
-				self.ui.SeqTable.setColumnWidth(4, 60)
+				self.ui.SeqTable.setColumnWidth(4, 80)
 				self.ui.SeqTable.setColumnWidth(5, 60)
 				self.ui.SeqTable.setColumnWidth(6, 50)
 				self.ui.SeqTable.setColumnWidth(7, 60)
