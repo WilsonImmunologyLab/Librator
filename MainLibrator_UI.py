@@ -394,6 +394,7 @@ class Ui_MainLibrator(object):
         self.label_6.setObjectName("label_6")
         self.horizontalLayout_5.addWidget(self.label_6)
         self.comboBoxHighlight = QtWidgets.QComboBox(self.frame_6)
+        self.comboBoxHighlight.setMinimumSize(QtCore.QSize(120, 0))
         self.comboBoxHighlight.setObjectName("comboBoxHighlight")
         self.comboBoxHighlight.addItem("")
         self.comboBoxHighlight.addItem("")

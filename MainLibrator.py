@@ -3726,7 +3726,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 			                        QMessageBox.Ok)
 
 	def sortTable(self, index):
-		self.ui.tableWidget.sortByColumn(index, self.ui.tableWidget.horizontalHeader().sortIndicatorOrder())
+		if self.ui.tabWidget.currentIndex() == 4:
+			self.ui.SeqTable.sortByColumn(index, self.ui.SeqTable.horizontalHeader().sortIndicatorOrder())
+		else:
+			self.ui.tableWidget.sortByColumn(index, self.ui.tableWidget.horizontalHeader().sortIndicatorOrder())
 
 	def determineFile(self):
 		global temp_folder
