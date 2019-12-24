@@ -1,4 +1,4 @@
-# Librator by Patrick Wilson
+# Librator by Patrick Wilson Lab
 from PyQt5.QtCore import QObject, pyqtSlot, QTimer, QDateTime, Qt, QSortFilterProxyModel, QModelIndex, QEventLoop, pyqtSignal,\
 	QEventLoop, QUrl, QSize
 from PyQt5 import QtWidgets, QtPrintSupport, QtGui
@@ -14423,7 +14423,6 @@ if os.path.exists(NA_Gibson_file):
 	tmp_end = configure[1].split(',')
 	NA_end_user = list(map(int, tmp_end))
 
-
 CodonDict={'ATT':'I',   'ATC':'I',  'ATA':'I',  'CTT':'L',  'CTC':'L',
 'CTA':'L',  'CTG':'L',  'TTA':'L',  'TTG':'L',  'GTT':'V',  'GTC':'V',
 'GTA':'V',  'GTG':'V',  'TTT':'F',  'TTC':'F',  'ATG':'M',  'TGT':'C',
@@ -14437,12 +14436,10 @@ CodonDict={'ATT':'I',   'ATC':'I',  'ATA':'I',  'CTT':'L',  'CTC':'L',
 'AGA':'R',  'AGG':'R',  'TAA':'*',  'TAG':'*',  'TGA':'*',  '...':'.',
 'NNN':'.'}
 
-
 AACodonDict={'I':'ATT','L':'CTT','V':'GTT','F':'TTT','M':'ATG','C':'TGT',
 			 'A':'GCT','G':'GGT','P':'CCT','T':'ACT','S':'TCT','Y':'TAT',
 			 'W':'TGG','Q':'CAA','N':'AAT','H':'CAT','E':'GAA','D':'GAT',
 			 'K':'AAA','R':'CGT'}
-
 
 H1HA1Regions = {'1':'Stalk', '2':'Stalk', '3':'Stalk', '4':'Stalk', '5':'Stalk', '6':'Stalk', '7':'Stalk',
 				'8':'Stalk', '9':'Stalk', '10':'Stalk', '11':'Stalk', '12':'Stalk-MN',
@@ -14522,8 +14519,6 @@ H1HA2Regions = {'1':'Stalk', '2':'Stalk', '3':'Stalk', '4':'Stalk', '5':'Stalk',
 				'170':'Stalk', '171':'Stalk', '172':'Stalk','173':'Stalk', '174':'Stalk', '175':'Stalk', '176':'Stalk',
 				'177':'Stalk', '178':'Stalk','179':'Stalk', '180':'Stalk', '181':'Stalk', '182':'Stalk', '183':'Stalk',
 				'184':'Stalk','185':'Stalk'}
-
-
 
 H3HA1Regions = {'1':'Stalk', '2':'Stalk', '3':'Stalk', '4':'Stalk', '5':'Stalk', '6':'Stalk', '7':'Stalk',
 				'8':'Stalk', '9':'Stalk', '10':'Stalk', '11':'Stalk', '12':'Stalk-MN',
@@ -14608,15 +14603,6 @@ if __name__ == '__main__':
 
 	app = QtWidgets.QApplication(sys.argv)
 	Librator = LibratorMain()
-
-	# test path
-	#print(__file__)
-	#print(os.path.realpath(__file__))
-	#print('using sys.executable:', repr(os.path.dirname(os.path.realpath(sys.executable))))
-	#print('using sys.argv[0]:', repr(os.path.dirname(os.path.realpath(sys.argv[0]))))
-	#print(sys.argv[0])
-	#print(sys.path[0])
-
 
 	# Librator.exec_()
 	Librator.show()
