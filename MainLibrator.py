@@ -45,6 +45,7 @@ from treedialog import Ui_treeDialog
 from gibsonalignmentdialog import Ui_GibsonMSADialog
 from jointdialog import Ui_JointDialog
 from htmldialog import Ui_htmlDialog
+from aa_or_nt import Ui_aantDialog
 
 from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText
 from VgenesTextEdit import VGenesTextMain
@@ -207,6 +208,29 @@ class ResizeWidget(QWebEngineView):
 		self.w = w
 		print(f' size now :{w, h, self.id}')
 		self.resizeSignal.emit(w,h)
+
+class aantDialog(QtWidgets.QDialog):
+	aantSignal = pyqtSignal(str)
+	def __init__(self):
+		super(aantDialog, self).__init__()
+		self.ui = Ui_aantDialog()
+		self.ui.setupUi(self)
+
+		self.ui.pushButtonAA.clicked.connect(self.returnAA)
+		self.ui.pushButtonNT.clicked.connect(self.returnNT)
+		self.ui.pushButtonCancel.clicked.connect(self.returnCancel)
+
+	def returnAA(self):
+		self.aantSignal.emit('AA')
+		self.close()
+
+	def returnNT(self):
+		self.aantSignal.emit('NT')
+		self.close()
+
+	def returnCancel(self):
+		self.aantSignal.emit('Cancel')
+		self.close()
 
 class jointDialog(QtWidgets.QDialog):
 	def __init__(self):
@@ -3902,8 +3926,22 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_actionExport_triggered(self):
-		global DataIs
+		listItems = self.ui.listWidgetStrainsIn.selectedItems()
+		if len(listItems) == 0:
+			QMessageBox.warning(self, 'Warning', 'Please select sequence from active sequence panel!', QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
 
+		# ask for AA or NT
+		mydialog = aantDialog()
+		mydialog.aantSignal.connect(self.exportSeq)
+		mydialog.exec_()
+
+	def exportSeq(self, option):
+		if option == "Cancel":
+			return
+
+		global DataIs
 		# read sequences from database
 		AlignIn = []
 		listItems = self.ui.listWidgetStrainsIn.selectedItems()
@@ -3912,16 +3950,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 		NumSeqs = len(listItems)
 		i = 1
 
-		if len(listItems) == 0:
-			QMessageBox.warning(self, 'Warning', 'Please select sequence from active sequence panel!', QMessageBox.Ok,
-			                    QMessageBox.Ok)
-			return
 		for item in listItems:
 			eachItemIs = item.text()
 			WhereState += 'SeqName = "' + eachItemIs + '"'
 			if NumSeqs > i:
 				WhereState += ' OR '
-
 			i += 1
 
 		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
@@ -3936,6 +3969,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			VTo = int(item[3])
 			Sequence = Sequence[VFrom:VTo]
 			Sequence = Sequence.upper()
+			if option == "AA":
+				Sequence, meg = Translator(Sequence,0)
 			EachIn = (SeqName, Sequence)
 			AlignIn.append(EachIn)
 

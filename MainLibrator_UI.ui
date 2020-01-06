@@ -474,7 +474,7 @@
              <x>0</x>
              <y>0</y>
              <width>1033</width>
-             <height>1270</height>
+             <height>1226</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_6">
@@ -2530,6 +2530,8 @@
     </property>
     <addaction name="action_New"/>
     <addaction name="action_Open"/>
+    <addaction name="separator"/>
+    <addaction name="actionExport"/>
     <addaction name="separator"/>
     <addaction name="actionPrint"/>
    </widget>
