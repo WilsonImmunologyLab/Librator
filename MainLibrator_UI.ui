@@ -1158,13 +1158,10 @@
                <enum>QFrame::Raised</enum>
               </property>
               <layout class="QGridLayout" name="gridLayout_10">
-               <item row="1" column="4">
-                <widget class="QLabel" name="label_16">
+               <item row="3" column="4" colspan="2">
+                <widget class="QLabel" name="label_8">
                  <property name="text">
-                  <string>Donor regions:</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                  <string>Template Sequence:</string>
                  </property>
                 </widget>
                </item>
@@ -1178,6 +1175,16 @@
                  </property>
                  <property name="readOnly">
                   <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="5">
+                <widget class="QLabel" name="label_63">
+                 <property name="text">
+                  <string>Mutations:</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                  </property>
                 </widget>
                </item>
@@ -1200,17 +1207,17 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="5">
-                <widget class="QLabel" name="label_63">
+               <item row="1" column="4">
+                <widget class="QLabel" name="label_16">
                  <property name="text">
-                  <string>Mutations:</string>
+                  <string>Donor regions:</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                  </property>
                 </widget>
                </item>
-               <item row="2" column="3">
+               <item row="2" column="3" rowspan="3">
                 <widget class="QFrame" name="frame_5">
                  <property name="maximumSize">
                   <size>
@@ -1481,6 +1488,9 @@
                   </item>
                  </layout>
                 </widget>
+               </item>
+               <item row="4" column="4" colspan="2">
+                <widget class="QTextEdit" name="txtTemplate"/>
                </item>
               </layout>
              </widget>
@@ -2097,91 +2107,9 @@
        <zorder>txtSeqName2</zorder>
        <zorder>label</zorder>
       </widget>
-      <widget class="QWidget" name="tabAlignment">
-       <attribute name="icon">
-        <iconset resource="Resources/VgenesResources.qrc">
-         <normaloff>:/PNG-Icons/print.png</normaloff>:/PNG-Icons/print.png</iconset>
-       </attribute>
-       <attribute name="title">
-        <string>Alignment(RTF)</string>
-       </attribute>
-       <attribute name="toolTip">
-        <string>Alignement (RTF) page, this page is printable</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_16">
-        <item row="0" column="0">
-         <widget class="QLabel" name="lblAlignment">
-          <property name="minimumSize">
-           <size>
-            <width>500</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>Muscle Alignment:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <spacer name="horizontalSpacer_5">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>532</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="0" column="2">
-         <widget class="QLabel" name="label_8">
-          <property name="text">
-           <string>Font Size (Ctrl+, Ctrl-): </string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QSpinBox" name="spnAlignFont">
-          <property name="cursor">
-           <cursorShape>ArrowCursor</cursorShape>
-          </property>
-          <property name="minimum">
-           <number>6</number>
-          </property>
-          <property name="maximum">
-           <number>36</number>
-          </property>
-          <property name="value">
-           <number>13</number>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0" colspan="4">
-         <widget class="QTextEdit" name="txtSeqAlignment">
-          <property name="font">
-           <font>
-            <family>Courier New</family>
-            <pointsize>13</pointsize>
-           </font>
-          </property>
-          <property name="verticalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOn</enum>
-          </property>
-          <property name="horizontalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOn</enum>
-          </property>
-          <property name="lineWrapMode">
-           <enum>QTextEdit::NoWrap</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
       <widget class="QWidget" name="tabAliHTML">
        <attribute name="title">
-        <string>Alignment(HTML)</string>
+        <string>Alignment</string>
        </attribute>
        <attribute name="toolTip">
         <string>Alignement (HTML) page</string>
