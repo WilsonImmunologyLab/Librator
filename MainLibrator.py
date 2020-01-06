@@ -9956,7 +9956,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			if CurrVal != "Cancelled Action":
 				self.UpdateSeq(CurName, CurrVal, 'SeqName')
 				self.ui.listWidgetStrainsIn.takeItem(listRow)
-
 				self.ui.listWidgetStrainsIn.addItem(CurrVal)
 
 				# self.UpdateSeq(eachItemIs, 'True', 'Active')
@@ -10172,11 +10171,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			# refresh the list - active sequence list
 			self.ui.listWidgetStrainsIn.clear()
-			SQLStatement = 'SELECT `SeqName` FROM LibDB WHERE Active = "True"'
+			SQLStatement = 'SELECT `SeqName` FROM LibDB WHERE Active = "True" ORDER BY SeqName ASC'
 			records = RunSQL(DBFilename, SQLStatement)
 			new_records = []
 			for x in records:
 				new_records.append(x[0])
+			new_records.sort()
 			self.ui.listWidgetStrainsIn.addItems(new_records)
 
 			# check if the database have base sequence
@@ -10341,6 +10341,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# updata interface
 		MoveNotChange = True
 		self.ui.listWidgetStrainsIn.clear()
+		selections.sort()
 		self.ui.listWidgetStrainsIn.addItems(selections)
 		MoveNotChange = False
 		self.highlightlist()
@@ -11616,6 +11617,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		new_records = []
 		for x in records:
 			new_records.append(x[0])
+		new_records.sort()
 		self.ui.listWidgetStrainsIn.addItems(new_records)
 		self.highlightlist()
 

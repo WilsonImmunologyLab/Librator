@@ -1501,7 +1501,7 @@ class Ui_MainLibrator(object):
         self.menuTools.setTitle(_translate("MainLibrator", "Tools"))
         self.menuHelp.setTitle(_translate("MainLibrator", "Help"))
         self.menuView.setTitle(_translate("MainLibrator", "View"))
-        self.menuSetting.setTitle(_translate("MainLibrator", "Setting"))
+        self.menuSetting.setTitle(_translate("MainLibrator", "Settings"))
         self.menuEdit_Sequence.setTitle(_translate("MainLibrator", "Edit Sequence"))
         self.menuVisualization.setTitle(_translate("MainLibrator", "Visualization"))
         self.menuGibsonClone.setTitle(_translate("MainLibrator", "GibsonClone"))
