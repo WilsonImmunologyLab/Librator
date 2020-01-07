@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f472839-8a65-4dce-be83-d1c7511e6e93" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/idmutationdialog.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DB/Test.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/Test.ldb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.ui" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator_UI.ui" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -160,22 +165,5 @@
         </breakpoint>
       </default-breakpoints>
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="PythonConfigurationType">
-        <watch expression="aa[344]" />
-        <watch expression="seq_seqs" />
-        <watch expression="nt_end" />
-        <watch expression="nt_start" />
-        <watch expression="hyphen_pos" />
-        <watch expression="fragment_data" />
-        <watch expression="base_aa_seq" />
-        <watch expression="donor_aa_seq" />
-        <watch expression="sequences_block" />
-        <watch expression="cur_block" />
-        <watch expression="cur_name" />
-        <watch expression="cur_seq" />
-        <watch expression="hyphen_pos_base" />
-      </configuration>
-    </watches-manager>
   </component>
 </project>

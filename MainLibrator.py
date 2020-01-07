@@ -46,6 +46,7 @@ from gibsonalignmentdialog import Ui_GibsonMSADialog
 from jointdialog import Ui_JointDialog
 from htmldialog import Ui_htmlDialog
 from aa_or_nt import Ui_aantDialog
+from idmutationdialog import Ui_IdMutationDialog
 
 from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText
 from VgenesTextEdit import VGenesTextMain
@@ -208,6 +209,115 @@ class ResizeWidget(QWebEngineView):
 		self.w = w
 		print(f' size now :{w, h, self.id}')
 		self.resizeSignal.emit(w,h)
+
+class IdMutationDialog(QtWidgets.QDialog):
+	def __init__(self):
+		super(IdMutationDialog, self).__init__()
+		self.ui = Ui_IdMutationDialog()
+		self.ui.setupUi(self)
+
+		self.ui.pushButtonConfirm.clicked.connect(self.accept)
+		self.ui.pushButtonCancel.clicked.connect(self.reject)
+		self.ui.comboBoxTemplate.currentTextChanged.connect(self.makeHTML)
+		self.ui.comboBoxTarget.currentTextChanged.connect(self.makeHTML)
+
+	def makeHTML(self):
+		template_name = self.ui.comboBoxTemplate.currentText()
+		target_name = self.ui.comboBoxTarget.currentText()
+
+		if template_name == "Please choose template sequence" or target_name == "Please choose target sequence":
+			return
+
+		# get data
+		Dataset = []
+		# load base seq
+		WhereState = 'SeqName = "' + template_name + '"'
+		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+
+		SeqName = DataIn[0][0]
+		Sequence = DataIn[0][1]
+		VFrom = int(DataIn[0][2]) - 1
+		if VFrom == -1: VFrom = 0
+
+		VTo = int(DataIn[0][3])
+		Sequence = Sequence[VFrom:VTo]
+		Sequence = Sequence.upper()
+		EachIn = (SeqName, Sequence)
+		Dataset.append(EachIn)
+
+		# load donor seq
+		WhereState = 'SeqName = "' + target_name + '"'
+		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+
+		SeqName = DataIn[0][0]
+		Sequence = DataIn[0][1]
+		VFrom = int(DataIn[0][2]) - 1
+		if VFrom == -1: VFrom = 0
+
+		VTo = int(DataIn[0][3])
+		Sequence = Sequence[VFrom:VTo]
+		Sequence = Sequence.upper()
+		EachIn = (SeqName, Sequence)
+		Dataset.append(EachIn)
+
+		donor_region = list(range(0, 0))
+		# make HTML
+		html_file, TemplateAA, DonorAA = EditSequencesHTML(Dataset, donor_region, 'template4.html')
+
+		# make mutation info
+		mutations = []
+		err_msg = ''
+		pos = 1
+		for i in range(len(DonorAA)):
+			cur_donor = DonorAA[i]
+			cur_template = TemplateAA[i]
+			if cur_donor == '-' or cur_template == '-':
+				err_msg = 'Insertion/Deletion detected between template and target sequences, please check your sequences!'
+				break
+			elif cur_donor == '*' or cur_template == '*':
+				pass
+			elif cur_donor == '~' or cur_template == '~':
+				pass
+			else:
+				if cur_donor == cur_template:
+					pass
+				else:
+					mutations.append(cur_template + str(pos) + cur_donor)
+			if cur_donor.isalpha():
+				pos += 1
+		
+		self.err_msg = err_msg
+		self.mutations = ','.join(mutations)
+		self.ui.textEdit.setText(self.mutations)
+
+		# load HTML
+		layout = self.ui.gridLayoutHTML
+		if layout.count() == 0:
+			view = QWebEngineView()
+			layout.addWidget(view)
+			view.load(QUrl("file://" + html_file))
+			view.show()
+		else:
+			view = layout.itemAt(0).widget()
+			view.load(QUrl("file://" + html_file))
+			view.show()
+
+	def accept(self):
+		template_name = self.ui.comboBoxTemplate.currentText()
+		target_name = self.ui.comboBoxTarget.currentText()
+
+		self.UpdateSeq(target_name, self.mutations, 'Mutations')
+		self.UpdateSeq(target_name, template_name, 'Base')
+
+		self.close()
+
+	def UpdateSeq(self, ID, ItemValue, FieldName):
+		global DBFilename
+		# ID = item[0]
+		UpdateField(ID, ItemValue, FieldName, DBFilename)
+
 
 class aantDialog(QtWidgets.QDialog):
 	aantSignal = pyqtSignal(str)
@@ -2571,7 +2681,7 @@ class SequenceEditDialog(QtWidgets.QDialog):
 			donor_end = 5000
 		donor_region = list(range(donor_start, donor_end+1))
 		# make HTML
-		html_file = EditSequencesHTML(Dataset, donor_region)
+		html_file, aa1, aa2 = EditSequencesHTML(Dataset, donor_region, 'template2.html')
 		# load HTML
 		layout = self.ui.groupBoxSeqComp.layout()
 		for i in range(layout.count()):
@@ -5375,7 +5485,26 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.open_mutation_dialog()
 		elif RepOption == 'Fusion Sequences':
 			self.open_fusion_dialog()
+		elif RepOption == 'Idenfity escape mutations':
+			self.open_IdMutation_dialog()
 		self.ui.cboReportOptions.setCurrentIndex(0)
+
+	def open_IdMutation_dialog(self):
+		if self.ui.listWidgetStrainsIn.count() == 0:
+			Msg = 'Your active sequence list is empty!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		active_list = []
+		for i in range(self.ui.listWidgetStrainsIn.count()):
+			active_list.append(self.ui.listWidgetStrainsIn.item(i).text())
+
+		self.IdMutationDIalog = IdMutationDialog()
+		self.IdMutationDIalog.ui.comboBoxTemplate.addItems(['Please choose template sequence'])
+		self.IdMutationDIalog.ui.comboBoxTemplate.addItems(active_list)
+		self.IdMutationDIalog.ui.comboBoxTarget.addItems(['Please choose target sequence'])
+		self.IdMutationDIalog.ui.comboBoxTarget.addItems(active_list)
+		self.IdMutationDIalog.show()
 
 	@pyqtSlot()
 	def MakeProbe(self):
@@ -13992,7 +14121,7 @@ def AlignSequencesHTML(DataSet, template):
 	out_file_handle.close()
 	return out_html_file
 
-def EditSequencesHTML(DataSet, donor_region):
+def EditSequencesHTML(DataSet, donor_region, template):
 	# import tempfile
 	import os
 	TupData = ()
@@ -14133,7 +14262,7 @@ def EditSequencesHTML(DataSet, donor_region):
 	# initial and open HTML file
 	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
 	out_html_file = os.path.join(temp_folder, time_stamp + '.html')
-	header_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'template2.html')
+	header_file = os.path.join(working_prefix, '..', 'Resources', 'Data', template)
 	shutil.copyfile(header_file, out_html_file)
 	out_file_handle = open(out_html_file, 'a')
 
@@ -14177,7 +14306,7 @@ def EditSequencesHTML(DataSet, donor_region):
 	out_file_handle.write(seq_div)
 	out_file_handle.write('\n</div>\n</body>\n</html>')
 	out_file_handle.close()
-	return out_html_file
+	return out_html_file, compact_consensusAA, donorAA
 
 def MakeConSeq(seq, con):
 	for i in range(len(seq)):

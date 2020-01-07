@@ -458,6 +458,11 @@
                <string>Make Secreted Probe</string>
               </property>
              </item>
+             <item>
+              <property name="text">
+               <string>Idenfity escape mutations</string>
+              </property>
+             </item>
             </widget>
            </item>
           </layout>
