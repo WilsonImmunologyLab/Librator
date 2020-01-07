@@ -370,7 +370,8 @@ $(document).ready(function(){
 	})
 	.mouseout(function(){
     	onmouseout_help(this)
-  });
+  	});
+  	$(".line_nt.1").find(".name").hide()
 });
 
 function onmouseover_help(ele,event){
@@ -434,6 +435,13 @@ function selectionChange() {
 		$(".line_h3").show()
 	} else {
 		$(".line_h3").hide()
+	}
+
+	if($("#aa").is(':checked') && $("#nt").is(':checked')){
+		$(".line_nt.1").find(".name").hide()
+	}
+	else if($("#nt").is(':checked')){
+		$(".line_nt.1").find(".name").show()
 	}
 }
 </script>
