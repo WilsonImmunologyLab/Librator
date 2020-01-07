@@ -3997,6 +3997,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 				currentFile.close()
 
 	@pyqtSlot()
+	def on_actionIdentifyMutation_triggered(self):
+		self.open_IdMutation_dialog()
+
+	@pyqtSlot()
 	def on_actionIncrease_font_size_triggered(self):
 
 		if self.ui.tabWidget.currentIndex() == 2:

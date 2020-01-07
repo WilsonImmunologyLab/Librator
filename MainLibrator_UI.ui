@@ -2480,6 +2480,7 @@
      <string>Tools</string>
     </property>
     <addaction name="actionHANumbering"/>
+    <addaction name="actionIdentifyMutation"/>
     <addaction name="separator"/>
     <addaction name="actionAlignmentHTML"/>
     <addaction name="separator"/>
@@ -2580,6 +2581,7 @@
    <addaction name="actionExport"/>
    <addaction name="separator"/>
    <addaction name="actionHANumbering"/>
+   <addaction name="actionIdentifyMutation"/>
    <addaction name="actionMutation"/>
    <addaction name="actionEditing"/>
    <addaction name="actionFusion"/>
@@ -3243,6 +3245,18 @@
   <action name="actionFusion_Low_reslution">
    <property name="text">
     <string>Fusion (Low reslution)</string>
+   </property>
+  </action>
+  <action name="actionIdentifyMutation">
+   <property name="icon">
+    <iconset resource="Resources/VgenesResources.qrc">
+     <normaloff>:/PNG-Icons/Align.png</normaloff>:/PNG-Icons/Align.png</iconset>
+   </property>
+   <property name="text">
+    <string>Identify Mutation</string>
+   </property>
+   <property name="toolTip">
+    <string>Identify mutations</string>
    </property>
   </action>
  </widget>
