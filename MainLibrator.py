@@ -12798,13 +12798,20 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 				nt_fragment = cur_seq_nt[nt_start[i] - 1: nt_end[i]]
 
+				# optimize codons for joint region
+				if i == 0:  # fragment 1, only compare tail
+					nt_fragment1 = nt_fragment[:-27] + AA2NT(fragment1[-9:], AACodonDict)
+				elif i == num_fragment - 1:  # fragment 4 or last fragment, only compare head
+					nt_fragment1 = AA2NT(fragment1[:9], AACodonDict) + nt_fragment[27:]
+				else:
+					nt_fragment1 = AA2NT(fragment1[:9], AACodonDict) + nt_fragment[27:-27] + AA2NT(fragment1[-9:], AACodonDict)
+
 				cur_seq_fragment_data.append(fragment)
 				cur_seq_fragment_data.append(fragment1)
 				cur_seq_fragment_data.append(nt_fragment)
 
 				# check if NT seq perfect match AA
-				nt_fragment_aa = Translator(nt_fragment,0)
-				nt_fragment_aa = nt_fragment_aa[0]
+				nt_fragment_aa, msg = Translator(nt_fragment,0)
 				if nt_fragment_aa != fragment1:
 					Msg = 'AA seq for current fragment is:\n\n'
 					Msg += fragment1 + '\n\n'
@@ -13039,7 +13046,25 @@ class LibratorMain(QtWidgets.QMainWindow):
 					fetch_results = RunMYSQL(db_file, SQLCommand)
 
 				row = len(fetch_results)
-				if (row != 0):
+				exist_tag = 0
+				if row != 0:
+					existing_nt_seq = fetch_results[0][7]
+					joint_nt_seq = ''
+					joint_existing_nt_seq = ''
+					if i == 0:  # fragment 1, only compare tail
+						joint_nt_seq = nt_seq[-27:]
+						joint_existing_nt_seq = existing_nt_seq[-27:]
+					elif i == num_fragment - 1:  # fragment 4 or last fragment, only compare head
+						joint_nt_seq = nt_seq[0:27]
+						joint_existing_nt_seq = existing_nt_seq[0:27]
+					else:
+						joint_nt_seq = nt_seq[0:27] + nt_seq[-27:]
+						joint_existing_nt_seq = existing_nt_seq[0:27] + existing_nt_seq[-27:]
+
+					if joint_nt_seq == joint_existing_nt_seq:
+						exist_tag = 1
+
+				if exist_tag == 1:
 					fragment_name = fetch_results[0][0]
 					nt_seq = fetch_results[0][7]
 					in_stock = fetch_results[0][8]
@@ -14443,6 +14468,13 @@ def Translator(Sequence, frame):
 # 'K':146.19, 'M':149.21, 'F':165.19, 'P':115.13, 'S':105.09, 'T':119.12,
 # 'W':204.23, 'Y':181.19, 'V':117.15, 'X':0.0,    '-':0.0,    '*':0.0,
 # '?':0.0}
+
+def AA2NT(sequence, dic):
+	nt_seq = ''
+	for i in range(len(sequence)):
+		nt_seq += dic[sequence[i]]
+
+	return nt_seq
 
 global Group1, Group2, GroupNA
 Group1 = ['H1','H2','H5','H6','H8','H9','H11','H12','H13','H16','H17','H18']
