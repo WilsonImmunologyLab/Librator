@@ -63,7 +63,7 @@ class Ui_IdMutationDialog(object):
 
     def retranslateUi(self, IdMutationDialog):
         _translate = QtCore.QCoreApplication.translate
-        IdMutationDialog.setWindowTitle(_translate("IdMutationDialog", "Dialog"))
+        IdMutationDialog.setWindowTitle(_translate("IdMutationDialog", "Identify mutations"))
         self.label.setText(_translate("IdMutationDialog", "Template Sequence"))
         self.label_2.setText(_translate("IdMutationDialog", "Target Sequence"))
         self.groupBoxHTML.setTitle(_translate("IdMutationDialog", "Sequence Alignment"))
