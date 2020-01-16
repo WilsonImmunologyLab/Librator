@@ -291,7 +291,9 @@ class IdMutationDialog(QtWidgets.QDialog):
 		self.err_msg = err_msg
 		self.mutations = ','.join(mutations)
 		self.ui.textEdit.setText(self.mutations)
-		if len(mutations) == 0:
+		if self.err_msg == '':
+			pass
+		else:
 			self.ui.textEdit.setText(self.err_msg)
 
 		# load HTML
