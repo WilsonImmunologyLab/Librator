@@ -322,7 +322,6 @@ class IdMutationDialog(QtWidgets.QDialog):
 		# ID = item[0]
 		UpdateField(ID, ItemValue, FieldName, DBFilename)
 
-
 class aantDialog(QtWidgets.QDialog):
 	aantSignal = pyqtSignal(str)
 	def __init__(self):
@@ -2506,13 +2505,30 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 		elif self.ui.radioButtonUser.isChecked():
 			joint_plan = 'User'
 
+		if os.path.isdir(self.ui.outpath.text()):
+			pass
+		else:
+			QMessageBox.warning(self, 'Warning', 'The output path is not a directory! Check your input!',
+			                    QMessageBox.Ok, QMessageBox.Ok)
+			return
+
 		active_tab = self.ui.tabWidget.currentIndex()
 		if active_tab == 0:
+			# validate if the DB have correct table
+			SQLStatement = 'SELECT * FROM Fragments ORDER BY Name DESC LIMIT 1 '
+			try:
+				DataIn = RunSQL(self.ui.dbpath.text(), SQLStatement)
+			except:
+				QMessageBox.warning(self, 'Warning', 'There is no Fragments table in the selected database!',
+				                    QMessageBox.Ok, QMessageBox.Ok)
+				return
 			# send signal
 			joint_up = self.ui.jointUP.toPlainText()
 			joint_down = self.ui.jointDOWN.toPlainText()
 			db_path = [self.ui.dbpath.text()]
 			out_path = self.ui.outpath.text()
+
+
 
 			if joint_up == "" or joint_down == "": 		# OriPos
 				QMessageBox.warning(self, 'Warning',
@@ -10724,7 +10740,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			self.ui.cboRole.setCurrentIndex(CurIndex)
 			self.ui.cboRole.last_value = Role
-
 
 			SubType = item[3]
 			CurIndex = subtype_switch(SubType)
