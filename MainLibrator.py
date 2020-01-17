@@ -4611,6 +4611,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			AlignIn.append(EachIn)
 		# make HTML
 		html_file = AlignSequencesHTML(AlignIn, '')
+		if html_file[0] == 'W':
+			QMessageBox.warning(self, 'Warning', html_file, QMessageBox.Ok, QMessageBox.Ok)
+			return
 		# delete close window objects
 		del_list = []
 		for id, obj in VGenesTextWindows.items():
@@ -5026,6 +5029,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 				AlignIn.append(EachIn)
 			# make HTML
 			html_file = AlignSequencesHTML(AlignIn, '')
+			if html_file[0] == 'W':
+				QMessageBox.warning(self, 'Warning', html_file, QMessageBox.Ok, QMessageBox.Ok)
+				return
 			# display
 			view = QWebEngineView()
 			view.load(QUrl("file://" + html_file))
@@ -11618,6 +11624,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 				AlignIn.append(EachIn)
 			# make HTML
 			html_file = AlignSequencesHTML(AlignIn, 'template3')
+			if html_file[0] == 'W':
+				QMessageBox.warning(self, 'Warning', html_file, QMessageBox.Ok, QMessageBox.Ok)
+				return
 			layout = self.modalessMutationDialog.ui.gridLayoutHTML
 			view = QWebEngineView(self)
 			view.load(QUrl("file://" + html_file))
@@ -13953,6 +13962,14 @@ def AlignSequencesHTML(DataSet, template):
 			SeqName = record[0].replace('\n', '').replace('\r', '')
 			SeqName = SeqName.strip()
 			NTseq = record[1]
+			# sequence check for NT seq
+			pattern = re.compile(r'[^ATCGUatcgu]')
+			cur_strange = pattern.findall(NTseq)
+			cur_strange = list(set(cur_strange))
+			ErrMsg = "We find Unlawful nucleotide: " + ','.join(cur_strange) + '\nfrom \n' + SeqName + \
+			         '\nPlease remove those Unlawful nucleotide!'
+			return ErrMsg
+
 			AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
 			AAseq = AAseq.replace('*','X').replace('~','Z').replace('.','J')
 			all[SeqName] = [NTseq, AAseq]
@@ -13991,10 +14008,10 @@ def AlignSequencesHTML(DataSet, template):
 	else:
 		return
 
-	if os.path.exists(outfilename):
-		os.remove(outfilename)
-	if os.path.exists(aafilename):
-		os.remove(aafilename)
+	#if os.path.exists(outfilename):
+	#	os.remove(outfilename)
+	#if os.path.exists(aafilename):
+	#	os.remove(aafilename)
 
 	# generate consnesus sequences (AA and NT)
 	if len(all) == 1:
@@ -14007,16 +14024,23 @@ def AlignSequencesHTML(DataSet, template):
 
 		consensusDNA = ''
 		tester = ''
+
 		for i in range(seqlen):
 			tester = ''
 			Cnuc = ''
 			for key in all:
-				seq = all[key][0]
-				tester += seq[i]
+				try:
+					seq = all[key][0]
+					tester += seq[i]
+				except:
+					Msg = 'Find sequence error in ' + key + ', please check your sequence!'
+					QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+					return
 
 			frequencies = [(c, tester.count(c)) for c in set(tester)]
 			Cnuc = max(frequencies, key=lambda x: x[1])[0]
 			consensusDNA += Cnuc
+
 
 		consensusAA = ''
 		firstOne = all[SeqName]
@@ -14357,7 +14381,7 @@ def EditSequencesHTML(DataSet, donor_region, template):
 	return out_html_file, compact_consensusAA, donorAA
 
 def MakeConSeq(seq, con):
-	for i in range(len(seq)):
+	for i in range(len(con)):
 		if seq[i] == con[i]:
 			seq = seq[:i] + '.' + seq[i+1:]
 	return seq
