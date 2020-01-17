@@ -13966,9 +13966,10 @@ def AlignSequencesHTML(DataSet, template):
 			pattern = re.compile(r'[^ATCGUatcgu]')
 			cur_strange = pattern.findall(NTseq)
 			cur_strange = list(set(cur_strange))
-			ErrMsg = "We find Unlawful nucleotide: " + ','.join(cur_strange) + '\nfrom \n' + SeqName + \
-			         '\nPlease remove those Unlawful nucleotide!'
-			return ErrMsg
+			if len(cur_strange) > 0:
+				ErrMsg = "We find Unlawful nucleotide: " + ','.join(cur_strange) + '\nfrom \n' + SeqName + \
+				         '\nPlease remove those Unlawful nucleotide!'
+				return ErrMsg
 
 			AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
 			AAseq = AAseq.replace('*','X').replace('~','Z').replace('.','J')
