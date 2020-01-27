@@ -5749,6 +5749,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				HANumbering(AASeqIs)
 			else:
 				return
+			#a = H1Numbering
+			#b = H3Numbering
 			cursor = self.ui.txtAASeq.textCursor()
 			self.Decorate(Decorations, cursor)
 		elif Subtype in GroupNA or Subtype == 'B' or Subtype == 'Other':
@@ -8140,6 +8142,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 				format.setForeground(QBrush(QColor("black")))
 			elif valueIs == '4':
 				format.setBackground(QBrush(QColor("yellow")))
+				#format.setFontItalic(True)
+				#format.setFontUnderline(True)
+				#format.setFontStrikeOut(True)
+				#format.setFontOverline(True)
+				#format.setTextOutline(QColor("red"))
 				format.setForeground(QBrush(QColor("black")))
 			elif valueIs == '5':
 				format.setBackground(QBrush(QColor("black")))
@@ -13853,7 +13860,10 @@ def SequencesHTML(AAseq, info):
 				unit = (cur_data[2], cur_data[2], cur_data[4])
 			else:
 				if cur_data[0] == 'HA1':
-					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
+					if cur_data[2] in LateralPatchH1:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' LateralPatch')
+					else:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
 		else:
@@ -13861,7 +13871,10 @@ def SequencesHTML(AAseq, info):
 				unit = (cur_data[2], cur_data[2], '')
 			else:
 				if cur_data[0] == 'HA1':
-					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+					if cur_data[2] in LateralPatchH1:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'LateralPatch')
+					else:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
 		pos_h1_data.append(unit)
@@ -13875,7 +13888,10 @@ def SequencesHTML(AAseq, info):
 				unit = (cur_data[2], cur_data[2], cur_data[4])
 			else:
 				if cur_data[0] == 'HA1':
-					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
+					if cur_data[2] in LateralPatchH3:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' LateralPatch')
+					else:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
 		else:
@@ -13883,7 +13899,10 @@ def SequencesHTML(AAseq, info):
 				unit = (cur_data[2], cur_data[2], '')
 			else:
 				if cur_data[0] == 'HA1':
-					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+					if cur_data[2] in LateralPatchH3:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'LateralPatch')
+					else:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
 		pos_h3_data.append(unit)
@@ -14070,7 +14089,10 @@ def AlignSequencesHTML(DataSet, template):
 				unit = (cur_data[2], cur_data[2], cur_data[4])
 			else:
 				if cur_data[0] == 'HA1':
-					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
+					if cur_data[2] in LateralPatchH1:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' LateralPatch')
+					else:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
 		else:
@@ -14078,7 +14100,10 @@ def AlignSequencesHTML(DataSet, template):
 				unit = (cur_data[2], cur_data[2], '')
 			else:
 				if cur_data[0] == 'HA1':
-					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+					if cur_data[2] in LateralPatchH1:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'LateralPatch')
+					else:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
 		pos_h1_data.append(unit)
@@ -14092,7 +14117,10 @@ def AlignSequencesHTML(DataSet, template):
 				unit = (cur_data[2], cur_data[2], cur_data[4])
 			else:
 				if cur_data[0] == 'HA1':
-					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
+					if cur_data[2] in LateralPatchH3:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' LateralPatch')
+					else:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
 		else:
@@ -14100,7 +14128,10 @@ def AlignSequencesHTML(DataSet, template):
 				unit = (cur_data[2], cur_data[2], '')
 			else:
 				if cur_data[0] == 'HA1':
-					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+					if cur_data[2] in LateralPatchH3:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'LateralPatch')
+					else:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
 		pos_h3_data.append(unit)
@@ -14688,6 +14719,9 @@ AACodonDict={'I':'ATT','L':'CTT','V':'GTT','F':'TTT','M':'ATG','C':'TGT',
 			 'A':'GCT','G':'GGT','P':'CCT','T':'ACT','S':'TCT','Y':'TAT',
 			 'W':'TGG','Q':'CAA','N':'AAT','H':'CAT','E':'GAA','D':'GAT',
 			 'K':'AAA','R':'CGT'}
+
+LateralPatchH3 = [119,129,165,166,169,171,173]
+LateralPatchH1 = [121,131,168,169,172,174,176]
 
 H1HA1Regions = {'1':'Stalk', '2':'Stalk', '3':'Stalk', '4':'Stalk', '5':'Stalk', '6':'Stalk', '7':'Stalk',
 				'8':'Stalk', '9':'Stalk', '10':'Stalk', '11':'Stalk', '12':'Stalk-MN',
