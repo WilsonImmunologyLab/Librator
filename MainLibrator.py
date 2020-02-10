@@ -11141,13 +11141,21 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	def show3Dstructure(self, mutation, pdbPath, pymolPath, subtype):
 		global temp_folder
+		global working_prefix
 
 		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime()) + '.pml'
 		pml_path = os.path.join(temp_folder, time_stamp)
 		with open(pml_path , "w") as pml:
 			# write pml script
 			text = 'set assembly, 1\n'
-			text += "fetch " + pdbPath + ", async=0\n"
+
+			# fetch PDB on-line
+			#text += "fetch " + pdbPath + ", async=0\n"
+
+			# load local structure. Can use without internet
+			pdbPath = pdbPath + '.cif'
+			pdbPath = os.path.join(working_prefix, '..', 'Resources', 'PDB', pdbPath)
+			text += "load " + pdbPath + "\n"
 			pml.write(text)
 			text = "as cartoon\n" \
 					+ "show mesh\n" \
