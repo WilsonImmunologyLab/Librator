@@ -5156,29 +5156,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
 
-		try:
-			svg = svg_formatter(data, format)
-			svg = svg.decode("utf-8")
-
-			out_svg = os.path.join(temp_folder, "out-" + time_stamp + ".html")
-			with open(out_svg, 'w') as f:
-				f.write('<!DOCTYPE html>\n<html>\n<body style="margin-left: 0px;\n">')
-				f.write(svg)
-				f.write('\n</body>\n</html>')
-
-			# display
-			view = QWebEngineView()
-			view.load(QUrl("file://" + out_svg))
-			view.show()
-
-			layout = self.ui.groupBoxLogo.layout()
-			if layout == None:
-				layout = QGridLayout(self.ui.groupBoxLogo)
-			else:
-				for i in range(layout.count()):
-					layout.removeWidget(layout.itemAt(i).widget())
-			layout.addWidget(view)
-		except:
+		if self.ui.radioButtonPop.isChecked():
 			eps = eps_formatter(data, format)
 			out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 			with open(out_eps, 'wb') as f:
@@ -5186,6 +5164,37 @@ class LibratorMain(QtWidgets.QMainWindow):
 			cmd = "open " + out_eps
 			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
 			             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+		else:
+			try:
+				svg = svg_formatter(data, format)
+				svg = svg.decode("utf-8")
+
+				out_svg = os.path.join(temp_folder, "out-" + time_stamp + ".html")
+				with open(out_svg, 'w') as f:
+					f.write('<!DOCTYPE html>\n<html>\n<body style="margin-left: 0px;\n">')
+					f.write(svg)
+					f.write('\n</body>\n</html>')
+
+				# display
+				view = QWebEngineView()
+				view.load(QUrl("file://" + out_svg))
+				view.show()
+
+				layout = self.ui.groupBoxLogo.layout()
+				if layout == None:
+					layout = QGridLayout(self.ui.groupBoxLogo)
+				else:
+					for i in range(layout.count()):
+						layout.removeWidget(layout.itemAt(i).widget())
+				layout.addWidget(view)
+			except:
+				eps = eps_formatter(data, format)
+				out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
+				with open(out_eps, 'wb') as f:
+					f.write(eps)
+				cmd = "open " + out_eps
+				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+				             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 
 
 
@@ -5255,29 +5264,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
 
-		try:
-			svg = svg_formatter(data, format)
-			svg = svg.decode("utf-8")
-
-			out_svg = os.path.join(temp_folder, "out-" + time_stamp + ".html")
-			with open(out_svg, 'w') as f:
-				f.write('<!DOCTYPE html>\n<html>\n<body style="margin-left: 0px;\n">')
-				f.write(svg)
-				f.write('\n</body>\n</html>')
-
-			# display
-			view = QWebEngineView()
-			view.load(QUrl("file://" + out_svg))
-			view.show()
-
-			layout = self.ui.groupBoxLogo.layout()
-			if layout == None:
-				layout = QGridLayout(self.ui.groupBoxLogo)
-			else:
-				for i in range(layout.count()):
-					layout.removeWidget(layout.itemAt(i).widget())
-			layout.addWidget(view)
-		except:
+		if self.ui.radioButtonPop.isChecked():
 			eps = eps_formatter(data, format)
 			out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 			with open(out_eps, 'wb') as f:
@@ -5285,6 +5272,38 @@ class LibratorMain(QtWidgets.QMainWindow):
 			cmd = "open " + out_eps
 			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
 			             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+		else:
+
+			try:
+				svg = svg_formatter(data, format)
+				svg = svg.decode("utf-8")
+
+				out_svg = os.path.join(temp_folder, "out-" + time_stamp + ".html")
+				with open(out_svg, 'w') as f:
+					f.write('<!DOCTYPE html>\n<html>\n<body style="margin-left: 0px;\n">')
+					f.write(svg)
+					f.write('\n</body>\n</html>')
+
+				# display
+				view = QWebEngineView()
+				view.load(QUrl("file://" + out_svg))
+				view.show()
+
+				layout = self.ui.groupBoxLogo.layout()
+				if layout == None:
+					layout = QGridLayout(self.ui.groupBoxLogo)
+				else:
+					for i in range(layout.count()):
+						layout.removeWidget(layout.itemAt(i).widget())
+				layout.addWidget(view)
+			except:
+				eps = eps_formatter(data, format)
+				out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
+				with open(out_eps, 'wb') as f:
+					f.write(eps)
+				cmd = "open " + out_eps
+				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+				             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 
 	def loadFragmentInfo(self):
 		global working_prefix

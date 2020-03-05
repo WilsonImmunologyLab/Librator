@@ -2139,8 +2139,33 @@
         <string>AlignmentLogo</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_11">
+        <item row="0" column="2">
+         <widget class="QRadioButton" name="radioButtonPop">
+          <property name="maximumSize">
+           <size>
+            <width>270</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Open Alignment Logo on a pop-up page</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="0">
          <widget class="QPushButton" name="pushButtonAA">
+          <property name="minimumSize">
+           <size>
+            <width>250</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>250</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="text">
            <string>Peptide Logo</string>
           </property>
@@ -2149,7 +2174,7 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="0" colspan="2">
+        <item row="1" column="0" colspan="4">
          <widget class="QGroupBox" name="groupBoxLogo">
           <property name="font">
            <font>
@@ -2164,10 +2189,35 @@
         </item>
         <item row="0" column="1">
          <widget class="QPushButton" name="pushButtonNT">
+          <property name="minimumSize">
+           <size>
+            <width>250</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>250</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="text">
            <string>Nucleotide Logo</string>
           </property>
          </widget>
+        </item>
+        <item row="0" column="3">
+         <spacer name="horizontalSpacer_5">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
