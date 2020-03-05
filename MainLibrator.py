@@ -5196,8 +5196,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
 				             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 
-
-
 	def makeAALogo(self):
 		listItems = self.ui.listWidgetStrainsIn.selectedItems()
 		WhereState = ''
