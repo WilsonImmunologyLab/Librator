@@ -2134,6 +2134,43 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>AlignmentLogo</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_11">
+        <item row="0" column="0">
+         <widget class="QPushButton" name="pushButtonAA">
+          <property name="text">
+           <string>Peptide Logo</string>
+          </property>
+          <property name="default">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="2">
+         <widget class="QGroupBox" name="groupBoxLogo">
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>Multiple Sequence Alignment Logo</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_14"/>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QPushButton" name="pushButtonNT">
+          <property name="text">
+           <string>Nucleotide Logo</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="tabSeqDB">
        <attribute name="title">
         <string>SequenceDB</string>

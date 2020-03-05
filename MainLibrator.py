@@ -5,6 +5,7 @@ from PyQt5 import QtWidgets, QtPrintSupport, QtGui
 from PyQt5.QtWidgets import *
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 from PyQt5.QtGui import QTextCursor, QFont, QPixmap, QTextCharFormat, QBrush, QColor, QCursor
+from PyQt5.QtSvg import QSvgWidget, QSvgRenderer
 from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecords, RunInsertion, creatnewFragmentDB,\
 	CopyDatatoDB2, RunMYSQL, RunMYSQLInsertion
 from PyQt5.QtWebEngine import *
@@ -12,6 +13,7 @@ from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtWebChannel import *
 from pyecharts.charts import Bar, Pie, Line, Page, Grid
 from pyecharts import options as opts
+from weblogo import *
 
 from HA_numbering_function import HA_numbering_Jesse
 from itertools import combinations
@@ -3442,6 +3444,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.EditLock.clicked.connect(self.ChangeEditMode)
 		self.ui.groupCombo.currentTextChanged.connect(self.rebuildTree)
 		self.ui.treeWidget.itemClicked['QTreeWidgetItem*', 'int'].connect(self.TreeItemClicked)
+		self.ui.pushButtonNT.clicked.connect(self.makeNTLogo)
+		self.ui.pushButtonAA.clicked.connect(self.makeAALogo)
 
 		self.ui.cboRole.last_value = ''
 		self.ui.cboForm.last_value = ''
@@ -3455,6 +3459,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.fig = 0
 		self.html = 0
+		self.logo = 0
 
 		self.ui.HTMLview1 = ResizeWidget(self)
 		self.ui.HTMLview1.id = 1
@@ -3518,11 +3523,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 				# generate local HTML
 				line = (
 					Line(init_opts=opts.InitOpts(width="900px", height="380px"))
-						.add_xaxis(range(1, len(data_array[0]) + 1))
-						.add_yaxis("Season H1", data_array[0], is_symbol_show=False)
-						.add_yaxis("pdm09 H1", data_array[1], is_symbol_show=False)
-						.set_global_opts(
-						title_opts=opts.TitleOpts(title="Variations for H1(Pct)", subtitle="human H1"))
+					.add_xaxis(range(1, len(data_array[0]) + 1))
+					.add_yaxis("Season H1", data_array[0], is_symbol_show=False)
+					.add_yaxis("pdm09 H1", data_array[1], is_symbol_show=False)
+					.set_global_opts(
+					title_opts=opts.TitleOpts(title="Variations for H1(Pct)", subtitle="human H1"),
+					#toolbox_opts=opts.ToolboxOpts()
+					)
 				)
 			elif self.ui.comboBoxHANA_html.currentIndex() == 1 and self.ui.comboBoxIndex_html.currentIndex() == 0:  # H3 + PCT
 				# get data
@@ -3541,10 +3548,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 				# generate local HTML
 				line = (
 					Line(init_opts=opts.InitOpts(width="900px", height="380px"))
-						.add_xaxis(range(1, len(data_array[0]) + 1))
-						.add_yaxis("H3", data_array[0], is_symbol_show=False)
-						.set_global_opts(
-						title_opts=opts.TitleOpts(title="Variations for H3(Pct)", subtitle="human H3"))
+					.add_xaxis(range(1, len(data_array[0]) + 1))
+					.add_yaxis("H3", data_array[0], is_symbol_show=False)
+					.set_global_opts(
+					title_opts=opts.TitleOpts(title="Variations for H3(Pct)", subtitle="human H3"),
+					#toolbox_opts=opts.ToolboxOpts()
+					)
 				)
 			elif self.ui.comboBoxHANA_html.currentIndex() == 2 and self.ui.comboBoxIndex_html.currentIndex() == 0:  # NA + PCT
 				# get data
@@ -3563,18 +3572,20 @@ class LibratorMain(QtWidgets.QMainWindow):
 				# generate local HTML
 				line = (
 					Line(init_opts=opts.InitOpts(width="900px", height="380px"))
-						.add_xaxis(range(1, len(data_array[0]) + 1))
-						.add_yaxis("N1", data_array[0], is_symbol_show=False)
-						.add_yaxis("N2", data_array[1], is_symbol_show=False)
-						.add_yaxis("N3", data_array[2], is_symbol_show=False)
-						.add_yaxis("N4", data_array[3], is_symbol_show=False)
-						.add_yaxis("N5", data_array[4], is_symbol_show=False)
-						.add_yaxis("N6", data_array[5], is_symbol_show=False)
-						.add_yaxis("N7", data_array[6], is_symbol_show=False)
-						.add_yaxis("N8", data_array[7], is_symbol_show=False)
-						.add_yaxis("N9", data_array[8], is_symbol_show=False)
-						.set_global_opts(
-						title_opts=opts.TitleOpts(title="Variations for NA(Pct)", subtitle="human NA"))
+					.add_xaxis(range(1, len(data_array[0]) + 1))
+					.add_yaxis("N1", data_array[0], is_symbol_show=False)
+					.add_yaxis("N2", data_array[1], is_symbol_show=False)
+					.add_yaxis("N3", data_array[2], is_symbol_show=False)
+					.add_yaxis("N4", data_array[3], is_symbol_show=False)
+					.add_yaxis("N5", data_array[4], is_symbol_show=False)
+					.add_yaxis("N6", data_array[5], is_symbol_show=False)
+					.add_yaxis("N7", data_array[6], is_symbol_show=False)
+					.add_yaxis("N8", data_array[7], is_symbol_show=False)
+					.add_yaxis("N9", data_array[8], is_symbol_show=False)
+					.set_global_opts(
+					title_opts=opts.TitleOpts(title="Variations for NA(Pct)", subtitle="human NA"),
+					#toolbox_opts=opts.ToolboxOpts()
+					)
 				)
 			elif self.ui.comboBoxHANA_html.currentIndex() == 0 and self.ui.comboBoxIndex_html.currentIndex() == 1:  # H1 + AAVI
 				# get data
@@ -3593,11 +3604,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 				# generate local HTML
 				line = (
 					Line(init_opts=opts.InitOpts(width="900px", height="380px"))
-						.add_xaxis(range(1, len(data_array[0]) + 1))
-						.add_yaxis("Season H1", data_array[0], is_symbol_show=False)
-						.add_yaxis("pdm09 H1", data_array[1], is_symbol_show=False)
-						.set_global_opts(
-						title_opts=opts.TitleOpts(title="Variations for H1(AAVI)", subtitle="human H1"))
+					.add_xaxis(range(1, len(data_array[0]) + 1))
+					.add_yaxis("Season H1", data_array[0], is_symbol_show=False)
+					.add_yaxis("pdm09 H1", data_array[1], is_symbol_show=False)
+					.set_global_opts(
+					title_opts=opts.TitleOpts(title="Variations for H1(AAVI)", subtitle="human H1"),
+					#toolbox_opts=opts.ToolboxOpts()
+					)
 				)
 			elif self.ui.comboBoxHANA_html.currentIndex() == 1 and self.ui.comboBoxIndex_html.currentIndex() == 1:  # H3 + AAVI
 				# get data
@@ -3616,10 +3629,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 				# generate local HTML
 				line = (
 					Line(init_opts=opts.InitOpts(width="900px", height="380px"))
-						.add_xaxis(range(1, len(data_array[0]) + 1))
-						.add_yaxis("H3", data_array[0], is_symbol_show=False)
-						.set_global_opts(
-						title_opts=opts.TitleOpts(title="Variations for H3(AAVI)", subtitle="human H3"))
+					.add_xaxis(range(1, len(data_array[0]) + 1))
+					.add_yaxis("H3", data_array[0], is_symbol_show=False)
+					.set_global_opts(
+					title_opts=opts.TitleOpts(title="Variations for H3(AAVI)", subtitle="human H3"),
+					#toolbox_opts=opts.ToolboxOpts()
+					)
 				)
 			elif self.ui.comboBoxHANA_html.currentIndex() == 2 and self.ui.comboBoxIndex_html.currentIndex() == 1:  # NA + AAVI
 				# get data
@@ -3638,18 +3653,20 @@ class LibratorMain(QtWidgets.QMainWindow):
 				# generate local HTML
 				line = (
 					Line(init_opts=opts.InitOpts(width="900px", height="380px"))
-						.add_xaxis(range(1, len(data_array[0]) + 1))
-						.add_yaxis("N1", data_array[0], is_symbol_show=False)
-						.add_yaxis("N2", data_array[1], is_symbol_show=False)
-						.add_yaxis("N3", data_array[2], is_symbol_show=False)
-						.add_yaxis("N4", data_array[3], is_symbol_show=False)
-						.add_yaxis("N5", data_array[4], is_symbol_show=False)
-						.add_yaxis("N6", data_array[5], is_symbol_show=False)
-						.add_yaxis("N7", data_array[6], is_symbol_show=False)
-						.add_yaxis("N8", data_array[7], is_symbol_show=False)
-						.add_yaxis("N9", data_array[8], is_symbol_show=False)
-						.set_global_opts(
-						title_opts=opts.TitleOpts(title="Variations for NA(AAVI)", subtitle="human NA"))
+					.add_xaxis(range(1, len(data_array[0]) + 1))
+					.add_yaxis("N1", data_array[0], is_symbol_show=False)
+					.add_yaxis("N2", data_array[1], is_symbol_show=False)
+					.add_yaxis("N3", data_array[2], is_symbol_show=False)
+					.add_yaxis("N4", data_array[3], is_symbol_show=False)
+					.add_yaxis("N5", data_array[4], is_symbol_show=False)
+					.add_yaxis("N6", data_array[5], is_symbol_show=False)
+					.add_yaxis("N7", data_array[6], is_symbol_show=False)
+					.add_yaxis("N8", data_array[7], is_symbol_show=False)
+					.add_yaxis("N9", data_array[8], is_symbol_show=False)
+					.set_global_opts(
+					title_opts=opts.TitleOpts(title="Variations for NA(AAVI)", subtitle="human NA"),
+					#toolbox_opts=opts.ToolboxOpts()
+					)
 				)
 
 			html_path = os.path.join(temp_folder, 'test3.html')
@@ -3743,7 +3760,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			pie = (
 				Pie(init_opts=opts.InitOpts(width="380px", height="380px"))
 					.add('', [list(z) for z in zip(labels, values)], radius=["40%", "75%"], )
-					.set_global_opts(title_opts=opts.TitleOpts(title=""))
+					.set_global_opts(title_opts=opts.TitleOpts(title=""),toolbox_opts=opts.ToolboxOpts())
 					.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
 			)
 			pie.render(path=html_path)
@@ -4643,7 +4660,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		AlignIn = []
 		EachIn = ()
 
-		if self.ui.tabWidget.currentIndex() == 9:   # Alignment(rtf)
+		# Alignment(rtf)
+		if self.ui.tabWidget.currentIndex() == 9:
 			self.ui.actionAA.setChecked(True)
 			self.ui.actionDNA.setChecked(True)
 			self.ui.actionBA.setChecked(False)
@@ -4681,7 +4699,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 				Notes = 'Tab'
 				self.AlignSequences(AlignIn, Notes)
-		elif self.ui.tabWidget.currentIndex() == 1: # Sequence
+		# Sequence
+		elif self.ui.tabWidget.currentIndex() == 1:
 			#displays all info about the selected sequence
 			selection = self.ui.listWidgetStrainsIn.selectedItems()
 			if len(selection) == 0:
@@ -4704,7 +4723,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.btnH3Num.setChecked(False)
 
 			self.CheckDecorations()
-		elif self.ui.tabWidget.currentIndex() == 3: # SequenceDB
+		# SequenceDB
+		elif self.ui.tabWidget.currentIndex() == 4:
 			if self.ui.SeqTable.columnCount() > 0:
 				self.ui.SeqTable.itemChanged.disconnect(self.EditTableItem)
 			self.ui.SeqTable.setColumnCount(0)
@@ -4750,7 +4770,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				# connect sort indicator to slot function
 				self.ui.SeqTable.horizontalHeader().sectionClicked.connect(self.sortTable)
 				self.ui.SeqTable.itemChanged.connect(self.EditTableItem)
-		elif self.ui.tabWidget.currentIndex() == 4: # Summary
+		# Summary
+		elif self.ui.tabWidget.currentIndex() == 5:
 			if DBFilename == 'none':
 				return
 			#  plot stat for subtype
@@ -4829,7 +4850,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				gridlayout_fig3.addWidget(self.F, 2, 0, 10, 0)
 
 				self.fig = 1
-		elif self.ui.tabWidget.currentIndex() == 5: # Summary
+		# Summary (HTML)
+		elif self.ui.tabWidget.currentIndex() == 6:
 			if DBFilename == 'none':
 				return
 			if self.ui.HTMLview1.h != 0:
@@ -4963,7 +4985,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				# show local HTML
 				self.ui.HTMLview3.load(QUrl('file://' + html_path))
 				self.ui.HTMLview3.show()
-		elif self.ui.tabWidget.currentIndex() == 6: # Fragment DB
+		# Fragment DB
+		elif self.ui.tabWidget.currentIndex() == 7:
 			mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
 
 			if os.path.exists(mysql_setting_file):
@@ -4988,7 +5011,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.Passinput.setText(Setting[4])
 
 			self.ui.dbpath.setText(fragmentdb_path)
-		elif self.ui.tabWidget.currentIndex() == 2: # Alignment(HTML)
+		# Alignment(HTML)
+		elif self.ui.tabWidget.currentIndex() == 2:
 			# load data
 			AlignIn = []
 			listItems = self.ui.listWidgetStrainsIn.selectedItems()
@@ -5044,6 +5068,223 @@ class LibratorMain(QtWidgets.QMainWindow):
 				for i in range(layout.count()):
 					layout.removeWidget(layout.itemAt(i).widget())
 			layout.addWidget(view)
+		# Alignment logo
+		elif self.ui.tabWidget.currentIndex() == 3:
+
+			#path = os.path.join(temp_folder, "logo.png")
+			#image = QtGui.QPixmap(path)
+			#image = image.scaledToWidth(1500)
+
+			#self.ui.labelLogo.setStyleSheet("border: 2px solid red")
+			#self.ui.labelLogo
+			#self.ui.labelLogo.setPixmap(image)
+			#self.ui.labelLogo.setScaledContents(True)
+
+			#graphicsView = self.ui.graphicsViewLogo
+			#graphicsView.scene = QGraphicsScene()
+			#item = QGraphicsPixmapItem(image)
+			#graphicsView.scene.addItem(item)
+			#graphicsView.scene.addText("Hello, world!")
+			#graphicsView.setScene(graphicsView.scene)
+			pass
+
+		else:
+			return
+
+	def makeNTLogo(self):
+		listItems = self.ui.listWidgetStrainsIn.selectedItems()
+		WhereState = ''
+		NumSeqs = len(listItems)
+		# if not listItems: do nothing
+		DataSet = []
+		if NumSeqs < 1:
+			return
+		else:
+			i = 1
+			for item in listItems:
+
+				eachItemIs = item.text()
+				WhereState += 'SeqName = "' + eachItemIs + '"'
+				if NumSeqs > i:
+					WhereState += ' OR '
+				i += 1
+
+			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+
+			for item in DataIn:
+				SeqName = item[0]
+				Sequence = item[1]
+				VFrom = int(item[2]) - 1
+				if VFrom == -1: VFrom = 0
+
+				VTo = int(item[3])
+				Sequence = Sequence[VFrom:VTo]
+				Sequence = Sequence.upper()
+				EachIn = (SeqName, Sequence)
+				DataSet.append(EachIn)
+
+		# align selected sequences using ClustalOmega
+		outfilename = ''
+		try:
+			if len(DataSet) == 1:
+				time_stamp = str(int(time.time() * 100))
+				outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
+				out_handle = open(outfilename, 'w')
+				out_handle.write('>' + DataSet[0][0] + '\n')
+				out_handle.write(DataSet[0][1])
+				out_handle.close()
+			else:
+				if os.path.exists(clustal_path):
+					outfilename = LibratorSeq.ClustalO(DataSet, 80, True, temp_folder, clustal_path)
+				else:
+					QMessageBox.warning(self, 'Warning',
+					                    'The Clustal Omega does not exist! Check your path!', QMessageBox.Ok,
+					                    QMessageBox.Ok)
+					return
+		except:
+			return
+
+		# start web logo
+		f = open(outfilename)
+		seqs = read_seq_data(f)
+		data = LogoData.from_seqs(seqs)
+
+		options = LogoOptions()
+		options.fineprint = 'Librator\nGenerated by WebLogo 3.7'
+		format = LogoFormat(data, options)
+
+		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+
+		try:
+			svg = svg_formatter(data, format)
+			svg = svg.decode("utf-8")
+
+			out_svg = os.path.join(temp_folder, "out-" + time_stamp + ".html")
+			with open(out_svg, 'w') as f:
+				f.write('<!DOCTYPE html>\n<html>\n<body style="margin-left: 0px;\n">')
+				f.write(svg)
+				f.write('\n</body>\n</html>')
+
+			# display
+			view = QWebEngineView()
+			view.load(QUrl("file://" + out_svg))
+			view.show()
+
+			layout = self.ui.groupBoxLogo.layout()
+			if layout == None:
+				layout = QGridLayout(self.ui.groupBoxLogo)
+			else:
+				for i in range(layout.count()):
+					layout.removeWidget(layout.itemAt(i).widget())
+			layout.addWidget(view)
+		except:
+			eps = eps_formatter(data, format)
+			out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
+			with open(out_eps, 'wb') as f:
+				f.write(eps)
+			cmd = "open " + out_eps
+			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+			             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+
+
+
+	def makeAALogo(self):
+		listItems = self.ui.listWidgetStrainsIn.selectedItems()
+		WhereState = ''
+		NumSeqs = len(listItems)
+		# if not listItems: do nothing
+		DataSet = []
+		if NumSeqs < 1:
+			return
+		else:
+			i = 1
+			for item in listItems:
+
+				eachItemIs = item.text()
+				WhereState += 'SeqName = "' + eachItemIs + '"'
+				if NumSeqs > i:
+					WhereState += ' OR '
+				i += 1
+
+			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+
+			for item in DataIn:
+				SeqName = item[0]
+				Sequence = item[1]
+				VFrom = int(item[2]) - 1
+				if VFrom == -1: VFrom = 0
+
+				VTo = int(item[3])
+				Sequence = Sequence[VFrom:VTo]
+				AAseq, msg = Translator(Sequence, 0)
+				AAseq = AAseq.upper()
+				EachIn = (SeqName, AAseq)
+				DataSet.append(EachIn)
+
+		# align selected sequences using ClustalOmega
+		outfilename = ''
+		try:
+			if len(DataSet) == 1:
+				time_stamp = str(int(time.time() * 100))
+				outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
+				out_handle = open(outfilename, 'w')
+				out_handle.write('>' + DataSet[0][0] + '\n')
+				out_handle.write(DataSet[0][1])
+				out_handle.close()
+			else:
+				if os.path.exists(clustal_path):
+					outfilename = LibratorSeq.ClustalO(DataSet, 80, True, temp_folder, clustal_path)
+				else:
+					QMessageBox.warning(self, 'Warning',
+					                    'The Clustal Omega does not exist! Check your path!', QMessageBox.Ok,
+					                    QMessageBox.Ok)
+					return
+		except:
+			return
+
+		# start web logo
+		f = open(outfilename)
+		seqs = read_seq_data(f)
+		data = LogoData.from_seqs(seqs)
+
+		options = LogoOptions()
+		options.fineprint = 'Librator\nGenerated by WebLogo 3.7'
+		format = LogoFormat(data, options)
+
+		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+
+		try:
+			svg = svg_formatter(data, format)
+			svg = svg.decode("utf-8")
+
+			out_svg = os.path.join(temp_folder, "out-" + time_stamp + ".html")
+			with open(out_svg, 'w') as f:
+				f.write('<!DOCTYPE html>\n<html>\n<body style="margin-left: 0px;\n">')
+				f.write(svg)
+				f.write('\n</body>\n</html>')
+
+			# display
+			view = QWebEngineView()
+			view.load(QUrl("file://" + out_svg))
+			view.show()
+
+			layout = self.ui.groupBoxLogo.layout()
+			if layout == None:
+				layout = QGridLayout(self.ui.groupBoxLogo)
+			else:
+				for i in range(layout.count()):
+					layout.removeWidget(layout.itemAt(i).widget())
+			layout.addWidget(view)
+		except:
+			eps = eps_formatter(data, format)
+			out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
+			with open(out_eps, 'wb') as f:
+				f.write(eps)
+			cmd = "open " + out_eps
+			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+			             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 
 	def loadFragmentInfo(self):
 		global working_prefix
