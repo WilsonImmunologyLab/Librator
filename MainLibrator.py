@@ -13,7 +13,7 @@ from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtWebChannel import *
 from pyecharts.charts import Bar, Pie, Line, Page, Grid
 from pyecharts import options as opts
-from weblogo import *
+from weblogo import read_seq_data, LogoData, LogoOptions, LogoFormat, eps_formatter, svg_formatter
 
 from HA_numbering_function import HA_numbering_Jesse
 from itertools import combinations
@@ -427,7 +427,7 @@ class jointDialog(QtWidgets.QDialog):
 		self.close()
 
 class treeDialog(QtWidgets.QDialog):
-	treeSignal = pyqtSignal(list, str)
+	treeSignal = pyqtSignal(list, str, str)
 	def __init__(self):
 		super(treeDialog, self).__init__()
 		self.ui = Ui_treeDialog()
@@ -516,7 +516,7 @@ class treeDialog(QtWidgets.QDialog):
 			seq = seq[start:end]
 			seq_list.append([self.names[i],seq])
 
-		self.treeSignal.emit(seq_list, self.path)
+		self.treeSignal.emit(seq_list, self.path, self.seq_type)
 		self.close()
 
 	def DecorateRegion(self, start, end, seq_len, num_len):
@@ -4454,7 +4454,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 					tmp_seq += Readline
 		seq_seqs.append(tmp_seq)
 
-		self.open_tree_dialog(seq_names, seq_seqs, this_folder)
+		self.open_tree_dialog(seq_names, seq_seqs, this_folder, 'AA')
 
 	@pyqtSlot()
 	def on_actionNTTree_triggered(self):
@@ -4549,7 +4549,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 					tmp_seq += Readline
 		seq_seqs.append(tmp_seq)
 
-		self.open_tree_dialog(seq_names, seq_seqs, this_folder)
+		self.open_tree_dialog(seq_names, seq_seqs, this_folder, 'NT')
 
 	@pyqtSlot()
 	def on_actionMultiple_Alignement_triggered(self):
@@ -12059,7 +12059,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.modalessDeleteDialog.close()
 
-	def open_tree_dialog(self, Names, Seqs, this_path):
+	def open_tree_dialog(self, Names, Seqs, this_path, seq_type):
 		self.modalessTreeDialog = treeDialog()
 
 		self.modalessTreeDialog.ui.nameList.addItems(Names)
@@ -12068,11 +12068,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessTreeDialog.path = this_path
 		self.modalessTreeDialog.names = Names
 		self.modalessTreeDialog.seqs = Seqs
+		self.modalessTreeDialog.seq_type = seq_type
 		self.modalessTreeDialog.treeSignal.connect(self.drawTree)
 
 		self.modalessTreeDialog.show()
 
-	def drawTree(self, Data, this_path):
+	def drawTree(self, Data, this_path, seq_type):
 		global raxml_path
 		global figtree_path
 		outfilename = this_path + "/alignment_parsed.fas"
@@ -12087,9 +12088,46 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# generate tree
 		cmd = 'cd ' + this_path + ';'
 		cmd += raxml_path
-		cmd += ' -m PROTGAMMAAUTO -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
+		if seq_type == "AA":
+			cmd += ' -m PROTGAMMAAUTO -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
+		elif seq_type == "NT":
+			cmd += ' -m GTRGAMMA -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
+		else:
+			return
 		os.system(cmd)
 
+		# generate html page
+		treefile = os.path.join(this_path, 'RAxML_bestTree.tree')
+		f = open(treefile, 'r')
+		tree_str = f.readline()
+		f.close()
+		tree_str = 'var test_string = "' + tree_str.rstrip("\n") + '";\n'
+
+		out_html_file = os.path.join(this_path, 'tree.html')
+		header_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'template5.html')
+		shutil.copyfile(header_file, out_html_file)
+
+		foot = 'var container_id = "#tree_container";\nvar svg = d3.select(container_id).append("svg")' \
+		       '.attr("width", width).attr("height", height);\n$( document ).ready( function () {' \
+		       'default_tree_settings();tree(test_string).svg (svg).layout();update_selection_names();' \
+		       '});\n</script>\n</body>\n</html>'
+		out_file_handle = open(out_html_file, 'a')
+		out_file_handle.write(tree_str)
+		out_file_handle.write(foot)
+		out_file_handle.close()
+
+		# display
+		window_id = int(time.time() * 100)
+		VGenesTextWindows[window_id] = htmlDialog()
+		VGenesTextWindows[window_id].id = window_id
+		layout = QGridLayout(VGenesTextWindows[window_id])
+		view = QWebEngineView(self)
+		view.load(QUrl("file://" + out_html_file))
+		view.show()
+		layout.addWidget(view)
+		VGenesTextWindows[window_id].show()
+
+		'''
 		# open file folder
 		my_cur_os = system()
 		if my_cur_os == 'Windows':
@@ -12116,7 +12154,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			                    'Can not find FigTree in your computer! Please open trees manually in the folder',
 			                    QMessageBox.Ok,
 			                    QMessageBox.Ok)
-
+		'''
 	def open_fusion_dialog(self):
 		if self.ui.lblBaseName.toPlainText() == "":
 			QMessageBox.warning(self, 'Warning', 'Please determine a base sequence first!', QMessageBox.Ok, QMessageBox.Ok)
