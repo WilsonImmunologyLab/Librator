@@ -5156,6 +5156,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
 
+
 		if self.ui.radioButtonPop.isChecked():
 			eps = eps_formatter(data, format)
 			out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
@@ -5271,7 +5272,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
 			             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 		else:
-
 			try:
 				svg = svg_formatter(data, format)
 				svg = svg.decode("utf-8")
@@ -12095,6 +12095,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		else:
 			return
 		os.system(cmd)
+		print("tree done!")
 
 		# generate html page
 		treefile = os.path.join(this_path, 'RAxML_bestTree.tree')
@@ -12116,6 +12117,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		out_file_handle.write(foot)
 		out_file_handle.close()
 
+		print("html done!")
 		# display
 		window_id = int(time.time() * 100)
 		VGenesTextWindows[window_id] = htmlDialog()

@@ -2120,7 +2120,7 @@
         <string>Alignement (HTML) page</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_7">
-        <item row="0" column="0">
+        <item row="0" column="0" colspan="2">
          <widget class="QGroupBox" name="MSAgroupBox">
           <property name="font">
            <font>
@@ -2136,22 +2136,9 @@
       </widget>
       <widget class="QWidget" name="tab">
        <attribute name="title">
-        <string>AlignmentLogo</string>
+        <string>Seq Logo</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_11">
-        <item row="0" column="2">
-         <widget class="QRadioButton" name="radioButtonPop">
-          <property name="maximumSize">
-           <size>
-            <width>270</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>Open Alignment Logo on a pop-up page</string>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="0">
          <widget class="QPushButton" name="pushButtonAA">
           <property name="minimumSize">
@@ -2174,19 +2161,6 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="0" colspan="4">
-         <widget class="QGroupBox" name="groupBoxLogo">
-          <property name="font">
-           <font>
-            <pointsize>15</pointsize>
-           </font>
-          </property>
-          <property name="title">
-           <string>Multiple Sequence Alignment Logo</string>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_14"/>
-         </widget>
-        </item>
         <item row="0" column="1">
          <widget class="QPushButton" name="pushButtonNT">
           <property name="minimumSize">
@@ -2206,18 +2180,37 @@
           </property>
          </widget>
         </item>
+        <item row="0" column="2">
+         <widget class="QRadioButton" name="radioButtonPop">
+          <property name="text">
+           <string>Open Sequence Logo on a popup window</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="3">
-         <spacer name="horizontalSpacer_5">
+         <spacer name="horizontalSpacer_8">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>40</width>
+            <width>242</width>
             <height>20</height>
            </size>
           </property>
          </spacer>
+        </item>
+        <item row="1" column="0" colspan="4">
+         <widget class="QGroupBox" name="groupBoxLogo">
+          <property name="font">
+           <font>
+            <pointsize>14</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>Sequence Logo</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

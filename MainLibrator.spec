@@ -14,6 +14,7 @@ added_files = [
              ('/Users/leil/Documents/Projects/Librator/Resources/Data/template2.html','Data'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Data/template3.html','Data'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Data/template4.html','Data'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Data/template5.html','Data'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Conf/db_record.txt','Conf'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Conf/db_record.txt','Temp'),
              ('/Users/leil/Documents/Projects/Librator/Resources/PDB/4jtv.cif','PDB'),
@@ -22,7 +23,15 @@ added_files = [
              ('/Users/leil/Documents/Projects/Librator/Resources/Tools/muscle','Tools'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Tools/clustalo','Tools'),
              ('/Users/leil/Documents/Projects/Librator/Resources/Js/echarts.min.js','Js'),
-             ('/Users/leil/Documents/Projects/Librator/Resources/Js/jquery.js','Js')
+             ('/Users/leil/Documents/Projects/Librator/Resources/Js/jquery.js','Js'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Js/phylotree.css','Js'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Js/phylotree.js','Js'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Js/underscore-min.js','Js'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Js/d3.js','Js'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Js/bootstrap.min.css','Js'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Js/bootstrap-theme.min.css','Js'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Js/bootstrap.min.js','Js'),
+             ('/Users/leil/Documents/Projects/Librator/Resources/Js/underscore-min.map','Js')
              ]
 
 
