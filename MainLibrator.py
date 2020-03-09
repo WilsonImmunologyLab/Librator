@@ -3657,7 +3657,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
 		             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 
-
 	def calEntropy(self, file):
 		Peptide_position = []
 
@@ -5340,25 +5339,39 @@ class LibratorMain(QtWidgets.QMainWindow):
 				DataSet.append(EachIn)
 
 		# align selected sequences using ClustalOmega
-		outfilename = ''
-		try:
-			if len(DataSet) == 1:
-				time_stamp = str(int(time.time() * 100))
-				outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
-				out_handle = open(outfilename, 'w')
-				out_handle.write('>' + DataSet[0][0] + '\n')
-				out_handle.write(DataSet[0][1])
-				out_handle.close()
-			else:
-				if os.path.exists(clustal_path):
-					outfilename = LibratorSeq.ClustalO(DataSet, 80, True, temp_folder, clustal_path)
-				else:
-					QMessageBox.warning(self, 'Warning',
-					                    'The Clustal Omega does not exist! Check your path!', QMessageBox.Ok,
-					                    QMessageBox.Ok)
-					return
-		except:
-			return
+		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+		outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
+		aafilename = os.path.join(temp_folder, "in-" + time_stamp + ".fas")
+		if len(DataSet) == 1:
+			SeqName = DataSet[0][0].replace('\n', '').replace('\r', '')
+			SeqName = SeqName.strip()
+			NTseq = DataSet[0][1]
+			AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
+			all_dict[SeqName] = [NTseq, AAseq]
+
+			out_handle = open(outfilename, 'w')
+			out_handle.write('>' + SeqName + '\n')
+			out_handle.write(AAseq)
+			out_handle.close()
+		else:
+			aa_handle = open(aafilename, 'w')
+			for record in DataSet:
+				SeqName = record[0].replace('\n', '').replace('\r', '')
+				SeqName = SeqName.strip()
+				NTseq = record[1]
+				aa_handle.write('>' + SeqName + '\n')
+				aa_handle.write(NTseq + '\n')
+			aa_handle.close()
+
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+			try:
+				os.system(cmd)
+			except:
+				QMessageBox.warning(self, 'Warning', 'Fail to run muscle! Check your muscle path!',
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+				return
 
 		# start web logo
 		f = open(outfilename)
@@ -5447,25 +5460,37 @@ class LibratorMain(QtWidgets.QMainWindow):
 				DataSet.append(EachIn)
 
 		# align selected sequences using ClustalOmega
-		outfilename = ''
-		try:
-			if len(DataSet) == 1:
-				time_stamp = str(int(time.time() * 100))
-				outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
-				out_handle = open(outfilename, 'w')
-				out_handle.write('>' + DataSet[0][0] + '\n')
-				out_handle.write(DataSet[0][1])
-				out_handle.close()
-			else:
-				if os.path.exists(clustal_path):
-					outfilename = LibratorSeq.ClustalO(DataSet, 80, True, temp_folder, clustal_path)
-				else:
-					QMessageBox.warning(self, 'Warning',
-					                    'The Clustal Omega does not exist! Check your path!', QMessageBox.Ok,
-					                    QMessageBox.Ok)
-					return
-		except:
-			return
+		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+		outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
+		aafilename = os.path.join(temp_folder, "in-" + time_stamp + ".fas")
+		if len(DataSet) == 1:
+			SeqName = DataSet[0][0].replace('\n', '').replace('\r', '')
+			SeqName = SeqName.strip()
+			AAseq = DataSet[0][1]
+
+			out_handle = open(outfilename, 'w')
+			out_handle.write('>' + SeqName + '\n')
+			out_handle.write(AAseq)
+			out_handle.close()
+		else:
+			aa_handle = open(aafilename, 'w')
+			for record in DataSet:
+				SeqName = record[0].replace('\n', '').replace('\r', '')
+				SeqName = SeqName.strip()
+				AAseq = record[1]
+				aa_handle.write('>' + SeqName + '\n')
+				aa_handle.write(AAseq + '\n')
+			aa_handle.close()
+
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+			try:
+				os.system(cmd)
+			except:
+				QMessageBox.warning(self, 'Warning', 'Fail to run muscle! Check your muscle path!',
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+				return
 
 		# start web logo
 		f = open(outfilename)
