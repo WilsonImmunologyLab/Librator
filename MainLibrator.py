@@ -24,6 +24,7 @@ import os, sys, re, time, string, sip, csv
 import pandas as pd
 import numpy as np
 import shutil
+import math
 
 import matplotlib
 matplotlib.use("Qt5Agg")
@@ -3446,6 +3447,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.treeWidget.itemClicked['QTreeWidgetItem*', 'int'].connect(self.TreeItemClicked)
 		self.ui.pushButtonNT.clicked.connect(self.makeNTLogo)
 		self.ui.pushButtonAA.clicked.connect(self.makeAALogo)
+		self.ui.toolButtonConserve.clicked.connect(self.showDiverse)
 
 		self.ui.cboRole.last_value = ''
 		self.ui.cboForm.last_value = ''
@@ -3490,6 +3492,219 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.HTMLview1.resizeSignal.connect(self.resizeHTML)
 		self.ui.HTMLview2.resizeSignal.connect(self.resizeHTML)
 		self.ui.HTMLview3.resizeSignal.connect(self.resizeHTML)
+
+	def showDiverse(self):
+		global H1Numbering
+		global H3Numbering
+		# get selected data
+		listItems = self.ui.listWidgetStrainsIn.selectedItems()
+		WhereState = ''
+		NumSeqs = len(listItems)
+		AlignIn = []
+		subtype = ''
+		
+		if NumSeqs < 1:
+			pass
+		else:
+			i = 1
+			for item in listItems:
+
+				eachItemIs = item.text()
+				WhereState += 'SeqName = "' + eachItemIs + '"'
+				if NumSeqs > i:
+					WhereState += ' OR '
+				i += 1
+
+			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo, Subtype FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+
+			for item in DataIn:
+				if subtype == '':
+					subtype = item[4]
+				else:
+					if subtype != item[4]:
+						Msg = 'This function only allow same subtype!'
+						QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+						return
+				SeqName = item[0]
+				Sequence = item[1]
+				VFrom = int(item[2]) - 1
+				if VFrom == -1: VFrom = 0
+
+				VTo = int(item[3])
+				Sequence = Sequence[VFrom:VTo]
+				Sequence = Sequence.upper()
+				EachIn = (SeqName, Sequence)
+				AlignIn.append(EachIn)
+
+		# align selected sequences (AA) using muscle
+		all_dict = dict()
+		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+		outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
+		aafilename = os.path.join(temp_folder, "in-" + time_stamp + ".fas")
+		if len(AlignIn) == 1:
+			SeqName = AlignIn[0][0].replace('\n', '').replace('\r', '')
+			SeqName = SeqName.strip()
+			NTseq = AlignIn[0][1]
+			AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
+			all_dict[SeqName] = [NTseq, AAseq]
+
+			out_handle = open(outfilename, 'w')
+			out_handle.write('>' + SeqName + '\n')
+			out_handle.write(AAseq)
+			out_handle.close()
+		else:
+			aa_handle = open(aafilename, 'w')
+			for record in AlignIn:
+				SeqName = record[0].replace('\n', '').replace('\r', '')
+				SeqName = SeqName.strip()
+				NTseq = record[1]
+				AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
+				all_dict[SeqName] = [NTseq, AAseq]
+				aa_handle.write('>' + SeqName + '\n')
+				aa_handle.write(AAseq + '\n')
+			aa_handle.close()
+
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+			try:
+				os.system(cmd)
+			except:
+				QMessageBox.warning(self, 'Warning', 'Fail to run muscle! Check your muscle path!',
+				                    QMessageBox.Ok,
+				                    QMessageBox.Ok)
+				return
+
+		# calculate entropy from alignment file
+		Entropy = self.calEntropy(outfilename)
+
+		# assign entropy score for each H1/H3 position on 3D structure
+		HANumbering(Entropy[0])
+		if subtype in Group2:
+			my_ha_numbering = H3Numbering
+		elif subtype in Group1:
+			my_ha_numbering = H1Numbering
+		elif subtype in GroupNA or subtype == 'B' or subtype == 'Other':
+			QMessageBox.warning(self, 'Warning', 'NA, B are not supported now!',
+			                    QMessageBox.Ok, QMessageBox.Ok)
+			return
+		else:
+			QMessageBox.warning(self, 'Warning', 'Something wrong with the subtype!',
+			                    QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		stat_ha1_res = [[],[],[],[],[],[]]
+		stat_ha2_res = [[],[],[],[],[],[]]
+
+		cur_line_num = 0
+		for line in my_ha_numbering:
+			if isinstance(my_ha_numbering[line][2],int):
+				score = int(Entropy[1][cur_line_num]/4.32*5)
+				if my_ha_numbering[line][0] == "HA1":
+					stat_ha1_res[score].append(my_ha_numbering[line][2])
+				else:
+					stat_ha2_res[score].append(my_ha_numbering[line][2])
+			cur_line_num += 1
+
+		# make pml script
+		color_dict = {5: "0x2B378E",
+		              4: "0x467DB4",
+		              3: "0x65B3C1",
+		              2: "0x91CDBB",
+		              1: "0xCEE6B9",
+		              0: "0xFDFAD1"}
+		if subtype in Group2:
+			pdbPath = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4jtv.cif')
+		elif subtype in Group1:
+			pdbPath = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4hmg.cif')
+
+		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime()) + '.pml'
+		pml_path = os.path.join(temp_folder, time_stamp)
+		with open(pml_path, "w") as pml:
+			# write pml script
+			text = 'set assembly, 1\n'
+			text += "load " + pdbPath + "\n"
+			pml.write(text)
+			text = "as cartoon\n" \
+			       + "show surface\n" \
+			       + "bg_color white\n" \
+			       + "color " + color_dict[5] + "\n"
+			pml.write(text)
+
+			iter = 0
+			for ele in stat_ha1_res:
+				if len(ele) > 0:
+					if iter < 5:
+						str_ele = [str(i) for i in ele]
+						text = 'sel HA1-' + str(iter) + ', chain A+C+E+G+I+K and (resi ' + '+'.join(str_ele) + ')\n'
+						text = text + 'color ' + color_dict[iter] + ', HA1-' + str(iter) + '\n'
+						pml.write(text)
+				iter += 1
+
+			iter = 0
+			for ele in stat_ha2_res:
+				if len(ele) > 0:
+					if iter < 5:
+						str_ele = [str(i) for i in ele]
+						text = 'sel HA2-' + str(iter) + ', chain B+D+F+H+J+L and (resi ' + '+'.join(str_ele) + ')\n'
+						text += 'color ' + color_dict[iter] + ', HA2-' + str(iter) + '\n'
+						pml.write(text)
+				iter += 1
+
+		# open pml script with PyMOL
+		cmd = pymol_path + " " + pml_path
+		# print(cmd)
+		bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+		             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+
+
+	def calEntropy(self, file):
+		Peptide_position = []
+
+		f = open(file,'r')
+		lines = f.readlines()
+		f.close()
+
+		iter = 0
+		seq = ''
+		seq_num = 0
+		for line in lines:
+			if line[0] == '>':
+				seq_num += 1
+				if seq == '':
+					pass
+				else:
+					if len(Peptide_position) == 0:
+						for str in seq:
+							Peptide_position.append([str])
+					else:
+						iter = 0
+						for str in seq:
+							Peptide_position[iter].append(str)
+							iter += 1
+				seq = ''
+			else:
+				seq += line.strip('\n')
+		if len(Peptide_position) == 0:
+			for str in seq:
+				Peptide_position.append([str])
+		else:
+			iter = 0
+			for str in seq:
+				Peptide_position[iter].append(str)
+				iter += 1
+
+		Consensus = ''
+		Entorpy = []
+		for Peptide in Peptide_position:
+			cur_stat = Counter(Peptide)
+			Consensus += cur_stat.most_common(1)[0][0]
+			cur_score = 4.32
+			for value in cur_stat.values():
+				cur_score = cur_score - (-1*value/seq_num*math.log(value/seq_num,2))
+			Entorpy.append(cur_score)
+		
+		return [Consensus, Entorpy]
 
 	def ChangeEditMode(self):
 		if self.ui.SeqTable.editTriggers() == QtWidgets.QAbstractItemView.NoEditTriggers:
