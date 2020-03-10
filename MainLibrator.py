@@ -3480,7 +3480,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.comboBoxHANA_html.currentIndexChanged.connect(self.reloadHTML)
 		self.ui.comboBoxIndex_html = QComboBox()
 		self.ui.comboBoxIndex_html.addItem("Percentage of Variation")
-		self.ui.comboBoxIndex_html.addItem("Amino Acid Variation Index")
+		self.ui.comboBoxIndex_html.addItem("Entropy")
 		self.ui.comboBoxIndex_html.currentIndexChanged.connect(self.reloadHTML)
 		self.ui.HTMLview3 = ResizeWidget(self)
 		self.ui.HTMLview3.id = 3
@@ -3822,7 +3822,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 					.add_yaxis("Season H1", data_array[0], is_symbol_show=False)
 					.add_yaxis("pdm09 H1", data_array[1], is_symbol_show=False)
 					.set_global_opts(
-					title_opts=opts.TitleOpts(title="Variations for H1(AAVI)", subtitle="human H1"),
+					title_opts=opts.TitleOpts(title="Entropy for H1", subtitle="human H1"),
 					#toolbox_opts=opts.ToolboxOpts()
 					)
 				)
@@ -3846,7 +3846,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 					.add_xaxis(range(1, len(data_array[0]) + 1))
 					.add_yaxis("H3", data_array[0], is_symbol_show=False)
 					.set_global_opts(
-					title_opts=opts.TitleOpts(title="Variations for H3(AAVI)", subtitle="human H3"),
+					title_opts=opts.TitleOpts(title="Entropy for H3", subtitle="human H3"),
 					#toolbox_opts=opts.ToolboxOpts()
 					)
 				)
@@ -3878,7 +3878,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 					.add_yaxis("N8", data_array[7], is_symbol_show=False)
 					.add_yaxis("N9", data_array[8], is_symbol_show=False)
 					.set_global_opts(
-					title_opts=opts.TitleOpts(title="Variations for NA(AAVI)", subtitle="human NA"),
+					title_opts=opts.TitleOpts(title="Entropy for NA", subtitle="human NA"),
 					#toolbox_opts=opts.ToolboxOpts()
 					)
 				)
@@ -5053,7 +5053,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 				self.ui.comboBoxIndex = QComboBox()
 				self.ui.comboBoxIndex.addItem("Percentage of Variation")
-				self.ui.comboBoxIndex.addItem("Amino Acid Variation Index")
+				self.ui.comboBoxIndex.addItem("Entropy")
 				self.ui.comboBoxIndex.currentIndexChanged.connect(self.FigChange)
 
 				self.Stat_fig()
@@ -5347,7 +5347,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			SeqName = SeqName.strip()
 			NTseq = DataSet[0][1]
 			AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
-			all_dict[SeqName] = [NTseq, AAseq]
 
 			out_handle = open(outfilename, 'w')
 			out_handle.write('>' + SeqName + '\n')
@@ -5893,20 +5892,20 @@ class LibratorMain(QtWidgets.QMainWindow):
 			i = 0
 			for joint in H1_joint:
 				if i == 0:
-					self.F.axes.plot([joint[0], joint[1]], [2.5, 2.5], color='r', linewidth=3, label="Joint region")
+					self.F.axes.plot([joint[0], joint[1]], [1, 1], color='r', linewidth=3, label="Joint region")
 					i += 1
 				else:
-					self.F.axes.plot([joint[0], joint[1]], [2.5, 2.5], color='r', linewidth=3)
+					self.F.axes.plot([joint[0], joint[1]], [1, 1], color='r', linewidth=3)
 			if len(H1_joint_user) > 0:
 				i = 0
 				for joint in H1_joint_user:
 					if i == 0:
-						self.F.axes.plot([joint[0], joint[1]], [5, 5], color='b', linewidth=3, label="Joint region (User)")
+						self.F.axes.plot([joint[0], joint[1]], [1.5, 1.5], color='b', linewidth=3, label="Joint region (User)")
 						i += 1
 					else:
-						self.F.axes.plot([joint[0], joint[1]], [5, 5], color='b', linewidth=3)
+						self.F.axes.plot([joint[0], joint[1]], [1.5, 1.5], color='b', linewidth=3)
 
-			self.F.fig.suptitle("Amino Acid Variation Index for H1")
+			self.F.fig.suptitle("Entropy for H1")
 			self.F.fig.legend()
 			self.F.axes.spines['top'].set_visible(False)
 			self.F.axes.spines['right'].set_visible(False)
@@ -5933,20 +5932,20 @@ class LibratorMain(QtWidgets.QMainWindow):
 			i = 0
 			for joint in H3_joint:
 				if i == 0:
-					self.F.axes.plot([joint[0],joint[1]], [5, 5], color='r', linewidth = 3, label="Joint region")
+					self.F.axes.plot([joint[0],joint[1]], [1, 1], color='r', linewidth = 3, label="Joint region")
 					i += 1
 				else:
-					self.F.axes.plot([joint[0], joint[1]], [5, 5], color='r', linewidth = 3)
+					self.F.axes.plot([joint[0], joint[1]], [1, 1], color='r', linewidth = 3)
 			if len(H3_joint_user) > 0:
 				i = 0
 				for joint in H3_joint_user:
 					if i == 0:
-						self.F.axes.plot([joint[0], joint[1]], [10, 10], color='b', linewidth=3, label="Joint region (User)")
+						self.F.axes.plot([joint[0], joint[1]], [1.5, 1.5], color='b', linewidth=3, label="Joint region (User)")
 						i += 1
 					else:
-						self.F.axes.plot([joint[0], joint[1]], [10, 10], color='b', linewidth=3)
+						self.F.axes.plot([joint[0], joint[1]], [1.5, 1.5], color='b', linewidth=3)
 
-			self.F.fig.suptitle("Amino Acid Variation Index for H3")
+			self.F.fig.suptitle("Entropy for H3")
 			self.F.fig.legend()
 			self.F.axes.spines['top'].set_visible(False)
 			self.F.axes.spines['right'].set_visible(False)
@@ -5981,20 +5980,20 @@ class LibratorMain(QtWidgets.QMainWindow):
 			i = 0
 			for joint in NA_joint:
 				if i == 0:
-					self.F.axes.plot([joint[0], joint[1]], [10, 10], color='r', linewidth=3, label="Joint region")
+					self.F.axes.plot([joint[0], joint[1]], [2, 2], color='r', linewidth=3, label="Joint region")
 					i += 1
 				else:
-					self.F.axes.plot([joint[0], joint[1]], [10, 10], color='r', linewidth=3)
+					self.F.axes.plot([joint[0], joint[1]], [2, 2], color='r', linewidth=3)
 			if len(NA_joint_user) > 0:
 				i = 0
 				for joint in NA_joint_user:
 					if i == 0:
-						self.F.axes.plot([joint[0], joint[1]], [15, 15], color='b', linewidth=3, label="Joint region (User)")
+						self.F.axes.plot([joint[0], joint[1]], [2.5, 2.5], color='b', linewidth=3, label="Joint region (User)")
 						i += 1
 					else:
-						self.F.axes.plot([joint[0], joint[1]], [15, 15], color='b', linewidth=3)
+						self.F.axes.plot([joint[0], joint[1]], [2.5, 2.5], color='b', linewidth=3)
 
-			self.F.fig.suptitle("Amino Acid Variation Index for NA")
+			self.F.fig.suptitle("Entropy for NA")
 			self.F.fig.legend()
 			self.F.axes.spines['top'].set_visible(False)
 			self.F.axes.spines['right'].set_visible(False)
