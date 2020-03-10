@@ -2,32 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f472839-8a65-4dce-be83-d1c7511e6e93" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DB/Test.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/Test.ldb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Conf/joint_setting.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Data/H1_AAVI.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Data/H1_PCT.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Data/H3_AAVI.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Data/H3_PCT.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Data/NA_AAVI.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Data/NA_PCT.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Data/template.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Data/template1.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Data/template2.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Data/template3.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Data/template4.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Js/echarts.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Js/jquery.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/PDB/4hmg.cif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/PDB/4jtv.cif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Tools/clustalo" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Tools/muscle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Tools/raxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainLibrator.spec" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.spec" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/igphyml/Makefile.am" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/igphyml/Makefile.am" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tools/igphyml/src/Makefile.am" beforeDir="false" afterPath="$PROJECT_DIR$/Tools/igphyml/src/Makefile.am" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
