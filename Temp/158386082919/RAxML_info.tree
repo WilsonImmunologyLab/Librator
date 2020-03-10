@@ -1,0 +1,92 @@
+
+
+This is RAxML version 8.0.0 released by Alexandros Stamatakis on Dec 13 2013.
+
+With greatly appreciated code contributions by:
+Andre Aberer      (HITS)
+Simon Berger      (HITS)
+Alexey Kozlov     (HITS)
+Nick Pattengale   (Sandia)
+Wayne Pfeiffer    (SDSC)
+Akifumi S. Tanabe (NRIFS)
+David Dao         (KIT)
+Charlie Taylor    (UF)
+
+
+Alignment has 227 distinct alignment patterns
+
+Proportion of gaps and completely undetermined characters in this alignment: 2.60%
+
+RAxML rapid hill-climbing mode
+
+Using 1 distinct models/data partitions with joint branch length optimization
+
+
+Executing 1 inferences on the original alignment using 1 distinct randomized MP trees
+
+All free model parameters will be estimated by RAxML
+GAMMA model of rate heteorgeneity, ML estimate of alpha-parameter
+
+GAMMA Model parameters will be estimated up to an accuracy of 0.1000000000 Log Likelihood units
+
+Partition: 0
+Alignment Patterns: 227
+Name: No Name Provided
+DataType: AA
+Substitution Matrix: AUTO
+Using fixed base frequencies
+
+
+
+
+RAxML was called as follows:
+
+/Users/leil/Documents/Projects/Librator/Librator/../Resources/Tools/raxml -m PROTGAMMAAUTO -p 12345 -T 2 -s /Users/leil/Documents/Projects/Librator/Librator/Resources/Temp/158386082919/alignment_parsed.fas -n tree 
+
+
+Partition: 0 with name: No Name Provided
+Base frequencies: 0.087 0.044 0.039 0.057 0.019 0.037 0.058 0.083 0.024 0.049 0.086 0.062 0.020 0.038 0.046 0.070 0.061 0.014 0.035 0.071 
+
+Automatic protein model assignment algorithm:
+
+	Partition: 0 best-scoring AA model: FLU likelihood -3638.987027
+
+
+Automatic protein model assignment algorithm:
+
+	Partition: 0 best-scoring AA model: FLU likelihood -3628.768664
+
+
+Automatic protein model assignment algorithm:
+
+	Partition: 0 best-scoring AA model: FLU likelihood -3628.766150
+
+
+Automatic protein model assignment algorithm:
+
+	Partition: 0 best-scoring AA model: FLU likelihood -3628.234305
+
+
+Inference[0]: Time 1.763286 GAMMA-based likelihood -3628.233380, best rearrangement setting 5
+alpha[0]: 0.459345 
+
+
+Conducting final model optimizations on all 1 trees under GAMMA-based models ....
+
+Automatic protein model assignment algorithm:
+
+	Partition: 0 best-scoring AA model: FLU likelihood -3628.233380
+
+
+Inference[0] final GAMMA-based Likelihood: -3628.233379 tree written to file /Users/leil/Documents/Projects/Librator/Librator/Resources/Temp/158386082919/RAxML_result.tree
+
+
+Starting final GAMMA-based thorough Optimization on tree 0 likelihood -3628.233379 .... 
+
+Final GAMMA-based Score of best tree -3628.233379
+
+Program execution info written to /Users/leil/Documents/Projects/Librator/Librator/Resources/Temp/158386082919/RAxML_info.tree
+Best-scoring ML tree written to: /Users/leil/Documents/Projects/Librator/Librator/Resources/Temp/158386082919/RAxML_bestTree.tree
+
+Overall execution time: 2.196532 secs or 0.000610 hours or 0.000025 days
+

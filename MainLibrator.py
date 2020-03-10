@@ -85,9 +85,9 @@ DBFilename = 'none'
 
 # read configure information from file. If no conf file, initial conf path
 global conf_file, ldb_file, joint_file
-conf_file = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), '..', 'Resources', 'Conf', 'path_setting.txt')
-ldb_file = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), '..', 'Resources', 'Conf', 'ldb_setting.txt')
-joint_file = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), '..', 'Resources', 'Conf', 'joint_setting.txt')
+conf_file = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), 'Conf', 'path_setting.txt')
+ldb_file = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), 'Conf', 'ldb_setting.txt')
+joint_file = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), 'Conf', 'joint_setting.txt')
 
 global working_prefix
 global temp_folder
@@ -99,7 +99,7 @@ global figtree_path
 global fragmentdb_path
 
 working_prefix = os.path.dirname(os.path.realpath(sys.argv[0])) + '/'
-temp_folder = os.path.join(working_prefix, '..', 'Resources', 'Temp')
+temp_folder = os.path.join(working_prefix, 'Temp')
 
 if os.path.exists(conf_file):   # if conf exist, read conf info from file
 	file_handle = open(conf_file, 'r')
@@ -115,10 +115,10 @@ if os.path.exists(conf_file):   # if conf exist, read conf info from file
 	if os.path.exists(muscle_path):
 		pass
 	else:	# if muscle_path does not exist, initial conf info and write to file
-		muscle_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'muscle')
-		clustal_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'clustalo')
+		muscle_path = os.path.join(working_prefix,  'Tools', 'muscle')
+		clustal_path = os.path.join(working_prefix, 'Tools', 'clustalo')
 		pymol_path = '/usr/local/bin/pymol'
-		raxml_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'raxml')
+		raxml_path = os.path.join(working_prefix,  'Tools', 'raxml')
 		figtree_path = '/Applications/FigTree.app/Contents/MacOS/universalJavaApplicationStub'
 
 		file_handle = open(conf_file, 'w')
@@ -129,10 +129,10 @@ if os.path.exists(conf_file):   # if conf exist, read conf info from file
 		file_handle.write(figtree_path)
 		file_handle.close()
 else:                           # if conf does not exist, initial conf info and write to file
-	muscle_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'muscle')
-	clustal_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'clustalo')
+	muscle_path = os.path.join(working_prefix, 'Tools', 'muscle')
+	clustal_path = os.path.join(working_prefix, 'Tools', 'clustalo')
 	pymol_path = '/usr/local/bin/pymol'
-	raxml_path = os.path.join(working_prefix, '..', 'Resources', 'Tools', 'raxml')
+	raxml_path = os.path.join(working_prefix,  'Tools', 'raxml')
 	figtree_path = '/Applications/FigTree.app/Contents/MacOS/universalJavaApplicationStub'
 
 	file_handle = open(conf_file, 'w')
@@ -2231,7 +2231,7 @@ class basePathDialog(QtWidgets.QDialog):
 				                    QMessageBox.Ok, QMessageBox.Ok)
 				return
 
-			mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
+			mysql_setting_file = os.path.join(working_prefix, 'Conf', 'mysql_setting.txt')
 			file_handle = open(mysql_setting_file, 'w')
 			my_info = self.ui.IPinput.text() + ',' + self.ui.Portinput.text() + ',' + self.ui.DBnameinput.text() + \
 			          ',' + self.ui.Userinput.text() + ',' + self.ui.Passinput.text()
@@ -2597,7 +2597,7 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 			text = '\n'.join(text)
 
 			# save MYSQL setting
-			mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
+			mysql_setting_file = os.path.join(working_prefix, 'Conf', 'mysql_setting.txt')
 			file_handle = open(mysql_setting_file, 'w')
 			my_info = self.ui.IPinput.text() + ',' + self.ui.Portinput.text() + ',' + self.ui.DBnameinput.text() + \
 			          ',' + self.ui.Userinput.text() + ',' + self.ui.Passinput.text()
@@ -3614,9 +3614,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		              1: "0xCEE6B9",
 		              0: "0xFDFAD1"}
 		if subtype in Group2:
-			pdbPath = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4jtv.cif')
+			pdbPath = os.path.join(working_prefix, 'PDB', '4jtv.cif')
 		elif subtype in Group1:
-			pdbPath = os.path.join(working_prefix, '..', 'Resources', 'PDB', '4hmg.cif')
+			pdbPath = os.path.join(working_prefix, 'PDB', '4hmg.cif')
 
 		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime()) + '.pml'
 		pml_path = os.path.join(temp_folder, time_stamp)
@@ -3722,7 +3722,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			######  plot stat for H1
 			if self.ui.comboBoxHANA_html.currentIndex() == 0 and self.ui.comboBoxIndex_html.currentIndex() == 0:  # H1 + PCT
 				# get data
-				data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H1_PCT.csv')
+				data_file = os.path.join(working_prefix, 'Data', 'H1_PCT.csv')
 				if os.path.exists(data_file):
 					pass
 				else:
@@ -3747,7 +3747,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				)
 			elif self.ui.comboBoxHANA_html.currentIndex() == 1 and self.ui.comboBoxIndex_html.currentIndex() == 0:  # H3 + PCT
 				# get data
-				data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H3_PCT.csv')
+				data_file = os.path.join(working_prefix,  'Data', 'H3_PCT.csv')
 				if os.path.exists(data_file):
 					pass
 				else:
@@ -3771,7 +3771,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				)
 			elif self.ui.comboBoxHANA_html.currentIndex() == 2 and self.ui.comboBoxIndex_html.currentIndex() == 0:  # NA + PCT
 				# get data
-				data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'NA_PCT.csv')
+				data_file = os.path.join(working_prefix,  'Data', 'NA_PCT.csv')
 				if os.path.exists(data_file):
 					pass
 				else:
@@ -3803,7 +3803,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				)
 			elif self.ui.comboBoxHANA_html.currentIndex() == 0 and self.ui.comboBoxIndex_html.currentIndex() == 1:  # H1 + AAVI
 				# get data
-				data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H1_AAVI.csv')
+				data_file = os.path.join(working_prefix,  'Data', 'H1_AAVI.csv')
 				if os.path.exists(data_file):
 					pass
 				else:
@@ -3828,7 +3828,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				)
 			elif self.ui.comboBoxHANA_html.currentIndex() == 1 and self.ui.comboBoxIndex_html.currentIndex() == 1:  # H3 + AAVI
 				# get data
-				data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H3_AAVI.csv')
+				data_file = os.path.join(working_prefix,  'Data', 'H3_AAVI.csv')
 				if os.path.exists(data_file):
 					pass
 				else:
@@ -3852,7 +3852,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				)
 			elif self.ui.comboBoxHANA_html.currentIndex() == 2 and self.ui.comboBoxIndex_html.currentIndex() == 1:  # NA + AAVI
 				# get data
-				data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'NA_AAVI.csv')
+				data_file = os.path.join(working_prefix,  'Data', 'NA_AAVI.csv')
 				if os.path.exists(data_file):
 					pass
 				else:
@@ -3891,7 +3891,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			file_handle.close()
 			# edit js line
 			js_line = '            <script type="text/javascript" src="' + \
-			          os.path.join(working_prefix, '..', 'Resources', 'Js', 'echarts.min.js') + '"></script>'
+			          os.path.join(working_prefix,  'Js', 'echarts.min.js') + '"></script>'
 			lines[5] = js_line
 			# edit style line
 			style_line = lines[9]
@@ -3944,7 +3944,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			file_handle.close()
 			# edit js line
 			js_line = '            <script type="text/javascript" src="' +\
-			          os.path.join(working_prefix,'..','Resources','Js','echarts.min.js') + '"></script>'
+			          os.path.join(working_prefix,'Js','echarts.min.js') + '"></script>'
 			lines[5] = js_line
 			#edit style line
 			style_line = lines[9]
@@ -3984,7 +3984,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			file_handle.close()
 			# edit js line
 			js_line = '            <script type="text/javascript" src="' + \
-			          os.path.join(working_prefix, '..', 'Resources', 'Js', 'echarts.min.js') + '"></script>'
+			          os.path.join(working_prefix,  'Js', 'echarts.min.js') + '"></script>'
 			lines[5] = js_line
 			# edit style line
 			style_line = lines[9]
@@ -4228,7 +4228,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global working_prefix
 		self.ui.cboRecent.clear()
 		self.ui.cboRecent.addItem('Open previous')
-		record_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'db_record.txt')
+		record_file = os.path.join(working_prefix,  'Conf', 'db_record.txt')
 		if os.path.isfile(record_file):
 			with open(record_file, 'r') as currentFile:
 				RecentFiles = currentFile.readlines()
@@ -5094,7 +5094,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				file_handle.close()
 				# edit js line
 				js_line = '            <script type="text/javascript" src="' + \
-				          os.path.join(working_prefix, '..', 'Resources', 'Js', 'echarts.min.js') + '"></script>'
+				          os.path.join(working_prefix,  'Js', 'echarts.min.js') + '"></script>'
 				lines[5] = js_line
 				# edit style line
 				style_line = lines[9]
@@ -5136,7 +5136,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				file_handle.close()
 				# edit js line
 				js_line = '            <script type="text/javascript" src="' + \
-				          os.path.join(working_prefix, '..', 'Resources', 'Js', 'echarts.min.js') + '"></script>'
+				          os.path.join(working_prefix,  'Js', 'echarts.min.js') + '"></script>'
 				lines[5] = js_line
 				# edit style line
 				style_line = lines[9]
@@ -5155,7 +5155,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			if self.ui.HTMLview3.h != 0:
 				######  plot stat for H1
 				# get data
-				data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H1_PCT.csv')
+				data_file = os.path.join(working_prefix,  'Data', 'H1_PCT.csv')
 				if os.path.exists(data_file):
 					pass
 				else:
@@ -5183,7 +5183,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				file_handle.close()
 				# edit js line
 				js_line = '            <script type="text/javascript" src="' + \
-				          os.path.join(working_prefix, '..', 'Resources', 'Js', 'echarts.min.js') + '"></script>'
+				          os.path.join(working_prefix,  'Js', 'echarts.min.js') + '"></script>'
 				lines[5] = js_line
 				# edit style line
 				style_line = lines[9]
@@ -5201,7 +5201,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.HTMLview3.show()
 		# Fragment DB
 		elif self.ui.tabWidget.currentIndex() == 7:
-			mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
+			mysql_setting_file = os.path.join(working_prefix, 'Conf', 'mysql_setting.txt')
 
 			if os.path.exists(mysql_setting_file):
 				my_open = open(mysql_setting_file, 'r')
@@ -5546,7 +5546,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global working_prefix
 		global fragmentdb_path
 
-		mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
+		mysql_setting_file = os.path.join(working_prefix,  'Conf', 'mysql_setting.txt')
 		if os.path.exists(mysql_setting_file):
 			my_open = open(mysql_setting_file, 'r')
 			my_info = my_open.readlines()
@@ -5733,7 +5733,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.F = MyFigure(width=6, height=3, dpi=160)
 
 		if self.ui.comboBoxHANA.currentIndex() == 0 and self.ui.comboBoxIndex.currentIndex() == 0:  # H1 + PCT
-			data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H1_PCT.csv')
+			data_file = os.path.join(working_prefix,  'Data', 'H1_PCT.csv')
 			if os.path.exists(data_file):
 				pass
 			else:
@@ -5777,7 +5777,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.F.axes.set_yticklabels(yticklabels)
 			self.F.fig.subplots_adjust(top = 0.95, bottom = 0.1, right = 0.98, left = 0.05, hspace = 0, wspace = 0)
 		elif self.ui.comboBoxHANA.currentIndex() == 1 and self.ui.comboBoxIndex.currentIndex() == 0:  # H3 + PCT
-			data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H3_PCT.csv')
+			data_file = os.path.join(working_prefix,  'Data', 'H3_PCT.csv')
 			if os.path.exists(data_file):
 				pass
 			else:
@@ -5820,7 +5820,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.F.axes.set_yticklabels(yticklabels)
 			self.F.fig.subplots_adjust(top = 0.95, bottom = 0.1, right = 0.98, left = 0.05, hspace = 0, wspace = 0)
 		elif self.ui.comboBoxHANA.currentIndex() == 2 and self.ui.comboBoxIndex.currentIndex() == 0:  # NA + PCT
-			data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'NA_PCT.csv')
+			data_file = os.path.join(working_prefix,  'Data', 'NA_PCT.csv')
 			if os.path.exists(data_file):
 				pass
 			else:
@@ -5872,7 +5872,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.F.fig.subplots_adjust(top=0.95, bottom=0.1, right=0.98, left=0.05, hspace=0, wspace=0)
 
 		elif self.ui.comboBoxHANA.currentIndex() == 0 and self.ui.comboBoxIndex.currentIndex() == 1:  # H1 + AAVI
-			data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H1_AAVI.csv')
+			data_file = os.path.join(working_prefix, 'Data', 'H1_AAVI.csv')
 			if os.path.exists(data_file):
 				pass
 			else:
@@ -5913,7 +5913,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.F.axes.spines['left'].set_position(('data', 0))
 			self.F.fig.subplots_adjust(top=0.95, bottom=0.1, right=0.98, left=0.05, hspace=0, wspace=0)
 		elif self.ui.comboBoxHANA.currentIndex() == 1 and self.ui.comboBoxIndex.currentIndex() == 1:  # H3 + AAVI
-			data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'H3_AAVI.csv')
+			data_file = os.path.join(working_prefix, 'Data', 'H3_AAVI.csv')
 			if os.path.exists(data_file):
 				pass
 			else:
@@ -5953,7 +5953,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.F.axes.spines['left'].set_position(('data', 0))
 			self.F.fig.subplots_adjust(top = 0.95, bottom = 0.1, right = 0.98, left = 0.05, hspace = 0, wspace = 0)
 		elif self.ui.comboBoxHANA.currentIndex() == 2 and self.ui.comboBoxIndex.currentIndex() == 1:  # NA + AAVI
-			data_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'NA_AAVI.csv')
+			data_file = os.path.join(working_prefix, 'Data', 'NA_AAVI.csv')
 			if os.path.exists(data_file):
 				pass
 			else:
@@ -11036,7 +11036,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 	@pyqtSlot()
 	def UpdateRecentFilelist(self, DBFilename):
 		global working_prefix
-		record_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'db_record.txt')
+		record_file = os.path.join(working_prefix,'Conf', 'db_record.txt')
 
 		if os.path.exists(record_file):
 			my_open = open(record_file, 'r')
@@ -11651,7 +11651,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			# load local structure. Can use without internet
 			pdbPath = pdbPath + '.cif'
-			pdbPath = os.path.join(working_prefix, '..', 'Resources', 'PDB', pdbPath)
+			pdbPath = os.path.join(working_prefix, 'PDB', pdbPath)
 			text += "load " + pdbPath + "\n"
 			pml.write(text)
 			text = "as cartoon\n" \
@@ -12195,7 +12195,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.modalessGibsonDialog.gibsonSignal.connect(self.GenerateGibson)
 
 			# check saved MYSQL setting
-			mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
+			mysql_setting_file = os.path.join(working_prefix, 'Conf', 'mysql_setting.txt')
 
 			if os.path.exists(mysql_setting_file):
 				my_open = open(mysql_setting_file, 'r')
@@ -12344,7 +12344,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		tree_str = 'var test_string = "' + tree_str.rstrip("\n") + '";\n'
 
 		out_html_file = os.path.join(this_path, 'tree.html')
-		header_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'template5.html')
+		header_file = os.path.join(working_prefix, 'Data', 'template5.html')
 		shutil.copyfile(header_file, out_html_file)
 
 		foot = 'var container_id = "#tree_container";\nvar svg = d3.select(container_id).append("svg")' \
@@ -12588,7 +12588,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessbaseDialog.ui.FragmentDB_path.setText(fragmentdb_path)
 
 		# check saved MYSQL setting
-		mysql_setting_file = os.path.join(working_prefix, '..', 'Resources', 'Conf', 'mysql_setting.txt')
+		mysql_setting_file = os.path.join(working_prefix,  'Conf', 'mysql_setting.txt')
 
 		if os.path.exists(mysql_setting_file):
 			my_open = open(mysql_setting_file, 'r')
@@ -14463,7 +14463,7 @@ def SequencesHTML(AAseq, info):
 	# initial and open HTML file
 	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
 	out_html_file = os.path.join(temp_folder, time_stamp + '.html')
-	header_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'template1.html')
+	header_file = os.path.join(working_prefix, 'Data', 'template1.html')
 	shutil.copyfile(header_file, out_html_file)
 	out_file_handle = open(out_html_file, 'a')
 
@@ -14695,9 +14695,9 @@ def AlignSequencesHTML(DataSet, template):
 	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
 	out_html_file = os.path.join(temp_folder, time_stamp + '.html')
 	if template == '':
-		header_file = os.path.join(working_prefix, '..', 'Resources', 'Data', 'template.html')
+		header_file = os.path.join(working_prefix, 'Data', 'template.html')
 	else:
-		header_file = os.path.join(working_prefix, '..', 'Resources', 'Data', template + '.html')
+		header_file = os.path.join(working_prefix, 'Data', template + '.html')
 	shutil.copyfile(header_file, out_html_file)
 	out_file_handle = open(out_html_file, 'a')
 
@@ -14911,7 +14911,7 @@ def EditSequencesHTML(DataSet, donor_region, template):
 	# initial and open HTML file
 	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
 	out_html_file = os.path.join(temp_folder, time_stamp + '.html')
-	header_file = os.path.join(working_prefix, '..', 'Resources', 'Data', template)
+	header_file = os.path.join(working_prefix, 'Data', template)
 	shutil.copyfile(header_file, out_html_file)
 	out_file_handle = open(out_html_file, 'a')
 
@@ -15216,9 +15216,9 @@ NA_end_user = []
 NA_start_user = []
 
 global H1_Gibson_file, H3_Gibson_file, NA_Gibson_file
-H1_Gibson_file = os.path.join(working_prefix, '..', 'Resources', 'Conf','H1_Gibson.txt')
-H3_Gibson_file = os.path.join(working_prefix, '..', 'Resources', 'Conf','H3_Gibson.txt')
-NA_Gibson_file = os.path.join(working_prefix, '..', 'Resources', 'Conf','NA_Gibson.txt')
+H1_Gibson_file = os.path.join(working_prefix, 'Conf','H1_Gibson.txt')
+H3_Gibson_file = os.path.join(working_prefix, 'Conf','H3_Gibson.txt')
+NA_Gibson_file = os.path.join(working_prefix, 'Conf','NA_Gibson.txt')
 
 if os.path.exists(H1_Gibson_file):
 	file_handle = open(H1_Gibson_file, 'r')
