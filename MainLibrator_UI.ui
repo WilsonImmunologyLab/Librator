@@ -238,7 +238,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sequence&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="usesScrollButtons">
        <bool>false</bool>
@@ -2143,7 +2143,7 @@
          <widget class="QPushButton" name="pushButtonNT">
           <property name="minimumSize">
            <size>
-            <width>250</width>
+            <width>200</width>
             <height>0</height>
            </size>
           </property>
@@ -2162,7 +2162,7 @@
          <widget class="QPushButton" name="pushButtonAA">
           <property name="minimumSize">
            <size>
-            <width>250</width>
+            <width>200</width>
             <height>0</height>
            </size>
           </property>
@@ -2187,7 +2187,7 @@
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>132</width>
+            <width>182</width>
             <height>20</height>
            </size>
           </property>
@@ -2204,22 +2204,32 @@
          <widget class="QToolButton" name="toolButtonConserve">
           <property name="minimumSize">
            <size>
-            <width>100</width>
+            <width>150</width>
             <height>0</height>
            </size>
           </property>
-          <property name="text">
-           <string>Show peptide conservation </string>
+          <property name="font">
+           <font>
+            <pointsize>13</pointsize>
+           </font>
           </property>
-          <property name="icon">
-           <iconset resource="Resources/VgenesResources.qrc">
-            <normaloff>:/PNG-Icons/PyMOL.png</normaloff>:/PNG-Icons/PyMOL.png</iconset>
+          <property name="toolTip">
+           <string>Show peptide conservation on 3D structure</string>
+          </property>
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Peptide conservation</string>
           </property>
           <property name="iconSize">
            <size>
-            <width>20</width>
-            <height>20</height>
+            <width>16</width>
+            <height>16</height>
            </size>
+          </property>
+          <property name="arrowType">
+           <enum>Qt::NoArrow</enum>
           </property>
          </widget>
         </item>

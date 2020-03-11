@@ -1,5 +1,5 @@
-/Users/leil/Documents/Projects/Librator/Librator/../Resources/Tools/muscle
-/Users/leil/Documents/Projects/Librator/Librator/../Resources/Tools/clustalo
+/Users/leil/Documents/Projects/Librator/Librator/Tools/muscle
+/Users/leil/Documents/Projects/Librator/Librator/Tools/clustalo
 /usr/local/bin/pymol
-/Users/leil/Documents/Projects/Librator/Librator/../Resources/Tools/raxml
+/Users/leil/Documents/Projects/Librator/Librator/Tools/raxml
 /Applications/FigTree.app/Contents/MacOS/universalJavaApplicationStub
