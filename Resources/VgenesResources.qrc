@@ -1,5 +1,10 @@
 <RCC>
   <qresource prefix="PNG-Icons">
+    <file>color1.png</file>
+    <file>color2.png</file>
+    <file>color3.png</file>
+    <file>color4.png</file>
+    <file>color5.png</file>
     <file>MSA.png</file>
     <file>Seq.png</file>
     <file>HA.png</file>

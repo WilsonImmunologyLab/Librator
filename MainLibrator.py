@@ -3463,11 +3463,22 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.html = 0
 		self.logo = 0
 
-		self.ui.comboBoxColor.addItem(QtGui.QIcon(os.path.join(working_prefix, 'Data', 'color1.png')), '')
-		self.ui.comboBoxColor.addItem(QtGui.QIcon(os.path.join(working_prefix, 'Data', 'color2.png')), '')
-		self.ui.comboBoxColor.addItem(QtGui.QIcon(os.path.join(working_prefix, 'Data', 'color3.png')), '')
-		self.ui.comboBoxColor.addItem(QtGui.QIcon(os.path.join(working_prefix, 'Data', 'color4.png')), '')
-		self.ui.comboBoxColor.addItem(QtGui.QIcon(os.path.join(working_prefix, 'Data', 'color5.png')), '')
+		color1_icon = QtGui.QIcon()
+		color1_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/color1.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		color2_icon = QtGui.QIcon()
+		color2_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/color2.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		color3_icon = QtGui.QIcon()
+		color3_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/color3.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		color4_icon = QtGui.QIcon()
+		color4_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/color4.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		color5_icon = QtGui.QIcon()
+		color5_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/color5.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+		self.ui.comboBoxColor.addItem(color1_icon, '')
+		self.ui.comboBoxColor.addItem(color2_icon, '')
+		self.ui.comboBoxColor.addItem(color3_icon, '')
+		self.ui.comboBoxColor.addItem(color4_icon, '')
+		self.ui.comboBoxColor.addItem(color5_icon, '')
 
 		self.ui.HTMLview1 = ResizeWidget(self)
 		self.ui.HTMLview1.id = 1
