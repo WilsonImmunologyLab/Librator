@@ -442,25 +442,45 @@
               <property name="text">
                <string>Mutate Sequences</string>
               </property>
+              <property name="icon">
+               <iconset resource="Resources/VgenesResources.qrc">
+                <normaloff>:/PNG-Icons/Mutation.png</normaloff>:/PNG-Icons/Mutation.png</iconset>
+              </property>
              </item>
              <item>
               <property name="text">
                <string>Sequence Editing</string>
+              </property>
+              <property name="icon">
+               <iconset resource="Resources/VgenesResources.qrc">
+                <normaloff>:/PNG-Icons/EditSeq.png</normaloff>:/PNG-Icons/EditSeq.png</iconset>
               </property>
              </item>
              <item>
               <property name="text">
                <string>Fusion Sequences</string>
               </property>
+              <property name="icon">
+               <iconset resource="Resources/VgenesResources.qrc">
+                <normaloff>:/PNG-Icons/Fusion.png</normaloff>:/PNG-Icons/Fusion.png</iconset>
+              </property>
              </item>
              <item>
               <property name="text">
                <string>Make Secreted Probe</string>
               </property>
+              <property name="icon">
+               <iconset resource="Resources/VgenesResources.qrc">
+                <normaloff>:/PNG-Icons/HA.png</normaloff>:/PNG-Icons/HA.png</iconset>
+              </property>
              </item>
              <item>
               <property name="text">
                <string>Idenfity escape mutations</string>
+              </property>
+              <property name="icon">
+               <iconset resource="Resources/VgenesResources.qrc">
+                <normaloff>:/PNG-Icons/Align.png</normaloff>:/PNG-Icons/Align.png</iconset>
               </property>
              </item>
             </widget>
@@ -2143,7 +2163,7 @@
          <widget class="QPushButton" name="pushButtonNT">
           <property name="minimumSize">
            <size>
-            <width>200</width>
+            <width>100</width>
             <height>0</height>
            </size>
           </property>
@@ -2154,53 +2174,11 @@
            </size>
           </property>
           <property name="text">
-           <string>Nucleotide Logo</string>
+           <string>Nucleotide </string>
           </property>
          </widget>
         </item>
-        <item row="0" column="0">
-         <widget class="QPushButton" name="pushButtonAA">
-          <property name="minimumSize">
-           <size>
-            <width>200</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>250</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>Peptide Logo</string>
-          </property>
-          <property name="default">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <spacer name="horizontalSpacer_8">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>182</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="0" column="2">
-         <widget class="QRadioButton" name="radioButtonPop">
-          <property name="text">
-           <string>Open Sequence Logo on a popup window</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="4">
+        <item row="0" column="6">
          <widget class="QToolButton" name="toolButtonConserve">
           <property name="minimumSize">
            <size>
@@ -2233,7 +2211,65 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="0" colspan="5">
+        <item row="0" column="5">
+         <widget class="QComboBox" name="comboBoxColor">
+          <property name="minimumSize">
+           <size>
+            <width>120</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>100</width>
+            <height>16</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QPushButton" name="pushButtonAA">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>250</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Peptide</string>
+          </property>
+          <property name="default">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <spacer name="horizontalSpacer_8">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>161</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="2">
+         <widget class="QRadioButton" name="radioButtonPop">
+          <property name="text">
+           <string>Open Sequence Logo on a popup window</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="7">
          <widget class="QGroupBox" name="groupBoxLogo">
           <property name="font">
            <font>
@@ -2242,6 +2278,13 @@
           </property>
           <property name="title">
            <string>Sequence Logo</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="4">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Color Schema </string>
           </property>
          </widget>
         </item>

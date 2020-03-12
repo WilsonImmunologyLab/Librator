@@ -3463,6 +3463,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.html = 0
 		self.logo = 0
 
+		self.ui.comboBoxColor.addItem(QtGui.QIcon(os.path.join(working_prefix, 'Data', 'color1.png')), '')
+		self.ui.comboBoxColor.addItem(QtGui.QIcon(os.path.join(working_prefix, 'Data', 'color2.png')), '')
+		self.ui.comboBoxColor.addItem(QtGui.QIcon(os.path.join(working_prefix, 'Data', 'color3.png')), '')
+		self.ui.comboBoxColor.addItem(QtGui.QIcon(os.path.join(working_prefix, 'Data', 'color4.png')), '')
+		self.ui.comboBoxColor.addItem(QtGui.QIcon(os.path.join(working_prefix, 'Data', 'color5.png')), '')
+
 		self.ui.HTMLview1 = ResizeWidget(self)
 		self.ui.HTMLview1.id = 1
 		grid_html1 = QGridLayout(self.ui.groupBoxHTML1)
@@ -3504,7 +3510,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		subtype = ''
 		
 		if NumSeqs < 1:
-			pass
+			QMessageBox.warning(self, 'Warning', 'Please select at least one sequence from active sequence panel!',
+			                    QMessageBox.Ok, QMessageBox.Ok)
 		else:
 			i = 1
 			for item in listItems:
@@ -3607,12 +3614,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 			cur_line_num += 1
 
 		# make pml script
-		color_dict = {5: "0x2B378E",
-		              4: "0x467DB4",
-		              3: "0x65B3C1",
-		              2: "0x91CDBB",
-		              1: "0xCEE6B9",
-		              0: "0xFDFAD1"}
+		if self.ui.comboBoxColor.currentIndex() == 0:
+			color_dict = {5: "0x2B378E", 4: "0x467DB4", 3: "0x65B3C1", 2: "0x91CDBB", 1: "0xCEE6B9", 0: "0xFDFAD1"}
+		elif self.ui.comboBoxColor.currentIndex() == 1:
+			color_dict = {0: "0xD53E4F", 1: "0xFC8D59", 2: "0xFEE08B", 3: "0xE6F598", 4: "0x99D594", 5: "0x3288BD"}
+		elif self.ui.comboBoxColor.currentIndex() == 2:
+			color_dict = {0: "0xEDF8E9", 1: "0xC7E9C0", 2: "0xA1D99B", 3: "0x74C476", 4: "0x31A354", 5: "0x006D2C"}
+		elif self.ui.comboBoxColor.currentIndex() == 3:
+			color_dict = {0: "0xFFFFB2", 1: "0xFED976", 2: "0xFEB24C", 3: "0xFD8D3C", 4: "0xF03B20", 5: "0xBD0026"}
+		elif self.ui.comboBoxColor.currentIndex() == 4:
+			color_dict = {0: "0x8C510A", 1: "0xD8B365", 2: "0xF6E8C3", 3: "0xC7EAE5", 4: "0x5AB4AC", 5: "0x01665E"}
+
 		if subtype in Group2:
 			pdbPath = os.path.join(working_prefix, 'PDB', '4jtv.cif')
 		elif subtype in Group1:
@@ -4234,12 +4246,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 				RecentFiles = currentFile.readlines()
 			currentFile.close()
 			if len(RecentFiles) != 0:
+				db_icon = QtGui.QIcon()
+				db_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/database.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 				RecentFiles = RecentFiles[0]
 				RecentFiles = RecentFiles.split(',')
 				for file in RecentFiles:
 					if file != '':
 						if os.path.isfile(file):
-							self.ui.cboRecent.addItem(file)
+							self.ui.cboRecent.addItem(db_icon, file)
 						else:
 							RecentFiles.remove(file)
 				RecentFiles_str = ','.join(RecentFiles)
@@ -5284,24 +5298,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			layout.addWidget(view)
 		# Alignment logo
 		elif self.ui.tabWidget.currentIndex() == 3:
-
-			#path = os.path.join(temp_folder, "logo.png")
-			#image = QtGui.QPixmap(path)
-			#image = image.scaledToWidth(1500)
-
-			#self.ui.labelLogo.setStyleSheet("border: 2px solid red")
-			#self.ui.labelLogo
-			#self.ui.labelLogo.setPixmap(image)
-			#self.ui.labelLogo.setScaledContents(True)
-
-			#graphicsView = self.ui.graphicsViewLogo
-			#graphicsView.scene = QGraphicsScene()
-			#item = QGraphicsPixmapItem(image)
-			#graphicsView.scene.addItem(item)
-			#graphicsView.scene.addText("Hello, world!")
-			#graphicsView.setScene(graphicsView.scene)
 			pass
-
 		else:
 			return
 
