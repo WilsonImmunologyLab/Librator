@@ -238,7 +238,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sequence&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <property name="usesScrollButtons">
        <bool>false</bool>
@@ -2299,23 +2299,31 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout_21">
         <item row="0" column="0">
-         <widget class="QLabel" name="label_3">
-          <property name="font">
-           <font>
-            <pointsize>15</pointsize>
-           </font>
-          </property>
+         <widget class="QCheckBox" name="checkBoxRowSelection">
           <property name="text">
-           <string>Current Sequence Database</string>
+           <string>Select entire row</string>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
+         <spacer name="horizontalSpacer_5">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="2">
          <widget class="QPushButton" name="EditLock">
           <property name="maximumSize">
            <size>
-            <width>100</width>
-            <height>16777215</height>
+            <width>10000</width>
+            <height>30</height>
            </size>
           </property>
           <property name="text">
@@ -2336,7 +2344,33 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="0" colspan="2">
+        <item row="0" column="3">
+         <widget class="QPushButton" name="pushButtonRefresh">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Refresh</string>
+          </property>
+          <property name="icon">
+           <iconset resource="Resources/VgenesResources.qrc">
+            <normaloff>:/PNG-Icons/refresh.png</normaloff>:/PNG-Icons/refresh.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>30</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="flat">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0" colspan="4">
          <widget class="QTableWidget" name="SeqTable">
           <property name="editTriggers">
            <set>QAbstractItemView::NoEditTriggers</set>

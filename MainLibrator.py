@@ -3448,6 +3448,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.pushButtonNT.clicked.connect(self.makeNTLogo)
 		self.ui.pushButtonAA.clicked.connect(self.makeAALogo)
 		self.ui.toolButtonConserve.clicked.connect(self.showDiverse)
+		self.ui.checkBoxRowSelection.stateChanged.connect(self.selectionMode)
+		self.ui.pushButtonRefresh.clicked.connect(self.load_table)
 
 		self.ui.cboRole.last_value = ''
 		self.ui.cboForm.last_value = ''
@@ -3509,6 +3511,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.HTMLview1.resizeSignal.connect(self.resizeHTML)
 		self.ui.HTMLview2.resizeSignal.connect(self.resizeHTML)
 		self.ui.HTMLview3.resizeSignal.connect(self.resizeHTML)
+
+	def selectionMode(self):
+		if self.ui.checkBoxRowSelection.isChecked():
+			self.ui.SeqTable.setSelectionBehavior(QAbstractItemView.SelectRows)
+		else:
+			self.ui.SeqTable.setSelectionBehavior(QAbstractItemView.SelectItems)
 
 	def showDiverse(self):
 		global H1Numbering
@@ -3733,11 +3741,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 			unlock_icon = QtGui.QIcon()
 			unlock_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/unlocked.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 			self.ui.EditLock.setIcon(unlock_icon)
+			self.ui.EditLock.setText('Edit Lock: Unlock (Double click to edit)')
 			self.ui.SeqTable.setEditTriggers(QtWidgets.QAbstractItemView.DoubleClicked)
 		else:
 			lock_icon = QtGui.QIcon()
 			lock_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/locked.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 			self.ui.EditLock.setIcon(lock_icon)
+			self.ui.EditLock.setText('Edit Lock: Locked')
 			self.ui.SeqTable.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
 	def reloadHTML(self):
@@ -4889,6 +4899,53 @@ class LibratorMain(QtWidgets.QMainWindow):
 		layout.addWidget(view)
 		VGenesTextWindows[window_id].show()
 
+	def load_table(self):
+		if self.ui.SeqTable.columnCount() > 0:
+			self.ui.SeqTable.itemChanged.disconnect(self.EditTableItem)
+		self.ui.SeqTable.setColumnCount(0)
+		self.ui.SeqTable.setRowCount(0)
+
+		if DBFilename != '' and DBFilename != 'none':
+			SQLStatement = 'SELECT * FROM LibDB ORDER BY SeqName DESC'
+			DataIn = RunSQL(DBFilename, SQLStatement)
+
+			num_row = len(DataIn)
+			num_col = 13
+			self.ui.SeqTable.setRowCount(num_row)
+			self.ui.SeqTable.setColumnCount(num_col)
+
+			horizontalHeader = ['SeqName', 'Sequence', 'SeqLen', 'Subtype', 'Form', 'VFrom', 'VTo', 'Active',
+			                    'Role', 'Donor', 'Mutations', 'ID', 'Base']
+			self.ui.SeqTable.setHorizontalHeaderLabels(horizontalHeader)
+			self.ui.SeqTable.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Fixed)
+			self.ui.SeqTable.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.Fixed)
+			self.ui.SeqTable.horizontalHeader().setSectionResizeMode(4, QtWidgets.QHeaderView.Fixed)
+			self.ui.SeqTable.horizontalHeader().setSectionResizeMode(5, QtWidgets.QHeaderView.Fixed)
+			self.ui.SeqTable.horizontalHeader().setSectionResizeMode(6, QtWidgets.QHeaderView.Fixed)
+			self.ui.SeqTable.horizontalHeader().setSectionResizeMode(7, QtWidgets.QHeaderView.Fixed)
+			self.ui.SeqTable.horizontalHeader().setSectionResizeMode(8, QtWidgets.QHeaderView.Fixed)
+			self.ui.SeqTable.horizontalHeader().setSectionResizeMode(11, QtWidgets.QHeaderView.Fixed)
+			self.ui.SeqTable.setColumnWidth(2, 60)
+			self.ui.SeqTable.setColumnWidth(3, 80)
+			self.ui.SeqTable.setColumnWidth(4, 80)
+			self.ui.SeqTable.setColumnWidth(5, 60)
+			self.ui.SeqTable.setColumnWidth(6, 50)
+			self.ui.SeqTable.setColumnWidth(7, 60)
+			self.ui.SeqTable.setColumnWidth(8, 100)
+			self.ui.SeqTable.setColumnWidth(11, 40)
+
+			for row_index in range(num_row):
+				for col_index in range(num_col):
+					unit = QTableWidgetItem(DataIn[row_index][col_index])
+					unit.last_name = DataIn[row_index][col_index]
+					self.ui.SeqTable.setItem(row_index, col_index, unit)
+
+			# show sort indicator
+			self.ui.SeqTable.horizontalHeader().setSortIndicatorShown(True)
+			# connect sort indicator to slot function
+			self.ui.SeqTable.horizontalHeader().sectionClicked.connect(self.sortTable)
+			self.ui.SeqTable.itemChanged.connect(self.EditTableItem)
+
 	@pyqtSlot()
 	def FillAlignmentTab(self):
 		global DBFilename
@@ -4964,51 +5021,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.CheckDecorations()
 		# SequenceDB
 		elif self.ui.tabWidget.currentIndex() == 4:
+			# if old table exists, clear table
 			if self.ui.SeqTable.columnCount() > 0:
-				self.ui.SeqTable.itemChanged.disconnect(self.EditTableItem)
-			self.ui.SeqTable.setColumnCount(0)
-			self.ui.SeqTable.setRowCount(0)
-
-			if DBFilename != '' and DBFilename != 'none':
-				SQLStatement = 'SELECT * FROM LibDB ORDER BY SeqName DESC'
-				DataIn = RunSQL(DBFilename, SQLStatement)
-
-				num_row = len(DataIn)
-				num_col = 13
-				self.ui.SeqTable.setRowCount(num_row)
-				self.ui.SeqTable.setColumnCount(num_col)
-
-				horizontalHeader = ['SeqName', 'Sequence', 'SeqLen', 'Subtype', 'Form', 'VFrom', 'VTo', 'Active',
-				                    'Role','Donor','Mutations','ID','Base']
-				self.ui.SeqTable.setHorizontalHeaderLabels(horizontalHeader)
-				self.ui.SeqTable.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Fixed)
-				self.ui.SeqTable.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.Fixed)
-				self.ui.SeqTable.horizontalHeader().setSectionResizeMode(4, QtWidgets.QHeaderView.Fixed)
-				self.ui.SeqTable.horizontalHeader().setSectionResizeMode(5, QtWidgets.QHeaderView.Fixed)
-				self.ui.SeqTable.horizontalHeader().setSectionResizeMode(6, QtWidgets.QHeaderView.Fixed)
-				self.ui.SeqTable.horizontalHeader().setSectionResizeMode(7, QtWidgets.QHeaderView.Fixed)
-				self.ui.SeqTable.horizontalHeader().setSectionResizeMode(8, QtWidgets.QHeaderView.Fixed)
-				self.ui.SeqTable.horizontalHeader().setSectionResizeMode(11, QtWidgets.QHeaderView.Fixed)
-				self.ui.SeqTable.setColumnWidth(2, 60)
-				self.ui.SeqTable.setColumnWidth(3, 80)
-				self.ui.SeqTable.setColumnWidth(4, 80)
-				self.ui.SeqTable.setColumnWidth(5, 60)
-				self.ui.SeqTable.setColumnWidth(6, 50)
-				self.ui.SeqTable.setColumnWidth(7, 60)
-				self.ui.SeqTable.setColumnWidth(8, 100)
-				self.ui.SeqTable.setColumnWidth(11, 40)
-
-				for row_index in range(num_row):
-					for col_index in range(num_col):
-						unit = QTableWidgetItem(DataIn[row_index][col_index])
-						unit.last_name = DataIn[row_index][col_index]
-						self.ui.SeqTable.setItem(row_index, col_index,unit)
-
-				# show sort indicator
-				self.ui.SeqTable.horizontalHeader().setSortIndicatorShown(True)
-				# connect sort indicator to slot function
-				self.ui.SeqTable.horizontalHeader().sectionClicked.connect(self.sortTable)
-				self.ui.SeqTable.itemChanged.connect(self.EditTableItem)
+				return
+			else:
+				self.load_table()
 		# Summary
 		elif self.ui.tabWidget.currentIndex() == 5:
 			if DBFilename == 'none':
