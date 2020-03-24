@@ -3476,11 +3476,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 		color5_icon = QtGui.QIcon()
 		color5_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/color5.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 
-		self.ui.comboBoxColor.addItem(color1_icon, '')
-		self.ui.comboBoxColor.addItem(color2_icon, '')
-		self.ui.comboBoxColor.addItem(color3_icon, '')
-		self.ui.comboBoxColor.addItem(color4_icon, '')
-		self.ui.comboBoxColor.addItem(color5_icon, '')
+		self.ui.comboBoxColor.addItem(color1_icon, ' =>Conserve')
+		self.ui.comboBoxColor.addItem(color2_icon, ' =>Conserve')
+		self.ui.comboBoxColor.addItem(color3_icon, ' =>Conserve')
+		self.ui.comboBoxColor.addItem(color4_icon, ' =>Conserve')
+		self.ui.comboBoxColor.addItem(color5_icon, ' =>Conserve')
 
 		self.ui.HTMLview1 = ResizeWidget(self)
 		self.ui.HTMLview1.id = 1
@@ -3531,6 +3531,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		if NumSeqs < 1:
 			QMessageBox.warning(self, 'Warning', 'Please select at least one sequence from active sequence panel!',
 			                    QMessageBox.Ok, QMessageBox.Ok)
+			return
 		else:
 			i = 1
 			for item in listItems:
