@@ -4046,7 +4046,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			try:
 				DataIn = RunSQL(F_db_name, SQLStatement)
 			except:
-				Msg = 'Can not connect to the Fragment DB! Please chekc your input!'
+				Msg = 'Can not connect to the Fragment DB! Please check your input!'
 				QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 				return
 		else:                                           # connect to remote MySQL DB
@@ -4060,7 +4060,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			try:
 				DataIn = RunMYSQL(db_config, SQLStatement)
 			except:
-				Msg = 'Can not connect to the Fragment DB! Please chekc your input!'
+				Msg = 'Can not connect to the Fragment DB! Please check your input!'
 				QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 				return
 
