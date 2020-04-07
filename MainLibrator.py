@@ -13228,7 +13228,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			else:
 				subtype = subtype1
 		else:
-			QMessageBox.warning(self, 'Warning', "Our Gibson Clone Designer only supports HA for now!", QMessageBox.Ok,
+			QMessageBox.warning(self, 'Warning', "Our Gibson Clone Designer only supports HA/NA for now!", QMessageBox.Ok,
 			                    QMessageBox.Ok)
 			return
 
@@ -14480,6 +14480,7 @@ def SequencesHTML(AAseq, info):
 	div_h3 = MakeDivH1N3('line line_h3', 'H3 numbering', 'H3 numbering: ', pos_h3_data)
 	# make sequence section HTML
 	div_seq = MakeSeqWithInseetion('line line_aa','seq',AAseq,info)
+	CSSdata = '<style type="text/css">.seq_div {width: ' + str(17*len(AAseq)) + 'px;}</style>\n'
 
 	# initial and open HTML file
 	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
@@ -14494,8 +14495,9 @@ def SequencesHTML(AAseq, info):
 	seq_div += div_h1[1] + '\n'
 	seq_div += div_h3[1] + '\n'
 	seq_div += div_seq + '\n'
-
 	seq_div += '</div>\n'
+
+	out_file_handle.write(CSSdata)
 	out_file_handle.write(seq_div)
 	out_file_handle.write('\n</div>')
 	info_div = '<div class="info_div" style="margin-top: 300px;">\n<p id = "info">Insertion information</p>\n</div>'
@@ -14722,6 +14724,7 @@ def AlignSequencesHTML(DataSet, template):
 	shutil.copyfile(header_file, out_html_file)
 	out_file_handle = open(out_html_file, 'a')
 
+	CSSdata = '<style type="text/css">.seq_div {width: ' + str(40*len(compact_consensusAA)) + 'px;}</style>\n'
 	JSdata = '<script type="text/javascript">\n'
 	JSdata += 'var data = {\n'
 	JSarray = []
@@ -14782,6 +14785,7 @@ def AlignSequencesHTML(DataSet, template):
 	name_div += '</div>\n'
 	seq_div += '</div>\n'
 
+	out_file_handle.write(CSSdata)
 	out_file_handle.write(JSdata)
 	out_file_handle.write(Optiondata)
 	out_file_handle.write('<div class="box">')
@@ -14930,6 +14934,7 @@ def EditSequencesHTML(DataSet, donor_region, template):
 	div_pos_nt = MakeDivPosNT('line line_pos_nt', 'Position NT:', 'Original NT position: ', pos_nt_data)
 
 	# initial and open HTML file
+	CSSdata = '<style type="text/css">.seq_div {width: ' + str(40*len(compact_consensusAA)) + 'px;}</style>\n'
 	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
 	out_html_file = os.path.join(temp_folder, time_stamp + '.html')
 	header_file = os.path.join(working_prefix, 'Data', template)
@@ -14971,6 +14976,7 @@ def EditSequencesHTML(DataSet, donor_region, template):
 	name_div += '</div>\n'
 	seq_div += '</div>\n'
 
+	out_file_handle.write(CSSdata)
 	out_file_handle.write('<div class="box">')
 	out_file_handle.write(name_div)
 	out_file_handle.write(seq_div)
