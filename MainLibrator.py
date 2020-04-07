@@ -13425,8 +13425,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			fragment_data.append(cur_seq_fragment_data)
 
+		del_in_fragment = []
+
 		# Chekc AA fragments and remove '-' in consensus sequence
-		fragment_data
 		for fragment in range(num_fragment):
 			cur_col = (fragment * 3) + 1
 			hyphe_pos_all = []
@@ -13438,6 +13439,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				Pos_set = set(hyphe_pos_all[0]).intersection(*hyphe_pos_all[1:])
 			else:
 				Pos_set = set(hyphe_pos_all[0])
+
 			if len(Pos_set) > 0:
 				# trim all AA fragments
 				for row in range(len(fragment_data)):
@@ -13446,6 +13448,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 						cur_seq = cur_seq[:pos] + '#' + cur_seq[pos+1:]
 					cur_seq = cur_seq.replace('#', '')
 					fragment_data[row][cur_col] = cur_seq
+
+			del_in_fragment.append(len(Pos_set))
 
 		# make col name
 		col_name = ["Name"]
@@ -13587,6 +13591,31 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessGibsonMSADialog.gibson_msa_Signal.connect(self.GibsonConfirm)
 		# show dialog
 		self.modalessGibsonMSADialog.show()
+
+		# another gibson clone fragments viewer
+		# make HTML
+		html_file = GibsonHTML(fragment_data, aa_start, aa_end, del_in_fragment, 'template6.html')
+		if html_file[0] == 'W':
+			QMessageBox.warning(self, 'Warning', html_file, QMessageBox.Ok, QMessageBox.Ok)
+			return
+		# delete close window objects
+		del_list = []
+		for id, obj in VGenesTextWindows.items():
+			if obj.isVisible() == False:
+				del_list.append(id)
+		for id in del_list:
+			del_obj = VGenesTextWindows.pop(id)
+
+		# display
+		window_id = int(time.time() * 100)
+		VGenesTextWindows[window_id] = htmlDialog()
+		VGenesTextWindows[window_id].id = window_id
+		layout = QGridLayout(VGenesTextWindows[window_id])
+		view = QWebEngineView(self)
+		view.load(QUrl("file://" + html_file))
+		view.show()
+		layout.addWidget(view)
+		VGenesTextWindows[window_id].show()
 
 	def GibsonConfirm(self, fragment_data, mode, db_file, out_dir, joint, subtype, num_fragment):
 		new_fragment_name_list = []
@@ -13815,6 +13844,115 @@ class LibratorMain(QtWidgets.QMainWindow):
 					cur_item.setForeground(QColor('red'))
 				else:
 					cur_item.setForeground(QColor('black'))
+
+
+def GibsonHTML(fragment_data, aa_start, aa_end, del_in_fragment, template):
+	joint_len = [0]
+	for i in range(1, len(aa_start)):
+		joint_len.append(aa_end[i-1] - aa_start[i] + 1)
+
+	# make header HTML
+	#pos_aa_data = [list(range(1, len(AAseq) + 1)), list(range(1, len(AAseq) + 1))]
+	#div_pos_aa = MakeDivPosAA('line line_pos_aa', 'Position AA:', 'Original AA position: ', pos_aa_data)
+	#pos_nt_data = [list(range(1, len(AAseq) + 1)), list(range(1, len(AAseq) + 1))]
+	#div_pos_nt = MakeDivPosAA('line line_pos_aa', 'Position AA:', 'Original AA position: ', pos_aa_data)
+	CSSdata = '<style type="text/css">.seq_div {width: ' + str(40 * aa_end[-1]) + 'px;}</style>\n'
+
+	# calculate distance
+	margin_top_double = [70, 126]
+	margin_top_single = [70, 104]
+	for i in aa_start:
+		value_double = margin_top_double[-1] + len(fragment_data) * 44 + 10
+		value_single = margin_top_single[-1] + len(fragment_data) * 22 + 10
+		margin_top_double.append(value_double)
+		margin_top_single.append(value_single)
+
+	var_str = '<script type="text/javascript">\n'
+	s = [str(i) for i in margin_top_double]
+	var_str += 'var margin_top_double = [' + ','.join(s) + '];\n'
+	s = [str(i) for i in margin_top_single]
+	var_str += 'var margin_top_single = [' + ','.join(s) + '];\n'
+	var_str += '</script>\n'
+
+	# make name_section_str
+	name_section_str = ''
+	## position part
+	name_section_str += '<div class="name_div pos_div" style="margin-top: ' + str(margin_top_double[0]) + 'px;">\n'
+	name_section_str += '<div class="line line_pos_aa"><span class="name">Position AA:</span></div>\n'
+	name_section_str += '<div class="line line_pos_nt"><span class="name">Position NT:</span></div>\n'
+	name_section_str += '</div>\n'
+
+	## seq name part
+	name_div = ''
+	i = 1
+	for index in fragment_data.index:
+		seq_nick_name = 'Seq' + str(i)
+		Seq_name = fragment_data.loc[index, "Name"]
+		name_part, seq_part = MakeDivAA('line line_aa ' + seq_nick_name, Seq_name, '')
+		name_div += name_part + "\n"
+		name_part, seq_part = MakeDivNT('line line_nt ' + seq_nick_name, Seq_name, '')
+		name_div += name_part + "\n"
+		i += 1
+
+	for i in range(len(aa_start)):
+		fragment_id = i + 1
+		name_section_str += '<div class="name_div fragment' + str(fragment_id) + '" style="margin-top: ' + \
+		                    str(margin_top_double[fragment_id]) + 'px;">\n'
+		name_section_str += name_div
+		name_section_str += '</div>\n'
+
+	# make seq_section_str
+	seq_section_str = ''
+	## position part
+	seq_section_str += '<div class="seq_div pos_div" style="margin-top: ' + str(margin_top_double[0]) + 'px;">\n'
+	pos_aa_data = [list(range(1, aa_end[-1])), list(range(1, aa_end[-1]))]
+	seq_section_str += MakeDivPosAA('line line_pos_aa', 'Position AA:', 'Original AA position: ', pos_aa_data)[1]
+	pos_nt_data = [list(range(1, aa_end[-1]*3)), list(range(1, aa_end[-1]*3))]
+	seq_section_str += MakeDivPosNT('line line_pos_nt', 'Position NT:', 'Original NT position: ', pos_nt_data)[1]
+	seq_section_str += '</div>\n'
+
+	## seq part for each fragment
+	for i in range(len(aa_start)):
+		fragment_id = i + 1
+		seq_section_str += '<div class="seq_div fragment' + str(fragment_id) + '" style="margin-top: ' + \
+		                    str(margin_top_double[fragment_id]) + 'px;">\n'
+		ii = 1
+		for index in fragment_data.index:
+			seq_nick_name = 'Seq' + str(ii)
+			aa_seq = fragment_data.loc[index, 'F_AA_' + str(fragment_id) + '_origin']
+			nt_seq = fragment_data.loc[index, 'F_NT_' + str(fragment_id)]
+
+			# make seq for current fragment
+			offset = 0
+			for iii in range(i):
+				offset += del_in_fragment[iii]
+
+			aa_seq = " " * (aa_start[i] - 1 - offset) + aa_seq
+			nt_seq = "   " * (aa_start[i] - 1 - offset) + nt_seq
+
+			name_part, seq_part = MakeDivAA('line line_aa ' + seq_nick_name, Seq_name, aa_seq)
+			seq_section_str += seq_part + '\n'
+			name_part, seq_part = MakeDivNT('line line_nt ' + seq_nick_name, Seq_name, nt_seq)
+			seq_section_str += seq_part + '\n'
+			ii += 1
+
+		seq_section_str += '</div>\n'
+
+	# initial and open HTML file
+	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+	out_html_file = os.path.join(temp_folder, time_stamp + '.html')
+	header_file = os.path.join(working_prefix, 'Data', template)
+	shutil.copyfile(header_file, out_html_file)
+	out_file_handle = open(out_html_file, 'a')
+
+	out_file_handle.write(CSSdata)
+	out_file_handle.write(var_str)
+	out_file_handle.write('<div class="box">\n')
+	out_file_handle.write(name_section_str)
+	out_file_handle.write(seq_section_str)
+	out_file_handle.write('\n</div>\n</body>\n</html>')
+	out_file_handle.close()
+	return out_html_file
 
 def MakeRuler(pos1, pos2, step, mode):
 	ErrMsg = ""
