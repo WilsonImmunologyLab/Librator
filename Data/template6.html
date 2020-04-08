@@ -374,60 +374,76 @@ function onmouseout_help(){
 }
 
 function selectionChange() {
-	if($("#nt").is(':checked')){
-		$(".insert").show()
-		$(".line_pos_nt").show()
-		if($("#consensus").is(':checked')){
-			$(".con_nt").show()
-			$(".line_nt").hide()
-		} else {
-			$(".line_nt").show()
-			$(".con_nt").hide()
-		}
-	} else {
-		$(".line_nt").hide()
-		$(".con_nt").hide()
-		$(".insert").hide()
-		$(".line_pos_nt").hide()
-	}
-
-	if($("#aa").is(':checked')){
-		$(".line_pos_aa").show()
-		if($("#consensus").is(':checked')){
-			$(".con_aa").show()
-			$(".line_aa").hide()
-		} else {
-			$(".line_aa").show()
-			$(".con_aa").hide()
-		}
-	} else {
-		$(".line_aa").hide()
-		$(".con_aa").hide()
-		$(".line_pos_aa").hide()
-	}
-
-	if($("#nt").is(':checked')) {
-    	if($("#aa").is(':checked')) {
-    		$(".pos_div").css({'margin-top': margin_top_double[0]+'px'})
-    		$(".fragment1").css({'margin-top': margin_top_double[1]+'px'})
-    		$(".fragment2").css({'margin-top': margin_top_double[2]+'px'})
-    		$(".fragment3").css({'margin-top': margin_top_double[3]+'px'})
-    		$(".fragment4").css({'margin-top': margin_top_double[4]+'px'})
-    	} else {
-    		$(".pos_div").css({'margin-top': margin_top_single[0]+'px'})
-    		$(".fragment1").css({'margin-top': margin_top_single[1]+'px'})
-    		$(".fragment2").css({'margin-top': margin_top_single[2]+'px'})
-    		$(".fragment3").css({'margin-top': margin_top_single[3]+'px'})
-    		$(".fragment4").css({'margin-top': margin_top_single[4]+'px'})
-    	}
+  if($("#nt").is(':checked')){
+    $(".insert").show()
+    $(".line_pos_nt").show()
+    if($("#consensus").is(':checked')){
+      $(".con_nt").show()
+      $(".line_nt").hide()
     } else {
-    	if($("#aa").is(':checked')) {
-    		$(".pos_div").css({'margin-top': margin_top_single[0]+'px'})
-    		$(".fragment1").css({'margin-top': margin_top_single[1]+'px'})
-    		$(".fragment2").css({'margin-top': margin_top_single[2]+'px'})
-    		$(".fragment3").css({'margin-top': margin_top_single[3]+'px'})
-    		$(".fragment4").css({'margin-top': margin_top_single[4]+'px'})
-    	} 
+      $(".line_nt").show()
+      $(".con_nt").hide()
+    }
+  } else {
+    $(".line_nt").hide()
+    $(".con_nt").hide()
+    $(".insert").hide()
+    $(".line_pos_nt").hide()
+  }
+
+  if($("#aa").is(':checked')){
+    $(".line_pos_aa").show()
+    if($("#consensus").is(':checked')){
+      $(".con_aa").show()
+      $(".line_aa").hide()
+    } else {
+      $(".line_aa").show()
+      $(".con_aa").hide()
+    }
+  } else {
+    $(".line_aa").hide()
+    $(".con_aa").hide()
+    $(".line_pos_aa").hide()
+  }
+
+  if($("#nt").is(':checked')) {
+      if($("#aa").is(':checked')) {
+        $(".pos_div").css({'margin-top': margin_top_double[0]+'px'})
+        $(".fragment1").css({'margin-top': margin_top_double[1]+'px'})
+        $(".fragment2").css({'margin-top': margin_top_double[2]+'px'})
+        $(".fragment3").css({'margin-top': margin_top_double[3]+'px'})
+        $(".fragment4").css({'margin-top': margin_top_double[4]+'px'})
+
+        $(".seq_div.fragment1 > div").css({'margin-left': margin_left_nt[0]+'px'})
+        $(".seq_div.fragment2 > div").css({'margin-left': margin_left_nt[1]+'px'})
+        $(".seq_div.fragment3 > div").css({'margin-left': margin_left_nt[2]+'px'})
+        $(".seq_div.fragment4 > div").css({'margin-left': margin_left_nt[3]+'px'})
+      } else {
+        $(".pos_div").css({'margin-top': margin_top_single[0]+'px'})
+        $(".fragment1").css({'margin-top': margin_top_single[1]+'px'})
+        $(".fragment2").css({'margin-top': margin_top_single[2]+'px'})
+        $(".fragment3").css({'margin-top': margin_top_single[3]+'px'})
+        $(".fragment4").css({'margin-top': margin_top_single[4]+'px'})
+
+        $(".seq_div.fragment1 > div").css({'margin-left': margin_left_nt[0]+'px'})
+        $(".seq_div.fragment2 > div").css({'margin-left': margin_left_nt[1]+'px'})
+        $(".seq_div.fragment3 > div").css({'margin-left': margin_left_nt[2]+'px'})
+        $(".seq_div.fragment4 > div").css({'margin-left': margin_left_nt[3]+'px'})
+      }
+      $(".line_nt.1").find(".name").show()
+    } else {
+      if($("#aa").is(':checked')) {
+        $(".pos_div").css({'margin-top': margin_top_single[0]+'px'})
+        $(".fragment1").css({'margin-top': margin_top_single[1]+'px'})
+        $(".fragment2").css({'margin-top': margin_top_single[2]+'px'})
+        $(".fragment3").css({'margin-top': margin_top_single[3]+'px'})
+        $(".fragment4").css({'margin-top': margin_top_single[4]+'px'})
+
+        $(".seq_div.fragment1 > div").css({'margin-left': margin_left_aa[0]+'px'})
+        $(".seq_div.fragment2 > div").css({'margin-left': margin_left_aa[1]+'px'})
+        $(".seq_div.fragment3 > div").css({'margin-left': margin_left_aa[2]+'px'})
+        $(".seq_div.fragment4 > div").css({'margin-left': margin_left_aa[3]+'px'})
+      } 
     }
 }
 

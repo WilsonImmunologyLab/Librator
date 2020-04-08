@@ -13477,9 +13477,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 					QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 					return
 
-		del_in_fragment = []
-
 		# Chekc AA fragments and remove '-' in consensus sequence
+		del_in_fragment = []
 		for fragment in range(num_fragment):
 			cur_col = (fragment * 3) + 1
 			hyphe_pos_all = []
@@ -13503,8 +13502,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			del_in_fragment.append(len(Pos_set))
 
-		for i in range(len(del_in_fragment)):
-			del_in_fragment[i] = del_in_fragment[i] - fix_in_fragment[i]
+		#for i in range(len(del_in_fragment)):
+		#	del_in_fragment[i] = del_in_fragment[i] - fix_in_fragment[i]
 
 		# make col name
 		col_name = ["Name"]
@@ -13649,7 +13648,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# another gibson clone fragments viewer
 		# make HTML
-		html_file = GibsonHTML(fragment_data, aa_start, aa_end, del_in_fragment, 'template6.html')
+		html_file = GibsonHTML(fragment_data, aa_start, aa_end, del_in_fragment, fix_in_fragment, 'template6.html')
 		if html_file[0] == 'W':
 			QMessageBox.warning(self, 'Warning', html_file, QMessageBox.Ok, QMessageBox.Ok)
 			return
@@ -13900,7 +13899,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				else:
 					cur_item.setForeground(QColor('black'))
 
-def GibsonHTML(fragment_data, aa_start, aa_end, del_in_fragment, template):
+def GibsonHTML(fragment_data, aa_start, aa_end, del_in_fragment, fix_in_fragment, template):
 	joint_len = [0]
 	for i in range(1, len(aa_start)):
 		joint_len.append(aa_end[i-1] - aa_start[i] + 1)
@@ -13920,12 +13919,33 @@ def GibsonHTML(fragment_data, aa_start, aa_end, del_in_fragment, template):
 		value_single = margin_top_single[-1] + len(fragment_data) * 22 + 10
 		margin_top_double.append(value_double)
 		margin_top_single.append(value_single)
+	
+	#calculate margin left and margin top
+	margin_left_nt = []
+	margin_left_aa = []
+	fragment_offset = 0
+	for i in range(len(aa_start)):
+		fragment_id = i + 1
+		cur_offset = 0
+		index = 0
+		aa_seq = fragment_data.loc[index, 'F_AA_' + str(fragment_id) + '_origin']
+		if i > 0:
+			joint_length = aa_end[i - 1] - aa_start[i] + 1
+			cur_offset = len(aa_seq) - joint_length
+		else:
+			joint_length = 0
+			cur_offset = len(aa_seq)
+		margin_left_nt.append(str(12 + (fragment_offset - joint_length) * 39))
+		margin_left_aa.append(str(12 + (fragment_offset - joint_length) * 13))
+		fragment_offset += cur_offset
 
 	var_str = '<script type="text/javascript">\n'
 	s = [str(i) for i in margin_top_double]
 	var_str += 'var margin_top_double = [' + ','.join(s) + '];\n'
 	s = [str(i) for i in margin_top_single]
 	var_str += 'var margin_top_single = [' + ','.join(s) + '];\n'
+	var_str += 'var margin_left_nt = [' + ','.join(margin_left_nt) + '];\n'
+	var_str += 'var margin_left_aa = [' + ','.join(margin_left_aa) + '];\n'
 	var_str += '</script>\n'
 
 	# make name_section_str
@@ -13966,11 +13986,13 @@ def GibsonHTML(fragment_data, aa_start, aa_end, del_in_fragment, template):
 	seq_section_str += '</div>\n'
 
 	## seq part for each fragment
+	fragment_offset = 0
 	for i in range(len(aa_start)):
 		fragment_id = i + 1
 		seq_section_str += '<div class="seq_div fragment' + str(fragment_id) + '" style="margin-top: ' + \
 		                    str(margin_top_double[fragment_id]) + 'px;">\n'
 		ii = 1
+		cur_offset = 0
 		for index in fragment_data.index:
 			seq_nick_name = 'Seq' + str(ii)
 			aa_seq = fragment_data.loc[index, 'F_AA_' + str(fragment_id) + '_origin']
@@ -13978,18 +14000,27 @@ def GibsonHTML(fragment_data, aa_start, aa_end, del_in_fragment, template):
 
 			nt_seq = BuildNTalignment(aa_seq,nt_seq)[1]
 			# make seq for current fragment
-			offset = 0
-			for iii in range(i):
-				offset += del_in_fragment[iii]
+			#offset = 0
+			#for iii in range(i):
+			#	offset += del_in_fragment[iii]
+			#offset -= fix_in_fragment[i]
 
-			aa_css = "margin-left:" + str(12 + (aa_start[i] - 1 - offset)*39) + 'px;'
+
+			if i > 0:
+				joint_length = aa_end[i-1] - aa_start[i] + 1
+				cur_offset = len(aa_seq) - joint_length
+			else:
+				joint_length = 0
+				cur_offset = len(aa_seq)
+
+			aa_css = "margin-left:" + margin_left_nt[i] + 'px;'
 
 			name_part, seq_part = MakeDivAACSS('line line_aa ' + seq_nick_name, Seq_name, aa_seq, aa_css)
 			seq_section_str += seq_part + '\n'
 			name_part, seq_part = MakeDivNTCSS('line line_nt ' + seq_nick_name, Seq_name, nt_seq, aa_css)
 			seq_section_str += seq_part + '\n'
 			ii += 1
-
+		fragment_offset += cur_offset
 		seq_section_str += '</div>\n'
 
 	# initial and open HTML file
@@ -15447,7 +15478,7 @@ NAtemplate_seq = {
 
 
 NA_start = [1, 131, 292];
-NA_end = [139, 301, 468];
+NA_end = [139, 300, 468];
 
 # SETUP user defined joint regions
 global H3_start_user, H3_end_user, H1_start_user, H1_end_user, NA_end_user, NA_start_user
