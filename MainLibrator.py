@@ -13425,6 +13425,58 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			fragment_data.append(cur_seq_fragment_data)
 
+		# check if joint region match and have no '-'
+		fix_in_fragment = [0 for i in range(10)]
+		for record in fragment_data:
+			fragments = []
+			i = 1
+			while i < len(record):
+				fragments.append(record[i])
+				i += 3
+
+			for i in range(len(fragments)-1):
+				cur_pre_f = fragments[i]
+				cur_aft_f = fragments[i+1]
+				cur_tail = cur_pre_f[-9:]
+				cur_head = cur_aft_f[:9]
+
+				if cur_tail == cur_head:
+					hyphen_pos = [i.start() for i in re.finditer('-', cur_tail)]
+					if len(hyphen_pos) > 0:
+						if len(fragment_data) > 1:
+							Msg = 'Deletion detected from joint region of your current sequence:\n' + record[0] + \
+							      '\nPlease run gibson clone design individually for this sequence!'
+							QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+							return
+						else:
+							if len(cur_pre_f) >= len(cur_aft_f):
+								offset = 9
+								aa_get = 0
+								while aa_get < len(hyphen_pos):
+									cur_aa = cur_aft_f[offset:offset+1]
+									if cur_aa in AACodonDict.keys():
+										record[1 + 3*i] += cur_aa
+										record[2 + 3 * i] += cur_aa
+										record[3 + 3 * i] += AACodonDict[cur_aa]
+										aa_get += 1
+									offset += 1
+							else:
+								offset = -10
+								aa_get = 0
+								while aa_get < len(hyphen_pos):
+									cur_aa = cur_pre_f[offset:offset + 1]
+									if cur_aa in AACodonDict.keys():
+										record[4 + 3 * i] = cur_aa + record[4 + 3 * i]
+										record[5 + 3 * i] = cur_aa + record[5 + 3 * i]
+										record[6 + 3 * i] = AACodonDict[cur_aa] + record[6 + 3 * i]
+										aa_get += 1
+									offset -= 1
+								fix_in_fragment[i+1] = len(hyphen_pos)
+				else:
+					Msg = 'Joint region does not match!\n' + record[0]
+					QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+					return
+
 		del_in_fragment = []
 
 		# Chekc AA fragments and remove '-' in consensus sequence
@@ -13450,6 +13502,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 					fragment_data[row][cur_col] = cur_seq
 
 			del_in_fragment.append(len(Pos_set))
+
+		for i in range(len(del_in_fragment)):
+			del_in_fragment[i] = del_in_fragment[i] - fix_in_fragment[i]
 
 		# make col name
 		col_name = ["Name"]
@@ -13845,7 +13900,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 				else:
 					cur_item.setForeground(QColor('black'))
 
-
 def GibsonHTML(fragment_data, aa_start, aa_end, del_in_fragment, template):
 	joint_len = [0]
 	for i in range(1, len(aa_start)):
@@ -13922,17 +13976,17 @@ def GibsonHTML(fragment_data, aa_start, aa_end, del_in_fragment, template):
 			aa_seq = fragment_data.loc[index, 'F_AA_' + str(fragment_id) + '_origin']
 			nt_seq = fragment_data.loc[index, 'F_NT_' + str(fragment_id)]
 
+			nt_seq = BuildNTalignment(aa_seq,nt_seq)[1]
 			# make seq for current fragment
 			offset = 0
 			for iii in range(i):
 				offset += del_in_fragment[iii]
 
-			aa_seq = " " * (aa_start[i] - 1 - offset) + aa_seq
-			nt_seq = "   " * (aa_start[i] - 1 - offset) + nt_seq
+			aa_css = "margin-left:" + str(12 + (aa_start[i] - 1 - offset)*39) + 'px;'
 
-			name_part, seq_part = MakeDivAA('line line_aa ' + seq_nick_name, Seq_name, aa_seq)
+			name_part, seq_part = MakeDivAACSS('line line_aa ' + seq_nick_name, Seq_name, aa_seq, aa_css)
 			seq_section_str += seq_part + '\n'
-			name_part, seq_part = MakeDivNT('line line_nt ' + seq_nick_name, Seq_name, nt_seq)
+			name_part, seq_part = MakeDivNTCSS('line line_nt ' + seq_nick_name, Seq_name, nt_seq, aa_css)
 			seq_section_str += seq_part + '\n'
 			ii += 1
 
@@ -14348,6 +14402,24 @@ def MakeDivNT(class_name, line_name, data):
 
 	return div_name, div_seq
 
+def MakeDivNTCSS(class_name, line_name, data, css):
+	div_name = 	'<div class="' + class_name + ' 1">'
+	div_name += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
+	div_name += '</div>'
+	div_seq = '<div class="' + class_name + ' 2" style="' + css + '">'
+	count = 0
+	for i in range(len(data)):
+		if count == 0:
+			div_seq += '<span class="unit_pack">'
+		elif count%3 == 0:
+			div_seq += '</span><span class="unit_pack">'
+		div_seq += '<span class="unit">' + data[i] + '</span>'
+		count += 1
+	div_seq += '</span>'
+	div_seq += '</div>'
+
+	return div_name, div_seq
+
 def MakeDivNTDonor(class_name, line_name, data, ori_seq, donor_region):
 	div_name = 	'<div class="' + class_name + ' 1">'
 	div_name += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
@@ -14387,6 +14459,17 @@ def MakeDivAA(class_name, line_name, data):
 	div_name += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
 	div_name += '</div>'
 	div_seq = '<div class="' + class_name + ' 2">'
+	for i in range(len(data)):
+		div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + data[i] + '</span><span class="insert">&nbsp;</span></span>'
+	div_seq += '</div>'
+
+	return div_name, div_seq
+
+def MakeDivAACSS(class_name, line_name, data, css):
+	div_name = '<div class="' + class_name + ' 1">'
+	div_name += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
+	div_name += '</div>'
+	div_seq = '<div class="' + class_name + ' 2" style="' + css + '">'
 	for i in range(len(data)):
 		div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + data[i] + '</span><span class="insert">&nbsp;</span></span>'
 	div_seq += '</div>'
