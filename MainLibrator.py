@@ -177,6 +177,8 @@ else:
 
 class GibsonSingleDialog(QtWidgets.QDialog):
 	def __init__(self):
+		global VGenesTextWindows
+
 		super(GibsonSingleDialog, self).__init__()
 		self.ui = Ui_GibsonSingleDialog()
 		self.ui.setupUi(self)
@@ -184,9 +186,62 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 		self.view = ''
 		self.info = {}
 
+		self.aaSeq = ''
+		self.ntSeq = ''
+
 		self.ui.comboBox.currentTextChanged.connect(self.makeSeqHTML)
 		self.ui.clear.clicked.connect(self.clearSelection)
 		self.ui.pushButtonAdd.clicked.connect(self.updateHTML)
+		self.ui.pushButtonGenerate.clicked.connect(self.previewFragments)
+
+	def previewFragments(self):
+		global VGenesTextWindows
+
+		if len(self.info) == 0:
+			Msg = 'No joint region exist!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		if self.aaSeq == '' or self.ntSeq == '':
+			Msg = 'Please determine a sequence!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		# generate gibson clone
+		data = GenerateGibsonSingleAlignment(self.aaSeq, self.ntSeq, self.info)
+
+		# generate HTML
+		html_page = GibsonSingleAlignmentHTML(data, self.aaSeq, self.ntSeq)
+
+		# show HTML
+		## delete close window objects
+		del_list = []
+		for id, obj in VGenesTextWindows.items():
+			if obj.isVisible() == False:
+				del_list.append(id)
+		for id in del_list:
+			del_obj = VGenesTextWindows.pop(id)
+
+		## display
+		window_id = int(time.time() * 100)
+		VGenesTextWindows[window_id] = htmlDialog()
+		VGenesTextWindows[window_id].id = window_id
+		layout = QGridLayout(VGenesTextWindows[window_id])
+		view = QWebEngineView(self)
+		view.load(QUrl("file://" + html_page))
+		view.show()
+		layout.addWidget(view)
+		VGenesTextWindows[window_id].show()
+
+	def updateText(self):
+		text = ''
+		i = 1
+		for key in self.info:
+			cur_start = self.info[key][0]
+			cur_end = self.info[key][1]
+			text += 'Joint ' + str(i) + ': ' + str(cur_start) + ',' + str(cur_end) + '\n'
+			i += 1
+		self.ui.textEdit.setText(text)
 
 	def updateHTML(self):
 		# get sequence editing information
@@ -232,14 +287,17 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 		key = int(time.time() * 100)
 		self.info[key] = [del_start, del_end, 'joint region', 'joint region', 'joint region']
 		self.makeSeqHTML()
+		self.updateText()
 
 	def clearSelection(self):
 		self.info = {}
 
 		self.makeSeqHTML()
+		self.updateText()
 
 	def deleteReplacement(self, id):
 		del self.info[int(id)]
+		self.updateText()
 		print("signal received!")
 
 	def makeSeqHTML(self):
@@ -260,6 +318,8 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 		AASequence = Translator(Sequence,0)
 		AASequence = AASequence[0]
 
+		self.aaSeq = AASequence
+		self.ntSeq = Sequence
 		html_file = GibsonSingleHTML(AASequence, Sequence, self.info)
 
 		# display
@@ -14054,6 +14114,107 @@ class LibratorMain(QtWidgets.QMainWindow):
 				else:
 					cur_item.setForeground(QColor('black'))
 
+def GibsonSingleAlignmentHTML(data, aaSeq, ntSeq):
+	# determine width of div
+	CSSdata = '<style type="text/css">.seq_div {width: ' + str(40 * len(aaSeq)) + 'px;}</style>\n'
+	# calculate distance
+	margin_top_double = [70, 170]
+	margin_top_single = [70, 126]
+	for i in data:
+		value_double = margin_top_double[-1] + 44 + 10
+		value_single = margin_top_single[-1] + 22 + 10
+		margin_top_double.append(value_double)
+		margin_top_single.append(value_single)
+
+	# calculate margin left and margin top
+	margin_left_nt = []
+	margin_left_aa = []
+	fragment_offset = 0
+	for i in range(len(data)):
+		margin_left_nt.append(str(12 + fragment_offset * 39))
+		margin_left_aa.append(str(12 + fragment_offset * 13))
+		fragment_offset += len(data[i][0]) - data[i][3]
+
+	var_str = '<script type="text/javascript">\n'
+	s = [str(i) for i in margin_top_double]
+	var_str += 'var margin_top_double = [' + ','.join(s) + '];\n'
+	s = [str(i) for i in margin_top_single]
+	var_str += 'var margin_top_single = [' + ','.join(s) + '];\n'
+	var_str += 'var margin_left_nt = [' + ','.join(margin_left_nt) + '];\n'
+	var_str += 'var margin_left_aa = [' + ','.join(margin_left_aa) + '];\n'
+	var_str += '</script>\n'
+
+	# make name_section_str
+	name_section_str = ''
+	## position part
+	name_section_str += '<div class="name_div pos_div" style="margin-top: ' + str(margin_top_double[0]) + 'px;">\n'
+	name_section_str += '<div class="line line_pos_aa"><span class="name">Position AA:</span></div>\n'
+	name_section_str += '<div class="line line_pos_nt"><span class="name">Position NT:</span></div>\n'
+	name_section_str += '<div class="line line_pos_aa"><span class="name">Sequence AA:</span></div>\n'
+	name_section_str += '<div class="line line_pos_nt"><span class="name">Sequence NT:</span></div>\n'
+	name_section_str += '</div>\n'
+
+	## seq name part
+	for i in range(len(data)):
+		fragment_id = i + 1
+		fragment_name = "Fragment" + str(fragment_id) + ""
+		name_section_str += '<div class="name_div fragment' + str(fragment_id) + '" style="margin-top: ' + \
+		            str(margin_top_double[fragment_id]) + 'px;">\n'
+		name_section_str += '<div class="line line_aa 1">'
+		name_section_str += '<span class="name">' + fragment_name + '<span class ="name_tip">' + fragment_name + '</span></span>'
+		name_section_str += '</div>\n'
+		name_section_str += '<div class="line line_nt 1">'
+		name_section_str += '<span class="name">' + fragment_name + '<span class ="name_tip">' + fragment_name + '</span></span>'
+		name_section_str += '</div>\n'
+		name_section_str += '</div>\n'
+
+	# make seq_section_str
+	seq_section_str = ''
+	## position part
+	seq_section_str += '<div class="seq_div pos_div" style="margin-top: ' + str(margin_top_double[0]) + 'px;">\n'
+	pos_aa_data = [list(range(1, len(aaSeq))), list(range(1,len(aaSeq)))]
+	seq_section_str += MakeDivPosAA('line line_pos_aa', 'Position AA:', 'Original AA position: ', pos_aa_data)[1] + '\n'
+	pos_nt_data = [list(range(1, len(ntSeq))), list(range(1, len(ntSeq)))]
+	seq_section_str += MakeDivPosNT('line line_pos_nt', 'Position NT:', 'Original NT position: ', pos_nt_data)[1] + '\n'
+	seq_section_str += MakeDivAA('line line_pos_aa', 'Position AA:', aaSeq)[1] + '\n'
+	seq_section_str += MakeDivNT('line line_pos_nt', 'Position AA:', ntSeq)[1] + '\n'
+	seq_section_str += '</div>\n'
+
+	## seq part for each fragment
+	for i in range(len(data)):
+		fragment_id = i + 1
+		fragment_name = "fragment " + str(fragment_id) + ""
+
+		seq_section_str += '<div class="seq_div fragment' + str(fragment_id) + '" style="margin-top: ' + \
+		                   str(margin_top_double[fragment_id]) + 'px;">\n'
+		aa_seq = data[i][0]
+		nt_seq = data[i][1]
+
+		aa_css = "margin-left:" + margin_left_nt[i] + 'px;'
+		name_part, seq_part = MakeDivAACSS('line line_aa ', fragment_name, aa_seq, aa_css)
+		seq_section_str += seq_part + '\n'
+		name_part, seq_part = MakeDivNTCSS('line line_nt ', fragment_name, nt_seq, aa_css)
+		seq_section_str += seq_part + '\n'
+
+		seq_section_str += '</div>\n'
+
+	# initial and open HTML file
+	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+	out_html_file = os.path.join(temp_folder, time_stamp + '.html')
+	header_file = os.path.join(working_prefix, 'Data', 'template6.html')
+	shutil.copyfile(header_file, out_html_file)
+	out_file_handle = open(out_html_file, 'a')
+
+	out_file_handle.write(CSSdata)
+	out_file_handle.write(var_str)
+	out_file_handle.write('<div class="box">\n')
+	out_file_handle.write(name_section_str)
+	out_file_handle.write(seq_section_str)
+	out_file_handle.write('\n</div>\n</body>\n</html>')
+	out_file_handle.close()
+	return out_html_file
+
+
 def GibsonHTML(fragment_data, aa_start, aa_end, del_in_fragment, fix_in_fragment, template):
 	joint_len = [0]
 	for i in range(1, len(aa_start)):
@@ -15603,6 +15764,48 @@ def AA2NT(sequence, dic):
 		nt_seq += dic[sequence[i]]
 
 	return nt_seq
+
+def GenerateGibsonSingleAlignment(aaSeq, ntSeq, info):
+	data = []
+	last_start = 0
+	last_end = 0
+	for key in info:
+		cur_start = info[key][0]
+		cur_end = info[key][1]
+
+		if last_start == 0:
+			joint_pre_aa = ''
+		else:
+			joint_pre_aa = aaSeq[last_start-1:last_end]
+
+		joint_past_aa = aaSeq[cur_start - 1:cur_end]
+		body_aa = aaSeq[last_end:cur_start-1]
+		body_nt = ntSeq[(last_end)*3:(cur_start-1)*3]
+
+		cur_aa = joint_pre_aa + body_aa + joint_past_aa
+		cur_nt = AA2NT(joint_pre_aa, AACodonDict) + body_nt + AA2NT(joint_past_aa, AACodonDict)
+
+		data.append((cur_aa,cur_nt, len(joint_pre_aa), len(joint_past_aa)))
+
+		last_start = cur_start
+		last_end = cur_end
+
+	if last_end == len(aaSeq):
+		Msg = 'You can not put a joint region in the end of sequence!'
+		QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+		return
+	else:
+		joint_pre_aa = aaSeq[last_start - 1:last_end]
+		joint_past_aa = ''
+		body_aa = aaSeq[last_end:]
+		body_nt = ntSeq[(last_end) * 3:]
+
+		cur_aa = joint_pre_aa + body_aa + joint_past_aa
+		cur_nt = AA2NT(joint_pre_aa, AACodonDict) + body_nt + AA2NT(joint_past_aa, AACodonDict)
+
+		data.append((cur_aa,cur_nt, len(joint_pre_aa), len(joint_past_aa)))
+
+	return data
 
 global Group1, Group2, GroupNA
 Group1 = ['H1','H2','H5','H6','H8','H9','H11','H12','H13','H16','H17','H18']
