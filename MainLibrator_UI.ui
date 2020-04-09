@@ -3441,6 +3441,10 @@
    </property>
   </action>
   <action name="actionGinsonCloneSingle">
+   <property name="icon">
+    <iconset resource="Resources/VgenesResources.qrc">
+     <normaloff>:/PNG-Icons/GibsonClone.png</normaloff>:/PNG-Icons/GibsonClone.png</iconset>
+   </property>
    <property name="text">
     <string>GinsonClone for single sequence</string>
    </property>

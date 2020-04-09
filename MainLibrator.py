@@ -188,15 +188,169 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 
 		self.aaSeq = ''
 		self.ntSeq = ''
+		self.data = []
 
 		self.ui.comboBox.currentTextChanged.connect(self.makeSeqHTML)
 		self.ui.clear.clicked.connect(self.clearSelection)
 		self.ui.pushButtonAdd.clicked.connect(self.updateHTML)
 		self.ui.pushButtonGenerate.clicked.connect(self.previewFragments)
+		self.ui.pushButtonCancel.clicked.connect(self.reject)
+		self.ui.pushButtonConfirm.clicked.connect(self.accept)
+		self.ui.pushButtonBrowse.clicked.connect(self.browse)
+		#self.ui.browseDB.clicked.connect(self.browse_db)
+		#self.ui.createDB.clicked.connect(self.new_db)
 
-	def previewFragments(self):
-		global VGenesTextWindows
+	def browse_db(self):  # browse and select path
+		global temp_folder
+		out_dir, _ = QFileDialog.getOpenFileName(self, "select existing fragment DB", temp_folder,"Librator database Files (*.ldb);;All Files (*)")
+		# check if this is the right DB
+		if out_dir == '':
+			return
+		SQLStatement = 'SELECT * FROM Fragments ORDER BY Name DESC LIMIT 1 '
+		try:
+			DataIn = RunSQL(out_dir, SQLStatement)
+		except:
+			QMessageBox.warning(self, 'Warning', 'There is no Fragments table in the selected database!', QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+		self.ui.dbpath.setText(out_dir)
 
+	def new_db(self):
+		options = QtWidgets.QFileDialog.Options()
+		DBFilename, _ = QtWidgets.QFileDialog.getSaveFileName(self,
+		                                                      "New Fragment Database",
+		                                                      "New Fragment database",
+		                                                      "Librator database Files (*.ldb);;All Files (*)",
+		                                                      options=options)
+		if DBFilename != 'none':
+			creatnewFragmentDB(DBFilename)
+			self.ui.dbpath.setText(DBFilename)
+
+	def browse(self):  # browse and select path
+		global temp_folder
+		out_dir = QFileDialog.getExistingDirectory(self, "select files", temp_folder)
+		self.ui.outpath.setText(out_dir)
+
+	def accept(self):  # redo accept method
+		global working_prefix
+
+		if os.path.isdir(self.ui.outpath.text()):
+			pass
+		else:
+			QMessageBox.warning(self, 'Warning', 'The output path is not a directory! Check your input!',
+			                    QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		self.GibsonFragments()
+
+		#active_tab = self.ui.tabWidget.currentIndex()
+		active_tab = 1
+		if active_tab == 0:
+			# validate if the DB have correct table
+			SQLStatement = 'SELECT * FROM Fragments ORDER BY Name DESC LIMIT 1 '
+			try:
+				DataIn = RunSQL(self.ui.dbpath.text(), SQLStatement)
+			except:
+				QMessageBox.warning(self, 'Warning', 'There is no Fragments table in the selected database!',
+				                    QMessageBox.Ok, QMessageBox.Ok)
+				return
+			# send signal
+			joint_up = self.ui.jointUP.toPlainText()
+			joint_down = self.ui.jointDOWN.toPlainText()
+			db_path = [self.ui.dbpath.text()]
+			out_path = self.ui.outpath.text()
+
+			if joint_up == "" or joint_down == "":  # OriPos
+				QMessageBox.warning(self, 'Warning',
+				                    'The joint region can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
+				return
+			else:
+				if out_path == "":
+					QMessageBox.warning(self, 'Warning',
+					                    'The output path can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
+					return
+
+			self.GibsonConfirm(self.data, joint_up, joint_down, out_path)
+		elif active_tab == 1:
+			# send signal
+			joint_up = self.ui.jointUP.text()
+			joint_down = self.ui.jointDOWN.text()
+			out_path = self.ui.outpath.text()
+
+			#server_ip = self.ui.IPinput.text()
+			#server_port = self.ui.Portinput.text()
+			#db_name = self.ui.DBnameinput.text()
+			#db_user = self.ui.Userinput.text()
+			#db_pass = self.ui.Passinput.text()
+
+			seq_name = self.ui.comboBox.currentText()
+
+			#db_path = [server_ip, server_port, db_name, db_user, db_pass]
+
+			if joint_up == "" or joint_down == "":  # OriPos
+				QMessageBox.warning(self, 'Warning',
+				                    'The joint region can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
+				return
+
+			if out_path == "":
+				QMessageBox.warning(self, 'Warning',
+				                    'The output path can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
+				return
+
+			#if server_ip == '' or db_name == '' or db_user == '' or db_pass == '':
+			#	QMessageBox.warning(self, 'Warning',
+			#	                    'The output path can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
+			#	return
+
+			# save MYSQL setting
+			#mysql_setting_file = os.path.join(working_prefix, 'Conf', 'mysql_setting.txt')
+			#file_handle = open(mysql_setting_file, 'w')
+			#my_info = self.ui.IPinput.text() + ',' + self.ui.Portinput.text() + ',' + self.ui.DBnameinput.text() + \
+			#          ',' + self.ui.Userinput.text() + ',' + self.ui.Passinput.text()
+			#file_handle.write(my_info)
+			#file_handle.close()
+
+			self.GibsonConfirm(self.data, joint_up, joint_down, out_path, seq_name)
+
+	def GibsonConfirm(self, data, joint_up, joint_down, out_path, seq_name):
+		# write result into file
+		seq_name = re.sub(r'\s+','',seq_name)
+		seq_name = re.sub(r'\W', '_', seq_name)
+		out_file = os.path.join(out_path, seq_name + '.fasta')
+		fw = open(out_file, 'w')
+		i = 1
+		for fragment in data:
+			fw.write('>' + seq_name + '-Fragment' + str(i) + '\n')
+			if i == 1:
+				fw.write(joint_up + fragment[1] + '\n')
+			elif i == len(data):
+				fw.write(fragment[1] + joint_down + '\n')
+			else:
+				fw.write(fragment[1] + '\n')
+			i += 1
+
+		# open Fragments file folder
+		my_cur_os = system()
+		if my_cur_os == 'Windows':
+			cmd = 'explorer ' + out_path     # Windows
+		elif my_cur_os == 'Darwin':
+			cmd = 'open ' + out_path      # mac
+		elif my_cur_os == 'Linux':
+			cmd = 'nautilus' + out_path   # Linux
+		else:
+			cmd = ''
+		if cmd != '':
+			try:
+				os.system(cmd)
+			except ValueError:
+				pass
+
+		Msg = 'Gibson Clone fragments generated!'
+		QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
+
+		self.close()
+
+	def GibsonFragments(self):
 		if len(self.info) == 0:
 			Msg = 'No joint region exist!'
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
@@ -207,11 +361,16 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 			return
 
+		self.data = GenerateGibsonSingleAlignment(self.aaSeq, self.ntSeq, self.info)
+
+	def previewFragments(self):
+		global VGenesTextWindows
+
 		# generate gibson clone
-		data = GenerateGibsonSingleAlignment(self.aaSeq, self.ntSeq, self.info)
+		self.GibsonFragments()
 
 		# generate HTML
-		html_page = GibsonSingleAlignmentHTML(data, self.aaSeq, self.ntSeq)
+		html_page = GibsonSingleAlignmentHTML(self.data, self.aaSeq, self.ntSeq)
 
 		# show HTML
 		## delete close window objects
@@ -338,7 +497,6 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 			layout.addWidget(self.view)
 		else:
 			self.view.load(QUrl("file://" + html_file))
-
 
 class MyObjectCls(QObject):
 	updateSelectionSignal = pyqtSignal(str)
@@ -736,6 +894,20 @@ class GibsonMSADialog(QtWidgets.QDialog):
 	gibson_msa_Signal = pyqtSignal(object, int, list, str, list, str, int)
 	def __init__(self):
 		super(GibsonMSADialog, self).__init__()
+		self.ui = Ui_GibsonMSADialog()
+		self.ui.setupUi(self)
+
+		self.ui.confirmButton.clicked.connect(self.accept)
+		self.ui.cancelButton.clicked.connect(self.reject)
+
+	def accept(self):
+		self.gibson_msa_Signal.emit(self.fragment_data, self.mode, self.db_file, self.out_dir, self.joint, self.subtype, self.num_frag)
+		self.close()
+
+class GibsonMSAOldDialog(QtWidgets.QDialog):
+	gibson_msa_Signal = pyqtSignal(object, int, list, str, list, str, int)
+	def __init__(self):
+		super(GibsonMSAOldDialog, self).__init__()
 		self.ui = Ui_GibsonMSADialog()
 		self.ui.setupUi(self)
 
@@ -13692,8 +13864,18 @@ class LibratorMain(QtWidgets.QMainWindow):
 		F2_seq_text = '\n'.join(F2_seqs) + '\n'
 		F3_seq_text = '\n'.join(F3_seqs) + '\n'
 
+		len_f1 = len(F1_seqs[0])
+		len_f2 = len(F2_seqs[0])
+		len_f3 = len(F3_seqs[0])
+		if num_fragment == 4:
+			F4_seqs = fragment_data['F_AA_4_origin'].tolist()
+			len_f4 = len(F4_seqs[0])
+		else:
+			len_f4 = 0
+
 		# create dialog
 		self.modalessGibsonMSADialog = GibsonMSADialog()
+		'''
 		# set values and text
 		self.modalessGibsonMSADialog.ui.nameList.addItems(seq_names)
 		self.modalessGibsonMSADialog.ui.seqEditF1.setText(F1_seq_text)
@@ -13796,6 +13978,19 @@ class LibratorMain(QtWidgets.QMainWindow):
 		else:
 			len_f4 = 0
 			self.modalessGibsonMSADialog.ui.tabWidget.removeTab(3)
+		'''
+		# make HTML
+		html_file = GibsonHTML(fragment_data, aa_start, aa_end, del_in_fragment, fix_in_fragment, 'template6.html')
+		if html_file[0] == 'W':
+			QMessageBox.warning(self, 'Warning', html_file, QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		# display
+		layout = self.modalessGibsonMSADialog.ui.gridLayoutFragment
+		view = QWebEngineView(self)
+		view.load(QUrl("file://" + html_file))
+		view.show()
+		layout.addWidget(view)
 
 		# link data
 		self.modalessGibsonMSADialog.fragment_data = fragment_data
@@ -13811,31 +14006,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessGibsonMSADialog.gibson_msa_Signal.connect(self.GibsonConfirm)
 		# show dialog
 		self.modalessGibsonMSADialog.show()
-
-		# another gibson clone fragments viewer
-		# make HTML
-		html_file = GibsonHTML(fragment_data, aa_start, aa_end, del_in_fragment, fix_in_fragment, 'template6.html')
-		if html_file[0] == 'W':
-			QMessageBox.warning(self, 'Warning', html_file, QMessageBox.Ok, QMessageBox.Ok)
-			return
-		# delete close window objects
-		del_list = []
-		for id, obj in VGenesTextWindows.items():
-			if obj.isVisible() == False:
-				del_list.append(id)
-		for id in del_list:
-			del_obj = VGenesTextWindows.pop(id)
-
-		# display
-		window_id = int(time.time() * 100)
-		VGenesTextWindows[window_id] = htmlDialog()
-		VGenesTextWindows[window_id].id = window_id
-		layout = QGridLayout(VGenesTextWindows[window_id])
-		view = QWebEngineView(self)
-		view.load(QUrl("file://" + html_file))
-		view.show()
-		layout.addWidget(view)
-		VGenesTextWindows[window_id].show()
 
 	@pyqtSlot()
 	def on_actionGinsonCloneSingle_triggered(self):
@@ -13876,12 +14046,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 		my_info = my_info.strip('\n')
 		Setting = my_info.split(',')
 
-		self.GibsonSingleDialog.ui.IPinput.setText(Setting[0])
-		self.GibsonSingleDialog.ui.Portinput.setText(Setting[1])
-		self.GibsonSingleDialog.ui.DBnameinput.setText(Setting[2])
-		self.GibsonSingleDialog.ui.Userinput.setText(Setting[3])
-		self.GibsonSingleDialog.ui.Passinput.setText(Setting[4])
-		self.GibsonSingleDialog.ui.dbpath.setText(fragmentdb_path)
+		#self.GibsonSingleDialog.ui.IPinput.setText(Setting[0])
+		#self.GibsonSingleDialog.ui.Portinput.setText(Setting[1])
+		#self.GibsonSingleDialog.ui.DBnameinput.setText(Setting[2])
+		#self.GibsonSingleDialog.ui.Userinput.setText(Setting[3])
+		#self.GibsonSingleDialog.ui.Passinput.setText(Setting[4])
+		#self.GibsonSingleDialog.ui.dbpath.setText(fragmentdb_path)
 
 		self.GibsonSingleDialog.show()
 

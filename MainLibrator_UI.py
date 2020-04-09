@@ -1280,6 +1280,7 @@ class Ui_MainLibrator(object):
         self.actionIdentifyMutation.setIcon(icon8)
         self.actionIdentifyMutation.setObjectName("actionIdentifyMutation")
         self.actionGinsonCloneSingle = QtWidgets.QAction(MainLibrator)
+        self.actionGinsonCloneSingle.setIcon(icon)
         self.actionGinsonCloneSingle.setObjectName("actionGinsonCloneSingle")
         self.menuFile.addAction(self.action_New)
         self.menuFile.addAction(self.action_Open)

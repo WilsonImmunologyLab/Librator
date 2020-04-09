@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1117</width>
-    <height>866</height>
+    <width>1118</width>
+    <height>819</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,7 +25,7 @@
       <string>Settings</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_5">
-      <item row="0" column="0">
+      <item row="0" column="0" colspan="3">
        <widget class="QFrame" name="frame_4">
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
@@ -57,99 +57,22 @@
         </layout>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QTabWidget" name="tabWidget">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>120</height>
-         </size>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="pushButtonBrowse">
+        <property name="text">
+         <string>Browse</string>
         </property>
-        <property name="currentIndex">
-         <number>0</number>
-        </property>
-        <widget class="QWidget" name="tab_3">
-         <attribute name="title">
-          <string>Loacl DB</string>
-         </attribute>
-         <layout class="QGridLayout" name="gridLayout_8">
-          <item row="0" column="0">
-           <widget class="QLineEdit" name="dbpath"/>
-          </item>
-          <item row="0" column="1">
-           <widget class="QPushButton" name="createDB">
-            <property name="text">
-             <string>Create</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QPushButton" name="browseDB">
-            <property name="text">
-             <string>Browse</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="tab_4">
-         <attribute name="title">
-          <string>Remote DB</string>
-         </attribute>
-         <layout class="QGridLayout" name="gridLayout_9">
-          <item row="0" column="5">
-           <widget class="QLabel" name="label_9">
-            <property name="text">
-             <string>DB name</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="6">
-           <widget class="QLineEdit" name="DBnameinput"/>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="Userinput"/>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_8">
-            <property name="text">
-             <string>User Name</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3" colspan="2">
-           <widget class="QLineEdit" name="Portinput"/>
-          </item>
-          <item row="1" column="2" colspan="2">
-           <widget class="QLabel" name="label_10">
-            <property name="text">
-             <string>Password</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_7">
-            <property name="text">
-             <string>Server IP</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="4" colspan="3">
-           <widget class="QLineEdit" name="Passinput"/>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_11">
-            <property name="text">
-             <string>Port</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="IPinput"/>
-          </item>
-         </layout>
-        </widget>
        </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Output Path</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="outpath"/>
       </item>
      </layout>
     </widget>
@@ -303,7 +226,7 @@
      </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>914</width>
+       <width>915</width>
        <height>20</height>
       </size>
      </property>
