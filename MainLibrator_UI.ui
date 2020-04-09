@@ -2711,6 +2711,7 @@
     </property>
     <addaction name="actionGibsonClone"/>
     <addaction name="actionGibsonClone_Setting"/>
+    <addaction name="actionGinsonCloneSingle"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSequences"/>
@@ -3437,6 +3438,11 @@
    </property>
    <property name="toolTip">
     <string>Identify mutations</string>
+   </property>
+  </action>
+  <action name="actionGinsonCloneSingle">
+   <property name="text">
+    <string>GinsonClone for single sequence</string>
    </property>
   </action>
  </widget>

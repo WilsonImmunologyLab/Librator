@@ -46,6 +46,7 @@ from updatesequencedialog import Ui_UpdateSequenceDialog
 from deletedialog import Ui_deleteDialog
 from treedialog import Ui_treeDialog
 from gibsonalignmentdialog import Ui_GibsonMSADialog
+from gibsonsingledialog import Ui_GibsonSingleDialog
 from jointdialog import Ui_JointDialog
 from htmldialog import Ui_htmlDialog
 from aa_or_nt import Ui_aantDialog
@@ -173,6 +174,111 @@ else:
 	file_handle.write(joint_up + '\n')
 	file_handle.write(joint_down)
 	file_handle.close()
+
+class GibsonSingleDialog(QtWidgets.QDialog):
+	def __init__(self):
+		super(GibsonSingleDialog, self).__init__()
+		self.ui = Ui_GibsonSingleDialog()
+		self.ui.setupUi(self)
+
+		self.view = ''
+		self.info = {}
+
+		self.ui.comboBox.currentTextChanged.connect(self.makeSeqHTML)
+		self.ui.clear.clicked.connect(self.clearSelection)
+		self.ui.pushButtonAdd.clicked.connect(self.updateHTML)
+
+	def updateHTML(self):
+		# get sequence editing information
+		del_start = self.ui.spinBoxStart.text()
+		del_end = self.ui.spinBoxEnd.text()
+
+		# input check
+		try:
+			del_start = int(del_start)
+			del_end = int(del_end)
+
+		except ValueError:
+			QMessageBox.warning(self, 'Warning', 'Please type integer numbers in all four inputs! Check your input!',
+			                    QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+		else:
+			if del_start >= del_end:
+				QMessageBox.warning(self, 'Warning',
+				                    'start position should be smaller than end position!', QMessageBox.Ok,
+				                    QMessageBox.Ok)
+				return
+
+			if (del_end - del_start) < 8:
+				question = 'Length of joint region seems too short (< 9 peptide), do you still want to continue?'
+				buttons = 'YN'
+				answer = questionMessage(self, question, buttons)
+				if answer == 'No':
+					return
+
+		# check if current replacement is conflict with existing ones
+		if len(self.info) > 0:
+			for key in self.info:
+				cur_start = self.info[key][0]
+				cur_end = self.info[key][1]
+				if checkOverlap(cur_start, cur_end, del_start, del_end):
+					QMessageBox.warning(self, 'Warning',
+					                    'The replace region on Base sequence is conflict with existing replace region!',
+					                    QMessageBox.Ok,
+					                    QMessageBox.Ok)
+					return
+
+		key = int(time.time() * 100)
+		self.info[key] = [del_start, del_end, 'joint region', 'joint region', 'joint region']
+		self.makeSeqHTML()
+
+	def clearSelection(self):
+		self.info = {}
+
+		self.makeSeqHTML()
+
+	def deleteReplacement(self, id):
+		del self.info[int(id)]
+		print("signal received!")
+
+	def makeSeqHTML(self):
+		if self.ui.comboBox.currentText() == 'Please choose template sequence':
+			return
+
+		WhereState = 'SeqName = "' + self.ui.comboBox.currentText() + '"'
+		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+
+		SeqName = DataIn[0][0]
+		Sequence = DataIn[0][1]
+		VFrom = int(DataIn[0][2]) - 1
+		if VFrom == -1: VFrom = 0
+		VTo = int(DataIn[0][3])
+		Sequence = Sequence[VFrom:VTo]
+		Sequence = Sequence.upper()
+		AASequence = Translator(Sequence,0)
+		AASequence = AASequence[0]
+
+		html_file = GibsonSingleHTML(AASequence, Sequence, self.info)
+
+		# display
+		if self.view == '':
+			self.view = QWebEngineView()
+			channel = QWebChannel(self.view.page())
+			my_object = MyObjectCls(self.view)
+			channel.registerObject('connection', my_object)
+			self.view.page().setWebChannel(channel)
+			my_object.updateSelectionSignal.connect(self.deleteReplacement)
+
+			self.view.load(QUrl("file://" + html_file))
+			self.view.show()
+
+			layout = self.ui.gridLayoutSeq
+			layout.addWidget(self.view)
+		else:
+			self.view.load(QUrl("file://" + html_file))
+
 
 class MyObjectCls(QObject):
 	updateSelectionSignal = pyqtSignal(str)
@@ -13671,6 +13777,55 @@ class LibratorMain(QtWidgets.QMainWindow):
 		layout.addWidget(view)
 		VGenesTextWindows[window_id].show()
 
+	@pyqtSlot()
+	def on_actionGinsonCloneSingle_triggered(self):
+		global working_prefix
+		global joint_down
+		global joint_up
+		global H1_start, H1_end
+		global fragmentdb_path
+		global DBFilename
+
+		if self.ui.listWidgetStrainsIn.count() == 0:
+			QMessageBox.warning(self, 'Warning', 'Please active some sequences first!', QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		self.GibsonSingleDialog = GibsonSingleDialog()
+
+		active_list = ['Please choose template sequence']
+		for i in range(self.ui.listWidgetStrainsIn.count()):
+			active_list.append(self.ui.listWidgetStrainsIn.item(i).text())
+		self.GibsonSingleDialog.ui.comboBox.addItems(active_list)
+
+		self.GibsonSingleDialog.ui.jointUP.setText(joint_up)
+		self.GibsonSingleDialog.ui.jointDOWN.setText(joint_down)
+		# check saved MYSQL setting
+		mysql_setting_file = os.path.join(working_prefix, 'Conf', 'mysql_setting.txt')
+
+		if os.path.exists(mysql_setting_file):
+			my_open = open(mysql_setting_file, 'r')
+			my_info = my_open.readlines()
+			my_open.close()
+			my_info = my_info[0]
+		else:
+			file_handle = open(mysql_setting_file, 'w')
+			my_info = ',,,,'
+			file_handle.write(my_info)
+			file_handle.close()
+
+		my_info = my_info.strip('\n')
+		Setting = my_info.split(',')
+
+		self.GibsonSingleDialog.ui.IPinput.setText(Setting[0])
+		self.GibsonSingleDialog.ui.Portinput.setText(Setting[1])
+		self.GibsonSingleDialog.ui.DBnameinput.setText(Setting[2])
+		self.GibsonSingleDialog.ui.Userinput.setText(Setting[3])
+		self.GibsonSingleDialog.ui.Passinput.setText(Setting[4])
+		self.GibsonSingleDialog.ui.dbpath.setText(fragmentdb_path)
+
+		self.GibsonSingleDialog.show()
+
+
 	def GibsonConfirm(self, fragment_data, mode, db_file, out_dir, joint, subtype, num_fragment):
 		new_fragment_name_list = []
 		existing_fragment_name_list = []
@@ -14656,6 +14811,35 @@ def MakeSeqWithInseetion(class_name,id,AAseq,info):
 
 	return div_seq
 
+def MakeAASeqWithInseetion(class_name,id,AAseq,info):
+	start_dict = {}
+	end_dict = {}
+	if len(info) > 0:
+		for ele in info:
+			start_dict[info[ele][0]] = ele
+			end_dict[info[ele][1]] = ele
+
+	div_seq = '<div class="' + class_name + '" id="' + id + '">'
+	i = 0
+	for aa in AAseq:
+		pos = i + 1
+		if end_dict.__contains__(pos):
+			div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + aa + '</span><span class="insert">&nbsp;</span></span>'
+			div_seq += '<span class="insertion" style="margin-top: 10px;">' + info[end_dict[pos]][2] + '</span>'
+			div_seq += '</span>'
+			i += 1
+			continue
+		if start_dict.__contains__(pos):
+			div_seq += '<span class="replace" id="' + str(start_dict[pos]) + '" title="' + info[start_dict[pos]][4] + '">'
+			div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + aa + '</span><span class="insert">&nbsp;</span></span>'
+			i += 1
+			continue
+		div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + aa + '</span><span class="insert">&nbsp;</span></span>'
+		i += 1
+	div_seq += '</div>'
+
+	return div_seq
+
 def SequencesHTML(AAseq, info):
 	# import tempfile
 	import os
@@ -14754,6 +14938,56 @@ def SequencesHTML(AAseq, info):
 	out_file_handle.write('\n</div>')
 	info_div = '<div class="info_div" style="margin-top: 300px;">\n<p id = "info">Insertion information</p>\n</div>'
 	out_file_handle.write(info_div)
+	out_file_handle.write('\n</body>\n</html>')
+	out_file_handle.close()
+	return out_html_file
+
+def GibsonSingleHTML(AAseq, NTseq,info):
+	# import tempfile
+	import os
+	TupData = ()
+	global GLMsg
+	global working_prefix
+	global clustal_path
+	global temp_folder
+	global muscle_path
+
+	# make header HTML
+	pos_aa_data = [list(range(1,len(AAseq)+1)),list(range(1,len(AAseq)+1))]
+	div_pos_aa = MakeDivPosAA('line line_pos_aa', 'Position AA:', 'Original AA position: ', pos_aa_data)
+	pos_nt_data = [list(range(1, len(NTseq) + 1)), list(range(1, len(NTseq) + 1))]
+	div_pos_nt = MakeDivPosNT('line line_pos_nt', 'Position NT:', 'Original NT position: ', pos_nt_data)
+	# make sequence section HTML
+	div_seq_aa = MakeAASeqWithInseetion('line line_aa', 'seq', AAseq, info)
+	div_seq_nt = MakeDivNT('line line_nt', 'seq', NTseq)
+	CSSdata = '<style type="text/css">.seq_div {width: ' + str(17*len(NTseq)) + 'px;}</style>\n'
+
+	# initial and open HTML file
+	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+	out_html_file = os.path.join(temp_folder, time_stamp + '.html')
+	header_file = os.path.join(working_prefix, 'Data', 'template7.html')
+	shutil.copyfile(header_file, out_html_file)
+	out_file_handle = open(out_html_file, 'a')
+
+	name_div = '<div class = "name_div">\n'
+	name_div += div_pos_aa[0] + '\n'
+	name_div += div_pos_nt[0] + '\n'
+	name_div += '<div class="line line_aa"><span class="name">AA seq:</span></div>\n'
+	name_div += '<div class="line line_aa"><span class="name">NT seq:</span></div>\n'
+	name_div += '</div>\n'
+
+	seq_div = '<div class = "seq_div">\n'
+	# write header section
+	seq_div += div_pos_aa[1] + '\n'
+	seq_div += div_pos_nt[1] + '\n'
+	seq_div += div_seq_aa + '\n'
+	seq_div += div_seq_nt[1] + '\n'
+	seq_div += '</div>\n'
+
+	out_file_handle.write(CSSdata)
+	out_file_handle.write(name_div)
+	out_file_handle.write(seq_div)
+	out_file_handle.write('\n</div>')
 	out_file_handle.write('\n</body>\n</html>')
 	out_file_handle.close()
 	return out_html_file
