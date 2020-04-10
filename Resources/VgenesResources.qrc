@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="PNG-Icons">
+    <file>ATCG.png</file>
+    <file>MKPR.png</file>
     <file>color1.png</file>
     <file>color2.png</file>
     <file>color3.png</file>

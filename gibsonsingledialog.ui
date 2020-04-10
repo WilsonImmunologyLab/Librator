@@ -121,6 +121,9 @@
      <property name="text">
       <string>Confirm</string>
      </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
      <property name="default">
       <bool>true</bool>
      </property>
@@ -190,65 +193,18 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="2" column="0" colspan="5">
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QPushButton" name="clear">
-          <property name="text">
-           <string>Clear</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="spinBoxStart">
-          <property name="minimumSize">
-           <size>
-            <width>80</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximum">
-           <number>9999</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="spinBoxEnd">
-          <property name="minimumSize">
-           <size>
-            <width>80</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximum">
-           <number>9999</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButtonAdd">
-          <property name="text">
-           <string>Add Joint</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="0" column="3" colspan="2">
-       <widget class="QComboBox" name="comboBox"/>
+      <item row="0" column="0" colspan="2">
+       <widget class="QLabel" name="label">
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Choose your target sequence:</string>
+        </property>
+       </widget>
       </item>
       <item row="1" column="0" colspan="5">
        <widget class="QFrame" name="frame_5">
@@ -277,18 +233,65 @@
         </layout>
        </widget>
       </item>
-      <item row="0" column="0" colspan="3">
-       <widget class="QLabel" name="label">
-        <property name="maximumSize">
-         <size>
-          <width>300</width>
-          <height>16777215</height>
-         </size>
-        </property>
+      <item row="2" column="0">
+       <widget class="QPushButton" name="clear">
         <property name="text">
-         <string>Choose your target sequence:</string>
+         <string>Clear</string>
         </property>
        </widget>
+      </item>
+      <item row="2" column="1" colspan="2">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>628</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="3">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QSpinBox" name="spinBoxStart">
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximum">
+           <number>9999</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="spinBoxEnd">
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximum">
+           <number>9999</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="4">
+       <widget class="QPushButton" name="pushButtonAdd">
+        <property name="text">
+         <string>Add Joint</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" colspan="3">
+       <widget class="QComboBox" name="comboBox"/>
       </item>
      </layout>
     </widget>

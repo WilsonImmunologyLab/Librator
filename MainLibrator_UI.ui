@@ -2245,7 +2245,17 @@
            </size>
           </property>
           <property name="text">
-           <string>Nucleotide </string>
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="Resources/VgenesResources.qrc">
+            <normaloff>:/PNG-Icons/ATCG.png</normaloff>:/PNG-Icons/ATCG.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>30</width>
+            <height>16</height>
+           </size>
           </property>
          </widget>
         </item>
@@ -2271,7 +2281,17 @@
            </size>
           </property>
           <property name="text">
-           <string>Peptide</string>
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="Resources/VgenesResources.qrc">
+            <normaloff>:/PNG-Icons/MKPR.png</normaloff>:/PNG-Icons/MKPR.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>40</width>
+            <height>16</height>
+           </size>
           </property>
           <property name="default">
            <bool>false</bool>
