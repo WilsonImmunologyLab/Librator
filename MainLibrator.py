@@ -2830,14 +2830,14 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 
 	def new_db(self):
 		options = QtWidgets.QFileDialog.Options()
-		DBFilename, _ = QtWidgets.QFileDialog.getSaveFileName(self,
+		file, _ = QtWidgets.QFileDialog.getSaveFileName(self,
 		                                                      "New Fragment Database",
 		                                                      "New Fragment database",
 		                                                      "Librator database Files (*.ldb);;All Files (*)",
 		                                                      options=options)
-		if DBFilename != 'none':
-			creatnewFragmentDB(DBFilename)
-			self.ui.dbpath.setText(DBFilename)
+		if file != 'none' and file != '':
+			creatnewFragmentDB(file)
+			self.ui.dbpath.setText(file)
 
 
 	def accept(self):  # redo accept method
