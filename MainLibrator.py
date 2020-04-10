@@ -241,7 +241,11 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 			                    QMessageBox.Ok, QMessageBox.Ok)
 			return
 
-		self.GibsonFragments()
+		res = self.GibsonFragments()
+		if res:
+			pass
+		else:
+			return
 
 		#active_tab = self.ui.tabWidget.currentIndex()
 		active_tab = 1
@@ -354,20 +358,25 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 		if len(self.info) == 0:
 			Msg = 'No joint region exist!'
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
-			return
+			return False
 
 		if self.aaSeq == '' or self.ntSeq == '':
 			Msg = 'Please determine a sequence!'
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
-			return
+			return False
 
 		self.data = GenerateGibsonSingleAlignment(self.aaSeq, self.ntSeq, self.info)
+		return True
 
 	def previewFragments(self):
 		global VGenesTextWindows
 
 		# generate gibson clone
-		self.GibsonFragments()
+		res = self.GibsonFragments()
+		if res:
+			pass
+		else:
+			return
 
 		# generate HTML
 		html_page = GibsonSingleAlignmentHTML(self.data, self.aaSeq, self.ntSeq)
