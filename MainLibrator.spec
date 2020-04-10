@@ -16,6 +16,7 @@ added_files = [
              ('/Users/leil/Documents/Projects/Librator/Librator/Data/template4.html','Data'),
              ('/Users/leil/Documents/Projects/Librator/Librator/Data/template5.html','Data'),
              ('/Users/leil/Documents/Projects/Librator/Librator/Data/template6.html','Data'),
+             ('/Users/leil/Documents/Projects/Librator/Librator/Data/template7.html','Data'),
              ('/Users/leil/Documents/Projects/Librator/Librator/Conf/db_record.txt','Conf'),
              ('/Users/leil/Documents/Projects/Librator/Librator/Conf/db_record.txt','Temp'),
              ('/Users/leil/Documents/Projects/Librator/Librator/PDB/4jtv.cif','PDB'),

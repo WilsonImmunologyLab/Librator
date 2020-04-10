@@ -14286,7 +14286,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 def GibsonSingleAlignmentHTML(data, aaSeq, ntSeq):
 	# determine width of div
-	CSSdata = '<style type="text/css">.seq_div {width: ' + str(40 * len(aaSeq)) + 'px;}</style>\n'
+	width_aa = 14 * len(aaSeq)
+	width_nt = 40 * len(aaSeq)
+	CSSdata = '<style type="text/css">.seq_div {width: ' + str(width_nt) + 'px;}</style>\n'
 	# calculate distance
 	margin_top_double = [70, 170]
 	margin_top_single = [70, 126]
@@ -14312,6 +14314,7 @@ def GibsonSingleAlignmentHTML(data, aaSeq, ntSeq):
 	var_str += 'var margin_top_single = [' + ','.join(s) + '];\n'
 	var_str += 'var margin_left_nt = [' + ','.join(margin_left_nt) + '];\n'
 	var_str += 'var margin_left_aa = [' + ','.join(margin_left_aa) + '];\n'
+	var_str += 'var seq_width = [' + str(width_nt) + ',' + str(width_aa) + '];\n'
 	var_str += '</script>\n'
 
 	# make name_section_str
@@ -14395,7 +14398,9 @@ def GibsonHTML(fragment_data, aa_start, aa_end, del_in_fragment, fix_in_fragment
 	#div_pos_aa = MakeDivPosAA('line line_pos_aa', 'Position AA:', 'Original AA position: ', pos_aa_data)
 	#pos_nt_data = [list(range(1, len(AAseq) + 1)), list(range(1, len(AAseq) + 1))]
 	#div_pos_nt = MakeDivPosAA('line line_pos_aa', 'Position AA:', 'Original AA position: ', pos_aa_data)
-	CSSdata = '<style type="text/css">.seq_div {width: ' + str(40 * aa_end[-1]) + 'px;}</style>\n'
+	width_aa = 14 * aa_end[-1]
+	width_nt = 40 * aa_end[-1]
+	CSSdata = '<style type="text/css">.seq_div {width: ' + str(width_nt) + 'px;}</style>\n'
 
 	# calculate distance
 	margin_top_double = [70, 126]
@@ -14432,6 +14437,7 @@ def GibsonHTML(fragment_data, aa_start, aa_end, del_in_fragment, fix_in_fragment
 	var_str += 'var margin_top_single = [' + ','.join(s) + '];\n'
 	var_str += 'var margin_left_nt = [' + ','.join(margin_left_nt) + '];\n'
 	var_str += 'var margin_left_aa = [' + ','.join(margin_left_aa) + '];\n'
+	var_str += 'var seq_width = [' + str(width_nt) + ',' + str(width_aa) + '];\n'
 	var_str += '</script>\n'
 
 	# make name_section_str
@@ -15541,8 +15547,11 @@ def AlignSequencesHTML(DataSet, template):
 	shutil.copyfile(header_file, out_html_file)
 	out_file_handle = open(out_html_file, 'a')
 
-	CSSdata = '<style type="text/css">.seq_div {width: ' + str(40*len(compact_consensusAA)) + 'px;}</style>\n'
+	width_aa = 14 * len(compact_consensusAA)
+	width_nt = 40 * len(compact_consensusAA)
+	CSSdata = '<style type="text/css">.seq_div {width: ' + str(width_nt) + 'px;}</style>\n'
 	JSdata = '<script type="text/javascript">\n'
+	JSdata += 'var seq_width = [' + str(width_nt) + ',' + str(width_aa) + '];\n'
 	JSdata += 'var data = {\n'
 	JSarray = []
 	JStext = '"Seq0":["Consensus","' + compact_consensusAA + '","' + consensusDNA + '"]'
@@ -15751,7 +15760,13 @@ def EditSequencesHTML(DataSet, donor_region, template):
 	div_pos_nt = MakeDivPosNT('line line_pos_nt', 'Position NT:', 'Original NT position: ', pos_nt_data)
 
 	# initial and open HTML file
-	CSSdata = '<style type="text/css">.seq_div {width: ' + str(40*len(compact_consensusAA)) + 'px;}</style>\n'
+	width_aa = 14 * len(compact_consensusAA)
+	width_nt = 40 * len(compact_consensusAA)
+	CSSdata = '<style type="text/css">.seq_div {width: ' + str(width_nt) + 'px;}</style>\n'
+	JSdata = '<script type="text/javascript">\n'
+	JSdata += 'var seq_width = [' + str(width_nt) + ',' + str(width_aa) + '];\n'
+	JSdata += '</script>'
+
 	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
 	out_html_file = os.path.join(temp_folder, time_stamp + '.html')
 	header_file = os.path.join(working_prefix, 'Data', template)
@@ -15794,6 +15809,7 @@ def EditSequencesHTML(DataSet, donor_region, template):
 	seq_div += '</div>\n'
 
 	out_file_handle.write(CSSdata)
+	out_file_handle.write(JSdata)
 	out_file_handle.write('<div class="box">')
 	out_file_handle.write(name_div)
 	out_file_handle.write(seq_div)

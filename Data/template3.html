@@ -530,6 +530,12 @@ function selectionChange() {
 	else if($("#nt").is(':checked')){
 		$(".line_nt.1").find(".name").show()
 	}
+
+	if($("#nt").is(':checked')){
+		$(".seq_div").css({'width': seq_width[0]+'px'})
+	} else {
+		$(".seq_div").css({'width': seq_width[1]+'px'})
+	}
 }
 
 </script>
