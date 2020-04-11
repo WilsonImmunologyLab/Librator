@@ -2718,6 +2718,7 @@
     <addaction name="actionFusion"/>
     <addaction name="actionFusion_High_resolution"/>
     <addaction name="actionFusion_Low_reslution"/>
+    <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuVisualization">
     <property name="title">
@@ -3451,7 +3452,7 @@
   <action name="actionIdentifyMutation">
    <property name="icon">
     <iconset resource="Resources/VgenesResources.qrc">
-     <normaloff>:/PNG-Icons/Align.png</normaloff>:/PNG-Icons/Align.png</iconset>
+     <normaloff>:/PNG-Icons/mutationScan.png</normaloff>:/PNG-Icons/mutationScan.png</iconset>
    </property>
    <property name="text">
     <string>Identify Mutation</string>

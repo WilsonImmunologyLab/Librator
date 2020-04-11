@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="PNG-Icons">
+    <file>mutationScan.png</file>
     <file>ATCG.png</file>
     <file>MKPR.png</file>
     <file>color1.png</file>
