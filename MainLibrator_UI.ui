@@ -498,7 +498,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1033</width>
+             <width>1048</width>
              <height>1226</height>
             </rect>
            </property>
@@ -2839,7 +2839,7 @@
   <action name="action_Import">
    <property name="icon">
     <iconset resource="Resources/VgenesResources.qrc">
-     <normaloff>:/PNG-Icons/Import.png</normaloff>:/PNG-Icons/Import.png</iconset>
+     <normaloff>:/PNG-Icons/Import1.png</normaloff>:/PNG-Icons/Import1.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Import</string>
@@ -2854,7 +2854,7 @@
   <action name="actionExport">
    <property name="icon">
     <iconset resource="Resources/VgenesResources.qrc">
-     <normaloff>:/PNG-Icons/Export.png</normaloff>:/PNG-Icons/Export.png</iconset>
+     <normaloff>:/PNG-Icons/Export1.png</normaloff>:/PNG-Icons/Export1.png</iconset>
    </property>
    <property name="text">
     <string>Export</string>
