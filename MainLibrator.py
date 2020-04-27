@@ -1,4 +1,5 @@
-# Librator by Patrick Wilson Lab
+# Librator by Patrick Wilson Lab @Uchicago
+__author__ = 'wilsonp, lei'
 from PyQt5.QtCore import QObject, pyqtSlot, QTimer, QDateTime, Qt, QSortFilterProxyModel, QModelIndex, QEventLoop, pyqtSignal,\
 	QEventLoop, QUrl, QSize
 from PyQt5 import QtWidgets, QtPrintSupport, QtGui
