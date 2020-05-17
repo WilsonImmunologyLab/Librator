@@ -6,190 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1118</width>
-    <height>819</height>
+    <width>1184</width>
+    <height>827</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Gibson Clone fragments design</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_10">
-   <item row="3" column="0" colspan="3">
-    <widget class="QGroupBox" name="groupBox">
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-      </font>
-     </property>
-     <property name="title">
-      <string>Settings</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_5">
-      <item row="0" column="0" colspan="2">
-       <widget class="QFrame" name="frame_4">
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QGridLayout" name="gridLayout_4">
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_5">
-           <property name="text">
-            <string>Upstream Connector </string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QLabel" name="label_6">
-           <property name="text">
-            <string>Downstream Connector </string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="jointUP"/>
-         </item>
-         <item row="0" column="3">
-          <widget class="QLineEdit" name="jointDOWN"/>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="QFrame" name="frame_3">
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QGridLayout" name="gridLayout_6">
-         <item row="0" column="2">
-          <widget class="QPushButton" name="pushButtonBrowse">
-           <property name="text">
-            <string>Browse</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="outpath"/>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>Output Path</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="4" column="1">
-    <widget class="QPushButton" name="pushButtonCancel">
-     <property name="text">
-      <string>Cancel</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="3">
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QTextEdit" name="textEdit">
-       <property name="font">
-        <font>
-         <pointsize>16</pointsize>
-        </font>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButtonGenerate">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>50</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Preview Gibson Clone Fragments</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="4" column="2">
-    <widget class="QPushButton" name="pushButtonConfirm">
-     <property name="text">
-      <string>Confirm</string>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <spacer name="horizontalSpacer_4">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>915</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="0" column="0" colspan="3">
-    <widget class="QFrame" name="frame">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>50</height>
-      </size>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="font">
-         <font>
-          <pointsize>15</pointsize>
-         </font>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="text">
-         <string>Design Gibson Clone fragments for your sequence</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
+  <layout class="QGridLayout" name="gridLayout_8">
    <item row="1" column="0" colspan="3">
     <widget class="QFrame" name="frame_2">
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>200</height>
+       <height>300</height>
       </size>
      </property>
      <property name="frameShape">
@@ -298,6 +128,185 @@
       </item>
       <item row="0" column="2" colspan="3">
        <widget class="QComboBox" name="comboBox"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="3">
+    <layout class="QGridLayout" name="gridLayout_7">
+     <item row="1" column="0">
+      <widget class="QTextEdit" name="textEdit">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>99999</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="pushButtonGenerate">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Preview Gibson Clone Fragments</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="2">
+      <layout class="QGridLayout" name="gridLayoutFig"/>
+     </item>
+    </layout>
+   </item>
+   <item row="4" column="0">
+    <spacer name="horizontalSpacer_4">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>915</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="4" column="1">
+    <widget class="QPushButton" name="pushButtonCancel">
+     <property name="text">
+      <string>Cancel</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QPushButton" name="pushButtonConfirm">
+     <property name="text">
+      <string>Confirm</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="3">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="title">
+      <string>Settings</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_5">
+      <item row="0" column="0" colspan="2">
+       <widget class="QFrame" name="frame_4">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Upstream Connector </string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Downstream Connector </string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="jointUP"/>
+         </item>
+         <item row="0" column="3">
+          <widget class="QLineEdit" name="jointDOWN"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <widget class="QFrame" name="frame_3">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_6">
+         <item row="0" column="2">
+          <widget class="QPushButton" name="pushButtonBrowse">
+           <property name="text">
+            <string>Browse</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="outpath"/>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Output Path</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="3">
+    <widget class="QFrame" name="frame">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>50</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+         </font>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="text">
+         <string>Design Gibson Clone fragments for your sequence</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

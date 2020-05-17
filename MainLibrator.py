@@ -458,6 +458,36 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 		self.makeSeqHTML()
 		self.updateText()
 
+	def updateFig(self):
+		if self.ui.gridLayoutFig.count() > 0:
+			for i in range(self.ui.gridLayoutFig.count()):
+				self.ui.gridLayoutFig.itemAt(i).widget().deleteLater()
+
+		AAlen = len(self.aaSeq)
+
+		F = MyFigure(width=3, height=1, dpi=160)
+		#F.axes.set_ylim(1,1)
+		F.axes.get_yaxis().set_visible(False)
+		F.axes.spines['top'].set_visible(False)
+		F.axes.spines['bottom'].set_visible(True)
+		F.axes.spines['left'].set_visible(False)
+		F.axes.spines['right'].set_visible(False)
+
+		F.axes.plot([0,AAlen], [1,1], color='green', linewidth = 5, label="Seq")
+
+		if len(self.info) > 0:
+			for key in self.info:
+				cur_start = self.info[key][0]
+				cur_end = self.info[key][1]
+				F.axes.plot([cur_start, cur_end], [1, 1], color='r', linewidth=5, label="Joint")
+
+		F.fig.legend(frameon=False)
+
+		F.axes.tick_params(labelsize=7)
+		F.fig.subplots_adjust(bottom=0.4)
+
+		self.ui.gridLayoutFig.addWidget(F, 0, 1)
+
 	def clearSelection(self):
 		self.info = {}
 
@@ -507,6 +537,8 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 			layout.addWidget(self.view)
 		else:
 			self.view.load(QUrl("file://" + html_file))
+
+		self.updateFig()
 
 class MyObjectCls(QObject):
 	updateSelectionSignal = pyqtSignal(str)
