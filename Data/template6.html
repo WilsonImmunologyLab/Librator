@@ -407,18 +407,18 @@ function onmouseover_help(ele,event){
     var top = ele.offsetParent.clientTop + ele.offsetParent.offsetTop
 
     if($("#nt").is(':checked')) {
-    	if($("#aa").is(':checked')) {
-    		top = margin_top_double[0]
-    		height = margin_top_double[5] - margin_top_double[0]
-    	} else {
-    		top = margin_top_single[0]
-    		height = margin_top_single[5] - margin_top_single[0]
-    	}
+        if($("#aa").is(':checked')) {
+            top = margin_top_double[0]
+            height = margin_top_double[margin_top_double.length-1] - margin_top_double[0]
+        } else {
+            top = margin_top_single[0]
+            height = margin_top_single[margin_top_single.length-1] - margin_top_single[0]
+        }
     } else {
-    	if($("#aa").is(':checked')) {
-    		top = margin_top_single[0]
-    		height = margin_top_single[5] - margin_top_single[0]
-    	} 
+        if($("#aa").is(':checked')) {
+            top = margin_top_single[0]
+            height = margin_top_single[margin_top_single.length-1] - margin_top_single[0]
+        } 
     }
 
     

@@ -192,12 +192,14 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 		self.data = []
 
 		self.ui.comboBox.currentTextChanged.connect(self.makeSeqHTML)
+		self.ui.comboBox.currentTextChanged.connect(self.updateFig)
 		self.ui.clear.clicked.connect(self.clearSelection)
 		self.ui.pushButtonAdd.clicked.connect(self.updateHTML)
 		self.ui.pushButtonGenerate.clicked.connect(self.previewFragments)
 		self.ui.pushButtonCancel.clicked.connect(self.reject)
 		self.ui.pushButtonConfirm.clicked.connect(self.accept)
 		self.ui.pushButtonBrowse.clicked.connect(self.browse)
+		self.ui.textEdit.textChanged.connect(self.updateFig)
 		#self.ui.browseDB.clicked.connect(self.browse_db)
 		#self.ui.createDB.clicked.connect(self.new_db)
 
@@ -537,8 +539,6 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 			layout.addWidget(self.view)
 		else:
 			self.view.load(QUrl("file://" + html_file))
-
-		self.updateFig()
 
 class MyObjectCls(QObject):
 	updateSelectionSignal = pyqtSignal(str)
