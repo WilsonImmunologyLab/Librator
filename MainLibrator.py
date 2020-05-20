@@ -11021,7 +11021,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		if SeqMove == False:
 			for item in DataIs:
-
 				CurName = item[0]
 			listRow = self.ui.listWidgetStrainsIn.currentRow()
 			message = 'Edit name for ' + CurName + '?'
@@ -11033,6 +11032,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.UpdateSeq(CurName, CurrVal, 'SeqName')
 				self.ui.listWidgetStrainsIn.takeItem(listRow)
 				self.ui.listWidgetStrainsIn.addItem(CurrVal)
+				new_item = self.ui.listWidgetStrainsIn.findItems(CurrVal, Qt.MatchExactly)
+				try:
+					self.ui.listWidgetStrainsIn.setCurrentItem(new_item[0])
+				except:
+					pass
 
 				# self.UpdateSeq(eachItemIs, 'True', 'Active')
 			self.UpdateFields()
