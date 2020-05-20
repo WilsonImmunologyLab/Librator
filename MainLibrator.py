@@ -26,6 +26,7 @@ import pandas as pd
 import numpy as np
 import shutil
 import math
+import random
 
 import matplotlib
 matplotlib.use("Qt5Agg")
@@ -6665,6 +6666,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 				return
 			cursor = self.ui.txtAASeq.textCursor()
 			self.DecorateNoneHA(Decorations, cursor)
+
+		size_w = self.size().width()
+		size_h = self.size().height()
+		offset_pool = [-1,1]
+		offset = offset_pool[random.randint(0,1)]
+		self.resize(size_w + offset, size_h + offset)
 
 	@pyqtSlot()
 	def DecorateSingle(self):
