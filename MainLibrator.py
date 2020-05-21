@@ -13817,6 +13817,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			fragment_data.append(cur_seq_fragment_data)
 
 		# check if joint region match and have no '-'
+		err_msg = ''
 		fix_in_fragment = [0 for i in range(10)]
 		for record in fragment_data:
 			fragments = []
@@ -13864,9 +13865,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 									offset -= 1
 								fix_in_fragment[i+1] = len(hyphen_pos)
 				else:
-					Msg = 'Joint region does not match!\n' + record[0]
-					QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
-					return
+					if joint_plan == 'Default':
+						Msg = 'Joint region does not match!\n' + record[0]
+						QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+						return
+					else:
+						err_msg = 'You are using your own fragment design, please double check the compatibility of joint region\n'
+		if err_msg != '':
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 
 		# Chekc AA fragments and remove '-' in consensus sequence
 		del_in_fragment = []
