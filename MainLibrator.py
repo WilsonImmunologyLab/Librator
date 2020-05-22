@@ -194,6 +194,95 @@ class FindKeyDialog(QtWidgets.QDialog):
 		self.ui.listWidgetNeg.itemDoubleClicked.connect(self.delName)
 		self.ui.pushButton_3.clicked.connect(self.reject)
 
+	def showAlignment(self):
+		global VGenesTextWindows
+		# load data
+		AlignIn = []
+		listItems_pos = self.pos_list
+		listItems_neg = self.neg_list
+
+		if len(listItems_pos) + len(listItems_neg) == 0:
+			QMessageBox.warning(self, 'Warning', 'Please select sequence from active sequence panel!',
+			                    QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+
+		# pos sequence
+		if len(listItems_pos) > 0:
+			WhereState = ''
+			NumSeqs = len(listItems_pos)
+			i = 1
+			for item in listItems_pos:
+				WhereState += 'SeqName = "' + item + '"'
+				if NumSeqs > i:
+					WhereState += ' OR '
+				i += 1
+
+			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+
+			for item in DataIn:
+				SeqName = item[0]
+				Sequence = item[1]
+				VFrom = int(item[2]) - 1
+				if VFrom == -1: VFrom = 0
+
+				VTo = int(item[3])
+				Sequence = Sequence[VFrom:VTo]
+				Sequence = Sequence.upper()
+				EachIn = ('Positive|' + SeqName, Sequence)
+				AlignIn.append(EachIn)
+
+		# neg sequence
+		if len(listItems_neg) > 0:
+			WhereState = ''
+			NumSeqs = len(listItems_neg)
+			i = 1
+			for item in listItems_neg:
+				WhereState += 'SeqName = "' + item + '"'
+				if NumSeqs > i:
+					WhereState += ' OR '
+				i += 1
+
+			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+
+			for item in DataIn:
+				SeqName = item[0]
+				Sequence = item[1]
+				VFrom = int(item[2]) - 1
+				if VFrom == -1: VFrom = 0
+
+				VTo = int(item[3])
+				Sequence = Sequence[VFrom:VTo]
+				Sequence = Sequence.upper()
+				EachIn = ('Negative|' + SeqName, Sequence)
+				AlignIn.append(EachIn)
+
+		# make HTML
+		html_file = AlignSequencesHTML(AlignIn, '')
+		if html_file[0] == 'W':
+			QMessageBox.warning(self, 'Warning', html_file, QMessageBox.Ok, QMessageBox.Ok)
+			return
+		# delete close window objects
+		del_list = []
+		for id, obj in VGenesTextWindows.items():
+			if obj.isVisible() == False:
+				del_list.append(id)
+		for id in del_list:
+			del_obj = VGenesTextWindows.pop(id)
+
+		# display
+		window_id = int(time.time() * 100)
+		VGenesTextWindows[window_id] = htmlDialog()
+		VGenesTextWindows[window_id].id = window_id
+		layout = QGridLayout(VGenesTextWindows[window_id])
+		view = QWebEngineView(self)
+		view.load(QUrl("file://" + html_file))
+		view.show()
+		layout.addWidget(view)
+		VGenesTextWindows[window_id].show()
+
 	def delName(self):
 		sender = self.sender()
 		if sender.objectName() == 'listWidgetPos':
@@ -232,12 +321,186 @@ class FindKeyDialog(QtWidgets.QDialog):
 					self.ui.listWidgetNeg.addItem(eachItemIs)
 					self.neg_list.append(eachItemIs)
 
-
 	def Findkey(self):
-		pass
+		# load data
+		AlignIn = []
+		listItems_pos = self.pos_list
+		listItems_neg = self.neg_list
 
-	def showAlignment(self):
-		pass
+		if len(listItems_pos) == 0 or len(listItems_neg) == 0:
+			QMessageBox.warning(self, 'Warning', 'Please select sequence from active sequence panel!',
+			                    QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+
+		# pos sequence
+		if len(listItems_pos) > 0:
+			WhereState = ''
+			NumSeqs = len(listItems_pos)
+			i = 1
+			for item in listItems_pos:
+				WhereState += 'SeqName = "' + item + '"'
+				if NumSeqs > i:
+					WhereState += ' OR '
+				i += 1
+
+			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+
+			for item in DataIn:
+				SeqName = item[0]
+				Sequence = item[1]
+				VFrom = int(item[2]) - 1
+				if VFrom == -1: VFrom = 0
+
+				VTo = int(item[3])
+				Sequence = Sequence[VFrom:VTo]
+				Sequence = Sequence.upper()
+				AAseq, meg = Translator(Sequence, 0)
+				EachIn = ('Positive|' + SeqName, AAseq)
+				AlignIn.append(EachIn)
+
+		# neg sequence
+		if len(listItems_neg) > 0:
+			WhereState = ''
+			NumSeqs = len(listItems_neg)
+			i = 1
+			for item in listItems_neg:
+				WhereState += 'SeqName = "' + item + '"'
+				if NumSeqs > i:
+					WhereState += ' OR '
+				i += 1
+
+			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+
+			for item in DataIn:
+				SeqName = item[0]
+				Sequence = item[1]
+				VFrom = int(item[2]) - 1
+				if VFrom == -1: VFrom = 0
+
+				VTo = int(item[3])
+				Sequence = Sequence[VFrom:VTo]
+				Sequence = Sequence.upper()
+				AAseq, meg = Translator(Sequence, 0)
+				EachIn = ('Negative|' + SeqName, AAseq)
+				AlignIn.append(EachIn)
+
+		# save sequence to file and make alignment
+		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+		outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
+		aafilename = os.path.join(temp_folder, "in-" + time_stamp + ".fas")
+		aa_handle = open(aafilename, 'w')
+		for record in AlignIn:
+			SeqName = record[0].replace('\n', '').replace('\r', '')
+			SeqName = SeqName.strip()
+			AAseq = record[1]
+
+			aa_handle.write('>' + SeqName + '\n')
+			aa_handle.write(AAseq + '\n')
+		aa_handle.close()
+
+		cmd = muscle_path
+		cmd += " -in " + aafilename + " -out " + outfilename
+		try:
+			os.system(cmd)
+		except:
+			QMessageBox.warning(self, 'Warning', 'Fail to run muscle! Check your muscle path!', QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+
+		# read alignment file, make alignment NT and AA sequences
+		pos_dict = dict()
+		neg_dict = dict()
+		alignment_len = 0
+		SeqName = ''
+		AAseq = ''
+		if os.path.isfile(outfilename):
+			currentfile = open(outfilename, 'r')
+			lines = currentfile.readlines()
+			for line in lines:
+				Readline = line.replace('\n', '').replace('\r', '')
+				Readline = Readline.strip()
+				if Readline[0] == '>':
+					if SeqName != '':
+						if 'Positive' in SeqName:
+							SeqName = re.sub('Positive','',SeqName)
+							pos_dict[SeqName] = AAseq
+						else:
+							SeqName = re.sub('Negative', '', SeqName)
+							neg_dict[SeqName] = AAseq
+					SeqName = Readline[1:]
+					AAseq = ''
+				else:
+					AAseq += Readline
+
+			if 'Positive' in SeqName:
+				SeqName = re.sub('Positive', '', SeqName)
+				pos_dict[SeqName] = AAseq
+			else:
+				SeqName = re.sub('Negative', '', SeqName)
+				neg_dict[SeqName] = AAseq
+			alignment_len = len(AAseq)
+		else:
+			return
+		
+		# start identify key residues between pos and neg group
+		AAIndexMap = {'I': 0, 'L': 1, 'V': 2, 'F': 3, 'M': 4, 'C': 5,
+		               'A': 6, 'G': 7, 'P': 8, 'T': 9, 'S': 10, 'Y': 11,
+		               'W': 12, 'Q': 13, 'N': 14, 'H': 15, 'E': 16, 'D': 17,
+		               'K': 18, 'R': 19}
+		score_list = dict()
+		pos_aa_list = []
+		neg_aa_list = []
+		for pos in range(alignment_len):
+			cur_pos_vector = [0] * 21
+			cur_neg_vector = [0] * 21
+			cur_pos_aa_str = ''
+			cur_neg_aa_str = ''
+
+			for key in pos_dict:
+				cur_seq = pos_dict[key]
+				cur_aa = cur_seq[pos]
+				cur_pos_aa_str += cur_aa
+				try:
+					cur_pos_vector[AAIndexMap[cur_aa]] += 1
+				except:
+					cur_pos_vector[20] += 1
+	
+			for key in neg_dict:
+				cur_seq = neg_dict[key]
+				cur_aa = cur_seq[pos]
+				cur_neg_aa_str += cur_aa
+				try:
+					cur_neg_vector[AAIndexMap[cur_aa]] += 1
+				except:
+					cur_neg_vector[20] += 1
+
+			cur_pos_vector = [i / float(len(pos_dict)) for i in cur_pos_vector]
+			cur_neg_vector = [i / float(len(neg_dict)) for i in cur_neg_vector]
+			
+			score = [cur_pos_vector[i] - cur_neg_vector[i] for i in range(len(cur_pos_vector))]
+			score = [i**2 for i in score]
+			score = sum(score)
+			score_list[pos] = score
+			pos_aa_list.append(cur_pos_aa_str)
+			neg_aa_list.append(cur_neg_aa_str)
+		
+		# output
+		out_str = []
+		rank = 1
+		for record in sorted(score_list.items(), key=lambda item:item[1], reverse=True):
+			if record[1] > 0:
+				cur_str = 'Rank #' + str(rank) + ': posotion:' + str(record[0] + 1) + ' pos group AA:' + pos_aa_list[record[0]] + ' neg group AA:' + neg_aa_list[record[0]] + '\n'
+				out_str.append(cur_str)
+				rank += 1
+
+		# add widget
+		plainText = QListWidget()
+		plainText.addItems(out_str)
+		self.ui.gridLayoutHTML.addWidget(plainText)
+
 
 class GibsonSingleDialog(QtWidgets.QDialog):
 	def __init__(self):
