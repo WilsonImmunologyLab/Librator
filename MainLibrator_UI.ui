@@ -2681,6 +2681,7 @@
     </property>
     <addaction name="actionHANumbering"/>
     <addaction name="actionIdentifyMutation"/>
+    <addaction name="actionIdentify_Key_Mutations"/>
     <addaction name="separator"/>
     <addaction name="actionAlignmentHTML"/>
     <addaction name="separator"/>
@@ -3468,6 +3469,11 @@
    </property>
    <property name="text">
     <string>GinsonClone for single sequence</string>
+   </property>
+  </action>
+  <action name="actionIdentify_Key_Mutations">
+   <property name="text">
+    <string>Identify Key Mutations</string>
    </property>
   </action>
  </widget>

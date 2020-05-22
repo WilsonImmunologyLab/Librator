@@ -1,0 +1,98 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'findkeydialog.ui'
+#
+# Created by: PyQt5 UI code generator 5.13.0
+#
+# WARNING! All changes made in this file will be lost!
+
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+
+class Ui_FindkeyDialog(object):
+    def setupUi(self, FindkeyDialog):
+        FindkeyDialog.setObjectName("FindkeyDialog")
+        FindkeyDialog.resize(998, 818)
+        self.gridLayout_3 = QtWidgets.QGridLayout(FindkeyDialog)
+        self.gridLayout_3.setObjectName("gridLayout_3")
+        self.label = QtWidgets.QLabel(FindkeyDialog)
+        self.label.setObjectName("label")
+        self.gridLayout_3.addWidget(self.label, 2, 2, 1, 1)
+        self.groupBox = QtWidgets.QGroupBox(FindkeyDialog)
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.groupBox.setFont(font)
+        self.groupBox.setObjectName("groupBox")
+        self.gridLayout = QtWidgets.QGridLayout(self.groupBox)
+        self.gridLayout.setObjectName("gridLayout")
+        self.gridLayoutHTML = QtWidgets.QGridLayout()
+        self.gridLayoutHTML.setObjectName("gridLayoutHTML")
+        self.gridLayout.addLayout(self.gridLayoutHTML, 1, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.groupBox, 5, 0, 1, 4)
+        self.listWidgetPos = QtWidgets.QListWidget(FindkeyDialog)
+        self.listWidgetPos.setObjectName("listWidgetPos")
+        self.gridLayout_3.addWidget(self.listWidgetPos, 1, 2, 1, 1)
+        self.pushButtonPos = QtWidgets.QPushButton(FindkeyDialog)
+        self.pushButtonPos.setText("")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/play.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pushButtonPos.setIcon(icon)
+        self.pushButtonPos.setIconSize(QtCore.QSize(35, 35))
+        self.pushButtonPos.setCheckable(True)
+        self.pushButtonPos.setChecked(True)
+        self.pushButtonPos.setAutoExclusive(True)
+        self.pushButtonPos.setFlat(True)
+        self.pushButtonPos.setObjectName("pushButtonPos")
+        self.gridLayout_3.addWidget(self.pushButtonPos, 1, 1, 1, 1)
+        self.listWidgetNeg = QtWidgets.QListWidget(FindkeyDialog)
+        self.listWidgetNeg.setObjectName("listWidgetNeg")
+        self.gridLayout_3.addWidget(self.listWidgetNeg, 3, 2, 1, 1)
+        self.pushButton_3 = QtWidgets.QPushButton(FindkeyDialog)
+        self.pushButton_3.setMaximumSize(QtCore.QSize(100, 16777215))
+        self.pushButton_3.setAcceptDrops(False)
+        self.pushButton_3.setLayoutDirection(QtCore.Qt.RightToLeft)
+        self.pushButton_3.setObjectName("pushButton_3")
+        self.gridLayout_3.addWidget(self.pushButton_3, 6, 2, 1, 1)
+        self.frame = QtWidgets.QFrame(FindkeyDialog)
+        self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame.setObjectName("frame")
+        self.gridLayout_2 = QtWidgets.QGridLayout(self.frame)
+        self.gridLayout_2.setObjectName("gridLayout_2")
+        self.FindKey = QtWidgets.QPushButton(self.frame)
+        self.FindKey.setObjectName("FindKey")
+        self.gridLayout_2.addWidget(self.FindKey, 0, 0, 1, 1)
+        self.Alignment = QtWidgets.QPushButton(self.frame)
+        self.Alignment.setObjectName("Alignment")
+        self.gridLayout_2.addWidget(self.Alignment, 0, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.frame, 4, 0, 1, 3)
+        self.pushButtonNeg = QtWidgets.QPushButton(FindkeyDialog)
+        self.pushButtonNeg.setText("")
+        self.pushButtonNeg.setIcon(icon)
+        self.pushButtonNeg.setIconSize(QtCore.QSize(35, 35))
+        self.pushButtonNeg.setCheckable(True)
+        self.pushButtonNeg.setChecked(False)
+        self.pushButtonNeg.setAutoExclusive(True)
+        self.pushButtonNeg.setFlat(True)
+        self.pushButtonNeg.setObjectName("pushButtonNeg")
+        self.gridLayout_3.addWidget(self.pushButtonNeg, 3, 1, 1, 1)
+        self.label_2 = QtWidgets.QLabel(FindkeyDialog)
+        self.label_2.setObjectName("label_2")
+        self.gridLayout_3.addWidget(self.label_2, 0, 2, 1, 1)
+        self.listWidgetAll = QtWidgets.QListWidget(FindkeyDialog)
+        self.listWidgetAll.setObjectName("listWidgetAll")
+        self.gridLayout_3.addWidget(self.listWidgetAll, 0, 0, 4, 1)
+
+        self.retranslateUi(FindkeyDialog)
+        QtCore.QMetaObject.connectSlotsByName(FindkeyDialog)
+
+    def retranslateUi(self, FindkeyDialog):
+        _translate = QtCore.QCoreApplication.translate
+        FindkeyDialog.setWindowTitle(_translate("FindkeyDialog", "Dialog"))
+        self.label.setText(_translate("FindkeyDialog", "Test negative sequences"))
+        self.groupBox.setTitle(_translate("FindkeyDialog", "Possible key residues"))
+        self.pushButton_3.setText(_translate("FindkeyDialog", "Close"))
+        self.FindKey.setText(_translate("FindkeyDialog", "Identify possible key residues"))
+        self.Alignment.setText(_translate("FindkeyDialog", "Show full alignment"))
+        self.label_2.setText(_translate("FindkeyDialog", "Test Positive sequences"))

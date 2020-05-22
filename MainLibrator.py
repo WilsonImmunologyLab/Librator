@@ -53,6 +53,7 @@ from jointdialog import Ui_JointDialog
 from htmldialog import Ui_htmlDialog
 from aa_or_nt import Ui_aantDialog
 from idmutationdialog import Ui_IdMutationDialog
+from findkeydialog import Ui_FindkeyDialog
 
 from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText
 from VgenesTextEdit import VGenesTextMain
@@ -176,6 +177,67 @@ else:
 	file_handle.write(joint_up + '\n')
 	file_handle.write(joint_down)
 	file_handle.close()
+
+class FindKeyDialog(QtWidgets.QDialog):
+	def __init__(self):
+		super(FindKeyDialog, self).__init__()
+		self.ui = Ui_FindkeyDialog()
+		self.ui.setupUi(self)
+		self.pos_list = []
+		self.neg_list = []
+
+
+		self.ui.FindKey.clicked.connect(self.Findkey)
+		self.ui.Alignment.clicked.connect(self.showAlignment)
+		self.ui.listWidgetAll.itemDoubleClicked.connect(self.addName)
+		self.ui.listWidgetPos.itemDoubleClicked.connect(self.delName)
+		self.ui.listWidgetNeg.itemDoubleClicked.connect(self.delName)
+		self.ui.pushButton_3.clicked.connect(self.reject)
+
+	def delName(self):
+		sender = self.sender()
+		if sender.objectName() == 'listWidgetPos':
+			listRow = self.ui.listWidgetPos.currentRow()
+			name = self.ui.listWidgetPos.item(listRow).text()
+			self.ui.listWidgetPos.takeItem(listRow)
+			self.pos_list.remove(name)
+		else:
+			listRow = self.ui.listWidgetNeg.currentRow()
+			name = self.ui.listWidgetNeg.item(listRow).text()
+			self.ui.listWidgetNeg.takeItem(listRow)
+			self.neg_list.remove(name)
+
+	def addName(self):
+		listItems = self.ui.listWidgetAll.selectedItems()
+		for item in listItems:
+			eachItemIs = item.text()
+			if self.ui.pushButtonPos.isChecked():
+				if eachItemIs in self.pos_list:
+					pass
+				elif eachItemIs in self.neg_list:
+					QMessageBox.warning(self, 'Warning', 'This sequence already in negative group!', QMessageBox.Ok,
+					                    QMessageBox.Ok)
+					return
+				else:
+					self.ui.listWidgetPos.addItem(eachItemIs)
+					self.pos_list.append(eachItemIs)
+			else:
+				if eachItemIs in self.neg_list:
+					pass
+				elif eachItemIs in self.pos_list:
+					QMessageBox.warning(self, 'Warning', 'This sequence already in positive group!', QMessageBox.Ok,
+					                    QMessageBox.Ok)
+					return
+				else:
+					self.ui.listWidgetNeg.addItem(eachItemIs)
+					self.neg_list.append(eachItemIs)
+
+
+	def Findkey(self):
+		pass
+
+	def showAlignment(self):
+		pass
 
 class GibsonSingleDialog(QtWidgets.QDialog):
 	def __init__(self):
@@ -3892,6 +3954,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.HTMLview1.resizeSignal.connect(self.resizeHTML)
 		self.ui.HTMLview2.resizeSignal.connect(self.resizeHTML)
 		self.ui.HTMLview3.resizeSignal.connect(self.resizeHTML)
+
+	@pyqtSlot()
+	def on_actionIdentify_Key_Mutations_triggered(self):
+		self.FindkeyDialog = FindKeyDialog()
+
+		active_list = []
+		for i in range(self.ui.listWidgetStrainsIn.count()):
+			active_list.append(self.ui.listWidgetStrainsIn.item(i).text())
+		self.FindkeyDialog.ui.listWidgetAll.addItems(active_list)
+		self.FindkeyDialog.show()
 
 	def selectionMode(self):
 		if self.ui.checkBoxRowSelection.isChecked():

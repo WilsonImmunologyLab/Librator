@@ -1294,6 +1294,8 @@ class Ui_MainLibrator(object):
         self.actionGinsonCloneSingle = QtWidgets.QAction(MainLibrator)
         self.actionGinsonCloneSingle.setIcon(icon)
         self.actionGinsonCloneSingle.setObjectName("actionGinsonCloneSingle")
+        self.actionIdentify_Key_Mutations = QtWidgets.QAction(MainLibrator)
+        self.actionIdentify_Key_Mutations.setObjectName("actionIdentify_Key_Mutations")
         self.menuFile.addAction(self.action_New)
         self.menuFile.addAction(self.action_Open)
         self.menuFile.addSeparator()
@@ -1304,6 +1306,7 @@ class Ui_MainLibrator(object):
         self.menuSequences.addAction(self.actionExport)
         self.menuTools.addAction(self.actionHANumbering)
         self.menuTools.addAction(self.actionIdentifyMutation)
+        self.menuTools.addAction(self.actionIdentify_Key_Mutations)
         self.menuTools.addSeparator()
         self.menuTools.addAction(self.actionAlignmentHTML)
         self.menuTools.addSeparator()
@@ -1673,4 +1676,5 @@ class Ui_MainLibrator(object):
         self.actionIdentifyMutation.setText(_translate("MainLibrator", "Identify Mutation"))
         self.actionIdentifyMutation.setToolTip(_translate("MainLibrator", "Identify mutations"))
         self.actionGinsonCloneSingle.setText(_translate("MainLibrator", "GinsonClone for single sequence"))
+        self.actionIdentify_Key_Mutations.setText(_translate("MainLibrator", "Identify Key Mutations"))
 import VgenesResources_rc
