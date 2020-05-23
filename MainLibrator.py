@@ -492,14 +492,41 @@ class FindKeyDialog(QtWidgets.QDialog):
 		rank = 1
 		for record in sorted(score_list.items(), key=lambda item:item[1], reverse=True):
 			if record[1] > 0:
-				cur_str = 'Rank #' + str(rank) + ': posotion:' + str(record[0] + 1) + ' pos group AA:' + pos_aa_list[record[0]] + ' neg group AA:' + neg_aa_list[record[0]] + '\n'
+				cur_str = [str(rank), str(record[0] + 1), str(record[1]), pos_aa_list[record[0]], neg_aa_list[record[0]]]
 				out_str.append(cur_str)
 				rank += 1
 
 		# add widget
-		plainText = QListWidget()
-		plainText.addItems(out_str)
-		self.ui.gridLayoutHTML.addWidget(plainText)
+		if 'self.data_table' in locals() or 'self.data_table' in globals():
+			self.data_table.setRowCount(0)
+			self.data_table.setColumnCount(0)
+		else:
+			self.data_table = QTableWidget()
+			self.ui.gridLayoutHTML.addWidget(self.data_table)
+
+		self.data_table.setRowCount(len(out_str))
+		self.data_table.setColumnCount(5)
+		self.data_table.setHorizontalHeaderLabels(['Rank', 'Position', 'Score', 'Peptide of positive group', 'Peptide of positive group'])
+		self.data_table.setSelectionMode(QAbstractItemView.ExtendedSelection)
+		self.data_table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+
+		for row_index in range(len(out_str)):
+			for col_index in range(5):
+				unit = QTableWidgetItem(out_str[row_index][col_index])
+				self.data_table.setItem(row_index, col_index, unit)
+
+		## disable edit
+		self.data_table.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+		## show sort indicator
+		self.data_table.horizontalHeader().setSortIndicatorShown(True)
+		## connect sort indicator to slot function
+		self.data_table.horizontalHeader().sectionClicked.connect(self.sortTable)
+
+	def sortTable(self, index):
+		if index == 0:
+			self.data_table.sortByColumn(index, self.data_table.horizontalHeader().sortIndicatorOrder())
+		else:
+			self.data_table.sortByColumn(index, self.data_table.horizontalHeader().sortIndicatorOrder())
 
 
 class GibsonSingleDialog(QtWidgets.QDialog):
