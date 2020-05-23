@@ -48,7 +48,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>Resources/play.png</normaloff>Resources/play.png</iconset>
+       <normaloff>Resources/green.png</normaloff>Resources/green.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -108,13 +108,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QPushButton" name="Alignment">
-        <property name="text">
-         <string>Show full alignment</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
@@ -125,7 +118,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>Resources/play.png</normaloff>Resources/play.png</iconset>
+       <normaloff>Resources/red.png</normaloff>Resources/red.png</iconset>
      </property>
      <property name="iconSize">
       <size>

@@ -186,13 +186,13 @@ class FindKeyDialog(QtWidgets.QDialog):
 		self.pos_list = []
 		self.neg_list = []
 
-
 		self.ui.FindKey.clicked.connect(self.Findkey)
-		self.ui.Alignment.clicked.connect(self.showAlignment)
 		self.ui.listWidgetAll.itemDoubleClicked.connect(self.addName)
 		self.ui.listWidgetPos.itemDoubleClicked.connect(self.delName)
 		self.ui.listWidgetNeg.itemDoubleClicked.connect(self.delName)
 		self.ui.pushButton_3.clicked.connect(self.reject)
+		self.ui.pushButtonPos.clicked.connect(self.updateUI)
+		self.ui.pushButtonNeg.clicked.connect(self.updateUI)
 
 	def showAlignment(self):
 		global VGenesTextWindows
@@ -282,6 +282,18 @@ class FindKeyDialog(QtWidgets.QDialog):
 		view.show()
 		layout.addWidget(view)
 		VGenesTextWindows[window_id].show()
+
+	def updateUI(self):
+		icon = QtGui.QIcon()
+		icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/green.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		icon1 = QtGui.QIcon()
+		icon1.addPixmap(QtGui.QPixmap(":/PNG-Icons/red.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		if self.ui.pushButtonPos.isChecked():
+			self.ui.pushButtonPos.setIcon(icon)
+			self.ui.pushButtonNeg.setIcon(icon1)
+		else:
+			self.ui.pushButtonPos.setIcon(icon1)
+			self.ui.pushButtonNeg.setIcon(icon)
 
 	def delName(self):
 		sender = self.sender()
@@ -506,7 +518,7 @@ class FindKeyDialog(QtWidgets.QDialog):
 
 		self.data_table.setRowCount(len(out_str))
 		self.data_table.setColumnCount(5)
-		self.data_table.setHorizontalHeaderLabels(['Rank', 'Position', 'Score', 'Peptide of positive group', 'Peptide of positive group'])
+		self.data_table.setHorizontalHeaderLabels(['Rank', 'Position', 'Score', 'Peptide of positive group', 'Peptide of negative group'])
 		self.data_table.setSelectionMode(QAbstractItemView.ExtendedSelection)
 		self.data_table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
@@ -521,6 +533,8 @@ class FindKeyDialog(QtWidgets.QDialog):
 		self.data_table.horizontalHeader().setSortIndicatorShown(True)
 		## connect sort indicator to slot function
 		self.data_table.horizontalHeader().sectionClicked.connect(self.sortTable)
+		
+		self.showAlignment()
 
 	def sortTable(self, index):
 		if index == 0:

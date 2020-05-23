@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="PNG-Icons">
+    <file>green.png</file>
+    <file>red.png</file>
     <file>Import1.png</file>
     <file>Export1.png</file>
     <file>mutationScan.png</file>
