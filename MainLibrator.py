@@ -284,16 +284,24 @@ class FindKeyDialog(QtWidgets.QDialog):
 		VGenesTextWindows[window_id].show()
 
 	def updateUI(self):
+		sender = self.sender()
 		icon = QtGui.QIcon()
 		icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/green.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 		icon1 = QtGui.QIcon()
 		icon1.addPixmap(QtGui.QPixmap(":/PNG-Icons/red.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-		if self.ui.pushButtonPos.isChecked():
+
+		if sender.objectName() == 'pushButtonPos':
 			self.ui.pushButtonPos.setIcon(icon)
 			self.ui.pushButtonNeg.setIcon(icon1)
 		else:
 			self.ui.pushButtonPos.setIcon(icon1)
 			self.ui.pushButtonNeg.setIcon(icon)
+
+		size_w = self.size().width()
+		size_h = self.size().height()
+		offset_pool = [-1, 1]
+		offset = offset_pool[random.randint(0, 1)]
+		self.resize(size_w + offset, size_h + offset)
 
 	def delName(self):
 		sender = self.sender()
