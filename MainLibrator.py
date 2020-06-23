@@ -550,7 +550,6 @@ class FindKeyDialog(QtWidgets.QDialog):
 		else:
 			self.data_table.sortByColumn(index, self.data_table.horizontalHeader().sortIndicatorOrder())
 
-
 class GibsonSingleDialog(QtWidgets.QDialog):
 	def __init__(self):
 		global VGenesTextWindows
@@ -4410,9 +4409,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		elif self.ui.comboBoxColor.currentIndex() == 4:
 			color_dict = {0: "0x8C510A", 1: "0xD8B365", 2: "0xF6E8C3", 3: "0xC7EAE5", 4: "0x5AB4AC", 5: "0x01665E"}
 
-		if subtype in Group2:
+		if subtype in Group1:
 			pdbPath = os.path.join(working_prefix, 'PDB', '4jtv.cif')
-		elif subtype in Group1:
+		elif subtype in Group2:
 			pdbPath = os.path.join(working_prefix, 'PDB', '4hmg.cif')
 
 		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime()) + '.pml'
@@ -12458,8 +12457,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			# highlight antigentic sites for H3N2 (A,B,C,D,E) and H1N1 (Ca1, Ca2, Cb, Sa, Sb)
 			if subtype in Group1:
-				text = "sel ABS-Ca1, chain A+C+E+G+I+K and (resi 142+143+144+145+146+147+172+173+174+175+176+209+210+211)\n" \
-						+ "sel ABS-Ca2, chain A+C+E+G+I+K and (resi 227+228+229)\n" \
+				text = "sel ABS-Ca1, chain A+C+E+G+I+K and (resi 172+173+174+175+176+209+210+211)\n" \
+						+ "sel ABS-Ca2, chain A+C+E+G+I+K and (resi 142+143+144+145+146+147+227+228+229)\n" \
 						+ "sel ABS-Cb, chain A+C+E+G+I+K and (resi 76+77+78+79+80+81)\n" \
 						+ "sel ABS-Sa, chain A+C+E+G+I+K and (resi 130+131+159+160+161+162+163+165+166+167+168+169+170)\n" \
 						+ "sel ABS-Sb, chain A+C+E+G+I+K and (resi 190+191+192+193+194+195+196+197+198+199+200)\n" \
@@ -16628,8 +16627,8 @@ H1HA1Regions = {'1':'Stalk', '2':'Stalk', '3':'Stalk', '4':'Stalk', '5':'Stalk',
 				'119':'Head', '120':'Head', '121':'Head', '122':'Head', '123':'Head', '124':'Head', '125':'Head',
 				'126':'Head', '127':'Head', '128':'Head', '129':'Head', '130':'Sa', '131':'Sa', '132':'Head',
 				'133':'Head', '134':'Head', '135':'Head', '136':'Head', '137':'Head', '138':'Head', '139':'Head',
-				'140':'Head', '141':'Head', '142':'Ca1', '143':'Ca1', '144':'Ca1','145':'Ca1', '146':'Ca1',
-				'147':'Ca1', '148':'Head', '149':'Head', '150':'Head', '151':'Head', '152':'Head', '153':'Head',
+				'140':'Head', '141':'Head', '142':'Ca2', '143':'Ca2', '144':'Ca2','145':'Ca2', '146':'Ca2',
+				'147':'Ca2', '148':'Head', '149':'Head', '150':'Head', '151':'Head', '152':'Head', '153':'Head',
 				'154':'Head', '155':'Head', '156':'Head', '157':'Head', '158':'Head','159':'Sa', '160':'Sa',
 				'161':'Sa', '162':'Sa', '163':'Sa', '164':'Head', '165':'Sa', '166':'Sa', '167':'Sa', '168':'Sa',
 				'169':'Sa', '170':'Sa', '172':'Ca1', '173':'Ca1', '174':'Ca1', '175':'Ca1', '176':'Ca1',
