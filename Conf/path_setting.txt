@@ -2,4 +2,3 @@
 /Users/leil/Documents/Projects/Librator/Librator/Tools/clustalo
 /usr/local/bin/pymol
 /Users/leil/Documents/Projects/Librator/Librator/Tools/raxml
-/Applications/FigTree.app/Contents/MacOS/universalJavaApplicationStub

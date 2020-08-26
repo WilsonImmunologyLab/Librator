@@ -99,7 +99,7 @@ global muscle_path
 global clustal_path
 global pymol_path
 global raxml_path
-global figtree_path
+#global figtree_path
 global fragmentdb_path
 
 working_prefix = os.path.dirname(os.path.realpath(sys.argv[0])) + '/'
@@ -112,7 +112,7 @@ if os.path.exists(conf_file):   # if conf exist, read conf info from file
 	clustal_path =  settings[1].strip('\n')
 	pymol_path =  settings[2].strip('\n')
 	raxml_path =  settings[3].strip('\n')
-	figtree_path =  settings[4].strip('\n')
+	#figtree_path =  settings[4].strip('\n')
 	file_handle.close()
 	del settings
 
@@ -123,28 +123,28 @@ if os.path.exists(conf_file):   # if conf exist, read conf info from file
 		clustal_path = os.path.join(working_prefix, 'Tools', 'clustalo')
 		pymol_path = '/usr/local/bin/pymol'
 		raxml_path = os.path.join(working_prefix,  'Tools', 'raxml')
-		figtree_path = '/Applications/FigTree.app/Contents/MacOS/universalJavaApplicationStub'
+		#figtree_path = '/Applications/FigTree.app/Contents/MacOS/universalJavaApplicationStub'
 
 		file_handle = open(conf_file, 'w')
 		file_handle.write(muscle_path + '\n')
 		file_handle.write(clustal_path + '\n')
 		file_handle.write(pymol_path + '\n')
 		file_handle.write(raxml_path + '\n')
-		file_handle.write(figtree_path)
+		#file_handle.write(figtree_path)
 		file_handle.close()
 else:                           # if conf does not exist, initial conf info and write to file
 	muscle_path = os.path.join(working_prefix, 'Tools', 'muscle')
 	clustal_path = os.path.join(working_prefix, 'Tools', 'clustalo')
 	pymol_path = '/usr/local/bin/pymol'
 	raxml_path = os.path.join(working_prefix,  'Tools', 'raxml')
-	figtree_path = '/Applications/FigTree.app/Contents/MacOS/universalJavaApplicationStub'
+	#figtree_path = '/Applications/FigTree.app/Contents/MacOS/universalJavaApplicationStub'
 
 	file_handle = open(conf_file, 'w')
 	file_handle.write(muscle_path + '\n')
 	file_handle.write(clustal_path + '\n')
 	file_handle.write(pymol_path + '\n')
 	file_handle.write(raxml_path + '\n')
-	file_handle.write(figtree_path)
+	#file_handle.write(figtree_path)
 	file_handle.close()
 
 if os.path.exists(ldb_file):   # if conf exist, read conf info from file
@@ -2835,7 +2835,7 @@ class basePathDialog(QtWidgets.QDialog):
 		self.ui.browseMuscle.clicked.connect(self.browsemuscledir)
 		self.ui.browseClustal.clicked.connect(self.browseclustaldir)
 		self.ui.browsePymol.clicked.connect(self.browsepymoldir)
-		self.ui.browseFigtree.clicked.connect(self.browsefigtreedir)
+		#self.ui.browseFigtree.clicked.connect(self.browsefigtreedir)
 		self.ui.browseRaxml.clicked.connect(self.browseraxmldir)
 		self.ui.browseFragmentDB.clicked.connect(self.browsesqlitedir)
 
@@ -2857,11 +2857,13 @@ class basePathDialog(QtWidgets.QDialog):
 		if out_dir == '':
 			return
 		self.ui.pymolPath.setText(out_dir)
+	'''
 	def browsefigtreedir(self):  # browse and select path
 		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
 		if out_dir == '':
 			return
 		self.ui.FigtreePath.setText(out_dir)
+	'''
 	def browseraxmldir(self):  # browse and select path
 		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
 		if out_dir == '':
@@ -2880,7 +2882,7 @@ class basePathDialog(QtWidgets.QDialog):
 		global pymol_path
 		global muscle_path
 		global clustal_path
-		global figtree_path
+		#global figtree_path
 		global raxml_path
 		global fragmentdb_path
 		global conf_file
@@ -2926,6 +2928,7 @@ class basePathDialog(QtWidgets.QDialog):
 					pymol_path = self.ui.pymolPath.text()
 
 		# check if FigTree path exist or not
+		'''
 		if self.ui.FigtreePath.text() != '':
 			if os.path.exists(self.ui.FigtreePath.text()):
 				figtree_path = self.ui.FigtreePath.text()
@@ -2937,7 +2940,7 @@ class basePathDialog(QtWidgets.QDialog):
 					return
 				else:
 					figtree_path = self.ui.FigtreePath.text()
-
+		'''
 		# check if RAxML path exist or not
 		if self.ui.RaxmlPath.text() != '':
 			if os.path.exists(self.ui.RaxmlPath.text()):
@@ -2999,7 +3002,7 @@ class basePathDialog(QtWidgets.QDialog):
 		file_handle.write(clustal_path + '\n')
 		file_handle.write(pymol_path + '\n')
 		file_handle.write(raxml_path + '\n')
-		file_handle.write(figtree_path)
+		#file_handle.write(figtree_path)
 		file_handle.close()
 
 		file_handle = open(ldb_file, 'w')
@@ -5375,7 +5378,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global DBFilename
 		global temp_folder
 		global raxml_path
-		global figtree_path
+		#global figtree_path
 
 		listItems = self.ui.listWidgetStrainsIn.selectedItems()
 		# if not listItems: return
@@ -5476,7 +5479,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global DBFilename
 		global temp_folder
 		global raxml_path
-		global figtree_path
+		#global figtree_path
 
 		listItems = self.ui.listWidgetStrainsIn.selectedItems()
 		# if not listItems: return
@@ -13109,7 +13112,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	def drawTree(self, Data, this_path, seq_type):
 		global raxml_path
-		global figtree_path
+		#global figtree_path
 		outfilename = this_path + "/alignment_parsed.fas"
 		treefilename = 'tree'
 		# generate output file
@@ -13370,7 +13373,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global muscle_path
 		global clustal_path
 		global pymol_path
-		global figtree_path
+		#global figtree_path
 		global raxml_path
 		global fragmentdb_path
 
@@ -13378,7 +13381,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessbaseDialog.ui.musclePath.setText(muscle_path)
 		self.modalessbaseDialog.ui.clustaloPath.setText(clustal_path)
 		self.modalessbaseDialog.ui.pymolPath.setText(pymol_path)
-		self.modalessbaseDialog.ui.FigtreePath.setText(figtree_path)
+		#self.modalessbaseDialog.ui.FigtreePath.setText(figtree_path)
 		self.modalessbaseDialog.ui.RaxmlPath.setText(raxml_path)
 		self.modalessbaseDialog.ui.FragmentDB_path.setText(fragmentdb_path)
 

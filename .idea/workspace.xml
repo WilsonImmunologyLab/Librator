@@ -3,7 +3,31 @@
   <component name="ChangeListManager">
     <list default="true" id="9f472839-8a65-4dce-be83-d1c7511e6e93" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Conf/db_record.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Conf/db_record.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Conf/path_setting.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Conf/path_setting.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DB/Test.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/Test.ldb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/Figure/Funs/PathSet.ai" beforeDir="false" afterPath="$PROJECT_DIR$/Document/Figure/Funs/PathSet.ai" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/Figure/Funs/PathSet.png" beforeDir="false" afterPath="$PROJECT_DIR$/Document/Figure/Funs/PathSet.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/Figure/Tabs/AlignmentHTML.ai" beforeDir="false" afterPath="$PROJECT_DIR$/Document/Figure/Tabs/AlignmentHTML.ai" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/Figure/Tabs/AlignmentHTML.png" beforeDir="false" afterPath="$PROJECT_DIR$/Document/Figure/Tabs/AlignmentHTML.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/Figure/Tabs/FragmentDBTab.ai" beforeDir="false" afterPath="$PROJECT_DIR$/Document/Figure/Tabs/FragmentDBTab.ai" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/Figure/Tabs/FragmentDBTab.png" beforeDir="false" afterPath="$PROJECT_DIR$/Document/Figure/Tabs/FragmentDBTab.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/Figure/Tabs/MainTab.ai" beforeDir="false" afterPath="$PROJECT_DIR$/Document/Figure/Tabs/MainTab.ai" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/Figure/Tabs/MainTab.png" beforeDir="false" afterPath="$PROJECT_DIR$/Document/Figure/Tabs/MainTab.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/Figure/Tabs/SequenceDBTab.ai" beforeDir="false" afterPath="$PROJECT_DIR$/Document/Figure/Tabs/SequenceDBTab.ai" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/Figure/Tabs/SequenceDBTab.png" beforeDir="false" afterPath="$PROJECT_DIR$/Document/Figure/Tabs/SequenceDBTab.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/Figure/Tabs/SequenceTab.ai" beforeDir="false" afterPath="$PROJECT_DIR$/Document/Figure/Tabs/SequenceTab.ai" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/Figure/Tabs/SequenceTab.png" beforeDir="false" afterPath="$PROJECT_DIR$/Document/Figure/Tabs/SequenceTab.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/Figure/Tabs/SummaryHTMLTab.ai" beforeDir="false" afterPath="$PROJECT_DIR$/Document/Figure/Tabs/SummaryHTMLTab.ai" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/Figure/Tabs/SummaryHTMLTab.png" beforeDir="false" afterPath="$PROJECT_DIR$/Document/Figure/Tabs/SummaryHTMLTab.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/Figure/Tabs/SummaryTab.ai" beforeDir="false" afterPath="$PROJECT_DIR$/Document/Figure/Tabs/SummaryTab.ai" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/Figure/Tabs/SummaryTab.png" beforeDir="false" afterPath="$PROJECT_DIR$/Document/Figure/Tabs/SummaryTab.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/Figure/Tabs/WeblogoTab.ai" beforeDir="false" afterPath="$PROJECT_DIR$/Document/Figure/Tabs/WeblogoTab.ai" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/Figure/Tabs/WeblogoTab.png" beforeDir="false" afterPath="$PROJECT_DIR$/Document/Figure/Tabs/WeblogoTab.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Document/UserGuide.docx" beforeDir="false" afterPath="$PROJECT_DIR$/Document/UserGuide.docx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base_path_dialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/base_path_dialog.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/base_path_dialog.ui" beforeDir="false" afterPath="$PROJECT_DIR$/base_path_dialog.ui" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
