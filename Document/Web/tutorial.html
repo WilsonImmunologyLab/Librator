@@ -143,6 +143,7 @@ $(document).ready(function(){
   <li><a href="install.html">Install</a></li>
   <li><a class="active" href="tutorial.html">Tutorial</a></li>
   <li><a href="contact.html">Contact</a></li>
+  <li><a href="index.html">Github Page</a></li>
 </ul>
 </div>
 
@@ -168,11 +169,6 @@ $(document).ready(function(){
         <a class="title">Sequence Tab</a>
         <p class="text">Users can set paths for all required tools and databases.</p>
         <img class="img" src="img/SequenceTab.png" style="width: 50%">
-      </li>
-      <li>
-        <a class="title">Alignment RTF Tab</a>
-        <p class="text">Users can set paths for all required tools and databases.</p>
-        <img class="img" src="img/AlignmentRTFTab.png" style="width: 50%">
       </li>
       <li>
         <a class="title">Alignment Tab (HTML)</a>
@@ -257,6 +253,7 @@ $(document).ready(function(){
           <a class="title">Generate phylogenetic tree (ML tree)</a>
           <p class="text">Users can generate phylogenetic tree (Maximum Likelihood tree) for selected sequences. Nucleotide and Amino Acid trees are available. For Nucleotide tree: Click Tools-> Generate Maximum Likelihood Tree (nucleotide) in menu; For Amino acid tree: Click Tools-> Generate Maximum Likelihood Tree (Amino Acid) in menu. </p>
           <img class="img" src="img/tree.png" style="width: 90%">
+          <img class="img" src="img/tree1.png" style="width: 90%">
         </li>
         <li>
           <a class="title">Mutate sequence</a>
@@ -283,6 +280,20 @@ $(document).ready(function(){
           <a class="title">Generate Gibson Clone fragments</a>
           <p class="text">Users can generate Gibson Clone Fragments. Users can select sequences, determine fragment DB, output path, and joint region plan (panel A), after click “Generate Fragments” button, a dialog will pop up for users to review and confirm (panel B). On panel B, users can review the generated Fragments (both amino acid sequences and nucleotide sequences), joint regions that shared by neighbor fragments are highlighted. Joint region that connect fragment 1 and 4 to the vector not displayed for AA sequences but can be found in NT sequences. ‘-’ in AA alignments indicate incomplete sequences or deletions and will be deleted in NT fragments. Users can click “confirm” button to generate fragments after they confirmed current fragments. After a few second, a notice will be popped up with summarized results (panel C).</p>
           <img class="img" src="img/Gibson.png" style="width: 50%">
+        </li>
+        <li>
+          <a class="title">Generate Gibson Clone fragments for any sequence</a>
+          <p class="text">Beside HA/NA sequences, Librator also allows users to split any of their sequences into fragments. Users can use this function for some frontier and novel research, e.g. COVID-19. 
+          Users can click GibsonClone-> GibsonClone for single sequence in menu. Users can view their sequence and add at most 12 joint regions (where to split the sequence) to their sequence. Then users can preview the fragment products under current design. After that, users can setup upstream connector sequence and downstream connector sequence and output path.
+          </p>
+          <img class="img" src="img/GibsonAny.png" style="width: 50%">
+        </li>
+        <li>
+          <a class="title">Identify possible key residues from two groups of sequences</a>
+          <p class="text">Librator allows users to identify possible key residues from two groups of sequences. This function could be helpful in the case of identifying key residues that potentially responsible for antigenic change or antibody binding.  
+          Users can click Tools-> Identify key residues in menu. Users can double click sequence names on the left panel to add them into positive group or negative group to the right. Users can click the corresponding arrow to change the destination (green arrow indicates current destination). Users also can double click sequences on the right panel to remove them from current panel. After that, users can click ‘Identify possible key residues’ button to run analysis. The importance of residues is quantified and ranked by numerical score, which indicates the difference of amino acid composition between two groups. All residues will be listed in a table and be sorted by the score (inverse order). Multiple sequence aliment will also be popped up for users to investigate the details.
+          </p>
+          <img class="img" src="img/Picture1.png" style="width: 50%">
         </li>
 
       </ul>
