@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="PNG-Icons">
+    <file>Cterminaldomain.png</file>
     <file>green.png</file>
     <file>red.png</file>
     <file>Import1.png</file>

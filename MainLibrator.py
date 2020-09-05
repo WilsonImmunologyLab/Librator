@@ -3131,6 +3131,46 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 		self.ui.radioButtonUser.clicked.connect(self.setJoint)
 		self.ui.checkBoxAll.stateChanged.connect(self.checkAll)
 		self.ui.saveConnector.clicked.connect(self.saveJoint)
+		self.ui.CterminalRadioButton.clicked.connect(self.showhideCT)
+
+		# hide C-terminal domain/tag by default
+		self.ui.Piclabel.setHidden(True)
+		self.ui.label_1h.setHidden(True)
+		self.ui.label_2h.setHidden(True)
+		self.ui.label_3h.setHidden(True)
+		self.ui.Trimerization.setHidden(True)
+		self.ui.AviTag.setHidden(True)
+		self.ui.SixHisTag.setHidden(True)
+
+		size_w = self.size().width()
+		size_h = self.size().height()
+		self.resize(size_w, size_h - 100)
+
+	def showhideCT(self):
+		if self.ui.CterminalRadioButton.isChecked():
+			self.ui.Piclabel.setHidden(False)
+			self.ui.label_1h.setHidden(False)
+			self.ui.label_2h.setHidden(False)
+			self.ui.label_3h.setHidden(False)
+			self.ui.Trimerization.setHidden(False)
+			self.ui.AviTag.setHidden(False)
+			self.ui.SixHisTag.setHidden(False)
+
+			size_w = self.size().width()
+			size_h = self.size().height()
+			self.resize(size_w, size_h + 200)
+		else:
+			self.ui.Piclabel.setHidden(True)
+			self.ui.label_1h.setHidden(True)
+			self.ui.label_2h.setHidden(True)
+			self.ui.label_3h.setHidden(True)
+			self.ui.Trimerization.setHidden(True)
+			self.ui.AviTag.setHidden(True)
+			self.ui.SixHisTag.setHidden(True)
+
+			size_w = self.size().width()
+			size_h = self.size().height()
+			self.resize(size_w, size_h - 200)
 
 	def saveJoint(self):
 		global joint_file
@@ -3272,6 +3312,21 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 			                    QMessageBox.Ok, QMessageBox.Ok)
 			return
 
+		# check C-terminal domain/tag setting
+		if self.ui.CterminalRadioButton.isChecked():
+			if self.ui.Trimerization.toPlainText() == "":
+				QMessageBox.warning(self, 'Warning', 'Please fill Trimerization domain!',
+				                    QMessageBox.Ok, QMessageBox.Ok)
+				return
+			if self.ui.AviTag.toPlainText() == "":
+				QMessageBox.warning(self, 'Warning', 'Please fill AviTag domain!',
+				                    QMessageBox.Ok, QMessageBox.Ok)
+				return
+			if self.ui.SixHisTag.toPlainText() == "":
+				QMessageBox.warning(self, 'Warning', 'Please fill 6xHISTag domain!',
+				                    QMessageBox.Ok, QMessageBox.Ok)
+				return
+
 		active_tab = self.ui.tabWidget.currentIndex()
 		if active_tab == 0:
 			# validate if the DB have correct table
@@ -3284,11 +3339,13 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 				return
 			# send signal
 			joint_up = self.ui.jointUP.toPlainText()
-			joint_down = self.ui.jointDOWN.toPlainText()
+			if self.ui.CterminalRadioButton.isChecked():
+				joint_down = "GGG" + self.ui.Trimerization.toPlainText() + "GGC" + self.ui.AviTag.toPlainText() \
+				             + "GGG" + self.ui.SixHisTag.toPlainText() + "TAA" + self.ui.jointDOWN.toPlainText()
+			else:
+				joint_down = self.ui.jointDOWN.toPlainText()
 			db_path = [self.ui.dbpath.text()]
 			out_path = self.ui.outpath.text()
-
-
 
 			if joint_up == "" or joint_down == "": 		# OriPos
 				QMessageBox.warning(self, 'Warning',
@@ -3314,7 +3371,11 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 		elif active_tab == 1:
 			# send signal
 			joint_up = self.ui.jointUP.toPlainText()
-			joint_down = self.ui.jointDOWN.toPlainText()
+			if self.ui.CterminalRadioButton.isChecked():
+				joint_down = "GGG" + self.ui.Trimerization.toPlainText() + "GGC" + self.ui.AviTag.toPlainText() \
+				             + "GGG" + self.ui.SixHisTag.toPlainText() + "TAA" + self.ui.jointDOWN.toPlainText()
+			else:
+				joint_down = self.ui.jointDOWN.toPlainText()
 			out_path = self.ui.outpath.text()
 
 			server_ip = self.ui.IPinput.text()
