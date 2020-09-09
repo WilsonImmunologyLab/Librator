@@ -3329,6 +3329,10 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 
 		active_tab = self.ui.tabWidget.currentIndex()
 		if active_tab == 0:
+			if self.ui.dbpath.text() == '':
+				QMessageBox.warning(self, 'Warning',
+				                    'The Gene fragment database setting can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
+				return
 			# validate if the DB have correct table
 			SQLStatement = 'SELECT * FROM Fragments ORDER BY Name DESC LIMIT 1 '
 			try:
@@ -3398,7 +3402,7 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 
 			if server_ip == '' or db_name == '' or db_user == '' or db_pass == '':
 				QMessageBox.warning(self, 'Warning',
-				                    'The output path can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
+				                    'The Gene fragment database setting can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
 				return
 
 			# get selected sequence name
@@ -12382,7 +12386,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 	def ImportSeqs(self):
 		global DBFilename
 		if DBFilename == 'none':
-			Msg = 'Please open or create a sequence database first!'
+			Msg = 'You have not loaded any sequence databse yet!\nPlease open or create a sequence database first!'
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 			return
 
