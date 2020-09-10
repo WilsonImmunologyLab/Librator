@@ -3142,9 +3142,7 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 		self.ui.AviTag.setHidden(True)
 		self.ui.SixHisTag.setHidden(True)
 
-		self.ui.Trimerization.textChanged.connect(self.updateCT)
 		self.ui.AviTag.textChanged.connect(self.updateCT)
-		self.ui.SixHisTag.textChanged.connect(self.updateCT)
 
 		size_w = self.size().width()
 		size_h = self.size().height()
@@ -3177,11 +3175,10 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 			self.resize(size_w, size_h - 200)
 
 	def updateCT(self):
-		if self.ui.Trimerization.toPlainText() != "" and self.ui.SixHisTag.toPlainText() != "":
-			if self.ui.AviTag.toPlainText() == "":
-				self.ui.Piclabel.setPixmap(QtGui.QPixmap(":/PNG-Icons/Cterminaldomain1.png"))
-			else:
-				self.ui.Piclabel.setPixmap(QtGui.QPixmap(":/PNG-Icons/Cterminaldomain.png"))
+		if self.ui.AviTag.toPlainText() == "":
+			self.ui.Piclabel.setPixmap(QtGui.QPixmap(":/PNG-Icons/Cterminaldomain1.png"))
+		else:
+			self.ui.Piclabel.setPixmap(QtGui.QPixmap(":/PNG-Icons/Cterminaldomain.png"))
 
 	def saveJoint(self):
 		global joint_file

@@ -246,7 +246,7 @@ class Ui_gibsoncloneDialog(object):
         self.Piclabel.setMinimumSize(QtCore.QSize(0, 80))
         self.Piclabel.setMaximumSize(QtCore.QSize(700, 80))
         self.Piclabel.setText("")
-        self.Piclabel.setPixmap(QtGui.QPixmap(":/PNG-Icons/Cterminaldomain.png"))
+        self.Piclabel.setPixmap(QtGui.QPixmap(":/PNG-Icons/Cterminaldomain1.png"))
         self.Piclabel.setScaledContents(True)
         self.Piclabel.setAlignment(QtCore.Qt.AlignCenter)
         self.Piclabel.setObjectName("Piclabel")
