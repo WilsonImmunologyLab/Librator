@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_gibsoncloneDialog(object):
     def setupUi(self, gibsoncloneDialog):
         gibsoncloneDialog.setObjectName("gibsoncloneDialog")
-        gibsoncloneDialog.resize(754, 1004)
+        gibsoncloneDialog.resize(754, 1003)
         self.gridLayout_9 = QtWidgets.QGridLayout(gibsoncloneDialog)
         self.gridLayout_9.setObjectName("gridLayout_9")
         spacerItem = QtWidgets.QSpacerItem(462, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -317,6 +317,6 @@ class Ui_gibsoncloneDialog(object):
         self.label_5.setText(_translate("gibsoncloneDialog", "Gibson cloning downstream:"))
         self.saveConnector.setText(_translate("gibsoncloneDialog", "Set as Default"))
         self.CterminalRadioButton.setText(_translate("gibsoncloneDialog", "customize C-terminal domain/tag"))
-        self.label_1h.setText(_translate("gibsoncloneDialog", "Trimerization domain"))
-        self.label_2h.setText(_translate("gibsoncloneDialog", "AviTag"))
-        self.label_3h.setText(_translate("gibsoncloneDialog", "6xHisTag"))
+        self.label_1h.setText(_translate("gibsoncloneDialog", "Trimerization (Required)"))
+        self.label_2h.setText(_translate("gibsoncloneDialog", "AviTag (Optional)"))
+        self.label_3h.setText(_translate("gibsoncloneDialog", "6xHisTag (Required)"))

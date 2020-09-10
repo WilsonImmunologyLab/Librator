@@ -511,7 +511,7 @@
       <item row="4" column="0">
        <widget class="QLabel" name="label_1h">
         <property name="text">
-         <string>Trimerization domain</string>
+         <string>Trimerization (Required)</string>
         </property>
        </widget>
       </item>
@@ -528,7 +528,7 @@
       <item row="5" column="0">
        <widget class="QLabel" name="label_2h">
         <property name="text">
-         <string>AviTag</string>
+         <string>AviTag (Optional)</string>
         </property>
        </widget>
       </item>
@@ -545,7 +545,7 @@
       <item row="6" column="0">
        <widget class="QLabel" name="label_3h">
         <property name="text">
-         <string>6xHisTag</string>
+         <string>6xHisTag (Required)</string>
         </property>
        </widget>
       </item>
