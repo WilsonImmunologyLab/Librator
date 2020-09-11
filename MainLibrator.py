@@ -3296,7 +3296,6 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 			creatnewFragmentDB(file)
 			self.ui.dbpath.setText(file)
 
-
 	def accept(self):  # redo accept method
 		global working_prefix
 
@@ -14033,6 +14032,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		data_list = []
 		subtype1 = ""
 		error_code = 0
+		ErrMsg = "We find Unlawful nucleotide:\n"
+		ErrSign = False
 		for item in DataIn:
 			SeqName = item[0]
 			Sequence = item[1]
@@ -14041,6 +14042,15 @@ class LibratorMain(QtWidgets.QMainWindow):
 			VTo = int(item[3])
 			Sequence = Sequence[VFrom:VTo]
 			SequenceNT = Sequence.upper()
+
+			# sequence check for NT seq
+			pattern = re.compile(r'[^ATCGUatcgu]')
+			cur_strange = pattern.findall(SequenceNT)
+			cur_strange = list(set(cur_strange))
+			if len(cur_strange) > 0:
+				ErrMsg += ','.join(cur_strange) + '    from    ' + SeqName + "\n"
+				ErrSign = True
+
 			SequenceAA = Translator(SequenceNT, 0)
 			cur_subtype = item[4]
 			if subtype1 == "":
@@ -14060,6 +14070,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 				#break
 			EachIn = (SeqName, SequenceNT, SequenceAA[0])
 			data_list.append(EachIn)
+		if ErrSign == True:
+			ErrMsg += "Please remove those Unlawful nucleotides!"
+			QMessageBox.warning(self, 'Warning', ErrMsg, QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
 
 		if subtype1 in Group1 or subtype1 in Group2:
 			if subtype1 in Group1 and subtype == 'H3':
@@ -15886,6 +15901,16 @@ def AlignSequencesHTML(DataSet, template):
 		SeqName = DataSet[0][0].replace('\n', '').replace('\r', '')
 		SeqName = SeqName.strip()
 		NTseq = DataSet[0][1]
+
+		# sequence check for NT seq
+		pattern = re.compile(r'[^ATCGUatcgu]')
+		cur_strange = pattern.findall(NTseq)
+		cur_strange = list(set(cur_strange))
+		if len(cur_strange) > 0:
+			ErrMsg = "We find Unlawful nucleotide: " + ','.join(cur_strange) + '\nfrom \n' + SeqName + \
+			         '\nPlease remove those Unlawful nucleotide!'
+			return ErrMsg
+
 		AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
 		all[SeqName] = [NTseq, AAseq]
 
