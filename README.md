@@ -1,5 +1,8 @@
+<p align="center">
+  <img src="/docs/img/logo.png"  width="200">
+</p>
+
 # Librator
-<img src="/docs/img/logo.png"  width="200">
 Librator: effcient and effective protein expression by using Gibson Cloning
 <!-- Please refer to https://WilsonImmunologyLab.github.io/LinQView/ for installation instruction and tutorial. -->
 
