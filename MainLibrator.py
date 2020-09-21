@@ -4350,6 +4350,18 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.HTMLview2.resizeSignal.connect(self.resizeHTML)
 		self.ui.HTMLview3.resizeSignal.connect(self.resizeHTML)
 
+		#self.loadPDB()
+
+	def loadPDB(self):
+		pdbPath = os.path.join(working_prefix, 'PDB')
+		pdb_files = os.listdir(pdbPath)
+		pdb_list = ['', 'NA']
+		for file in pdb_files:
+			if not os.path.isdir(file):
+				if file[-3:] == 'pdb':
+					pdb_list.append(file[0:-4])
+		self.ui.PDBcombo.addItems(pdb_list)
+
 	@pyqtSlot()
 	def on_actionIdentify_Key_Mutations_triggered(self):
 		self.FindkeyDialog = FindKeyDialog()
