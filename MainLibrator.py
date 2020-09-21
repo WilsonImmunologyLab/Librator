@@ -4453,6 +4453,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# calculate entropy from alignment file
 		Entropy = self.calEntropy(outfilename)
 
+		# read Entropy from file
+		# H1_Consensus = ""
+		# H1_score = []
+		# Entropy = [H1_Consensus, H1_score]
+
 		# assign entropy score for each H1/H3 position on 3D structure
 		HANumbering(Entropy[0])
 		if subtype in Group2:
@@ -14612,11 +14617,15 @@ class LibratorMain(QtWidgets.QMainWindow):
 		summary_array = []
 		summary_index = 0
 
-		# initial output file 2, IDT 96 well order format
-		idt_out_file = out_dir + "/IDTorder_" + time_stamp + ".xlsx"
-		writer_idt = pd.ExcelWriter(idt_out_file)
-		idt_array = [["" for i in range(4)] for j in range(96)]
-		well_row = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+		# initial data container for output file 2, IDT 96 well order format
+		if subtype == "NA":
+			max_frag_num = len(fragment_data.index) * 3
+		else:
+			max_frag_num = len(fragment_data.index) * 4
+		max_file_num = math.ceil(max_frag_num/96)
+
+		idt_array = [["" for i in range(4)] for j in range(96*max_file_num)]
+		well_row = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'] * max_file_num
 		well_col = range(1, 13)
 
 		cur_idt_index = 0
@@ -14768,10 +14777,37 @@ class LibratorMain(QtWidgets.QMainWindow):
 							QMessageBox.Ok)
 
 		# save IDT EXCEL file
-		idt_array = pd.DataFrame(data=idt_array)
-		idt_array.columns = ["Well Position","Name","Sequence","5' Phosphorylation (for blunt cloning only)"]
-		idt_array.to_excel(writer_idt, sheet_name='Sheet1', index=False)
-		writer_idt.save()
+		if max_file_num == 1:
+			idt_array = pd.DataFrame(data=idt_array)
+			idt_array.columns = ["Well Position", "Name", "Sequence", "5' Phosphorylation (for blunt cloning only)"]
+
+			idt_out_file = out_dir + "/IDTorder_" + time_stamp + ".xlsx"
+			writer_idt = pd.ExcelWriter(idt_out_file)
+			idt_array.to_excel(writer_idt, sheet_name='Sheet1', index=False)
+			writer_idt.save()
+		else:
+			if idt_array[96][1] == "":
+				idt_array = pd.DataFrame(data=idt_array[0:96])
+				idt_array.columns = ["Well Position", "Name", "Sequence", "5' Phosphorylation (for blunt cloning only)"]
+
+				idt_out_file = out_dir + "/IDTorder_" + time_stamp + ".xlsx"
+				writer_idt = pd.ExcelWriter(idt_out_file)
+				idt_array.to_excel(writer_idt, sheet_name='Sheet1', index=False)
+				writer_idt.save()
+			else:
+				for file_num in range(0, max_file_num):
+					first_index_of_cur_file = file_num * 96
+					last_index_of_cur_file = first_index_of_cur_file + 96
+					if idt_array[first_index_of_cur_file][1] != "":
+						out_idt_array = pd.DataFrame(data=idt_array[first_index_of_cur_file:last_index_of_cur_file])
+						out_idt_array.columns = ["Well Position","Name","Sequence","5' Phosphorylation (for blunt cloning only)"]
+
+						idt_out_file = out_dir + "/IDTorder_" + time_stamp + "_" + str(file_num + 1) + ".xlsx"
+						writer_idt = pd.ExcelWriter(idt_out_file)
+						out_idt_array.to_excel(writer_idt, sheet_name='Sheet1', index=False)
+						writer_idt.save()
+					else:
+						break
 
 		# save summary EXCEL file
 		new_fragment_name_list = new_fragment_name_list.tolist()
