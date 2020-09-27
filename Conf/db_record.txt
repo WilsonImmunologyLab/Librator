@@ -1,1 +1,1 @@
-/Users/leil/Documents/Projects/Librator/Librator/DB/Test.ldb,/Users/leil/Downloads/All-Flu.ldb,/Users/leil/Downloads/H3_db.ldb,/Users/leil/Documents/Projects/Lab/Jenna/20200323_H1/H1_selection.ldb,/Users/leil/Desktop/111.ldb
+/Users/leil/Documents/Projects/Librator/Librator/DB/Test.ldb,/Users/leil/Downloads/All-Flu.ldb,/Users/leil/Downloads/H3_db.ldb,/Users/leil/Documents/Projects/Lab/Jenna/20200323_H1/H1_selection.ldb

@@ -6970,7 +6970,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				NewSeqName = ''
 				SeqInfoPacket = []
 				a = H3Numbering
-				if SubType == 'H3':
+				if SubType in Group1 or SubType in Group2:
 					Mutations = 'none'
 					for i in range(1, len(H3Numbering)):
 						residue = H3Numbering[i]
@@ -7022,11 +7022,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 							self.PopulateCombos()
 							break
 				else:
-					Msg = 'Make Probe function only works for H3!'
+					Msg = 'Make Probe function only works for HA!'
 					QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 					return
 		else:
-			Msg = 'Please select a H3 sequence!'
+			Msg = 'Please select a HA sequence!'
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 			return
 
@@ -8781,6 +8781,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 	@pyqtSlot()
 	def Decorate(self, Decorations, cursor):
 		AAColorMap = ''
+
+		#a = H3Numbering
+		#b = H1Numbering
 
 		H3NumOn = False
 		H1NumOn = False
@@ -12194,6 +12197,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 			return
 		else:
 			self.removeAll()
+			size_w = self.size().width()
+			size_h = self.size().height()
+			offset_pool = [-1, 1]
+			offset = offset_pool[random.randint(0, 1)]
+			self.resize(size_w + offset, size_h + offset)
 
 	@pyqtSlot()
 	def on_btnSeqIn_clicked(self):
@@ -12551,7 +12559,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			text += "load " + pdbPath + "\n"
 			pml.write(text)
 			text = "as cartoon\n" \
-					+ "show mesh\n" \
 					+ "bg_color white\n" \
 					+ "color lightorange\n"
 			pml.write(text)
@@ -15405,6 +15412,7 @@ def HANumbering(AASeq):
 
 	TMOn = False
 	# StartTest = False
+	a = H1Numbering
 	for i in range(1,len(H1Numbering)):
 		CurRes = H1Numbering[i]
 		HASegment = CurRes[0]
