@@ -6983,9 +6983,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 						# idenfity Y98 and make Y98F
 						if H3Num == 98 and region == 'HA1':
 							if AA != 'Y':
-								Msg = 'H3 numbering 98 of this sequence\n' + SeqName + '\nis not Y!'
+								Msg = 'H3 numbering 98 of this sequence\n' + SeqName + '\nis not Y! \nBTW, most H16, all H17 and H18 already have Y98F!'
 								QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
-								break
+								return
 							else:
 								# make mutation Y98F
 								Start = (i - 1) * 3
@@ -7030,9 +7030,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 			return
 
-		Msg = 'Probe sequence for sequence\n' + SeqName + '\nhas been generated. The name of Probe sequences is\n' +\
-		      NewSeqName
-		QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
+		if NewSeqName == "":
+			Msg = 'Did not find transmembrane region on your sequence!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+		else:
+			Msg = 'Probe sequence for sequence\n' + SeqName + '\nhas been generated. The name of Probe sequences is\n' + \
+			      NewSeqName
+			QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
 
 	@pyqtSlot()
 	def on_actionDelete_record_triggered(self):
@@ -15468,7 +15472,7 @@ def HANumbering(AASeq):
 			StartTest = False
 	TMOn = False
 	TriOn = False
-	
+
 	os.remove(SavedFile)
 	os.remove(workingfilename)
 
