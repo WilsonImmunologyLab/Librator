@@ -15379,7 +15379,6 @@ def HANumbering(AASeq):
 		try:
 			testString = ''
 			if AA == 'V':
-
 				for j in range(i,i+6):
 					testRes = H3Numbering[j]
 					AATest = testRes[1]
@@ -15411,6 +15410,7 @@ def HANumbering(AASeq):
 			StartTest = False
 
 	TMOn = False
+	TriOn = False
 	# StartTest = False
 	a = H1Numbering
 	for i in range(1,len(H1Numbering)):
@@ -15437,7 +15437,6 @@ def HANumbering(AASeq):
 		try:
 			testString = ''
 			if AA == 'V':
-
 				for j in range(i,i+6):
 					testRes = H1Numbering[j]
 					AATest = testRes[1]
@@ -15467,7 +15466,9 @@ def HANumbering(AASeq):
 			HAIn = (HASegment, AA, HANumber, HAbase, HAAg)
 			H1Numbering[i] = HAIn
 			StartTest = False
-
+	TMOn = False
+	TriOn = False
+	
 	os.remove(SavedFile)
 	os.remove(workingfilename)
 
