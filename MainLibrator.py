@@ -15358,6 +15358,8 @@ def HANumbering(AASeq):
 	# if len(H3Numbering) > 425:
 	testString = ''
 	TMOn = False
+	TriOn = False
+	HA2_counted = False
 	# StartTest = False
 	for i in range(1,len(H3Numbering)):
 		CurRes = H3Numbering[i]
@@ -15376,7 +15378,7 @@ def HANumbering(AASeq):
 			if MapEnds == 'HA1' or MapEnds == 'none':
 				NumberingMap['H3HA2beg'] = i
 				MapEnds = 'HA2'
-
+			HA2_counted = True
 			NumberingMap['H3HA2end'] = i
 
 
@@ -15387,8 +15389,13 @@ def HANumbering(AASeq):
 					testRes = H3Numbering[j]
 					AATest = testRes[1]
 					testString += AATest
+				# for H1 and H3
 				if testString == 'VELKSG' or testString == 'VQLKSG' or testString == 'VKLESM' or testString == 'VKLEST' or testString == 'VKLDS':
 					TMOn = True
+				# for other subtypes
+				else:
+					if HASegment == "HA1" and HA2_counted == True:
+						TMOn = True
 			elif AA == 'G':
 				for j in range(i,i+6):
 					testRes = H3Numbering[j]
@@ -15415,6 +15422,7 @@ def HANumbering(AASeq):
 
 	TMOn = False
 	TriOn = False
+	HA2_counted = False
 	# StartTest = False
 	a = H1Numbering
 	for i in range(1,len(H1Numbering)):
@@ -15434,7 +15442,7 @@ def HANumbering(AASeq):
 			if MapEnds == 'HA1' or MapEnds == 'none':
 				NumberingMap['H1HA2beg'] = i
 				MapEnds = 'HA2'
-
+			HA2_counted = True
 			NumberingMap['H1HA2end'] = i
 
 
@@ -15445,8 +15453,13 @@ def HANumbering(AASeq):
 					testRes = H1Numbering[j]
 					AATest = testRes[1]
 					testString += AATest
+				# for H1 and H3
 				if testString == 'VELKSG' or testString == 'VQLKSG' or testString == 'VKLESM' or testString == 'VKLEST' or testString == 'VKLDS':
 					TMOn = True
+				# for other subtypes
+				else:
+					if HASegment == "HA1" and HA2_counted == True:
+						TMOn = True
 			elif AA == 'G':
 				for j in range(i,i+6):
 					testRes = H1Numbering[j]
