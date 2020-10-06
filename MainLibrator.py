@@ -6925,6 +6925,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.IdMutationDIalog.show()
 
 	@pyqtSlot()
+	def on_actionAntigen_probe_triggered(self):
+		self.MakeProbe()
+
+	@pyqtSlot()
 	def MakeProbe(self):
 		global H1Numbering
 		global H3Numbering

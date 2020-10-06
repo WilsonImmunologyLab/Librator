@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="PNG-Icons">
+    <file>probe.png</file>
     <file>Cterminaldomain1.png</file>
     <file>Cterminaldomain.png</file>
     <file>green.png</file>

@@ -471,7 +471,7 @@
               </property>
               <property name="icon">
                <iconset resource="Resources/VgenesResources.qrc">
-                <normaloff>:/PNG-Icons/HA.png</normaloff>:/PNG-Icons/HA.png</iconset>
+                <normaloff>:/PNG-Icons/probe.png</normaloff>:/PNG-Icons/probe.png</iconset>
               </property>
              </item>
              <item>
@@ -2680,6 +2680,7 @@
      <string>Tools</string>
     </property>
     <addaction name="actionHANumbering"/>
+    <addaction name="actionAntigen_probe"/>
     <addaction name="actionIdentifyMutation"/>
     <addaction name="actionIdentify_Key_Mutations"/>
     <addaction name="separator"/>
@@ -2785,6 +2786,7 @@
    <addaction name="separator"/>
    <addaction name="actionHANumbering"/>
    <addaction name="actionIdentifyMutation"/>
+   <addaction name="actionAntigen_probe"/>
    <addaction name="actionMutation"/>
    <addaction name="actionEditing"/>
    <addaction name="actionFusion"/>
@@ -3474,6 +3476,20 @@
   <action name="actionIdentify_Key_Mutations">
    <property name="text">
     <string>Identify Key Mutations</string>
+   </property>
+  </action>
+  <action name="actionAntigen_probe">
+   <property name="icon">
+    <iconset resource="Resources/VgenesResources.qrc">
+     <normaloff>:/PNG-Icons/probe.png</normaloff>:/PNG-Icons/probe.png</iconset>
+   </property>
+   <property name="text">
+    <string>Antigen probe</string>
+   </property>
+  </action>
+  <action name="actionAntigen_Probe">
+   <property name="text">
+    <string>Antigen Probe</string>
    </property>
   </action>
  </widget>
