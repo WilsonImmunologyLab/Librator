@@ -200,7 +200,6 @@ def questionMessage(self, question, buttons):
     elif buttons == "YNCA":
         type  = QtWidgets.QMessageBox.Cancel | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.NoToAll | QtWidgets.QMessageBox.YesToAll# , QtWidgets.QMessageBox.Yes
     # QtWidgets.QMessageBox.setDefaultButton(self, QtWidgets.QMessageBox.Yes)
-
     reply = QtWidgets.QMessageBox.question(self, "QMessageBox.question()", question, type)
 
     if reply == QtWidgets.QMessageBox.Yes:

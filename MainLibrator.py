@@ -54,6 +54,7 @@ from htmldialog import Ui_htmlDialog
 from aa_or_nt import Ui_aantDialog
 from idmutationdialog import Ui_IdMutationDialog
 from findkeydialog import Ui_FindkeyDialog
+from fastaorseqdialog import Ui_FastaOrSeqDialog
 
 from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText
 from VgenesTextEdit import VGenesTextMain
@@ -1086,6 +1087,29 @@ class aantDialog(QtWidgets.QDialog):
 
 	def returnCancel(self):
 		self.aantSignal.emit('Cancel')
+		self.close()
+
+class FastaOrSeqDialog(QtWidgets.QDialog):
+	inputSignal = pyqtSignal(str)
+	def __init__(self):
+		super(FastaOrSeqDialog, self).__init__()
+		self.ui = Ui_FastaOrSeqDialog()
+		self.ui.setupUi(self)
+
+		self.ui.pushButtonFasta.clicked.connect(self.returnFasta)
+		self.ui.pushButtonSEQ.clicked.connect(self.returnSEQ)
+		self.ui.pushButtonCancel.clicked.connect(self.returnCancel)
+
+	def returnFasta(self):
+		self.inputSignal.emit('Fasta')
+		self.close()
+
+	def returnSEQ(self):
+		self.inputSignal.emit('SEQ')
+		self.close()
+
+	def returnCancel(self):
+		self.inputSignal.emit('Cancel')
 		self.close()
 
 class jointDialog(QtWidgets.QDialog):
@@ -12381,7 +12405,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			buttons = 'YN'
 			answer = questionMessage(self, question, buttons)
 			if answer == 'Yes':
-				self.ImportSeqs()
+				mydialog1 = FastaOrSeqDialog()
+				mydialog1.inputSignal.connect(self.ImportSeqs)
+				mydialog1.exec_()
 		self.UpdateRecentFilelist(DBFilename)
 			# if os.path.isfile(DBFilename):
 			# 	self.LoadDB(DBFilename)
@@ -12419,11 +12445,27 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_action_Import_triggered(self):
-		self.ImportSeqs()
+		global DBFilename
+		if DBFilename == 'none':
+			Msg = 'You have not loaded any sequence databse yet!\nPlease open or create a sequence database first!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		mydialog1 = FastaOrSeqDialog()
+		mydialog1.inputSignal.connect(self.ImportSeqs)
+		mydialog1.exec_()
 
 	@pyqtSlot()
 	def on_btnImport_clicked(self):
-		self.ImportSeqs()
+		global DBFilename
+		if DBFilename == 'none':
+			Msg = 'You have not loaded any sequence databse yet!\nPlease open or create a sequence database first!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		mydialog1 = FastaOrSeqDialog()
+		mydialog1.inputSignal.connect(self.ImportSeqs)
+		mydialog1.exec_()
 
 	@pyqtSlot()
 	def on_btnDelete_clicked(self):
@@ -12431,19 +12473,32 @@ class LibratorMain(QtWidgets.QMainWindow):
 		if len(selections) > 0:
 			self.open_delete_dialog()
 
-	@pyqtSlot()
-	def ImportSeqs(self):
-		global DBFilename
-		if DBFilename == 'none':
-			Msg = 'You have not loaded any sequence databse yet!\nPlease open or create a sequence database first!'
+	def ImportSeqs(self, answer):
+		SeqInfoPacket = []
+
+		#question = 'Do you want to import sequences from FASTA file or SEQ file?\nClick Yes for Fasta, No for SEQ\n'
+		#buttons = 'YNC'
+		#answer = questionMessage(self, question, buttons)
+		if answer == "Fasta":
+			filename, _ = QFileDialog.getOpenFileName(self, "select FASTA files", '~/Documents',
+			                                         "FASTA Files (*.fasta *.fas *.fa);;All Files (*)")
+		elif answer == "SEQ":
+			filename = QFileDialog.getExistingDirectory(self, "select path for SEQ files", temp_folder)
+		else:
+			return
+
+		if filename == '':
+			return
+
+		if os.path.isfile(filename):
+			HA_Read = ReadFASTA(filename)
+		elif os.path.isdir(filename):
+			HA_Read = ReadSEQ(filename)
+		else:
+			Msg = 'Wrong file format! Please specify FASTA file or folder for SEQ files!'
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 			return
 
-		SeqInfoPacket = []
-		filename = openFile(self, 'FASTA')
-		if filename is None:
-			return
-		HA_Read = ReadFASTA(filename)
 		SequenceFiltered = []
 		# check if any sequence have strange nt
 		ErrMsg = 'The following sequences will not be imported due to unlawful nucleotide more than 5%:\n\n'
@@ -15492,6 +15547,21 @@ def HANumbering(AASeq):
 
 	os.remove(SavedFile)
 	os.remove(workingfilename)
+
+def ReadSEQ(path):
+	ReadFile = []
+
+	cur_files = os.listdir(path)
+	cur_name = path.split('/')[-1]
+	for cur_file in cur_files:
+		if cur_file[-4:] == '.seq':
+			cur_name = cur_file[:-4]
+			f = open(os.path.join(path, cur_file), 'r')
+			cur_seq = f.read()
+			f.close()
+			ReadFile.append((cur_name, cur_seq))
+
+	return ReadFile
 
 def ReadFASTA(outfilename):
 	ReadFile = []
