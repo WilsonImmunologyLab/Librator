@@ -74,6 +74,8 @@ app = BUNDLE(coll,
              icon='Flu.icns',
              bundle_identifier=None,
              info_plist={
-              'NSHumanReadableCopyright':"Copyright @ 2019, Wilson Lab, All Rights Reserved",
+              'NSPrincipalClass': 'NSApplication',
+              'NSAppleScriptEnabled': False,
+              'NSHumanReadableCopyright':"Copyright @ 2020, Wilson Lab, All Rights Reserved",
               'NSHighResolutionCapable': 'True'
              })

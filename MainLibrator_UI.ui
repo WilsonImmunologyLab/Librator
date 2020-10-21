@@ -3443,11 +3443,19 @@
    </property>
   </action>
   <action name="actionFusion_High_resolution">
+   <property name="icon">
+    <iconset resource="Resources/VgenesResources.qrc">
+     <normaloff>:/PNG-Icons/Fusion.png</normaloff>:/PNG-Icons/Fusion.png</iconset>
+   </property>
    <property name="text">
     <string>Fusion (High resolution)</string>
    </property>
   </action>
   <action name="actionFusion_Low_reslution">
+   <property name="icon">
+    <iconset resource="Resources/VgenesResources.qrc">
+     <normaloff>:/PNG-Icons/Fusion.png</normaloff>:/PNG-Icons/Fusion.png</iconset>
+   </property>
    <property name="text">
     <string>Fusion (Low reslution)</string>
    </property>
@@ -3474,6 +3482,10 @@
    </property>
   </action>
   <action name="actionIdentify_Key_Mutations">
+   <property name="icon">
+    <iconset resource="Resources/VgenesResources.qrc">
+     <normaloff>:/PNG-Icons/Seq.png</normaloff>:/PNG-Icons/Seq.png</iconset>
+   </property>
    <property name="text">
     <string>Identify Key Mutations</string>
    </property>
