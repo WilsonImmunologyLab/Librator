@@ -6966,6 +6966,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		NumSeqs = len(listItems)
 		# AASeqWas = self.ui.textAA.toPlainText()
 		AASeq = ''
+		errMsg = ''
 
 		if NumSeqs > 0:
 			i = 1
@@ -6988,6 +6989,15 @@ class LibratorMain(QtWidgets.QMainWindow):
 				SubType  = item[4]
 				VFrom = int(item[2]) - 1
 				if VFrom == -1: VFrom = 0
+
+				# check if sequence name is already taken
+				NewSeqName = SeqName + '-Probe'
+				SQLStatement = 'SELECT SeqName FROM LibDB WHERE SeqName = "' + NewSeqName + '"'
+				query = RunSQL(DBFilename, SQLStatement)
+				if len(query) > 0:
+					self.UpdateSeq(NewSeqName, 'True', 'Active')
+					errMsg += 'The Probe (' + NewSeqName + ') of your selected sequence is already exist\n'
+					continue
 
 				VTo = int(item[3])-1
 				Sequence = Sequence[VFrom:VTo]
@@ -7040,14 +7050,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 							ItemIn = [NewSeqName, NewSeq, str(len(NewSeq)), SubType, form, VFrom, str(len(NewSeq)), Active, Role, Donor, Mutations, 0]
 							SeqInfoPacket.clear()
 							SeqInfoPacket.append(ItemIn)
-							# if DBFilename == 'none':
-							# 	self.on_action_New_triggered()
-							# 	return
 							NumEnterred = enterData(self, DBFilename, SeqInfoPacket)
-
 							# self.HANumbering(AASeqWas) #changes Numbering back to original
-							self.ui.listWidgetStrainsIn.setCurrentRow(0)
-							self.PopulateCombos()
 							break
 				else:
 					Msg = 'Make Probe function only works for HA!'
@@ -7058,12 +7062,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 			return
 
+		self.ui.listWidgetStrainsIn.setCurrentRow(0)
+		self.PopulateCombos()
+
 		if NewSeqName == "":
 			Msg = 'Did not find transmembrane region on your sequence!'
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 		else:
-			Msg = 'Probe sequence for sequence\n' + SeqName + '\nhas been generated. The name of Probe sequences is\n' + \
-			      NewSeqName
+			#Msg = 'Probe sequence for your selected sequence\n' + SeqName + '\nhas been generated. The name of Probe sequences is\n' + \
+			#      NewSeqName
+			Msg = 'Probe sequences for your selected sequences have been generated.\n\n' + errMsg
 			QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
 
 	@pyqtSlot()
