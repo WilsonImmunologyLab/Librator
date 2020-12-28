@@ -1805,6 +1805,39 @@ class updateSeqDialog(QtWidgets.QDialog):
 		self.ui.searchBtn.clicked.connect(self.searchFun)
 		self.ui.RFstart.valueChanged.connect(self.highRegion)
 		self.ui.RFend.valueChanged.connect(self.highRegion)
+		self.ui.pushButtonCheck.clicked.connect(self.seqCheck)
+
+	def seqCheck(self):
+		pattern = re.compile(r'[^ATCUG]')
+		text = self.ui.textEdit.toPlainText().upper()
+		cursor = self.ui.textEdit.textCursor()
+		format = QTextCharFormat()
+
+		# reset all font color
+		format.setForeground(QBrush(QColor("black")))
+		cursor.setPosition(0)
+		cursor.setPosition(len(text), QTextCursor.KeepAnchor)
+		cursor.mergeCharFormat(format)
+
+		# highlight pattern
+		format.setForeground(QBrush(QColor("red")))
+		pos_list = [i.start() for i in re.finditer(pattern, text)]
+		if len(pos_list) > 0:
+			for pos in pos_list:
+				cursor.setPosition(pos)
+				cursor.setPosition(pos + 1, QTextCursor.KeepAnchor)
+				cursor.mergeCharFormat(format)
+
+			Msg = 'We found and highlighted ' + str(len(pos_list)) + ' unlawful nucleotides in your sequence!'
+			QMessageBox.warning(self, 'Warning', Msg,
+			                    QMessageBox.Ok, QMessageBox.Ok)
+			return
+		else:
+			Msg = 'Did not found any unlawful nucleotide in your sequence! Your sequence is good!'
+			QMessageBox.warning(self, 'Warning', Msg,
+			                    QMessageBox.Ok, QMessageBox.Ok)
+			return
+
 
 	def searchFun(self):
 		pattern = self.ui.SearchText.text().upper()
@@ -4312,6 +4345,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.toolButtonConserve.clicked.connect(self.showDiverse)
 		self.ui.checkBoxRowSelection.stateChanged.connect(self.selectionMode)
 		self.ui.pushButtonRefresh.clicked.connect(self.load_table)
+		self.ui.pushButtonCheck.clicked.connect(self.CheckSeq)
 
 		self.ui.cboRole.last_value = ''
 		self.ui.cboForm.last_value = ''
@@ -4375,6 +4409,47 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.HTMLview3.resizeSignal.connect(self.resizeHTML)
 
 		#self.loadPDB()
+
+	def CheckSeq(self):
+		pattern = re.compile(r'[^ATCUG]')
+
+		text = self.ui.textSeq.toPlainText()
+		cursor = self.ui.textSeq.textCursor()
+
+		if text == "":
+			Msg = 'No DNA sequence loaded!'
+			QMessageBox.warning(self, 'Warning', Msg,
+			                    QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		format = QTextCharFormat()
+		format.setBackground(QBrush(QColor("white")))
+		format.setForeground(QBrush(QColor("black")))
+		cursor.setPosition(0)
+		cursor.setPosition(len(text), QTextCursor.KeepAnchor)
+		cursor.mergeCharFormat(format)
+
+		format.setBackground(QBrush(QColor("red")))
+		format.setForeground(QBrush(QColor("white")))
+		try:
+			pos_list = [i.start() for i in re.finditer(pattern, text)]
+			if len(pos_list) > 0:
+				for pos in pos_list:
+					cursor.setPosition(pos)
+					cursor.setPosition(pos + 1, QTextCursor.KeepAnchor)
+					cursor.mergeCharFormat(format)
+
+				Msg = 'We found and highlighted ' + str(len(pos_list)) + ' unlawful nucleotides in your sequence!'
+				QMessageBox.warning(self, 'Warning', Msg,
+				                    QMessageBox.Ok, QMessageBox.Ok)
+				return
+			else:
+				Msg = 'Did not found any unlawful nucleotide in your sequence! Your sequence is good!'
+				QMessageBox.warning(self, 'Warning', Msg,
+				                    QMessageBox.Ok, QMessageBox.Ok)
+				return
+		except Exception:
+			pass
 
 	def loadPDB(self):
 		pdbPath = os.path.join(working_prefix, 'PDB')
@@ -12396,8 +12471,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		DB_create_flag = False
 		while (DB_create_flag == False):
 			DBFilename, _ = QtWidgets.QFileDialog.getSaveFileName(self,
-			                                                      "New Database",
-			                                                      "New database",
+			                                                      "Create New Database",
+			                                                      os.path.join(working_prefix, 'New Database'),
+			                                                      #os.path.join("～/Documents", 'New Database'),
 			                                                      "Librator database Files (*.ldb);;All Files (*)",
 			                                                      options=options)
 
