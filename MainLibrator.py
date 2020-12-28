@@ -12393,29 +12393,39 @@ class LibratorMain(QtWidgets.QMainWindow):
 		options = QtWidgets.QFileDialog.Options()
 		global DBFilename
 		# options |= QtWidgets.QFileDialog.DontUseNativeDialog
-		DBFilename, _ = QtWidgets.QFileDialog.getSaveFileName(self,
-		                                                      "New Database",
-		                                                      "New database",
-		                                                      "Librator database Files (*.ldb);;All Files (*)",
-		                                                      options=options)
+		DB_create_flag = False
+		while (DB_create_flag == False):
+			DBFilename, _ = QtWidgets.QFileDialog.getSaveFileName(self,
+			                                                      "New Database",
+			                                                      "New database",
+			                                                      "Librator database Files (*.ldb);;All Files (*)",
+			                                                      options=options)
 
-		if DBFilename != None and DBFilename != 'none' and DBFilename != '':
-			(dirname, filename) = os.path.split(DBFilename)
-			(shortname, extension) = os.path.splitext(filename)
+			if DBFilename != None and DBFilename != 'none' and DBFilename != '':
+				(dirname, filename) = os.path.split(DBFilename)
+				(shortname, extension) = os.path.splitext(filename)
 
-			if extension != '.ldb':
-				DBFilename = shortname + '.ldb'
+				if extension != '.ldb':
+					DBFilename = shortname + '.ldb'
 
-			creatnewDB(DBFilename)
+				try:
+					creatnewDB(DBFilename)
+					DB_create_flag = True
+				except:
+					Msg = 'Fail to create DB! Please try one more time or a different location!'
+					QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			else:
+				return
 
-			# self.UpdateRecentList(DBFilename, True)
-			question = 'Would you like to enter sequences into your new database?'
-			buttons = 'YN'
-			answer = questionMessage(self, question, buttons)
-			if answer == 'Yes':
-				mydialog1 = FastaOrSeqDialog()
-				mydialog1.inputSignal.connect(self.ImportSeqs)
-				mydialog1.exec_()
+			if DB_create_flag == True:
+				question = 'Would you like to enter sequences into your new database?'
+				buttons = 'YN'
+				answer = questionMessage(self, question, buttons)
+				if answer == 'Yes':
+					mydialog1 = FastaOrSeqDialog()
+					mydialog1.inputSignal.connect(self.ImportSeqs)
+					mydialog1.exec_()
+
 		self.UpdateRecentFilelist(DBFilename)
 			# if os.path.isfile(DBFilename):
 			# 	self.LoadDB(DBFilename)
