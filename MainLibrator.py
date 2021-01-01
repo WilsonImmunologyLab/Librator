@@ -12573,24 +12573,35 @@ class LibratorMain(QtWidgets.QMainWindow):
 		#question = 'Do you want to import sequences from FASTA file or SEQ file?\nClick Yes for Fasta, No for SEQ\n'
 		#buttons = 'YNC'
 		#answer = questionMessage(self, question, buttons)
+		HA_Read = []
 		if answer == "Fasta":
-			filename, _ = QFileDialog.getOpenFileName(self, "select FASTA files", '~/Documents',
+			filename, _ = QFileDialog.getOpenFileNames(self, "select FASTA files", '~/Documents',
 			                                         "FASTA Files (*.fasta *.fas *.fa);;All Files (*)")
+
+			if filename == '' or len(filename) == 0:
+				return
+
+			for single_file_name in filename:
+				if os.path.isfile(single_file_name):
+					HA_Read = HA_Read + ReadFASTA(single_file_name)
+				else:
+					Msg = 'File ' + single_file_name + ' do not exist! Please specify a folder for SEQ files!'
+					QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+					return
+
 		elif answer == "SEQ":
 			filename = QFileDialog.getExistingDirectory(self, "select path for SEQ files", temp_folder)
-		else:
-			return
 
-		if filename == '':
-			return
+			if filename == '' or len(filename) == 0:
+				return
 
-		if os.path.isfile(filename):
-			HA_Read = ReadFASTA(filename)
-		elif os.path.isdir(filename):
-			HA_Read = ReadSEQ(filename)
+			if os.path.isdir(filename):
+				HA_Read = ReadSEQ(filename)
+			else:
+				Msg = 'Path do not exist! Please specify a folder for SEQ files!'
+				QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+				return
 		else:
-			Msg = 'Wrong file format! Please specify FASTA file or folder for SEQ files!'
-			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 			return
 
 		SequenceFiltered = []
