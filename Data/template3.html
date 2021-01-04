@@ -304,6 +304,11 @@
         gray 40%, gray 65%, #eff7ff 65%, #eff7ff 80%, gray 80%, gray
       );
 }
+
+.NGlyPattern{
+	color: red;
+	font-weight: bold;
+}
 </style>
 
 <style>
@@ -436,7 +441,9 @@ $(document).ready(function(){
 
 		var class_name_aa = ".line.con_aa.2";
 		var class_name_nt = ".line.con_nt.2";
-		$(class_name_aa).html(MakeDivAA(con_aa));
+		
+		var NGlyPos = checkNGlyPos(con_aa);
+		$(class_name_aa).html(MakeDivAA(con_aa, NGlyPos));
 		$(class_name_nt).html(MakeDivNT(con_nt));
 
 		for(var seq in data) {
@@ -445,7 +452,9 @@ $(document).ready(function(){
 				var class_name_nt = ".line.line_con_nt." + seq + ".2";
 				var cur_con_aa = MakeConSeq(data[seq][1],con_aa);
 				var cur_con_nt = MakeConSeq(data[seq][2],con_nt);
-				$(class_name_aa).html(MakeDivAA(cur_con_aa));
+				
+				var NGlyPos = checkNGlyPos(data[seq][1]);
+				$(class_name_aa).html(MakeDivAA(cur_con_aa, NGlyPos));
 				$(class_name_nt).html(MakeDivNT(cur_con_nt));
 			}
 		}
@@ -551,10 +560,15 @@ function MakeConSeq(seq, con){
 	return seq;
 }
 
-function MakeDivAA(data){
+function MakeDivAA(data, pos){
 	var div_seq = '';
 	for (var i = 0; i < data.length; i++) {
-		div_seq = div_seq + '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + data[i] + '</span><span class="insert">&nbsp;</span></span>';
+		index = i.toString();
+		if(index in pos){
+			div_seq = div_seq + '<span class="unit_pack ' + pos[index] + '"><span class="insert">&nbsp;</span><span class="unit">' + data[i] + '</span><span class="insert">&nbsp;</span></span>';
+		} else {
+			div_seq = div_seq + '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + data[i] + '</span><span class="insert">&nbsp;</span></span>';
+		}
 	}
 	return div_seq;
 }
@@ -572,6 +586,23 @@ function MakeDivNT(data){
 	div_seq = div_seq + '</span>';
 
 	return div_seq;
+}
+
+function checkNGlyPos(AAseq){
+	var NGlyPatternDict = {};
+	//N-X-S/T pattern, X = ^P
+	var pattern=/N[ILVFMCAGTSYWQNHEDKR][ST]/gi;
+	var matches = AAseq.matchAll(pattern);
+
+	for (const match of matches){
+		start = match.index;
+		end = match.index + match[0].length;
+		for (var i = start; i < end; i++) {
+			NGlyPatternDict[i.toString()] = 'NGlyPattern';
+		}
+	}
+
+	return NGlyPatternDict
 }
 </script>
 
@@ -600,7 +631,7 @@ function MakeDivNT(data){
 </div>
 
 <div class="header_div" style="margin-top: 95px;">
-	<h3 style="margin-left:12px;margin-top:5px;margin-bottom:5px;">Legend:</h3>
+	<h3 style="margin-left:12px;margin-top:0px;margin-bottom:0px;">Legend:</h3>
 	<span class="name" style="margin-left:12px;">H1 highlight region:</span>
 	<span class="unit_long Ca1">Ca1</span>
 	<span class="unit_long Ca2">Ca2</span>
@@ -618,4 +649,7 @@ function MakeDivNT(data){
 	<span class="unit_long E">E</span>
 	<span class="unit_long Stalk-MN">Stalk-MN</span>
 	<span class="unit_long LateralPatch" style="width: 100px">Lateral Patch</span>
+	<br>
+	<span class="name" style="margin-left:12px;">Potential N-Gly site:</span>
+	<span class="unit_long NGlyPattern">N-X-S/T</span>
 </div>

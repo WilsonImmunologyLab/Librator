@@ -2295,8 +2295,8 @@ class fusionDialog(QtWidgets.QDialog):
 
 		H1Key = ''
 		H1KeyCMap = ''
-		AAKey = 'Sequence elements:  HA1    HA2   stop   Transmembrane  Trimerization-Avitag-H6  Highlight Region \n'
-		AAKeyC = '000000000000000000000000099999991111111888888888888888BBBBBBBBBBBBBBBBBBBBBBBBBEEEEEEEEEEEEEEEEEE\n'
+		AAKey = 'Sequence elements:  HA1    HA2   stop   Transmembrane  Trimerization-Avitag-H6  Highlight Region  N-Gly site \n'
+		AAKeyC = '000000000000000000000000099999991111111888888888888888BBBBBBBBBBBBBBBBBBBBBBBBBEEEEEEEEEEEEEEEEEEFFFFFFFFFFFF\n'
 
 		PosKey = ''
 		PosKeyC = ''
@@ -2722,6 +2722,10 @@ class fusionDialog(QtWidgets.QDialog):
 			ColorMap += '0'
 		ColorMap += '\n'
 
+		NGly_info = 'none'
+		pattern_pos = checkNGlyPos(AASeq)
+		NGly_info = pattern_pos.keys()
+
 		for i in range(0, len(AASeq), 60):
 			AASeqSeg = AASeq[i:i + 60]
 			AAColorSeg = AAColorMap[i:i + 60]
@@ -2793,6 +2797,18 @@ class fusionDialog(QtWidgets.QDialog):
 							AAColorSeg = list(AAColorSeg)
 							AAColorSeg[mutation_pos - cur_start] = 'E'
 							AAColorSeg = ''.join(AAColorSeg)
+
+			# for N-Gly site
+			cur_start = i
+			cur_end = i + 60
+			if NGly_info != "none":
+				for x in NGly_info:
+					NGly_pos = x
+
+					if NGly_pos in range(cur_start, cur_end):
+						AAColorSeg = list(AAColorSeg)
+						AAColorSeg[NGly_pos - cur_start] = 'F'
+						AAColorSeg = ''.join(AAColorSeg)
 
 			AASeqSeg = '    Sequence: ' + AASeqSeg + '\n\n'
 			AAColorSeg = '00000000000000' + AAColorSeg + '\n\n'
@@ -2873,6 +2889,9 @@ class fusionDialog(QtWidgets.QDialog):
 			elif valueIs == 'E':
 				format.setBackground(QBrush(QColor("lightGray")))
 				format.setForeground(QBrush(QColor("red")))
+			elif valueIs == 'F':
+				format.setBackground(QBrush(QColor("lightGray")))
+				format.setForeground(QBrush(QColor("blue")))
 
 			cursor.setPosition(CurPos)
 			cursor.setPosition(CurPos + 1, QTextCursor.KeepAnchor)
@@ -7317,8 +7336,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		H1Key = ''
 		H1KeyCMap = ''
-		AAKey = 'Sequence elements:  HA1    HA2   stop   Transmembrane  Trimerization-Avitag-H6  Mutations \n'
-		AAKeyC = '000000000000000000000000099999991111111888888888888888BBBBBBBBBBBBBBBBBBBBBBBBBEEEEEEEEEEE\n'
+		AAKey = 'Sequence elements:  HA1    HA2   stop   Transmembrane  Trimerization-Avitag-H6  Mutations  N-Gly site \n'
+		AAKeyC = '000000000000000000000000099999991111111888888888888888BBBBBBBBBBBBBBBBBBBBBBBBBEEEEEEEEEEEFFFFFFFFFFFF\n'
 
 		PosKey = 'Position:           Donor Region \n'
 		PosKeyC = '0000000000000000000DDDDDDDDDDDDDD\n'
@@ -7815,6 +7834,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# NumLine += '.'
 		# AAPosColorMap += '0'
+		NGly_info = 'none'
+		pattern_pos = checkNGlyPos(AASeq)
+		NGly_info = pattern_pos.keys()
+
 		for i in range(0, len(AASeq), 60):
 			AASeqSeg = AASeq[i:i + 60]
 			AAColorSeg = AAColorMap[i:i + 60]
@@ -7888,6 +7911,18 @@ class LibratorMain(QtWidgets.QMainWindow):
 							AAColorSeg[mutation_pos - cur_start] = 'E'
 							AAColorSeg = ''.join(AAColorSeg)
 
+			# for N-Gly site
+			cur_start = i
+			cur_end = i + 60
+			if NGly_info != "none":
+				for x in NGly_info:
+					NGly_pos = x
+
+					if NGly_pos in range(cur_start, cur_end):
+						AAColorSeg = list(AAColorSeg)
+						AAColorSeg[NGly_pos - cur_start] = 'F'
+						AAColorSeg = ''.join(AAColorSeg)
+
 			AASeqSeg = '    Sequence: ' + AASeqSeg + '\n\n'
 			AAColorSeg = '00000000000000' + AAColorSeg + '\n\n'
 
@@ -7934,8 +7969,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				MutsLine = ''
 				MutsOn = True
 
-		AAKey = 'Sequence elements:  Mutations \n'
-		AAKeyC = '0000000000000000000EEEEEEEEEEE\n'
+		AAKey = 'Sequence elements:  Mutations   N-Gly site \n'
+		AAKeyC = '0000000000000000000EEEEEEEEEEEFFFFFFFFFFFF\n'
 
 		PosKey = 'Position:           Donor Region \n'
 		PosKeyC = '0000000000000000000DDDDDDDDDDDDDD\n'
@@ -7967,6 +8002,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 		if DonRegOn == True:
 			if donor_info == 'none':
 				pass
+
+		NGly_info = 'none'
+		pattern_pos = checkNGlyPos(AASeq)
+		NGly_info = pattern_pos.keys()
 
 		for i in range(0, len(AASeq), 60):
 			AASeqSeg = AASeq[i:i + 60]
@@ -8028,6 +8067,18 @@ class LibratorMain(QtWidgets.QMainWindow):
 							AAColorSeg = list(AAColorSeg)
 							AAColorSeg[mutation_pos - cur_start] = 'E'
 							AAColorSeg = ''.join(AAColorSeg)
+
+			# for N-Gly site
+			cur_start = i
+			cur_end = i + 60
+			if NGly_info != "none":
+				for x in NGly_info:
+					NGly_pos = x
+
+					if NGly_pos in range(cur_start, cur_end):
+						AAColorSeg = list(AAColorSeg)
+						AAColorSeg[NGly_pos - cur_start] = 'F'
+						AAColorSeg = ''.join(AAColorSeg)
 
 			AASeqSeg = '    Sequence: ' + AASeqSeg + '\n\n'
 			AAColorSeg = '00000000000000' + AAColorSeg + '\n\n'
@@ -8061,8 +8112,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				MutsLine = ''
 				MutsOn = True
 
-		AAKey = 'Sequence elements:  Mutations \n'
-		AAKeyC = '0000000000000000000EEEEEEEEEEE\n'
+		AAKey = 'Sequence elements:  Mutations   N-Gly site \n'
+		AAKeyC = '0000000000000000000EEEEEEEEEEEFFFFFFFFFFFF\n'
 
 		PosKey = 'Position:           Donor Region \n'
 		PosKeyC = '0000000000000000000DDDDDDDDDDDDDD\n'
@@ -8094,6 +8145,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 		if DonRegOn == True:
 			if donor_info == 'none':
 				pass
+
+		NGly_info = 'none'
+		pattern_pos = checkNGlyPos(AASeq)
+		NGly_info = pattern_pos.keys()
 
 		for i in range(0, len(AASeq), 60):
 			AASeqSeg = AASeq[i:i + 60]
@@ -8155,6 +8210,19 @@ class LibratorMain(QtWidgets.QMainWindow):
 							AAColorSeg = list(AAColorSeg)
 							AAColorSeg[mutation_pos - cur_start] = 'E'
 							AAColorSeg = ''.join(AAColorSeg)
+
+			# for N-Gly site
+			cur_start = i
+			cur_end = i + 60
+			if NGly_info != "none":
+				for x in NGly_info:
+					NGly_pos = x
+
+					if NGly_pos in range(cur_start, cur_end):
+						AAColorSeg = list(AAColorSeg)
+						AAColorSeg[NGly_pos - cur_start] = 'F'
+						AAColorSeg = ''.join(AAColorSeg)
+
 
 			AASeqSeg = '    Sequence: ' + AASeqSeg + '\n\n'
 			AAColorSeg = '00000000000000' + AAColorSeg + '\n\n'
@@ -8308,8 +8376,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		H1Key = ''
 		H1KeyCMap = ''
-		AAKey = 'Sequence elements:  HA1    HA2   stop   Transmembrane  Trimerization-Avitag-H6  Mutations \n'
-		AAKeyC = '000000000000000000000000099999991111111888888888888888BBBBBBBBBBBBBBBBBBBBBBBBBEEEEEEEEEEE\n'
+		AAKey = 'Sequence elements:  HA1    HA2   stop   Transmembrane  Trimerization-Avitag-H6  Mutations  N-Gly site \n'
+		AAKeyC = '000000000000000000000000099999991111111888888888888888BBBBBBBBBBBBBBBBBBBBBBBBBEEEEEEEEEEEFFFFFFFFFFFF\n'
 
 		PosKey = 'Position:           Donor Region \n'
 		PosKeyC = '0000000000000000000DDDDDDDDDDDDDD\n'
@@ -8806,6 +8874,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# NumLine += '.'
 		# AAPosColorMap += '0'
+		NGly_info = 'none'
+		pattern_pos = checkNGlyPos(AASeq)
+		NGly_info = pattern_pos.keys()
+
 		for i in range(0, len(AASeq), 60):
 			AASeqSeg = AASeq[i:i + 60]
 			AAColorSeg = AAColorMap[i:i + 60]
@@ -8846,6 +8918,18 @@ class LibratorMain(QtWidgets.QMainWindow):
 					# case 6
 					if donor_start > cur_end:
 						pass
+
+			# for N-Gly site
+			cur_start = i
+			cur_end = i + 60
+			if NGly_info != "none":
+				for x in NGly_info:
+					NGly_pos = x
+
+					if NGly_pos in range(cur_start, cur_end):
+						AAColorSeg = list(AAColorSeg)
+						AAColorSeg[NGly_pos - cur_start] = 'F'
+						AAColorSeg = ''.join(AAColorSeg)
 
 			NumLineSeg = '    Position: ' + NumLineSeg + '\n'
 			AAPosColorSeg = '00000000000000' + AAPosColorSeg + '\n'
@@ -9034,8 +9118,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		H1Key = ''
 		H1KeyCMap = ''
-		AAKey = 'Sequence elements:  HA1    HA2   stop   Transmembrane  Trimerization-Avitag-H6  Mutations \n'
-		AAKeyC = '000000000000000000000000099999991111111888888888888888BBBBBBBBBBBBBBBBBBBBBBBBBEEEEEEEEEEE\n'
+		AAKey = 'Sequence elements:  HA1    HA2   stop   Transmembrane  Trimerization-Avitag-H6  Mutations  N-Gly site \n'
+		AAKeyC = '000000000000000000000000099999991111111888888888888888BBBBBBBBBBBBBBBBBBBBBBBBBEEEEEEEEEEEFFFFFFFFFFFF\n'
 
 		PosKey =  'Position:           Donor Region \n'
 		PosKeyC = '0000000000000000000DDDDDDDDDDDDDD\n'
@@ -9534,6 +9618,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# NumLine += '.'
 		# AAPosColorMap += '0'
+
+		NGly_info = 'none'
+		pattern_pos = checkNGlyPos(AASeq)
+		NGly_info = pattern_pos.keys()
+
 		for i in range(0, len(AASeq), 60):
 			AASeqSeg = AASeq[i:i + 60]
 			AAColorSeg = AAColorMap[i:i + 60]
@@ -9606,6 +9695,18 @@ class LibratorMain(QtWidgets.QMainWindow):
 							AAColorSeg = list(AAColorSeg)
 							AAColorSeg[mutation_pos - cur_start] = 'E'
 							AAColorSeg = ''.join(AAColorSeg)
+
+			# for N-Gly site
+			cur_start = i
+			cur_end = i + 60
+			if NGly_info != "none":
+				for x in NGly_info:
+					NGly_pos = x
+
+					if NGly_pos in range(cur_start, cur_end):
+						AAColorSeg = list(AAColorSeg)
+						AAColorSeg[NGly_pos - cur_start] = 'F'
+						AAColorSeg = ''.join(AAColorSeg)
 
 			AASeqSeg = '    Sequence: ' + AASeqSeg + '\n\n'
 			AAColorSeg = '00000000000000' + AAColorSeg + '\n\n'
@@ -9693,6 +9794,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			elif valueIs == 'E':
 				format.setBackground(QBrush(QColor("lightGray")))
 				format.setForeground(QBrush(QColor("red")))
+			elif valueIs == 'F':
+				format.setBackground(QBrush(QColor("lightGray")))
+				format.setForeground(QBrush(QColor("blue")))
 
 
 			cursor.setPosition(CurPos)
@@ -15783,6 +15887,22 @@ def MakeDivAA(class_name, line_name, data):
 
 	return div_name, div_seq
 
+def MakeDivAAHighPos(class_name, line_name, data, pos):
+	div_name = '<div class="' + class_name + ' 1">'
+	div_name += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
+	div_name += '</div>'
+	div_seq = '<div class="' + class_name + ' 2">'
+	for i in range(len(data)):
+		if i in pos.keys():
+			div_seq += '<span class="unit_pack ' + pos[i] + '"><span class="insert">&nbsp;</span><span class="unit">' \
+			           + data[i] + '</span><span class="insert">&nbsp;</span></span>'
+		else:
+			div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' \
+			           + data[i] + '</span><span class="insert">&nbsp;</span></span>'
+	div_seq += '</div>'
+
+	return div_name, div_seq
+
 def MakeDivAACSS(class_name, line_name, data, css):
 	div_name = '<div class="' + class_name + ' 1">'
 	div_name += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
@@ -15794,7 +15914,7 @@ def MakeDivAACSS(class_name, line_name, data, css):
 
 	return div_name, div_seq
 
-def MakeDivAADonor(class_name, line_name, data, ori_seq, donor_region):
+def MakeDivAADonor(class_name, line_name, data, ori_seq, donor_region, pos):
 	div_name = '<div class="' + class_name + ' 1">'
 	div_name += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
 	div_name += '</div>'
@@ -15802,15 +15922,27 @@ def MakeDivAADonor(class_name, line_name, data, ori_seq, donor_region):
 	cur_pos = 1
 	for i in range(len(data)):
 		if ori_seq[i] == "-":
-			div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + \
-			           data[i] + '</span><span class="insert">&nbsp;</span></span>'
-		else:
-			if cur_pos in donor_region:
-				div_seq += '<span class="unit_pack donor"><span class="insert">&nbsp;</span><span class="unit">' + \
-			           data[i] + '</span><span class="insert">&nbsp;</span></span>'
+			if i in pos.keys():
+				div_seq += '<span class="unit_pack ' + pos[i] + '"><span class="insert">&nbsp;</span><span class="unit">' + \
+				           data[i] + '</span><span class="insert">&nbsp;</span></span>'
 			else:
 				div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + \
 				           data[i] + '</span><span class="insert">&nbsp;</span></span>'
+		else:
+			if cur_pos in donor_region:
+				if i in pos.keys():
+					div_seq += '<span class="unit_pack ' + pos[i] + ' donor"><span class="insert">&nbsp;</span><span class="unit">' + \
+				           data[i] + '</span><span class="insert">&nbsp;</span></span>'
+				else:
+					div_seq += '<span class="unit_pack donor"><span class="insert">&nbsp;</span><span class="unit">' + \
+					           data[i] + '</span><span class="insert">&nbsp;</span></span>'
+			else:
+				if i in pos.keys():
+					div_seq += '<span class="unit_pack ' + pos[i] + '"><span class="insert">&nbsp;</span><span class="unit">' + \
+					           data[i] + '</span><span class="insert">&nbsp;</span></span>'
+				else:
+					div_seq += '<span class="unit_pack"><span class="insert">&nbsp;</span><span class="unit">' + \
+					           data[i] + '</span><span class="insert">&nbsp;</span></span>'
 			cur_pos += 1
 
 	div_seq += '</div>'
@@ -16337,7 +16469,9 @@ def AlignSequencesHTML(DataSet, template):
 	div_pos_aa = MakeDivPosAA('line line_pos_aa', 'Position AA:', 'Original AA position: ', pos_aa_data)
 	div_h1 = MakeDivH1N3('line line_h1', 'H1 numbering', 'H1 numbering: ', pos_h1_data)
 	div_h3 = MakeDivH1N3('line line_h3', 'H3 numbering', 'H3 numbering: ', pos_h3_data)
-	div_con_aa = MakeDivAA('line con_aa', 'Template AA:', compact_consensusAA)
+	#div_con_aa = MakeDivAA('line con_aa', 'Template AA:', compact_consensusAA)
+	pattern_pos = checkNGlyPos(compact_consensusAA)
+	div_con_aa = MakeDivAAHighPos('line con_aa', 'Template AA:', compact_consensusAA, pattern_pos)
 	pos_nt_data = [list(range(1, len(consensusDNA) + 1)), list(range(1, len(consensusDNA) + 1))]
 	div_pos_nt = MakeDivPosNT('line line_pos_nt', 'Position NT:', 'Original NT position: ', pos_nt_data)
 	div_con_nt = MakeDivNT('line con_nt', 'Template NT:', consensusDNA)
@@ -16390,8 +16524,11 @@ def AlignSequencesHTML(DataSet, template):
 		con_nt = MakeConSeq(seq_nt, consensusDNA)
 		con_aa = MakeConSeq(seq_aa, compact_consensusAA)
 
-		div_aa = MakeDivAA('line line_aa ' + seq_nick_name, key, seq_aa)
-		div_aa_mut = MakeDivAA('line line_con_aa ' + seq_nick_name, key, con_aa)
+		#div_aa = MakeDivAA('line line_aa ' + seq_nick_name, key, seq_aa)
+		#div_aa_mut = MakeDivAA('line line_con_aa ' + seq_nick_name, key, con_aa)
+		pattern_pos = checkNGlyPos(seq_aa)
+		div_aa = MakeDivAAHighPos('line line_aa ' + seq_nick_name, key, seq_aa, pattern_pos)
+		div_aa_mut = MakeDivAAHighPos('line line_con_aa ' + seq_nick_name, key, con_aa, pattern_pos)
 		div_nt = MakeDivNT('line line_nt ' + seq_nick_name, key, seq_nt)
 		div_nt_mut = MakeDivNT('line line_con_nt ' + seq_nick_name, key, con_nt)
 		# write sequence section
@@ -16425,6 +16562,18 @@ def AlignSequencesHTML(DataSet, template):
 	out_file_handle.write('\n</div>\n</body>\n</html>')
 	out_file_handle.close()
 	return out_html_file
+
+def checkNGlyPos(AAseq):
+	NGlyPatternDict = dict()
+	# N-X-S/T pattern, X = ^P
+	pattern = re.compile(r'N[ILVFMCAGTSYWQNHEDKR][ST]', re.I)
+	matches = pattern.finditer(AAseq)
+	for match in matches:
+		span = match.span()
+		for i in range(span[0], span[1]):
+			NGlyPatternDict[i] = 'NGlyPattern'
+
+	return NGlyPatternDict
 
 def EditSequencesHTML(DataSet, donor_region, template):
 	# import tempfile
@@ -16591,7 +16740,9 @@ def EditSequencesHTML(DataSet, donor_region, template):
 	seq_div += div_pos_nt[1] + '\n'
 	# make sequence section HTML
 	# base seq
-	div_aa = MakeDivAA('line line_aa', base_name, compact_consensusAA)
+	pattern_pos = checkNGlyPos(compact_consensusAA)
+	div_aa = MakeDivAAHighPos('line line_aa', base_name, compact_consensusAA, pattern_pos)
+	#div_aa = MakeDivAA('line line_aa', base_name, compact_consensusAA)
 	div_nt = MakeDivNT('line line_nt', base_name, consensusDNA)
 
 	name_div += div_aa[0] + '\n'
@@ -16602,7 +16753,8 @@ def EditSequencesHTML(DataSet, donor_region, template):
 	con_nt = MakeConSeq(donorDNA, consensusDNA)
 	con_aa = MakeConSeq(donorAA, compact_consensusAA)
 
-	div_aa_mut = MakeDivAADonor('line line_aa', donor_name, con_aa, donorAA, donor_region)
+	pattern_pos = checkNGlyPos(donorAA)
+	div_aa_mut = MakeDivAADonor('line line_aa', donor_name, con_aa, donorAA, donor_region, pattern_pos)
 	div_nt_mut = MakeDivNTDonor('line line_nt', donor_name, con_nt, donorAA, donor_region)
 
 	name_div += div_aa_mut[0] + '\n'
