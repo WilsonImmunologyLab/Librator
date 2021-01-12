@@ -179,6 +179,89 @@ else:
 	file_handle.write(joint_down)
 	file_handle.close()
 
+# this combo check box class is adopted from https://learnku.com/articles/42618
+# author is Bgods
+class ComboCheckBox(QComboBox):
+    def loadItems(self, items):
+        self.items = items
+        self.items.insert(0, 'All')
+        self.row_num = len(self.items)
+        self.Selectedrow_num = 0
+        self.qCheckBox = []
+        self.qLineEdit = QLineEdit()
+        self.qLineEdit.setReadOnly(True)
+        self.qListWidget = QListWidget()
+        self.addQCheckBox(0)
+        self.qCheckBox[0].stateChanged.connect(self.All)
+        for i in range(0, self.row_num):
+            self.addQCheckBox(i)
+            self.qCheckBox[i].stateChanged.connect(self.showMessage)
+        self.setModel(self.qListWidget.model())
+        self.setView(self.qListWidget)
+        self.setLineEdit(self.qLineEdit)
+
+    def showPopup(self):
+        select_list = self.Selectlist()
+        self.loadItems(items=self.items[1:])
+        for select in select_list:
+            index = self.items[:].index(select)
+            self.qCheckBox[index].setChecked(True)
+        return QComboBox.showPopup(self)
+
+    def printResults(self):
+        list = self.Selectlist()
+        print(list)
+
+    def addQCheckBox(self, i):
+        self.qCheckBox.append(QCheckBox())
+        qItem = QListWidgetItem(self.qListWidget)
+        self.qCheckBox[i].setText(self.items[i])
+        self.qListWidget.setItemWidget(qItem, self.qCheckBox[i])
+
+    def Selectlist(self):
+        Outputlist = []
+        for i in range(1, self.row_num):
+            if self.qCheckBox[i].isChecked() == True:
+                Outputlist.append(self.qCheckBox[i].text())
+        self.Selectedrow_num = len(Outputlist)
+        return Outputlist
+
+    def showMessage(self):
+        Outputlist = self.Selectlist()
+        self.qLineEdit.setReadOnly(False)
+        self.qLineEdit.clear()
+        show = ';'.join(Outputlist)
+
+        if self.Selectedrow_num == 0:
+            self.qCheckBox[0].setCheckState(0)
+        elif self.Selectedrow_num == self.row_num - 1:
+            self.qCheckBox[0].setCheckState(2)
+        else:
+            self.qCheckBox[0].setCheckState(1)
+        self.qLineEdit.setText(show)
+        self.qLineEdit.setReadOnly(True)
+
+    def All(self, zhuangtai):
+        if zhuangtai == 2:
+            for i in range(1, self.row_num):
+                self.qCheckBox[i].setChecked(True)
+        elif zhuangtai == 1:
+            if self.Selectedrow_num == 0:
+                self.qCheckBox[0].setCheckState(2)
+        elif zhuangtai == 0:
+            self.clear()
+
+    def clear(self):
+        for i in range(self.row_num):
+            self.qCheckBox[i].setChecked(False)
+
+    def currentText(self):
+        text = QComboBox.currentText(self).split(';')
+        if text.__len__() == 1:
+            if not text[0]:
+                return []
+        return text
+
 class FindKeyDialog(QtWidgets.QDialog):
 	def __init__(self):
 		super(FindKeyDialog, self).__init__()
@@ -4427,6 +4510,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.HTMLview2.resizeSignal.connect(self.resizeHTML)
 		self.ui.HTMLview3.resizeSignal.connect(self.resizeHTML)
 
+		# fill template info into comboBox
+		TemplateList = ["H3","H1_PR34","H1_1933","H1post1995","H1N1pdm","H2","H4","H5mEAnonGsGD","H5",
+		                "H5c221","H6","H7N3","H7N7","H8","H9","H10","H11","H12","H13","H14","H15","H16",
+		                "H17","H18","B_HK73","B_FL06","B_BR08"]
+		self.mycomboBoxTemplate = ComboCheckBox()
+		self.mycomboBoxTemplate.setMinimumSize(200,20)
+		self.ui.gridLayout_16.addWidget(self.mycomboBoxTemplate)
+		self.mycomboBoxTemplate.loadItems(TemplateList)
 		#self.loadPDB()
 
 	def CheckSeq(self):
@@ -6251,6 +6342,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 				self.ui.Passinput.setText(Setting[4])
 
 			self.ui.dbpath.setText(fragmentdb_path)
+		# FLU DB HA numbering
+		elif self.ui.tabWidget.currentIndex() == 8:
+			# update active sequence name
+			SeqNames = []
+			count = self.ui.listWidgetStrainsIn.count()
+			for i in range(count):
+				SeqNames.append(self.ui.listWidgetStrainsIn.item(i).text())
+			self.ui.comboBoxAllSeq.addItems(SeqNames)
 		# Alignment(HTML)
 		elif self.ui.tabWidget.currentIndex() == 2:
 			# load data
@@ -6313,6 +6412,65 @@ class LibratorMain(QtWidgets.QMainWindow):
 			pass
 		else:
 			return
+
+	@pyqtSlot()
+	def on_RunFLUDB_clicked(self):
+		# determine query sequence
+		query_name = self.ui.comboBoxAllSeq.currentText()
+		if query_name == '':
+			QMessageBox.warning(self, 'Warning', 'Please determine the query sequence!',
+			                    QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		# determine template sequences
+		template = []
+		checked_template = self.mycomboBoxTemplate.Selectlist()
+		if len(checked_template) == 0:
+			QMessageBox.warning(self, 'Warning', 'Please select at least 1 template!',
+			                    QMessageBox.Ok, QMessageBox.Ok)
+			return
+		template_path = os.path.join(working_prefix, 'Data', 'templates.fasta')
+		All_Template = ReadFASTA(template_path)
+		template = []
+		for item in All_Template:
+			if item[0] in checked_template:
+				template.append(item)
+
+		# load data
+		WhereState = 'SeqName = "' + query_name + '"'
+		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+		AlignIn = []
+		for item in DataIn:
+			SeqName = item[0]
+			Sequence = item[1]
+			VFrom = int(item[2]) - 1
+			if VFrom == -1: VFrom = 0
+
+			VTo = int(item[3])
+			Sequence = Sequence[VFrom:VTo]
+			Sequence = Sequence.upper()
+			EachIn = (SeqName, Sequence)
+			AlignIn.append(EachIn)
+
+		# make HTML
+		html_file = FLUDBSequencesHTML(AlignIn, template)
+		if html_file[0] == 'W':
+			QMessageBox.warning(self, 'Warning', html_file, QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		# display
+		view = QWebEngineView()
+		view.load(QUrl("file://" + html_file))
+		view.show()
+
+		layout = self.ui.FLUDBgroupBox.layout()
+		if layout == None:
+			layout = QGridLayout(self.ui.FLUDBgroupBox)
+		else:
+			for i in range(layout.count()):
+				layout.removeWidget(layout.itemAt(i).widget())
+		layout.addWidget(view)
 
 	def makeNTLogo(self):
 		listItems = self.ui.listWidgetStrainsIn.selectedItems()
@@ -16556,6 +16714,167 @@ def AlignSequencesHTML(DataSet, template):
 	out_file_handle.write(CSSdata)
 	out_file_handle.write(JSdata)
 	out_file_handle.write(Optiondata)
+	out_file_handle.write('<div class="box">')
+	out_file_handle.write(name_div)
+	out_file_handle.write(seq_div)
+	out_file_handle.write('\n</div>\n</body>\n</html>')
+	out_file_handle.close()
+	return out_html_file
+
+def BuildRuler(seq):
+	ruler = []
+	num = 1
+	for aa in seq:
+		if aa in 'ILVFMCAGTSYWQNHEDKRPXZJ':
+			ruler.append(num)
+			num += 1
+		else:
+			ruler.append('-')
+
+	return ruler
+
+def FLUDBSequencesHTML(DataSet, template):
+	# import tempfile
+	import os
+	TupData = ()
+	global GLMsg
+	global working_prefix
+	global clustal_path
+	global temp_folder
+	global VGenesTextWindows
+	global muscle_path
+
+	query_name = ''
+	# align selected sequences (AA) using muscle
+	all = dict()
+	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+	outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
+	aafilename = os.path.join(temp_folder, "in-" + time_stamp + ".fas")
+	if len(DataSet) >= 1:
+		SeqName = DataSet[0][0].replace('\n', '').replace('\r', '')
+		SeqName = SeqName.strip()
+		query_name = SeqName
+		NTseq = DataSet[0][1]
+
+		# sequence check for NT seq
+		pattern = re.compile(r'[^ATCGUatcgu]')
+		cur_strange = pattern.findall(NTseq)
+		cur_strange = list(set(cur_strange))
+		if len(cur_strange) > 0:
+			ErrMsg = "Warning! We find Unlawful nucleotide: " + ','.join(cur_strange) + '\nfrom \n' + SeqName + \
+			         '\nPlease remove those Unlawful nucleotide!'
+			return ErrMsg
+
+		AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
+		AAseq = AAseq.replace('*', 'X').replace('~', 'Z').replace('.', 'J')
+		all[SeqName] = [NTseq, AAseq]
+
+		# write quesy_seq
+		aa_handle = open(aafilename,'w')
+		aa_handle.write('>' + SeqName + '\n')
+		aa_handle.write(AAseq + '\n')
+
+		# write selected template
+		for record in template:
+			SeqName = record[0].replace('\n', '').replace('\r', '')
+			SeqName = SeqName.strip()
+			AAseq = record[1]
+			aa_handle.write('>' + SeqName + '\n')
+			aa_handle.write(AAseq + '\n')
+
+		aa_handle.close()
+
+		cmd = muscle_path
+		cmd += " -in " + aafilename + " -out " + outfilename
+		try:
+			os.system(cmd)
+		except:
+			ErrMsg = 'Warning! Fail to run muscle! Check your muscle path!'
+			return ErrMsg
+	else:
+		ErrMsg = "Warning! Please provide at least one sequence!"
+		return ErrMsg
+
+	# read alignment file
+	SeqName = ''
+	AAseq = ''
+	template_names = []
+	if os.path.isfile(outfilename):
+		currentfile = open(outfilename, 'r')
+		lines = currentfile.readlines()
+		for line in lines:
+			Readline = line.replace('\n', '').replace('\r', '')
+			Readline = Readline.strip()
+			if Readline[0] == '>':
+				if SeqName != '':
+					ruler = BuildRuler(AAseq)
+					all[SeqName] = [ruler, AAseq]
+					if SeqName != query_name:
+						template_names.append(SeqName)
+				SeqName = Readline[1:]
+				AAseq = ''
+			else:
+				AAseq += Readline
+		ruler = BuildRuler(AAseq)
+		all[SeqName] = [ruler, AAseq]
+		if SeqName != query_name:
+			template_names.append(SeqName)
+	else:
+		return
+
+	#if os.path.exists(outfilename):
+	#	os.remove(outfilename)
+	#if os.path.exists(aafilename):
+	#	os.remove(aafilename)
+
+	# initial and open HTML file
+	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+	out_html_file = os.path.join(temp_folder, time_stamp + '.html')
+	header_file = os.path.join(working_prefix, 'Data', 'template8.html')
+	shutil.copyfile(header_file, out_html_file)
+	out_file_handle = open(out_html_file, 'a')
+
+	# css data
+	width = 40 * len(all[query_name][1])
+	CSSdata = '<style type="text/css">.seq_div {width: ' + str(width) + 'px;}</style>\n'
+
+	# start HTML section
+	name_div = '<div class="name_div">\n'
+	seq_div = '<div class = "seq_div">\n'
+
+	# make query sequence HTML
+	pos_nt_data = [list(all[query_name][0]), list(all[query_name][0])]
+	div_query_ruler = MakeDivPosAA('line line_pos_aa query', 'Position Query:', 'Original residue number: ',pos_nt_data)
+	div_query_seq = MakeDivAA('line line_aa query', 'Query:' + query_name, all[query_name][1])
+
+	name_div += div_query_ruler[0] + '\n'
+	seq_div += div_query_ruler[1] + '\n'
+	name_div += div_query_seq[0] + '\n'
+	seq_div += div_query_seq[1] + '\n'
+
+	# make template sequence HTML
+	template_option = ''
+	for template_name in template_names:
+		pos_nt_data = [list(all[template_name][0]), list(all[template_name][0])]
+		div_template_ruler = MakeDivPosAA('line line_pos_aa ' + template_name, template_name + ' position:', template_name + ' number: ',
+		                               pos_nt_data)
+		div_template_seq = MakeDivAA('line line_aa ' + template_name, template_name, all[template_name][1])
+
+		name_div += div_template_ruler[0] + '\n'
+		seq_div += div_template_ruler[1] + '\n'
+		name_div += div_template_seq[0] + '\n'
+		seq_div += div_template_seq[1] + '\n'
+
+		template_option += '<label class="container">' + template_name + '<input id = "' + template_name \
+		                   + '" type="checkbox" checked="checked"><span class="checkmark"></span></label>\n'
+	template_option += '</div>\n'
+
+	# finish HTML file
+	name_div += '</div>\n'
+	seq_div += '</div>\n'
+
+	out_file_handle.write(template_option)
+	out_file_handle.write(CSSdata)
 	out_file_handle.write('<div class="box">')
 	out_file_handle.write(name_div)
 	out_file_handle.write(seq_div)
