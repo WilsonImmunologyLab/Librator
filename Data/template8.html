@@ -597,6 +597,21 @@ $(document).ready(function(){
 			$(".B_BR08").hide()
 		}
 	});
+	$("#compact").click(function(){
+		if($("#compact").is(':checked')){
+			$(".insert").hide()
+		} else {
+			$(".insert").show()
+		}
+	});
+	$("#alignment").click(function(){
+		if($("#alignment").is(':checked')){
+			$(".line_pos_aa").hide()
+		} else {
+			$(".line_pos_aa").show()
+		}
+	});
+
 	$('.unit_pack')
 	.mouseover(function(){
 		onmouseover_help(this,event)
@@ -624,5 +639,8 @@ function onmouseout_help(){
 
 <div id="indicator" style="display:none;position:absolute;z-index:1;pointer-events: none" class = "help-tip"></div>
 
-<div class = 'header_div' style="margin-top: 10px; height: 65px;">
-	<h3 style="margin-left:12px;margin-top:5px;margin-bottom:5px;">Templates:</h3>
+<div class = 'header_div' style="margin-top: 10px; height: 75px;">
+	<h3 style="margin-left:12px;margin-top:5px;margin-bottom:5px;">Templates:  
+		<label class="container">Compact mode<input id = 'compact' type="checkbox"><span class="checkmark"></span></label>
+		<label class="container">Only alignment<input id = 'alignment' type="checkbox"><span class="checkmark"></span></label>
+	</h3>
