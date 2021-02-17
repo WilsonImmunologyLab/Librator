@@ -498,7 +498,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1033</width>
+             <width>1048</width>
              <height>1226</height>
             </rect>
            </property>
@@ -2166,22 +2166,6 @@
         <string>Seq Logo</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_11">
-        <item row="0" column="7">
-         <widget class="QComboBox" name="comboBoxColor">
-          <property name="minimumSize">
-           <size>
-            <width>120</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>100</width>
-            <height>16</height>
-           </size>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="5">
          <spacer name="horizontalSpacer_8">
           <property name="orientation">
@@ -2195,81 +2179,10 @@
           </property>
          </spacer>
         </item>
-        <item row="0" column="6">
-         <widget class="QLabel" name="label_10">
-          <property name="text">
-           <string>Color Schema </string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="8">
-         <widget class="QPushButton" name="toolButtonConserve">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>40</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>Peptide conservation</string>
-          </property>
-          <property name="icon">
-           <iconset resource="Resources/VgenesResources.qrc">
-            <normaloff>:/PNG-Icons/PyMOL.png</normaloff>:/PNG-Icons/PyMOL.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>25</width>
-            <height>25</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1" colspan="8">
-         <widget class="QGroupBox" name="groupBoxLogo">
-          <property name="font">
-           <font>
-            <pointsize>14</pointsize>
-           </font>
-          </property>
-          <property name="title">
-           <string>Sequence Logo</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QPushButton" name="pushButtonNT">
-          <property name="minimumSize">
-           <size>
-            <width>100</width>
-            <height>40</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>250</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset resource="Resources/VgenesResources.qrc">
-            <normaloff>:/PNG-Icons/ATCG.png</normaloff>:/PNG-Icons/ATCG.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>30</width>
-            <height>16</height>
-           </size>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="4">
          <widget class="QRadioButton" name="radioButtonPop">
           <property name="text">
-           <string>Open Sequence Logo on a popup window</string>
+           <string>Open on a popup window</string>
           </property>
          </widget>
         </item>
@@ -2303,6 +2216,110 @@
           <property name="default">
            <bool>false</bool>
           </property>
+         </widget>
+        </item>
+        <item row="0" column="9">
+         <widget class="QPushButton" name="toolButtonConserve">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Peptide conservation</string>
+          </property>
+          <property name="icon">
+           <iconset resource="Resources/VgenesResources.qrc">
+            <normaloff>:/PNG-Icons/PyMOL.png</normaloff>:/PNG-Icons/PyMOL.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>25</width>
+            <height>25</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QPushButton" name="pushButtonNT">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>250</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="Resources/VgenesResources.qrc">
+            <normaloff>:/PNG-Icons/ATCG.png</normaloff>:/PNG-Icons/ATCG.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>30</width>
+            <height>16</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="8">
+         <widget class="QComboBox" name="comboBoxColor">
+          <property name="minimumSize">
+           <size>
+            <width>120</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>100</width>
+            <height>16</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="7">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Color Schema </string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1" colspan="9">
+         <widget class="QGroupBox" name="groupBoxLogo">
+          <property name="font">
+           <font>
+            <pointsize>14</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>Sequence Logo</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="6">
+         <widget class="QComboBox" name="comboBoxMax">
+          <property name="toolTip">
+           <string>Choose Global Max if you want compare different models. See user guide for details.</string>
+          </property>
+          <item>
+           <property name="text">
+            <string>Global Max</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Local Max</string>
+           </property>
+          </item>
          </widget>
         </item>
        </layout>

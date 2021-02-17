@@ -4448,6 +4448,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.checkBoxRowSelection.stateChanged.connect(self.selectionMode)
 		self.ui.pushButtonRefresh.clicked.connect(self.load_table)
 		self.ui.pushButtonCheck.clicked.connect(self.CheckSeq)
+		self.ui.comboBoxMax.currentTextChanged['QString'].connect(self.MaxNotice)
 
 		self.ui.cboRole.last_value = ''
 		self.ui.cboForm.last_value = ''
@@ -4560,6 +4561,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 				return
 		except Exception:
 			pass
+
+	def MaxNotice(self):
+		if self.ui.comboBoxMax.currentText() == "Local Max":
+			Msg = 'Please make sure you know what "Local Max" means!\n' \
+			      'In general, models generated using local max are not comparable with each other!'
+			QMessageBox.warning(self, 'Warning', Msg,
+			                    QMessageBox.Ok, QMessageBox.Ok)
 
 	def loadPDB(self):
 		pdbPath = os.path.join(working_prefix, 'PDB')
@@ -4697,10 +4705,15 @@ class LibratorMain(QtWidgets.QMainWindow):
 		stat_ha1_res = [[],[],[],[],[],[]]
 		stat_ha2_res = [[],[],[],[],[],[]]
 
+		if self.ui.comboBoxMax.currentText() == "Global Max":
+			Max = 4.32
+		else:
+			Max = max(Entropy[1])
+
 		cur_line_num = 0
 		for line in my_ha_numbering:
 			if isinstance(my_ha_numbering[line][2],int):
-				score = int(Entropy[1][cur_line_num]/4.32*5)
+				score = int(math.ceil(Entropy[1][cur_line_num]/Max*5))
 				if my_ha_numbering[line][0] == "HA1":
 					stat_ha1_res[score].append(my_ha_numbering[line][2])
 				else:
@@ -4709,15 +4722,15 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# make pml script
 		if self.ui.comboBoxColor.currentIndex() == 0:
-			color_dict = {5: "0x2B378E", 4: "0x467DB4", 3: "0x65B3C1", 2: "0x91CDBB", 1: "0xCEE6B9", 0: "0xFDFAD1"}
+			color_dict = {0: "0x2B378E", 1: "0x467DB4", 2: "0x65B3C1", 3: "0x91CDBB", 4: "0xCEE6B9", 5: "0xFDFAD1"}
 		elif self.ui.comboBoxColor.currentIndex() == 1:
-			color_dict = {0: "0xD53E4F", 1: "0xFC8D59", 2: "0xFEE08B", 3: "0xE6F598", 4: "0x99D594", 5: "0x3288BD"}
+			color_dict = {5: "0xD53E4F", 4: "0xFC8D59", 3: "0xFEE08B", 2: "0xE6F598", 1: "0x99D594", 0: "0x3288BD"}
 		elif self.ui.comboBoxColor.currentIndex() == 2:
-			color_dict = {0: "0xEDF8E9", 1: "0xC7E9C0", 2: "0xA1D99B", 3: "0x74C476", 4: "0x31A354", 5: "0x006D2C"}
+			color_dict = {5: "0xEDF8E9", 4: "0xC7E9C0", 3: "0xA1D99B", 2: "0x74C476", 1: "0x31A354", 0: "0x006D2C"}
 		elif self.ui.comboBoxColor.currentIndex() == 3:
-			color_dict = {0: "0xFFFFB2", 1: "0xFED976", 2: "0xFEB24C", 3: "0xFD8D3C", 4: "0xF03B20", 5: "0xBD0026"}
+			color_dict = {5: "0xFFFFB2", 4: "0xFED976", 3: "0xFEB24C", 2: "0xFD8D3C", 1: "0xF03B20", 0: "0xBD0026"}
 		elif self.ui.comboBoxColor.currentIndex() == 4:
-			color_dict = {0: "0x8C510A", 1: "0xD8B365", 2: "0xF6E8C3", 3: "0xC7EAE5", 4: "0x5AB4AC", 5: "0x01665E"}
+			color_dict = {5: "0x8C510A", 4: "0xD8B365", 3: "0xF6E8C3", 2: "0xC7EAE5", 1: "0x5AB4AC", 0: "0x01665E"}
 
 		if subtype in Group1:
 			pdbPath = os.path.join(working_prefix, 'PDB', '4jtv.cif')
@@ -4764,6 +4777,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 
 	def calEntropy(self, file):
+		# this function generate entropy score, 0 indicate conserve, 4.32 indicate highest variable
 		Peptide_position = []
 
 		f = open(file,'r')
@@ -4804,9 +4818,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		for Peptide in Peptide_position:
 			cur_stat = Counter(Peptide)
 			Consensus += cur_stat.most_common(1)[0][0]
-			cur_score = 4.32
 			for value in cur_stat.values():
-				cur_score = cur_score - (-1*value/seq_num*math.log(value/seq_num,2))
+				#cur_score = 4.32 - (-1*value/seq_num*math.log(value/seq_num,2))
+				cur_score = -1*value/seq_num*math.log(value/seq_num,2)
 			Entorpy.append(cur_score)
 		
 		return [Consensus, Entorpy]
@@ -6344,6 +6358,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.ui.dbpath.setText(fragmentdb_path)
 		# FLU DB HA numbering
 		elif self.ui.tabWidget.currentIndex() == 8:
+			self.ui.comboBoxAllSeq.clear()
 			# update active sequence name
 			SeqNames = []
 			count = self.ui.listWidgetStrainsIn.count()
