@@ -2308,7 +2308,7 @@
         <item row="0" column="6">
          <widget class="QComboBox" name="comboBoxMax">
           <property name="toolTip">
-           <string>Choose Global Max if you want compare different models. See user guide for details.</string>
+           <string>Choose Global Max if you want compare different models. See user guide 4.1.6 for details.</string>
           </property>
           <item>
            <property name="text">

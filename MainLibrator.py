@@ -4565,7 +4565,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 	def MaxNotice(self):
 		if self.ui.comboBoxMax.currentText() == "Local Max":
 			Msg = 'Please make sure you know what "Local Max" means!\n' \
-			      'In general, models generated using local max are not comparable with each other!'
+			      'See user guide 4.1.6 for details!'
 			QMessageBox.warning(self, 'Warning', Msg,
 			                    QMessageBox.Ok, QMessageBox.Ok)
 

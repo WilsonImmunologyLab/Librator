@@ -1578,7 +1578,7 @@ class Ui_MainLibrator(object):
         self.toolButtonConserve.setText(_translate("MainLibrator", "Peptide conservation"))
         self.label_10.setText(_translate("MainLibrator", "Color Schema "))
         self.groupBoxLogo.setTitle(_translate("MainLibrator", "Sequence Logo"))
-        self.comboBoxMax.setToolTip(_translate("MainLibrator", "Choose Global Max if you want compare different models. See user guide for details."))
+        self.comboBoxMax.setToolTip(_translate("MainLibrator", "Choose Global Max if you want compare different models. See user guide 4.1.6 for details."))
         self.comboBoxMax.setItemText(0, _translate("MainLibrator", "Global Max"))
         self.comboBoxMax.setItemText(1, _translate("MainLibrator", "Local Max"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainLibrator", "Seq Logo"))
