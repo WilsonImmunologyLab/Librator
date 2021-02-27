@@ -2827,6 +2827,7 @@
     <addaction name="actionFusion_High_resolution"/>
     <addaction name="actionFusion_Low_reslution"/>
     <addaction name="separator"/>
+    <addaction name="actionCodon_Optimize"/>
    </widget>
    <widget class="QMenu" name="menuVisualization">
     <property name="title">
@@ -3608,6 +3609,11 @@
   <action name="actionAntigen_Probe">
    <property name="text">
     <string>Antigen Probe</string>
+   </property>
+  </action>
+  <action name="actionCodon_Optimize">
+   <property name="text">
+    <string>Codon Optimize</string>
    </property>
   </action>
  </widget>

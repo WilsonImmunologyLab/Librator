@@ -1350,6 +1350,8 @@ class Ui_MainLibrator(object):
         self.actionAntigen_probe.setObjectName("actionAntigen_probe")
         self.actionAntigen_Probe = QtWidgets.QAction(MainLibrator)
         self.actionAntigen_Probe.setObjectName("actionAntigen_Probe")
+        self.actionCodon_Optimize = QtWidgets.QAction(MainLibrator)
+        self.actionCodon_Optimize.setObjectName("actionCodon_Optimize")
         self.menuFile.addAction(self.action_New)
         self.menuFile.addAction(self.action_Open)
         self.menuFile.addSeparator()
@@ -1380,6 +1382,7 @@ class Ui_MainLibrator(object):
         self.menuEdit_Sequence.addAction(self.actionFusion_High_resolution)
         self.menuEdit_Sequence.addAction(self.actionFusion_Low_reslution)
         self.menuEdit_Sequence.addSeparator()
+        self.menuEdit_Sequence.addAction(self.actionCodon_Optimize)
         self.menuVisualization.addAction(self.actionPyMOL)
         self.menuGibsonClone.addAction(self.actionGibsonClone)
         self.menuGibsonClone.addAction(self.actionGibsonClone_Setting)
@@ -1744,4 +1747,5 @@ class Ui_MainLibrator(object):
         self.actionIdentify_Key_Mutations.setText(_translate("MainLibrator", "Identify Key Mutations"))
         self.actionAntigen_probe.setText(_translate("MainLibrator", "Antigen probe"))
         self.actionAntigen_Probe.setText(_translate("MainLibrator", "Antigen Probe"))
+        self.actionCodon_Optimize.setText(_translate("MainLibrator", "Codon Optimize"))
 import VgenesResources_rc

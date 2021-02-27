@@ -21,6 +21,8 @@ from itertools import combinations
 from collections import Counter
 from subprocess import call, Popen, PIPE
 from platform import system
+from dnachisel import *
+
 import os, sys, re, time, string, sip, csv
 import pandas as pd
 import numpy as np
@@ -55,6 +57,7 @@ from aa_or_nt import Ui_aantDialog
 from idmutationdialog import Ui_IdMutationDialog
 from findkeydialog import Ui_FindkeyDialog
 from fastaorseqdialog import Ui_FastaOrSeqDialog
+from codon_optimize_dialog import Ui_CodonDialog
 
 from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText
 from VgenesTextEdit import VGenesTextMain
@@ -262,6 +265,362 @@ class ComboCheckBox(QComboBox):
                 return []
         return text
 
+class CodonDialog(QtWidgets.QDialog):
+	updateSignal = pyqtSignal(str)
+
+	def __init__(self):
+		super(CodonDialog, self).__init__()
+		self.ui = Ui_CodonDialog()
+		self.ui.setupUi(self)
+		self.ui.lcdNumberGCOpt.setSegmentStyle(QLCDNumber.Flat)  # For Mac system, to enable font color setting
+		self.ui.lcdNumberGCOri.setSegmentStyle(QLCDNumber.Flat)  # For Mac system, to enable font color setting
+		self.ui.lcdNumberGCOpt.setStyleSheet("border: 2px solid black; color: red; background: silver;")
+		self.ui.lcdNumberGCOri.setStyleSheet("border: 2px solid black; color: red; background: silver;")
+
+		self.manualEdited = False
+		self.OptColorCode = ''
+
+		self.speciesList = {
+			'Homo sapiens' : 'h_sapiens',
+			'Gallus gallus':'g_gallus',
+			'Mus musculus':'m_musculus',
+			'Bacillus subtilis': 'b_subtilis',
+			'Drosophila melanogaster': 'd_melanogaster',
+			'Saccharomyces cerevisiae': 's_cerevisiae',
+			'Caenorhabditis elegans': 'c_elegans',
+			'Escherichia coli': 'e_coli',
+			'Mus musculus domesticus': 'm_musculus_domesticus'
+		}
+
+		self.ui.comboBoxSpecies.addItems(self.speciesList.keys())
+		self.ui.comboBoxSeqName.currentTextChanged.connect(self.loadSeq)
+		self.ui.pushButtonRun.clicked.connect(self.runOpt)
+		self.ui.pushButtonSave.clicked.connect(self.SaveSeq)
+		self.ui.pushButtonManualEdit.clicked.connect(self.ManualEdit)
+		self.ui.pushButtonHighlight.clicked.connect(self.decorate)
+
+	def loadSeq(self):
+		global MoveNotChange
+
+		if MoveNotChange == True:
+			return
+		# clear UI
+		self.ui.textEditSeqOri.clear()
+		self.ui.textEditSeqOpt.clear()
+		self.ui.tableWidget.setRowCount(0)
+		self.ui.tableWidget.setColumnCount(0)
+		self.ui.tableWidget.setHidden(True)
+		self.ui.lcdNumberGCOpt.display('00.00')
+		# fetch data
+		seqName = self.ui.comboBoxSeqName.currentText()
+		WhereState = 'SeqName = "' + seqName + '"'
+		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+		item = DataIn[0]
+		Sequence = item[1]
+		VFrom = int(item[2]) - 1
+		if VFrom == -1: VFrom = 0
+		VTo = int(item[3])
+		Sequence = Sequence[VFrom:VTo]
+		Sequence = Sequence.upper()
+		gc_pct = calcateGC(Sequence)
+		gc_pct = str(gc_pct*100)[0:5]
+		
+		# display sequence
+		self.ui.textEditSeqOri.setText(Sequence)
+		self.ui.lcdNumberGCOri.display(gc_pct)
+	
+	def SaveSeq(self):
+		# sak new name
+		CurName = self.ui.comboBoxSeqName.currentText()
+		message = 'Please type a name for optimized sequence:'
+		CurrVal = setText(self, message, CurName + '-optimized')
+		New_name = ''
+
+		if CurrVal != "Cancelled Action":
+			# check if the name is usable
+			WhereState = 'SeqName = "' + CurrVal + '"'
+			SQLStatement = 'SELECT SeqName FROM LibDB WHERE ' + WhereState
+			DataIn = RunSQL(DBFilename, SQLStatement)
+			if len(DataIn) > 0:
+				N = 1
+				Dup_name_indicate = True
+				while Dup_name_indicate == True:
+					CurName = self.ui.comboBoxSeqName.currentText()
+					message = 'Name taken! Please type another name for optimized sequence:'
+					CurrVal = setText(self, message, CurName + '-optimized' + str(N))
+					if CurrVal != "Cancelled Action":
+						WhereState = 'SeqName = "' + CurrVal + '"'
+						SQLStatement = 'SELECT SeqName FROM LibDB WHERE ' + WhereState
+						DataIn = RunSQL(DBFilename, SQLStatement)
+						if len(DataIn) > 0:
+							N += 1
+						else:
+							Dup_name_indicate = False
+							New_name = CurrVal
+					else:
+						return
+			else:
+				New_name = CurrVal
+		else:
+			return
+
+		# save record
+		WhereState = 'SeqName = "' + CurName + '"'
+		SQLStatement = 'SELECT * FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+		record = DataIn[0]
+		if record[12] == None:
+			template = ''
+		else:
+			template = record[12]
+
+		SQLStatement = "INSERT INTO LibDB(`SeqName`, `Sequence`, `SeqLen`, `SubType`, `Form`, `VFrom`, `VTo`, `Active`, `Role`, " \
+		               "`Donor`, `Mutations`, `ID`, `Base`) VALUES('" \
+		               + New_name + "','" \
+		               + self.ui.textEditSeqOpt.toPlainText() + "','" \
+		               + str(len(self.ui.textEditSeqOpt.toPlainText())) + "','" \
+		               + record[3] + "','" \
+		               + record[4] + "','" \
+		               + "1" + "','" \
+		               + "5000" + "','" \
+		               + record[7] + "','" \
+		               + "Generated" + "','" \
+		               + record[9] + "','" \
+		               + record[10] + "','" \
+		               + "0" + "','" \
+		               + template + "')"
+		response = RunInsertion(DBFilename, SQLStatement)
+		if response == 1:
+			Msg = "Error happen when insert the new sequence!"
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+		else:
+			self.updateSignal.emit(New_name)
+			Msg = "Optimized sequence saved!"
+			QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
+
+
+	def runOpt(self):
+		# fetch sequence
+		sequence = self.ui.textEditSeqOri.toPlainText()
+		# fetch species
+		species = self.ui.comboBoxSpecies.currentText()
+		species = self.speciesList[species]
+		# determine region
+		region = math.floor(len(sequence)/3)*3
+
+		# DEFINE THE OPTIMIZATION PROBLEM
+		problem = DnaOptimizationProblem(
+			sequence=sequence,
+			constraints=[
+				EnforceTranslation(location=(0, region))
+			],
+			objectives=[CodonOptimize(species=species, location=(0, region))]
+		)
+		# SOLVE THE CONSTRAINTS, OPTIMIZE WITH RESPECT TO THE OBJECTIVE
+		problem.resolve_constraints()
+		problem.optimize()
+		sequence_opt = problem.sequence
+
+		# load UI
+		self.ui.textEditSeqOpt.setText(sequence_opt)
+
+		# decorate text
+		'''
+		cursor = self.ui.textEditSeqOpt.textCursor()
+		format = QTextCharFormat()
+		format1 = QTextCharFormat()
+		## reset all font color
+		format.setForeground(QBrush(QColor("black")))
+		cursor.setPosition(0)
+		cursor.setPosition(len(sequence_opt), QTextCursor.KeepAnchor)
+		cursor.mergeCharFormat(format)
+		## highlight difference
+		format1.setForeground(QBrush(QColor("red")))
+		format.setBackground(QBrush(QColor("lightGray")))
+		for pos in range(math.floor(len(sequence_opt)/3)):
+			ori_codon = sequence[pos*3:pos*3+3]
+			opt_codon = sequence_opt[pos*3:pos*3+3]
+			if ori_codon != opt_codon:
+				cur_pos = pos * 3
+				cursor.setPosition(cur_pos)
+				cursor.setPosition(cur_pos + 3, QTextCursor.KeepAnchor)
+				cursor.mergeCharFormat(format)
+				for i in [0,1,2]:
+					if ori_codon[i] != opt_codon[i]:
+						cur_pos = pos * 3 + i
+						cursor.setPosition(cur_pos)
+						cursor.setPosition(cur_pos + 1, QTextCursor.KeepAnchor)
+						cursor.mergeCharFormat(format1)
+		'''
+		gc_pct = calcateGC(sequence_opt)
+		gc_pct = str(gc_pct * 100)[0:5]
+		self.ui.lcdNumberGCOpt.display(gc_pct)
+
+		self.OptColorCode = '0' * len(sequence_opt)
+
+		# resize UI in order to update UI
+		size_w = self.size().width()
+		size_h = self.size().height()
+		offset_pool = [-1, 1]
+		offset = offset_pool[random.randint(0, 1)]
+		self.resize(size_w + offset, size_h + offset)
+
+	def decorate(self):
+		sequence = self.ui.textEditSeqOri.toPlainText()
+		sequence_opt = self.ui.textEditSeqOpt.toPlainText()
+
+		OptColorCode = ''
+
+		for pos in range(math.floor(len(sequence_opt)/3)):
+			ori_codon = sequence[pos*3:pos*3+3]
+			opt_codon = sequence_opt[pos*3:pos*3+3]
+			print(str(pos))
+			if ori_codon != opt_codon:
+				OptColorCode += '111'
+			else:
+				OptColorCode += '000'
+
+		OptColorCode += '0' * (len(sequence_opt) - len(OptColorCode))
+
+		cursor = self.ui.textEditSeqOpt.textCursor()
+		self.decorate_text(cursor, OptColorCode)
+
+		self.OptColorCode = OptColorCode
+
+		# resize UI in order to update UI
+		size_w = self.size().width()
+		size_h = self.size().height()
+		offset_pool = [-1, 1]
+		offset = offset_pool[random.randint(0, 1)]
+		self.resize(size_w + offset, size_h + offset)
+
+	def decorate_text(self, cursor, code):
+		format = QTextCharFormat()
+		format.setForeground(QBrush(QColor("black")))
+		format.setBackground(QBrush(QColor("white")))
+		format1 = QTextCharFormat()
+		format1.setForeground(QBrush(QColor("black")))
+		format1.setBackground(QBrush(QColor("lightGray")))
+		format2 = QTextCharFormat()
+		format2.setForeground(QBrush(QColor("white")))
+		format2.setBackground(QBrush(QColor("red")))
+
+		# reset all font color
+		cursor.setPosition(0)
+		cursor.setPosition(len(code), QTextCursor.KeepAnchor)
+		cursor.mergeCharFormat(format)
+
+		# color set
+		pattern = re.compile(r'1')
+		pos_list = [i.start() for i in re.finditer(pattern, code)]
+		if len(pos_list) > 0:
+			for pos in pos_list:
+				cursor.setPosition(pos)
+				cursor.setPosition(pos + 1, QTextCursor.KeepAnchor)
+				cursor.mergeCharFormat(format1)
+
+		pattern = re.compile(r'2')
+		pos_list = [i.start() for i in re.finditer(pattern, code)]
+		if len(pos_list) > 0:
+			for pos in pos_list:
+				cursor.setPosition(pos)
+				cursor.setPosition(pos + 1, QTextCursor.KeepAnchor)
+				cursor.mergeCharFormat(format2)
+
+	def ManualEdit(self):
+		# check if opt seq exist
+		sequence_opt = self.ui.textEditSeqOpt.toPlainText()
+		sequence_ori = self.ui.textEditSeqOri.toPlainText()
+		if sequence_opt == '':
+			Msg = "Please Run optimization first!"
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
+		else:
+			if len(sequence_ori) != len(sequence_opt):
+				Msg = "Your Opt seq and Ori seq don't have same length!"
+				QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+				return
+
+		sequence_opt_AA = Translator(sequence_opt, 0)[0]
+		sequence_ori_AA = Translator(sequence_ori, 0)[0]
+
+		if sequence_opt_AA != sequence_ori_AA:
+			Msg = "Your Opt AA seq and Ori AA seq don't match! Something wrong!"
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		# generate table
+		horizontalHeader = ['Residue Number', 'Amino Acid', 'Ori Codon', 'Opt Codon']
+		num_row = len(sequence_ori_AA)
+		num_col = len(horizontalHeader)
+		self.ui.tableWidget.setRowCount(num_row)
+		self.ui.tableWidget.setColumnCount(num_col)
+		self.ui.tableWidget.setHorizontalHeaderLabels(horizontalHeader)
+		self.ui.tableWidget.horizontalHeader().setStretchLastSection(True)
+		self.ui.tableWidget.setSelectionMode(QAbstractItemView.SingleSelection)
+		self.ui.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows)
+
+		for row_index in range(len(sequence_ori_AA)):
+			cur_AA = sequence_ori_AA[row_index]
+			ori_codon = sequence_ori[row_index*3:row_index*3+3]
+			opt_codon = sequence_opt[row_index*3:row_index*3+3]
+			opt_codon_list = CodonList[cur_AA]
+
+			item = QTableWidgetItem(str(row_index + 1))
+			self.ui.tableWidget.setItem(row_index, 0, item)
+			item1 = QTableWidgetItem(cur_AA)
+			self.ui.tableWidget.setItem(row_index, 1, item1)
+			item2 = QTableWidgetItem(ori_codon)
+			self.ui.tableWidget.setItem(row_index, 2, item2)
+			my_widget = QComboBox()
+			my_widget.residue_num = row_index + 1
+			my_widget.addItems(opt_codon_list)
+			my_widget.setCurrentText(opt_codon)
+			my_widget.currentTextChanged.connect(self.updateOptSeq)
+			self.ui.tableWidget.setCellWidget(row_index, 3, my_widget)
+
+		# disable edit
+		self.ui.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+		# resize table
+		self.ui.tableWidget.resizeColumnsToContents()
+		self.ui.tableWidget.resizeRowsToContents()
+	
+		# set signal
+		#self.mySHMtableDialog.ui.tableWidget.currentCellChanged.connect(self.mySHMtableDialog.updateSelection)
+		
+		self.ui.tableWidget.setHidden(False)
+
+		# resize UI in order to update UI
+		size_w = self.size().width()
+		size_h = self.size().height()
+		offset_pool = [-1, 1]
+		offset = offset_pool[random.randint(0, 1)]
+		self.resize(size_w + offset, size_h + offset)
+
+	def updateOptSeq(self):
+		# locate sender
+		sender = self.sender()
+		# update opt seq
+		sequence_opt = self.ui.textEditSeqOpt.toPlainText()
+		residue_num = sender.residue_num
+		start_pos = (residue_num - 1) * 3
+		end_pos = residue_num * 3
+		sequence_opt = sequence_opt[0:start_pos] + sender.currentText() + sequence_opt[end_pos:]
+		self.ui.textEditSeqOpt.setText(sequence_opt)
+		# highlight manual update region
+		cursor = self.ui.textEditSeqOpt.textCursor()
+		self.OptColorCode = self.OptColorCode[0:start_pos] + '222' + self.OptColorCode[end_pos:]
+		self.decorate_text(cursor, self.OptColorCode)
+
+		# also highlight in table
+		line_number = residue_num - 1
+		self.ui.tableWidget.item(line_number, 0).setBackground(QBrush(QColor('red')))
+		self.ui.tableWidget.item(line_number, 1).setBackground(QBrush(QColor('red')))
+		self.ui.tableWidget.item(line_number, 2).setBackground(QBrush(QColor('red')))
+		#self.ui.tableWidget.cellWidget(line_number, 3).setBackground(QBrush(QColor('green')))
+
+
 class FindKeyDialog(QtWidgets.QDialog):
 	def __init__(self):
 		super(FindKeyDialog, self).__init__()
@@ -381,6 +740,7 @@ class FindKeyDialog(QtWidgets.QDialog):
 			self.ui.pushButtonPos.setIcon(icon1)
 			self.ui.pushButtonNeg.setIcon(icon)
 
+		# resize UI inorder to update UI
 		size_w = self.size().width()
 		size_h = self.size().height()
 		offset_pool = [-1, 1]
@@ -4520,6 +4880,28 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.gridLayout_16.addWidget(self.mycomboBoxTemplate)
 		self.mycomboBoxTemplate.loadItems(TemplateList)
 		#self.loadPDB()
+
+	def updateUI(self, str):
+		self.ui.listWidgetStrainsIn.addItem(str)
+		self.rebuildTree()
+		self.highlightlist()
+
+	def on_actionCodon_Optimize_triggered(self):
+		global MoveNotChange
+
+		self.myCodonDialog = CodonDialog()
+
+		active_list = []
+		for i in range(self.ui.listWidgetStrainsIn.count()):
+			active_list.append(self.ui.listWidgetStrainsIn.item(i).text())
+
+		MoveNotChange = True
+		self.myCodonDialog.ui.comboBoxSeqName.addItems(active_list)
+		MoveNotChange = False
+		self.myCodonDialog.ui.comboBoxSeqName.setCurrentIndex(0)
+		self.myCodonDialog.loadSeq()
+		self.myCodonDialog.updateSignal.connect(self.updateUI)
+		self.myCodonDialog.show()
 
 	def CheckSeq(self):
 		pattern = re.compile(r'[^ATCUG]')
@@ -13646,6 +14028,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.modalessDeleteDialog.close()
 
+		# resize UI in order to update UI
+		size_w = self.size().width()
+		size_h = self.size().height()
+		offset_pool = [-1, 1]
+		offset = offset_pool[random.randint(0, 1)]
+		self.resize(size_w + offset, size_h + offset)
+
 	def open_tree_dialog(self, Names, Seqs, this_path, seq_type):
 		self.modalessTreeDialog = treeDialog()
 
@@ -17284,6 +17673,11 @@ def GenerateGibsonSingleAlignment(aaSeq, ntSeq, info):
 
 	return data
 
+def calcateGC(seq):
+	GC_count = seq.count('G') + seq.count('C')
+	GC_count = GC_count/len(seq)
+	return GC_count
+
 global Group1, Group2, GroupNA
 Group1 = ['H1','H2','H5','H6','H8','H9','H11','H12','H13','H16','H17','H18']
 Group2 = ['H3','H4','H7','H10','H14','H15']
@@ -17452,6 +17846,30 @@ AACodonDict={'I':'ATT','L':'CTT','V':'GTT','F':'TTT','M':'ATG','C':'TGT',
 			 'A':'GCT','G':'GGT','P':'CCT','T':'ACT','S':'TCT','Y':'TAT',
 			 'W':'TGG','Q':'CAA','N':'AAT','H':'CAT','E':'GAA','D':'GAT',
 			 'K':'AAA','R':'CGT'}
+
+CodonList={
+	'I':['ATT','ATC','ATA'],
+	'L':['CTT','CTC','CTA','CTG','TTA','TTG'],
+	'V':['GTT','GTC','GTA','GTG'],
+	'F':['TTT','TTC'],
+	'M':['ATG'],
+	'C':['TGT','TGC'],
+	'A':['GCT','GCC','GCA','GCG'],
+	'G':['GGT','GGC','GGA','GGG'],
+	'P':['CCT','CCC','CCA','CCG'],
+	'T':['ACT','ACC','ACA','ACG'],
+	'S':['TCT','TCC','TCA','TCG','AGT','AGC'],
+	'Y':['TAT','TAC'],
+	'W':['TGG'],
+	'Q':['CAA','CAG'],
+	'N':['AAT','AAC'],
+	'H':['CAT','CAC'],
+	'E':['GAA','GAG'],
+	'D':['GAT','GAC'],
+	'K':['AAA','AAG'],
+	'R':['CGT','CGC','CGA','CGG','AGA','AGG'],
+	'*':['TAA','TAG','TGA']
+}
 
 LateralPatchH3 = [119,129,165,166,169,171,173]
 LateralPatchH1 = [121,131,168,169,172,174,176]
