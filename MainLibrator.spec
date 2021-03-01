@@ -35,7 +35,9 @@ added_files = [
              ('/Users/leil/Documents/Projects/Librator/Librator/Js/bootstrap.min.css','Js'),
              ('/Users/leil/Documents/Projects/Librator/Librator/Js/bootstrap-theme.min.css','Js'),
              ('/Users/leil/Documents/Projects/Librator/Librator/Js/bootstrap.min.js','Js'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/Js/underscore-min.map','Js')
+             ('/Users/leil/Documents/Projects/Librator/Librator/Js/underscore-min.map','Js'),
+             ('/Users/leil/Documents/Projects/Librator/codon_usage_data','codon_usage_data'),
+             ('/Users/leil/anaconda3/lib/python3.7/site-packages/python_codon_tables','python_codon_tables')
              ]
 
 
