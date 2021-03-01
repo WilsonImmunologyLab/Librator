@@ -33,7 +33,7 @@
       </size>
      </property>
      <property name="text">
-      <string>Highlight Changes</string>
+      <string>Highlight Pattern</string>
      </property>
     </widget>
    </item>
@@ -230,6 +230,9 @@
       <string>Original Sequence (NT)</string>
      </property>
     </widget>
+   </item>
+   <item row="8" column="6" colspan="2">
+    <widget class="QLineEdit" name="lineEditPattern"/>
    </item>
   </layout>
  </widget>

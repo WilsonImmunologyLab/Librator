@@ -267,11 +267,11 @@ class ComboCheckBox(QComboBox):
 
 class CodonDialog(QtWidgets.QDialog):
 	updateSignal = pyqtSignal(str)
-
 	def __init__(self):
 		super(CodonDialog, self).__init__()
 		self.ui = Ui_CodonDialog()
 		self.ui.setupUi(self)
+
 		self.ui.lcdNumberGCOpt.setSegmentStyle(QLCDNumber.Flat)  # For Mac system, to enable font color setting
 		self.ui.lcdNumberGCOri.setSegmentStyle(QLCDNumber.Flat)  # For Mac system, to enable font color setting
 		self.ui.lcdNumberGCOpt.setStyleSheet("border: 2px solid black; color: red; background: silver;")
@@ -413,6 +413,7 @@ class CodonDialog(QtWidgets.QDialog):
 		problem = DnaOptimizationProblem(
 			sequence=sequence,
 			constraints=[
+				EnforceGCContent(mini=0.3, maxi=0.7, window=100),
 				EnforceTranslation(location=(0, region))
 			],
 			objectives=[CodonOptimize(species=species, location=(0, region))]
@@ -466,7 +467,7 @@ class CodonDialog(QtWidgets.QDialog):
 		offset = offset_pool[random.randint(0, 1)]
 		self.resize(size_w + offset, size_h + offset)
 
-	def decorate(self):
+	def decorateold(self):
 		sequence = self.ui.textEditSeqOri.toPlainText()
 		sequence_opt = self.ui.textEditSeqOpt.toPlainText()
 
@@ -494,6 +495,42 @@ class CodonDialog(QtWidgets.QDialog):
 		offset_pool = [-1, 1]
 		offset = offset_pool[random.randint(0, 1)]
 		self.resize(size_w + offset, size_h + offset)
+
+	def decorate(self):
+		time_start = time.time()
+		pattern_str = self.ui.lineEditPattern.text().upper()
+		if pattern_str == "":
+			return
+
+		sequence_opt = self.ui.textEditSeqOpt.toPlainText()
+		cursor = self.ui.textEditSeqOpt.textCursor()
+
+		# reset all font color
+		format = QTextCharFormat()
+		format.setForeground(QBrush(QColor("black")))
+		cursor.setPosition(0)
+		cursor.setPosition(len(sequence_opt), QTextCursor.KeepAnchor)
+		cursor.mergeCharFormat(format)
+
+		format1 = QTextCharFormat()
+		format1.setForeground(QBrush(QColor("red")))
+		pattern = re.compile(pattern_str)
+		pos_list = [i.start() for i in re.finditer(pattern, sequence_opt)]
+		if len(pos_list) > 0:
+			for pos in pos_list:
+				cursor.setPosition(pos)
+				cursor.setPosition(pos + len(pattern_str), QTextCursor.KeepAnchor)
+				cursor.mergeCharFormat(format1)
+
+		# resize UI in order to update UI
+		size_w = self.size().width()
+		size_h = self.size().height()
+		offset_pool = [-1, 1]
+		offset = offset_pool[random.randint(0, 1)]
+		self.resize(size_w + offset, size_h + offset)
+
+		time_end = time.time()
+		print('decorate_text time cost: ', time_end - time_start, 's')
 
 	def decorate_text(self, cursor, code):
 		format = QTextCharFormat()

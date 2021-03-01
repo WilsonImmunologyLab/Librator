@@ -103,6 +103,9 @@ class Ui_CodonDialog(object):
         self.label_4.setMaximumSize(QtCore.QSize(16777215, 30))
         self.label_4.setObjectName("label_4")
         self.gridLayout.addWidget(self.label_4, 3, 0, 1, 1)
+        self.lineEditPattern = QtWidgets.QLineEdit(CodonDialog)
+        self.lineEditPattern.setObjectName("lineEditPattern")
+        self.gridLayout.addWidget(self.lineEditPattern, 8, 6, 1, 2)
 
         self.retranslateUi(CodonDialog)
         QtCore.QMetaObject.connectSlotsByName(CodonDialog)
@@ -110,7 +113,7 @@ class Ui_CodonDialog(object):
     def retranslateUi(self, CodonDialog):
         _translate = QtCore.QCoreApplication.translate
         CodonDialog.setWindowTitle(_translate("CodonDialog", "Dialog"))
-        self.pushButtonHighlight.setText(_translate("CodonDialog", "Highlight Changes"))
+        self.pushButtonHighlight.setText(_translate("CodonDialog", "Highlight Pattern"))
         self.label_6.setText(_translate("CodonDialog", "Target Sequence"))
         self.label_3.setText(_translate("CodonDialog", "Optimized Sequence (NT)"))
         self.label_2.setText(_translate("CodonDialog", "GC %"))
