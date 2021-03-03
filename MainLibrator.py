@@ -2524,16 +2524,93 @@ class fusionDialog(QtWidgets.QDialog):
 			self.ui.endDonor.setValue(0)
 
 	def highlight(self):
-		startBase = int(self.ui.startBase.text())
-		endBase = int(self.ui.endBase.text())
+		try:
+			startBase = int(self.ui.startBase.text())
+			endBase = int(self.ui.endBase.text())
 
-		if startBase != 0 and endBase != 0:
-			if endBase > self.base_len:
-				endBase = self.base_len
-				self.ui.endBase.setValue(endBase)
-			if endBase > startBase:
-				mut_info = range(startBase, endBase + 1)
+			if startBase != 0 and endBase != 0:
+				if endBase > self.base_len:
+					endBase = self.base_len
+					self.ui.endBase.setValue(endBase)
+				if endBase > startBase:
+					mut_info = range(startBase, endBase + 1)
 
+					base = self.ui.basename.text()
+					WhereState = 'SeqName = "' + base + '"'
+					SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo, Subtype FROM LibDB WHERE ' + WhereState
+					DataIn = RunSQL(DBFilename, SQLStatement)
+					Sequence = DataIn[0][1]
+					VFrom = int(DataIn[0][2]) - 1
+					if VFrom == -1: VFrom = 0
+					VTo = int(DataIn[0][3])
+					Subtype = DataIn[0][4]
+					Sequence = Sequence[VFrom:VTo]
+					Sequence = Sequence.upper()
+					AA_Sequence = Translator(Sequence, 0)
+					AA_Sequence = AA_Sequence[0]
+
+					if Subtype in Group1 or Subtype in Group2:
+						HANumbering(AA_Sequence)
+						Decorations = ['H3Num', 'H1Num', 'Muts']
+						self.Decorate(Decorations, self.ui.textEditBase, mut_info)
+					else:
+						HANumbering(AA_Sequence)
+						Decorations = ['Muts']
+						self.Decorate(Decorations, self.ui.textEditBase, mut_info)
+
+			startDonor = int(self.ui.startDonor.text())
+			endDonor = int(self.ui.endDonor.text())
+
+			if startDonor != 0 and endDonor != 0:
+				if endDonor > self.donor_len:
+					endDonor = self.donor_len
+					self.ui.endDonor.setValue(endDonor)
+				if endDonor > startDonor:
+					mut_info = range(startDonor, endDonor + 1)
+
+					donor = self.ui.selection.selectedItems()
+					if len(donor) > 0:
+						donor = donor[0].text()
+						WhereState = 'SeqName = "' + donor + '"'
+						SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo, Subtype FROM LibDB WHERE ' + WhereState
+						DataIn = RunSQL(DBFilename, SQLStatement)
+						Sequence = DataIn[0][1]
+						VFrom = int(DataIn[0][2]) - 1
+						if VFrom == -1: VFrom = 0
+						VTo = int(DataIn[0][3])
+						Subtype = DataIn[0][4]
+						Sequence = Sequence[VFrom:VTo]
+						Sequence = Sequence.upper()
+						AA_Sequence = Translator(Sequence, 0)
+						AA_Sequence = AA_Sequence[0]
+
+						if Subtype in Group1 or Subtype in Group2:
+							HANumbering(AA_Sequence)
+							Decorations = ['H3Num', 'H1Num', 'Muts']
+							self.Decorate(Decorations, self.ui.textEditDonor, mut_info)
+						else:
+							HANumbering(AA_Sequence)
+							Decorations = ['Muts']
+							self.Decorate(Decorations, self.ui.textEditDonor, mut_info)
+		except:
+			return
+
+	def accept(self):
+		if len(self.info) == 0:
+			QMessageBox.warning(self, 'Warning', 'You did not make any change to the base sequence!',
+			                    QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+		base_name  = self.ui.basename.text()
+		self.fusionSeqSignal.emit(base_name, self.baseSeqNT, self.baseSeq, self.info)
+
+	def displaySeq(self):
+		global DBFilename
+		global H1Numbering
+		global H3Numbering
+		try:
+			if self.ui.textEditBase.toPlainText() == '':
+				# base sequence
 				base = self.ui.basename.text()
 				WhereState = 'SeqName = "' + base + '"'
 				SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo, Subtype FROM LibDB WHERE ' + WhereState
@@ -2551,129 +2628,57 @@ class fusionDialog(QtWidgets.QDialog):
 				if Subtype in Group1 or Subtype in Group2:
 					HANumbering(AA_Sequence)
 					Decorations = ['H3Num', 'H1Num', 'Muts']
-					self.Decorate(Decorations, self.ui.textEditBase, mut_info)
+					self.Decorate(Decorations, self.ui.textEditBase, 'none')
 				else:
 					HANumbering(AA_Sequence)
 					Decorations = ['Muts']
-					self.Decorate(Decorations, self.ui.textEditBase, mut_info)
+					self.Decorate(Decorations, self.ui.textEditBase, 'none')
 
-		startDonor = int(self.ui.startDonor.text())
-		endDonor = int(self.ui.endDonor.text())
+				self.ui.label_base.setText('Base Sequence: ' + base)
+				self.base_len = len(AA_Sequence)
 
-		if startDonor != 0 and endDonor != 0:
-			if endDonor > self.donor_len:
-				endDonor = self.donor_len
-				self.ui.endDonor.setValue(endDonor)
-			if endDonor > startDonor:
-				mut_info = range(startDonor, endDonor + 1)
+			# selected donor
+			donor = self.ui.selection.selectedItems()
+			if len(donor) > 0:
+				donor = donor[0].text()
+				WhereState = 'SeqName = "' + donor + '"'
+				SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo, Subtype FROM LibDB WHERE ' + WhereState
+				DataIn = RunSQL(DBFilename, SQLStatement)
+				Sequence = DataIn[0][1]
+				VFrom = int(DataIn[0][2]) - 1
+				if VFrom == -1: VFrom = 0
+				VTo = int(DataIn[0][3])
+				Subtype = DataIn[0][4]
+				Sequence = Sequence[VFrom:VTo]
+				Sequence = Sequence.upper()
+				AA_Sequence = Translator(Sequence, 0)
+				AA_Sequence = AA_Sequence[0]
 
-				donor = self.ui.selection.selectedItems()
-				if len(donor) > 0:
-					donor = donor[0].text()
-					WhereState = 'SeqName = "' + donor + '"'
-					SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo, Subtype FROM LibDB WHERE ' + WhereState
-					DataIn = RunSQL(DBFilename, SQLStatement)
-					Sequence = DataIn[0][1]
-					VFrom = int(DataIn[0][2]) - 1
-					if VFrom == -1: VFrom = 0
-					VTo = int(DataIn[0][3])
-					Subtype = DataIn[0][4]
-					Sequence = Sequence[VFrom:VTo]
-					Sequence = Sequence.upper()
-					AA_Sequence = Translator(Sequence, 0)
-					AA_Sequence = AA_Sequence[0]
+				if Subtype in Group1 or Subtype in Group2:
+					HANumbering(AA_Sequence)
+					Decorations = ['H3Num', 'H1Num','Muts']
+					self.Decorate(Decorations, self.ui.textEditDonor, 'none')
+				else:
+					HANumbering(AA_Sequence)
+					Decorations = ['Muts']
+					self.Decorate(Decorations, self.ui.textEditDonor, 'none')
 
-					if Subtype in Group1 or Subtype in Group2:
-						HANumbering(AA_Sequence)
-						Decorations = ['H3Num', 'H1Num', 'Muts']
-						self.Decorate(Decorations, self.ui.textEditDonor, mut_info)
-					else:
-						HANumbering(AA_Sequence)
-						Decorations = ['Muts']
-						self.Decorate(Decorations, self.ui.textEditDonor, mut_info)
+				self.ui.label_donor.setText('Donor Sequence: ' + donor)
+				self.donor_len = len(AA_Sequence)
 
-	def accept(self):
-		if len(self.info) == 0:
-			QMessageBox.warning(self, 'Warning', 'You did not make any change to the base sequence!',
-			                    QMessageBox.Ok,
-			                    QMessageBox.Ok)
+				self.ui.startDonor.setDisabled(False)
+				self.ui.endDonor.setDisabled(False)
+				self.ui.startDonor.setValue(0)
+				self.ui.endDonor.setValue(0)
+			else:
+				self.ui.textEditDonor.setText('')
+				self.ui.startDonor.setValue(0)
+				self.ui.endDonor.setValue(0)
+				self.ui.startDonor.setDisabled(True)
+				self.ui.endDonor.setDisabled(True)
+				self.ui.label_donor.setText('Donor Sequence: ')
+		except:
 			return
-		base_name  = self.ui.basename.text()
-		self.fusionSeqSignal.emit(base_name, self.baseSeqNT, self.baseSeq, self.info)
-
-	def displaySeq(self):
-		global DBFilename
-		global H1Numbering
-		global H3Numbering
-
-		if self.ui.textEditBase.toPlainText() == '':
-			# base sequence
-			base = self.ui.basename.text()
-			WhereState = 'SeqName = "' + base + '"'
-			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo, Subtype FROM LibDB WHERE ' + WhereState
-			DataIn = RunSQL(DBFilename, SQLStatement)
-			Sequence = DataIn[0][1]
-			VFrom = int(DataIn[0][2]) - 1
-			if VFrom == -1: VFrom = 0
-			VTo = int(DataIn[0][3])
-			Subtype = DataIn[0][4]
-			Sequence = Sequence[VFrom:VTo]
-			Sequence = Sequence.upper()
-			AA_Sequence = Translator(Sequence, 0)
-			AA_Sequence = AA_Sequence[0]
-
-			if Subtype in Group1 or Subtype in Group2:
-				HANumbering(AA_Sequence)
-				Decorations = ['H3Num', 'H1Num', 'Muts']
-				self.Decorate(Decorations, self.ui.textEditBase, 'none')
-			else:
-				HANumbering(AA_Sequence)
-				Decorations = ['Muts']
-				self.Decorate(Decorations, self.ui.textEditBase, 'none')
-
-			self.ui.label_base.setText('Base Sequence: ' + base)
-			self.base_len = len(AA_Sequence)
-
-		# selected donor
-		donor = self.ui.selection.selectedItems()
-		if len(donor) > 0:
-			donor = donor[0].text()
-			WhereState = 'SeqName = "' + donor + '"'
-			SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo, Subtype FROM LibDB WHERE ' + WhereState
-			DataIn = RunSQL(DBFilename, SQLStatement)
-			Sequence = DataIn[0][1]
-			VFrom = int(DataIn[0][2]) - 1
-			if VFrom == -1: VFrom = 0
-			VTo = int(DataIn[0][3])
-			Subtype = DataIn[0][4]
-			Sequence = Sequence[VFrom:VTo]
-			Sequence = Sequence.upper()
-			AA_Sequence = Translator(Sequence, 0)
-			AA_Sequence = AA_Sequence[0]
-
-			if Subtype in Group1 or Subtype in Group2:
-				HANumbering(AA_Sequence)
-				Decorations = ['H3Num', 'H1Num','Muts']
-				self.Decorate(Decorations, self.ui.textEditDonor, 'none')
-			else:
-				HANumbering(AA_Sequence)
-				Decorations = ['Muts']
-				self.Decorate(Decorations, self.ui.textEditDonor, 'none')
-
-			self.ui.label_donor.setText('Donor Sequence: ' + donor)
-			self.donor_len = len(AA_Sequence)
-
-			self.ui.startDonor.setDisabled(False)
-			self.ui.endDonor.setDisabled(False)
-			self.ui.startDonor.setValue(0)
-			self.ui.endDonor.setValue(0)
-		else:
-			self.ui.textEditDonor.setText('')
-			self.ui.startDonor.setValue(0)
-			self.ui.endDonor.setValue(0)
-			self.ui.startDonor.setDisabled(True)
-			self.ui.endDonor.setDisabled(True)
-			self.ui.label_donor.setText('Donor Sequence: ')
 
 	def showalignment(self):
 		global DBFilename
@@ -15855,7 +15860,6 @@ def GibsonSingleAlignmentHTML(data, aaSeq, ntSeq):
 	out_file_handle.close()
 	return out_html_file
 
-
 def GibsonHTML(fragment_data, aa_start, aa_end, del_in_fragment, fix_in_fragment, template):
 	joint_len = [0]
 	for i in range(1, len(aa_start)):
@@ -17770,8 +17774,8 @@ H3template_seq = "MKTIIALSYIFCLAIGQDLPGNDNSTATLCLGHHAVPNGTLVKTITDDQIEVTNATELVQSS
                  "EKFHQIEKEFSEVEGRIQDLEKYVEDTKIDLWSYNAELLVALENQHTIDLTDSEMNKLFEKTRRQLRENAEDMGNGCFKIY" \
                  "HKCDNACIESIRNGTYDHDVYRDEALNNRFQIKGVELKSGYKDWILWISFAISCFLLCVVLLGFIMWACQRGNIRCNICI"
 
-H3_start = [1, 123, 264, 403];
-H3_end = [131, 272, 411, 520];
+H3_start = [1, 123, 265, 403];
+H3_end = [131, 273, 411, 520];
 
 global H1template
 global H1template_seq

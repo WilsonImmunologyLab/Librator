@@ -6,8 +6,6 @@
       <change beforePath="$PROJECT_DIR$/DB/FragmentDB.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/FragmentDB.ldb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DB/Test.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/Test.ldb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/codon_optimize_dialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/codon_optimize_dialog.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/codon_optimize_dialog.ui" beforeDir="false" afterPath="$PROJECT_DIR$/codon_optimize_dialog.ui" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
