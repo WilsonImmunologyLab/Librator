@@ -657,7 +657,6 @@ class CodonDialog(QtWidgets.QDialog):
 		self.ui.tableWidget.item(line_number, 2).setBackground(QBrush(QColor('red')))
 		#self.ui.tableWidget.cellWidget(line_number, 3).setBackground(QBrush(QColor('green')))
 
-
 class FindKeyDialog(QtWidgets.QDialog):
 	def __init__(self):
 		super(FindKeyDialog, self).__init__()
@@ -16731,6 +16730,8 @@ def SequencesHTML(AAseq, info):
 				if cur_data[0] == 'HA1':
 					if cur_data[2] in LateralPatchH1:
 						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' LateralPatch')
+					if cur_data[2] in RBSH1:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' RBS')
 					else:
 						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
 				else:
@@ -16742,6 +16743,8 @@ def SequencesHTML(AAseq, info):
 				if cur_data[0] == 'HA1':
 					if cur_data[2] in LateralPatchH1:
 						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'LateralPatch')
+					if cur_data[2] in RBSH1:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'RBS')
 					else:
 						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
 				else:
@@ -16759,6 +16762,8 @@ def SequencesHTML(AAseq, info):
 				if cur_data[0] == 'HA1':
 					if cur_data[2] in LateralPatchH3:
 						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' LateralPatch')
+					if cur_data[2] in RBSH3:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' RBS')
 					else:
 						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
 				else:
@@ -16770,6 +16775,8 @@ def SequencesHTML(AAseq, info):
 				if cur_data[0] == 'HA1':
 					if cur_data[2] in LateralPatchH3:
 						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'LateralPatch')
+					if cur_data[2] in RBSH3:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'RBS')
 					else:
 						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
 				else:
@@ -17022,6 +17029,8 @@ def AlignSequencesHTML(DataSet, template):
 				if cur_data[0] == 'HA1':
 					if cur_data[2] in LateralPatchH1:
 						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' LateralPatch')
+					if cur_data[2] in RBSH1:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' RBS')
 					else:
 						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
 				else:
@@ -17033,6 +17042,8 @@ def AlignSequencesHTML(DataSet, template):
 				if cur_data[0] == 'HA1':
 					if cur_data[2] in LateralPatchH1:
 						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'LateralPatch')
+					if cur_data[2] in RBSH1:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'RBS')
 					else:
 						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
 				else:
@@ -17050,6 +17061,8 @@ def AlignSequencesHTML(DataSet, template):
 				if cur_data[0] == 'HA1':
 					if cur_data[2] in LateralPatchH3:
 						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' LateralPatch')
+					if cur_data[2] in RBSH3:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' RBS')
 					else:
 						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
 				else:
@@ -17061,6 +17074,8 @@ def AlignSequencesHTML(DataSet, template):
 				if cur_data[0] == 'HA1':
 					if cur_data[2] in LateralPatchH3:
 						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'LateralPatch')
+					if cur_data[2] in RBSH3:
+						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'RBS')
 					else:
 						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
 				else:
@@ -17914,6 +17929,9 @@ CodonList={
 
 LateralPatchH3 = [119,129,165,166,169,171,173]
 LateralPatchH1 = [121,131,168,169,172,174,176]
+
+RBSH3 = list(range(134,139)) + list(range(155,164)) + list(range(188,196)) + list(range(221,229))
+RBSH1 = list(range(136,142)) + list(range(158,167)) + list(range(191,199)) + list(range(224,232))
 
 H1HA1Regions = {'1':'Stalk', '2':'Stalk', '3':'Stalk', '4':'Stalk', '5':'Stalk', '6':'Stalk', '7':'Stalk',
 				'8':'Stalk', '9':'Stalk', '10':'Stalk', '11':'Stalk', '12':'Stalk-MN',
