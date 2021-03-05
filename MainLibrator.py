@@ -13509,44 +13509,50 @@ class LibratorMain(QtWidgets.QMainWindow):
 					return
 
 				# for HA1 mutations:
-				position = ''
+				position_list = []
 				for x in real_pos_arr:
 					if numbering[int(x)][0] == 'HA1' and numbering[int(x)][2] != '-':
-						position += str(numbering[int(x)][2]) + '+'
+						#position += str(numbering[int(x)][2]) + '+'
+						position_list.append(int(numbering[int(x)][2]))
 
-				position = position.strip('+')
-				text = "sel ha1mutation, chain A+C+E+G+I+K and (resi " + position + ")\n"
-				pml.write(text)
-				text = "color red, ha1mutation\n"
-				pml.write(text)
+				if len(position_list) > 0:
+					position_list_sorted = SortAndMerge(position_list)
+					position = '+'.join(position_list_sorted)
+					text = "sel ha1mutation, chain A+C+E+G+I+K and (resi " + position + ")\n"
+					pml.write(text)
+					text = "color red, ha1mutation\n"
+					pml.write(text)
 
-				labels = mutation.split(",")
-				for label in labels:
-					number = int(re.sub('[A-Za-z]', '', label))
-					if numbering[number][0] == 'HA1' and numbering[number][2] != '-':
-						position = str(numbering[number][2])
-						text = "label chain A+C+E+G+I+K and resi " + position + " and name C, \"" + label + "\"\n"
-						pml.write(text)
+					labels = mutation.split(",")
+					for label in labels:
+						number = int(re.sub('[A-Za-z]', '', label))
+						if numbering[number][0] == 'HA1' and numbering[number][2] != '-':
+							position = str(numbering[number][2])
+							text = "label chain A+C+E+G+I+K and resi " + position + " and name C, \"" + label + "\"\n"
+							pml.write(text)
 
 				# for HA2 mutations:
-				position = ''
+				position_list = []
 				for x in real_pos_arr:
 					if numbering[int(x)][0] == 'HA2' and numbering[int(x)][2] != '-':
-						position += str(numbering[int(x)][2]) + '+'
+						#position += str(numbering[int(x)][2]) + '+'
+						position_list.append(int(numbering[int(x)][2]))
 
-				position = position.strip('+')
-				text = "sel ha2mutation, chain B+D+F+H+J+L and (resi " + position + ")\n"
-				pml.write(text)
-				text = "color red, ha2mutation\n"
-				pml.write(text)
+				if len(position_list) > 0:
+					position_list_sorted = SortAndMerge(position_list)
+					position = '+'.join(position_list_sorted)
+					text = "sel ha2mutation, chain B+D+F+H+J+L and (resi " + position + ")\n"
+					pml.write(text)
+					text = "color red, ha2mutation\n"
+					pml.write(text)
 
-				labels = mutation.split(",")
-				for label in labels:
-					number = int(re.sub('[A-Za-z]', '', label))
-					if numbering[number][0] == 'HA2' and numbering[number][2] != '-':
-						position = str(numbering[number][2])
-						text = "label chain B+D+F+H+J+L and resi " + position + " and name C, \"" + label + "\"\n"
-						pml.write(text)
+					labels = mutation.split(",")
+					for label in labels:
+						number = int(re.sub('[A-Za-z]', '', label))
+						if numbering[number][0] == 'HA2' and numbering[number][2] != '-':
+							position = str(numbering[number][2])
+							text = "label chain B+D+F+H+J+L and resi " + position + " and name C, \"" + label + "\"\n"
+							pml.write(text)
 
 				text = "set label_size, 25\n"
 				pml.write(text)
