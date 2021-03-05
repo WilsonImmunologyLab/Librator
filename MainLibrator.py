@@ -5178,7 +5178,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				if len(ele) > 0:
 					if iter < 5:
 						str_ele = [str(i) for i in ele]
-						text = 'sel HA1-' + str(iter) + ', chain A+C+E+G+I+K and (resi ' + '+'.join(str_ele) + ')\n'
+						str_ele_sorted = SortAndMerge(str_ele)
+						text = 'sel HA1-' + str(iter) + ', chain A+C+E+G+I+K and (resi ' + '+'.join(str_ele_sorted) + ')\n'
 						text = text + 'color ' + color_dict[iter] + ', HA1-' + str(iter) + '\n'
 						pml.write(text)
 				iter += 1
@@ -5188,7 +5189,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				if len(ele) > 0:
 					if iter < 5:
 						str_ele = [str(i) for i in ele]
-						text = 'sel HA2-' + str(iter) + ', chain B+D+F+H+J+L and (resi ' + '+'.join(str_ele) + ')\n'
+						str_ele_sorted = SortAndMerge(str_ele)
+						text = 'sel HA2-' + str(iter) + ', chain B+D+F+H+J+L and (resi ' + '+'.join(str_ele_sorted) + ')\n'
 						text += 'color ' + color_dict[iter] + ', HA2-' + str(iter) + '\n'
 						pml.write(text)
 				iter += 1
@@ -17748,6 +17750,42 @@ def calcateGC(seq):
 	GC_count = seq.count('G') + seq.count('C')
 	GC_count = GC_count/len(seq)
 	return GC_count
+
+def SortAndMerge(list):
+	merge_list = []
+
+	list = [int(i) for i in list]
+	sort_list = sorted(list)
+	pool_current = ''
+	pool_start = ''
+
+	for ele in sort_list:
+		if pool_current == '':
+			pool_current = ele
+			pool_start = ele
+		else:
+			if abs(ele - pool_current) == 1:
+				pool_current = ele
+			else:
+				if pool_start == pool_current:
+					string = str(pool_start)
+					merge_list.append(string)
+					pool_current = ele
+					pool_start = ele
+				else:
+					string = str(pool_start) + '-' + str(pool_current)
+					merge_list.append(string)
+					pool_current = ele
+					pool_start = ele
+
+	if pool_start == pool_current:
+		string = str(pool_start)
+		merge_list.append(string)
+	else:
+		string = str(pool_start) + '-' + str(pool_current)
+		merge_list.append(string)
+
+	return merge_list
 
 global Group1, Group2, GroupNA
 Group1 = ['H1','H2','H5','H6','H8','H9','H11','H12','H13','H16','H17','H18']
