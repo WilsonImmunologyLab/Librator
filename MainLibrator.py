@@ -5193,6 +5193,21 @@ class LibratorMain(QtWidgets.QMainWindow):
 						pml.write(text)
 				iter += 1
 
+			if subtype in Group1:
+				text = "sel ABS-Ca1, chain A+C+E+G+I+K and (resi 172+173+174+175+176+209+210+211)\n" \
+				       + "sel ABS-Ca2, chain A+C+E+G+I+K and (resi 142+143+144+145+146+147+227+228+229)\n" \
+				       + "sel ABS-Cb, chain A+C+E+G+I+K and (resi 76+77+78+79+80+81)\n" \
+				       + "sel ABS-Sa, chain A+C+E+G+I+K and (resi 130+131+159+160+161+162+163+165+166+167+168+169+170)\n" \
+				       + "sel ABS-Sb, chain A+C+E+G+I+K and (resi 190+191+192+193+194+195+196+197+198+199+200)\n"
+				pml.write(text)
+			elif subtype in Group2:
+				text = "sel ABS-A, chain A+C+E+G+I+K and (resi 122+126+127+128+129+130+131+132+133+137+141+142+143+144)\n" \
+				       + "sel ABS-B, chain A+C+E+G+I+K and (resi 155+156+157+158+159+160+164+186+188+189+190+191+192+193+194+195+196+197+198+201)\n" \
+				       + "sel ABS-C, chain A+C+E+G+I+K and (resi 52+53+54+275+276)\n" \
+				       + "sel ABS-D, chain A+C+E+G+I+K and (resi 174+182+207+220+226+229+230+242+244)\n" \
+				       + "sel ABS-E, chain A+C+E+G+I+K and (resi 62+63+78+81+83)\n"
+				pml.write(text)
+
 		# open pml script with PyMOL
 		cmd = pymol_path + " " + pml_path
 		# print(cmd)
