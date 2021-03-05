@@ -13682,38 +13682,28 @@ class LibratorMain(QtWidgets.QMainWindow):
 			text = "\n# Antigenic sites\n"
 			pml.write(text)
 			if subtype in Group1:
-				text = "color purple :172-176+209-211.a\n" \
-						+ "color purple :172-176+209-211.c\n" \
-						+ "color purple :172-176+209-211.e\n" \
-						+ "color yellow :142-147+227-229.a\n" \
-						+ "color yellow :142-147+227-229.c\n" \
-						+ "color yellow :142-147+227-229.e\n" \
-						+ "color gray :76-81.a\n" \
-						+ "color gray :76-81.c\n" \
-						+ "color gray :76-81.e\n" \
-						+ "color chocolate :130-131+159-163+165-170.a\n" \
-						+ "color chocolate :130-131+159-163+165-170.c\n" \
-						+ "color chocolate :130-131+159-163+165-170.e\n" \
-						+ "color green :190-200.a\n" \
-						+ "color green :190-200.c\n" \
-						+ "color green :190-200.e\n"
+				text = "alias ABS-Ca1 :172-176.A,209-211.A,172-176.C,209-211.C,172-176.E,209-211.E\n" \
+				       + "alias ABS-Ca2 :142-147.A,227-229.A,142-147.C,227-229.C,142-147.E,227-229.E\n" \
+				       + "alias ABS-Cb :76-81.A,76-81.C,76-81.E\n" \
+				       + "alias ABS-Sa :130-131.A,159-163.A,165-170.A,130-131.C,159-163.C,165-170.C,130-131.E,159-163.E,165-170.E\n" \
+				       + "alias ABS-Sb :190-200.A,190-200.C,190-200.E\n" \
+				       + "color purple ABS-Ca1\n" \
+				       + "color yellow ABS-Ca2\n" \
+				       + "color gray ABS-Cb\n" \
+				       + "color chocolate ABS-Sa\n" \
+				       + "color green ABS-Sb\n"
 				pml.write(text)
 			elif subtype in Group2:
-				text = "color purple :122+126-133+137+141-144.a\n" \
-						+ "color purple :122+126-133+137+141-144.c\n" \
-						+ "color purple :122+126-133+137+141-144.e\n" \
-						+ "color yellow :155-160+164+188-198+201.a\n" \
-						+ "color yellow :155-160+164+188-198+201.c\n" \
-						+ "color yellow :155-160+164+188-198+201.e\n" \
-						+ "color gray :52-54+275-276.a\n" \
-						+ "color gray :52-54+275-276.c\n" \
-						+ "color gray :52-54+275-276.e\n" \
-						+ "color chocolate :174+182+207+220+226+229-230+242+244.a\n" \
-						+ "color chocolate :174+182+207+220+226+229-230+242+244.c\n" \
-						+ "color chocolate :174+182+207+220+226+229-230+242+244.e\n" \
-						+ "color green :62-63+78+81+83.a\n" \
-						+ "color green :62-63+78+81+83.c\n" \
-						+ "color green :62-63+78+81+83.e\n"
+				text = "alias ABS-A :122.A,126-133.A,137.A,141-144.A,122.C,126-133.C,137.C,141-144.C,122.E,126-133.E,137.E,141-144.E\n" \
+				       + "alias ABS-B :155-160.A,164.A,188-198.A,201.A,155-160.C,164.C,188-198.C,201.C,155-160.E,164.E,188-198.E,201.E\n" \
+				       + "alias ABS-C :52-54.A,275-276.A,52-54.C,275-276.C,52-54.E,275-276.E\n" \
+				       + "alias ABS-D :174.A,182.A,207.A,220.A,226.A,229-230.A,242.A,244.A,174.C,182.C,207.C,220.C,226.C,229-230.C,242.C,244.C,174.E,182.E,207.E,220.E,226.E,229-230.E,242.E,244.E\n" \
+				       + "alias ABS-E :62-63.A,78.A,81.A,83.A,62-63.C,78.C,81.C,83.C,62-63.E,78.E,81.E,83.E\n" \
+				       + "color purple ABS-A\n" \
+				       + "color yellow ABS-B\n" \
+				       + "color gray ABS-C\n" \
+				       + "color chocolate ABS-D\n" \
+				       + "color green ABS-E\n"
 				pml.write(text)
 			else:
 				QMessageBox.warning(self, 'Warning', 'We only support HA structure now!', QMessageBox.Ok, QMessageBox.Ok)
@@ -13762,10 +13752,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 				if len(position_list) > 0:
 					position_list_sorted = SortAndMerge(position_list)
-					position = '+'.join(position_list_sorted)
-					text = "color red :" + position + ".a\n" \
-					       + "color red :" + position + ".c\n" \
-					       + "color red :" + position + ".e\n"
+					text = "alias HA1-mutation :" \
+					       + '.A,'.join(position_list_sorted) + '.A,' \
+					       + '.C,'.join(position_list_sorted) + '.C,' \
+					       + '.E,'.join(position_list_sorted) + '.E\n'
+					text += "color red HA1-mutation\n"
 					pml.write(text)
 
 					#labels = mutation.split(",")
@@ -13785,10 +13776,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 				if len(position_list) > 0:
 					position_list_sorted = SortAndMerge(position_list)
-					position = '+'.join(position_list_sorted)
-					text = "color red :" + position + ".b\n" \
-					       + "color red :" + position + ".d\n" \
-					       + "color red :" + position + ".f\n"
+					text = "alias HA2-mutation :" \
+					       + '.A,'.join(position_list_sorted) + '.A,' \
+					       + '.C,'.join(position_list_sorted) + '.C,' \
+					       + '.E,'.join(position_list_sorted) + '.E\n'
+					text += "color red HA2-mutation\n"
 					pml.write(text)
 
 					#labels = mutation.split(",")
