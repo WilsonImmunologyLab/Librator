@@ -102,8 +102,9 @@ global temp_folder
 global muscle_path
 global clustal_path
 global pymol_path
+global UCSF_path
 global raxml_path
-#global figtree_path
+global VisualizeSoftWare
 global fragmentdb_path
 
 working_prefix = os.path.dirname(os.path.realpath(sys.argv[0])) + '/'
@@ -116,7 +117,8 @@ if os.path.exists(conf_file):   # if conf exist, read conf info from file
 	clustal_path =  settings[1].strip('\n')
 	pymol_path =  settings[2].strip('\n')
 	raxml_path =  settings[3].strip('\n')
-	#figtree_path =  settings[4].strip('\n')
+	UCSF_path =  settings[4].strip('\n')
+	VisualizeSoftWare = settings[5].strip('\n')
 	file_handle.close()
 	del settings
 
@@ -127,28 +129,32 @@ if os.path.exists(conf_file):   # if conf exist, read conf info from file
 		clustal_path = os.path.join(working_prefix, 'Tools', 'clustalo')
 		pymol_path = '/usr/local/bin/pymol'
 		raxml_path = os.path.join(working_prefix,  'Tools', 'raxml')
-		#figtree_path = '/Applications/FigTree.app/Contents/MacOS/universalJavaApplicationStub'
+		UCSF_path = '/Applications/Chimera.app/Contents/MacOS/chimera'
+		VisualizeSoftWare = 'pymol'
 
 		file_handle = open(conf_file, 'w')
 		file_handle.write(muscle_path + '\n')
 		file_handle.write(clustal_path + '\n')
 		file_handle.write(pymol_path + '\n')
 		file_handle.write(raxml_path + '\n')
-		#file_handle.write(figtree_path)
+		file_handle.write(UCSF_path + '\n')
+		file_handle.write('pymol')
 		file_handle.close()
 else:                           # if conf does not exist, initial conf info and write to file
 	muscle_path = os.path.join(working_prefix, 'Tools', 'muscle')
 	clustal_path = os.path.join(working_prefix, 'Tools', 'clustalo')
 	pymol_path = '/usr/local/bin/pymol'
 	raxml_path = os.path.join(working_prefix,  'Tools', 'raxml')
-	#figtree_path = '/Applications/FigTree.app/Contents/MacOS/universalJavaApplicationStub'
+	UCSF_path = '/Applications/Chimera.app/Contents/MacOS/chimera'
+	VisualizeSoftWare = 'pymol'
 
 	file_handle = open(conf_file, 'w')
 	file_handle.write(muscle_path + '\n')
 	file_handle.write(clustal_path + '\n')
 	file_handle.write(pymol_path + '\n')
 	file_handle.write(raxml_path + '\n')
-	#file_handle.write(figtree_path)
+	file_handle.write(UCSF_path + '\n')
+	file_handle.write('pymol')
 	file_handle.close()
 
 if os.path.exists(ldb_file):   # if conf exist, read conf info from file
@@ -3395,7 +3401,7 @@ class basePathDialog(QtWidgets.QDialog):
 		self.ui.browseMuscle.clicked.connect(self.browsemuscledir)
 		self.ui.browseClustal.clicked.connect(self.browseclustaldir)
 		self.ui.browsePymol.clicked.connect(self.browsepymoldir)
-		#self.ui.browseFigtree.clicked.connect(self.browsefigtreedir)
+		self.ui.pushButtonUCSF.clicked.connect(self.browseUCSFdir)
 		self.ui.browseRaxml.clicked.connect(self.browseraxmldir)
 		self.ui.browseFragmentDB.clicked.connect(self.browsesqlitedir)
 
@@ -3417,13 +3423,11 @@ class basePathDialog(QtWidgets.QDialog):
 		if out_dir == '':
 			return
 		self.ui.pymolPath.setText(out_dir)
-	'''
-	def browsefigtreedir(self):  # browse and select path
+	def browseUCSFdir(self):  # browse and select path
 		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
 		if out_dir == '':
 			return
-		self.ui.FigtreePath.setText(out_dir)
-	'''
+		self.ui.UCSFpath.setText(out_dir)
 	def browseraxmldir(self):  # browse and select path
 		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
 		if out_dir == '':
@@ -3442,8 +3446,9 @@ class basePathDialog(QtWidgets.QDialog):
 		global pymol_path
 		global muscle_path
 		global clustal_path
-		#global figtree_path
+		global UCSF_path
 		global raxml_path
+		global VisualizeSoftWare
 		global fragmentdb_path
 		global conf_file
 		global ldb_file
@@ -3487,20 +3492,19 @@ class basePathDialog(QtWidgets.QDialog):
 				else:
 					pymol_path = self.ui.pymolPath.text()
 
-		# check if FigTree path exist or not
-		'''
-		if self.ui.FigtreePath.text() != '':
-			if os.path.exists(self.ui.FigtreePath.text()):
-				figtree_path = self.ui.FigtreePath.text()
+		# check if UCSF path exist or not
+		if self.ui.UCSFpath.text() != '':
+			if os.path.exists(self.ui.UCSFpath.text()):
+				UCSF_path = self.ui.UCSFpath.text()
 			else:
-				question = 'The path for FigTree you typed seems not exist, do you still want to continue?'
+				question = 'The path for UCSF Chimera you typed seems not exist, do you still want to continue?'
 				buttons = 'YN'
 				answer = questionMessage(self, question, buttons)
 				if answer == 'No':
 					return
 				else:
-					figtree_path = self.ui.FigtreePath.text()
-		'''
+					UCSF_path = self.ui.UCSFpath.text()
+
 		# check if RAxML path exist or not
 		if self.ui.RaxmlPath.text() != '':
 			if os.path.exists(self.ui.RaxmlPath.text()):
@@ -3562,7 +3566,13 @@ class basePathDialog(QtWidgets.QDialog):
 		file_handle.write(clustal_path + '\n')
 		file_handle.write(pymol_path + '\n')
 		file_handle.write(raxml_path + '\n')
-		#file_handle.write(figtree_path)
+		file_handle.write(UCSF_path + '\n')
+		if self.ui.pushButtonChoosePyMol.isChecked():
+			VisualizeSoftWare = 'pymol'
+			file_handle.write('pymol')
+		else:
+			VisualizeSoftWare = 'ucsf'
+			file_handle.write('ucsf')
 		file_handle.close()
 
 		file_handle = open(ldb_file, 'w')
@@ -12521,7 +12531,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 		else:
 			pdb_path = '3hto'
 
-		self.show3Dstructure(mutation, pdb_path, pymol_path, subtype)
+		if VisualizeSoftWare == 'pymol':
+			self.show3Dstructure(mutation, pdb_path, pymol_path, subtype)
+		else:
+			self.show3DstructureUCSF(mutation, pdb_path, UCSF_path, subtype)
 
 	@pyqtSlot()
 	def on_actionGibsonClone_triggered(self):
@@ -13561,6 +13574,152 @@ class LibratorMain(QtWidgets.QMainWindow):
 		#print(cmd)
 		bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 
+	def show3DstructureUCSF(self, mutation, pdbPath, UCSFPath, subtype):
+		global temp_folder
+		global working_prefix
+
+		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime()) + '.com'
+		pml_path = os.path.join(temp_folder, time_stamp)
+		with open(pml_path , "w") as pml:
+			# write com script for UCSF
+			# fetch PDB on-line
+			#text += "fetch " + pdbPath + ", async=0\n"
+
+			# load local structure. Can use without internet
+			pdbPath = pdbPath + '.cif'
+			pdbPath = os.path.join(working_prefix, 'PDB', pdbPath)
+			text = "open " + pdbPath + "\n"
+			pml.write(text)
+			text = "~display\n" \
+					+ "surface\n" \
+					+ "background solid white\n"
+			pml.write(text)
+
+			# highlight antigentic sites for H3N2 (A,B,C,D,E) and H1N1 (Ca1, Ca2, Cb, Sa, Sb)
+			text = "\n# Antigenic sites\n"
+			pml.write(text)
+			if subtype in Group1:
+				text = "color purple :172-176+209-211.a\n" \
+						+ "color purple :172-176+209-211.c\n" \
+						+ "color purple :172-176+209-211.e\n" \
+						+ "color yellow :142-147+227-229.a\n" \
+						+ "color yellow :142-147+227-229.c\n" \
+						+ "color yellow :142-147+227-229.e\n" \
+						+ "color gray :76-81.a\n" \
+						+ "color gray :76-81.c\n" \
+						+ "color gray :76-81.e\n" \
+						+ "color chocolate :130-131+159-163+165-170.a\n" \
+						+ "color chocolate :130-131+159-163+165-170.c\n" \
+						+ "color chocolate :130-131+159-163+165-170.e\n" \
+						+ "color green :190-200.a\n" \
+						+ "color green :190-200.c\n" \
+						+ "color green :190-200.e\n"
+				pml.write(text)
+			elif subtype in Group2:
+				text = "color purple :122+126-133+137+141-144.a\n" \
+						+ "color purple :122+126-133+137+141-144.c\n" \
+						+ "color purple :122+126-133+137+141-144.e\n" \
+						+ "color yellow :155-160+164+188-198+201.a\n" \
+						+ "color yellow :155-160+164+188-198+201.c\n" \
+						+ "color yellow :155-160+164+188-198+201.e\n" \
+						+ "color gray :52-54+275-276.a\n" \
+						+ "color gray :52-54+275-276.c\n" \
+						+ "color gray :52-54+275-276.e\n" \
+						+ "color chocolate :174+182+207+220+226+229-230+242+244.a\n" \
+						+ "color chocolate :174+182+207+220+226+229-230+242+244.c\n" \
+						+ "color chocolate :174+182+207+220+226+229-230+242+244.e\n" \
+						+ "color green :62-63+78+81+83.a\n" \
+						+ "color green :62-63+78+81+83.c\n" \
+						+ "color green :62-63+78+81+83.e\n"
+				pml.write(text)
+			else:
+				QMessageBox.warning(self, 'Warning', 'We only support HA structure now!', QMessageBox.Ok, QMessageBox.Ok)
+				return
+
+			# highlight mutations in red on the 3D structure
+			if mutation != "none":
+				text = "\n# mutation info\n"
+				pml.write(text)
+
+				position = re.sub('[A-Za-z]', '', mutation)
+				position = position.strip(',')
+				real_pos_arr = position.split(',')
+				# convert original position numbering to H1 or H3 numbering
+				seq_name = self.ui.txtName.toPlainText()
+				WhereState = "SeqName = " + '"' + seq_name + '"'
+				SQLStatement = 'SELECT * FROM LibDB WHERE ' + WhereState
+				DataIn = RunSQL(DBFilename, SQLStatement)
+				HASeq = DataIn[0][1]
+				FromV = int(DataIn[0][5]) - 1
+				if FromV == -1: FromV = 0
+				ToV = int(DataIn[0][6]) - 1
+
+				HASeq = HASeq[FromV:ToV]
+				# translate nt to aa
+				HAAA = Translator(HASeq.upper(), 0)
+				HAAA = HAAA[0]
+				# HA numbering
+				HANumbering(HAAA)
+
+				if subtype  in Group1:
+					numbering = H1Numbering
+				elif subtype  in Group2:
+					numbering = H3Numbering
+				else:
+					QMessageBox.warning(self, 'Warning',
+					                    'We will support NA and FLU B later!', QMessageBox.Ok, QMessageBox.Ok)
+					return
+
+				# for HA1 mutations:
+				position_list = []
+				for x in real_pos_arr:
+					if numbering[int(x)][0] == 'HA1' and numbering[int(x)][2] != '-':
+						#position += str(numbering[int(x)][2]) + '+'
+						position_list.append(int(numbering[int(x)][2]))
+
+				if len(position_list) > 0:
+					position_list_sorted = SortAndMerge(position_list)
+					position = '+'.join(position_list_sorted)
+					text = "color red :" + position + ".a\n" \
+					       + "color red :" + position + ".c\n" \
+					       + "color red :" + position + ".e\n"
+					pml.write(text)
+
+					#labels = mutation.split(",")
+					#for label in labels:
+					#	number = int(re.sub('[A-Za-z]', '', label))
+					#	if numbering[number][0] == 'HA1' and numbering[number][2] != '-':
+					#		position = str(numbering[number][2])
+					#		text = "label chain A+C+E+G+I+K and resi " + position + " and name C, \"" + label + "\"\n"
+					#		pml.write(text)
+
+				# for HA2 mutations:
+				position_list = []
+				for x in real_pos_arr:
+					if numbering[int(x)][0] == 'HA2' and numbering[int(x)][2] != '-':
+						#position += str(numbering[int(x)][2]) + '+'
+						position_list.append(int(numbering[int(x)][2]))
+
+				if len(position_list) > 0:
+					position_list_sorted = SortAndMerge(position_list)
+					position = '+'.join(position_list_sorted)
+					text = "color red :" + position + ".b\n" \
+					       + "color red :" + position + ".d\n" \
+					       + "color red :" + position + ".f\n"
+					pml.write(text)
+
+					#labels = mutation.split(",")
+					#for label in labels:
+					#	number = int(re.sub('[A-Za-z]', '', label))
+					#	if numbering[number][0] == 'HA2' and numbering[number][2] != '-':
+					#		position = str(numbering[number][2])
+					#		text = "label chain B+D+F+H+J+L and resi " + position + " and name C, \"" + label + "\"\n"
+					#		pml.write(text)
+
+		cmd = UCSFPath + " " + pml_path
+		#print(cmd)
+		bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+
 	@pyqtSlot()
 	def on_gibsonBTN_clicked(self):
 		self.open_gibson_dialog()
@@ -13594,7 +13753,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# pdb_path = os.path.join(working_prefix, '..', 'Resources', 'PDB', '3hto.pdb')
 			pdb_path = '3hto'
 
-		self.show3Dstructure(mutation, pdb_path, pymol_path, subtype)
+		if VisualizeSoftWare == 'pymol':
+			self.show3Dstructure(mutation, pdb_path, pymol_path, subtype)
+		else:
+			self.show3DstructureUCSF(mutation, pdb_path, UCSF_path, subtype)
 
 	def generate_mutation_sequence(self, mode, template_name, seq_name, mutation1, mutation2):
 		# load data records from database
@@ -14376,7 +14538,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		global muscle_path
 		global clustal_path
 		global pymol_path
-		#global figtree_path
+		global UCSF_path
 		global raxml_path
 		global fragmentdb_path
 
@@ -14384,9 +14546,15 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessbaseDialog.ui.musclePath.setText(muscle_path)
 		self.modalessbaseDialog.ui.clustaloPath.setText(clustal_path)
 		self.modalessbaseDialog.ui.pymolPath.setText(pymol_path)
-		#self.modalessbaseDialog.ui.FigtreePath.setText(figtree_path)
+		self.modalessbaseDialog.ui.UCSFpath.setText(UCSF_path)
 		self.modalessbaseDialog.ui.RaxmlPath.setText(raxml_path)
 		self.modalessbaseDialog.ui.FragmentDB_path.setText(fragmentdb_path)
+		if VisualizeSoftWare == 'pymol':
+			self.modalessbaseDialog.ui.pushButtonChoosePyMol.setChecked(True)
+			self.modalessbaseDialog.ui.pushButtonChooseUCSF.setChecked(False)
+		else:
+			self.modalessbaseDialog.ui.pushButtonChoosePyMol.setChecked(False)
+			self.modalessbaseDialog.ui.pushButtonChooseUCSF.setChecked(True)
 
 		# check saved MYSQL setting
 		mysql_setting_file = os.path.join(working_prefix,  'Conf', 'mysql_setting.txt')
