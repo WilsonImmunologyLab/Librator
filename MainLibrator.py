@@ -5146,86 +5146,169 @@ class LibratorMain(QtWidgets.QMainWindow):
 		cur_line_num = 0
 		for line in my_ha_numbering:
 			if isinstance(my_ha_numbering[line][2],int):
-				score = int(math.ceil(Entropy[1][cur_line_num]/Max*5))
+				score = math.ceil(Entropy[1][cur_line_num]/Max*5)
 				if my_ha_numbering[line][0] == "HA1":
 					stat_ha1_res[score].append(my_ha_numbering[line][2])
 				else:
 					stat_ha2_res[score].append(my_ha_numbering[line][2])
 			cur_line_num += 1
 
-		# make pml script
-		if self.ui.comboBoxColor.currentIndex() == 0:
-			color_dict = {0: "0x2B378E", 1: "0x467DB4", 2: "0x65B3C1", 3: "0x91CDBB", 4: "0xCEE6B9", 5: "0xFDFAD1"}
-		elif self.ui.comboBoxColor.currentIndex() == 1:
-			color_dict = {5: "0xD53E4F", 4: "0xFC8D59", 3: "0xFEE08B", 2: "0xE6F598", 1: "0x99D594", 0: "0x3288BD"}
-		elif self.ui.comboBoxColor.currentIndex() == 2:
-			color_dict = {5: "0xEDF8E9", 4: "0xC7E9C0", 3: "0xA1D99B", 2: "0x74C476", 1: "0x31A354", 0: "0x006D2C"}
-		elif self.ui.comboBoxColor.currentIndex() == 3:
-			color_dict = {5: "0xFFFFB2", 4: "0xFED976", 3: "0xFEB24C", 2: "0xFD8D3C", 1: "0xF03B20", 0: "0xBD0026"}
-		elif self.ui.comboBoxColor.currentIndex() == 4:
-			color_dict = {5: "0x8C510A", 4: "0xD8B365", 3: "0xF6E8C3", 2: "0xC7EAE5", 1: "0x5AB4AC", 0: "0x01665E"}
-
-		if subtype in Group1:
-			pdbPath = os.path.join(working_prefix, 'PDB', '4jtv.cif')
-		elif subtype in Group2:
-			pdbPath = os.path.join(working_prefix, 'PDB', '4hmg.cif')
-
-		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime()) + '.pml'
-		pml_path = os.path.join(temp_folder, time_stamp)
-		with open(pml_path, "w") as pml:
-			# write pml script
-			text = 'set assembly, 1\n'
-			text += "load " + pdbPath + "\n"
-			pml.write(text)
-			text = "as cartoon\n" \
-			       + "show surface\n" \
-			       + "bg_color white\n" \
-			       + "color " + color_dict[5] + "\n"
-			pml.write(text)
-
-			iter = 0
-			for ele in stat_ha1_res:
-				if len(ele) > 0:
-					if iter < 5:
-						str_ele = [str(i) for i in ele]
-						str_ele_sorted = SortAndMerge(str_ele)
-						text = 'sel HA1-' + str(iter) + ', chain A+C+E+G+I+K and (resi ' + '+'.join(str_ele_sorted) + ')\n'
-						text = text + 'color ' + color_dict[iter] + ', HA1-' + str(iter) + '\n'
-						pml.write(text)
-				iter += 1
-
-			iter = 0
-			for ele in stat_ha2_res:
-				if len(ele) > 0:
-					if iter < 5:
-						str_ele = [str(i) for i in ele]
-						str_ele_sorted = SortAndMerge(str_ele)
-						text = 'sel HA2-' + str(iter) + ', chain B+D+F+H+J+L and (resi ' + '+'.join(str_ele_sorted) + ')\n'
-						text += 'color ' + color_dict[iter] + ', HA2-' + str(iter) + '\n'
-						pml.write(text)
-				iter += 1
+		if VisualizeSoftWare == 'pymol':
+			# make pml script
+			if self.ui.comboBoxColor.currentIndex() == 0:
+				color_dict = {0: "0x2B378E", 1: "0x467DB4", 2: "0x65B3C1", 3: "0x91CDBB", 4: "0xCEE6B9", 5: "0xFDFAD1"}
+			elif self.ui.comboBoxColor.currentIndex() == 1:
+				color_dict = {5: "0xD53E4F", 4: "0xFC8D59", 3: "0xFEE08B", 2: "0xE6F598", 1: "0x99D594", 0: "0x3288BD"}
+			elif self.ui.comboBoxColor.currentIndex() == 2:
+				color_dict = {5: "0xEDF8E9", 4: "0xC7E9C0", 3: "0xA1D99B", 2: "0x74C476", 1: "0x31A354", 0: "0x006D2C"}
+			elif self.ui.comboBoxColor.currentIndex() == 3:
+				color_dict = {5: "0xFFFFB2", 4: "0xFED976", 3: "0xFEB24C", 2: "0xFD8D3C", 1: "0xF03B20", 0: "0xBD0026"}
+			elif self.ui.comboBoxColor.currentIndex() == 4:
+				color_dict = {5: "0x8C510A", 4: "0xD8B365", 3: "0xF6E8C3", 2: "0xC7EAE5", 1: "0x5AB4AC", 0: "0x01665E"}
 
 			if subtype in Group1:
-				text = "sel ABS-Ca1, chain A+C+E+G+I+K and (resi 172+173+174+175+176+209+210+211)\n" \
-				       + "sel ABS-Ca2, chain A+C+E+G+I+K and (resi 142+143+144+145+146+147+227+228+229)\n" \
-				       + "sel ABS-Cb, chain A+C+E+G+I+K and (resi 76+77+78+79+80+81)\n" \
-				       + "sel ABS-Sa, chain A+C+E+G+I+K and (resi 130+131+159+160+161+162+163+165+166+167+168+169+170)\n" \
-				       + "sel ABS-Sb, chain A+C+E+G+I+K and (resi 190+191+192+193+194+195+196+197+198+199+200)\n"
-				pml.write(text)
+				pdbPath = os.path.join(working_prefix, 'PDB', '4jtv.cif')
 			elif subtype in Group2:
-				text = "sel ABS-A, chain A+C+E+G+I+K and (resi 122+126+127+128+129+130+131+132+133+137+141+142+143+144)\n" \
-				       + "sel ABS-B, chain A+C+E+G+I+K and (resi 155+156+157+158+159+160+164+186+188+189+190+191+192+193+194+195+196+197+198+201)\n" \
-				       + "sel ABS-C, chain A+C+E+G+I+K and (resi 52+53+54+275+276)\n" \
-				       + "sel ABS-D, chain A+C+E+G+I+K and (resi 174+182+207+220+226+229+230+242+244)\n" \
-				       + "sel ABS-E, chain A+C+E+G+I+K and (resi 62+63+78+81+83)\n"
+				pdbPath = os.path.join(working_prefix, 'PDB', '4hmg.cif')
+
+			time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime()) + '.pml'
+			pml_path = os.path.join(temp_folder, time_stamp)
+			with open(pml_path, "w") as pml:
+				# write pml script
+				text = 'set assembly, 1\n'
+				text += "load " + pdbPath + "\n"
+				pml.write(text)
+				text = "as cartoon\n" \
+				       + "show surface\n" \
+				       + "bg_color white\n" \
+				       + "color " + color_dict[0] + "\n"
 				pml.write(text)
 
-		# open pml script with PyMOL
-		cmd = pymol_path + " " + pml_path
-		# print(cmd)
-		bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
-		             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+				iter = 0
+				for ele in stat_ha1_res:
+					if len(ele) > 0:
+						if iter < 6 and iter > 0:
+							str_ele = [str(i) for i in ele]
+							str_ele_sorted = SortAndMerge(str_ele)
+							text = 'sel HA1-' + str(iter) + ', chain A+C+E+G+I+K and (resi ' + '+'.join(str_ele_sorted) + ')\n'
+							text = text + 'color ' + color_dict[iter] + ', HA1-' + str(iter) + '\n'
+							pml.write(text)
+					iter += 1
 
+				iter = 0
+				for ele in stat_ha2_res:
+					if len(ele) > 0:
+						if iter < 6 and iter > 0:
+							str_ele = [str(i) for i in ele]
+							str_ele_sorted = SortAndMerge(str_ele)
+							text = 'sel HA2-' + str(iter) + ', chain B+D+F+H+J+L and (resi ' + '+'.join(str_ele_sorted) + ')\n'
+							text += 'color ' + color_dict[iter] + ', HA2-' + str(iter) + '\n'
+							pml.write(text)
+					iter += 1
+
+				if subtype in Group1:
+					text = "sel ABS-Ca1, chain A+C+E+G+I+K and (resi 172+173+174+175+176+209+210+211)\n" \
+					       + "sel ABS-Ca2, chain A+C+E+G+I+K and (resi 142+143+144+145+146+147+227+228+229)\n" \
+					       + "sel ABS-Cb, chain A+C+E+G+I+K and (resi 76+77+78+79+80+81)\n" \
+					       + "sel ABS-Sa, chain A+C+E+G+I+K and (resi 130+131+159+160+161+162+163+165+166+167+168+169+170)\n" \
+					       + "sel ABS-Sb, chain A+C+E+G+I+K and (resi 190+191+192+193+194+195+196+197+198+199+200)\n"
+					pml.write(text)
+				elif subtype in Group2:
+					text = "sel ABS-A, chain A+C+E+G+I+K and (resi 122+126+127+128+129+130+131+132+133+137+141+142+143+144)\n" \
+					       + "sel ABS-B, chain A+C+E+G+I+K and (resi 155+156+157+158+159+160+164+186+188+189+190+191+192+193+194+195+196+197+198+201)\n" \
+					       + "sel ABS-C, chain A+C+E+G+I+K and (resi 52+53+54+275+276)\n" \
+					       + "sel ABS-D, chain A+C+E+G+I+K and (resi 174+182+207+220+226+229+230+242+244)\n" \
+					       + "sel ABS-E, chain A+C+E+G+I+K and (resi 62+63+78+81+83)\n"
+					pml.write(text)
+
+			# open pml script with PyMOL
+			cmd = pymol_path + " " + pml_path
+			# print(cmd)
+			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+			             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+		else:
+			# make com script for UCSF
+			if self.ui.comboBoxColor.currentIndex() == 0:
+				color_dict = {0: "#2B378E", 1: "#467DB4", 2: "#65B3C1", 3: "#91CDBB", 4: "#CEE6B9", 5: "#FDFAD1"}
+			elif self.ui.comboBoxColor.currentIndex() == 1:
+				color_dict = {5: "#D53E4F", 4: "#FC8D59", 3: "#FEE08B", 2: "#E6F598", 1: "#99D594", 0: "#3288BD"}
+			elif self.ui.comboBoxColor.currentIndex() == 2:
+				color_dict = {5: "#EDF8E9", 4: "#C7E9C0", 3: "#A1D99B", 2: "#74C476", 1: "#31A354", 0: "#006D2C"}
+			elif self.ui.comboBoxColor.currentIndex() == 3:
+				color_dict = {5: "#FFFFB2", 4: "#FED976", 3: "#FEB24C", 2: "#FD8D3C", 1: "#F03B20", 0: "#BD0026"}
+			elif self.ui.comboBoxColor.currentIndex() == 4:
+				color_dict = {5: "#8C510A", 4: "#D8B365", 3: "#F6E8C3", 2: "#C7EAE5", 1: "#5AB4AC", 0: "#01665E"}
+
+			if subtype in Group1:
+				pdbPath = os.path.join(working_prefix, 'PDB', '4jtv.cif')
+			elif subtype in Group2:
+				pdbPath = os.path.join(working_prefix, 'PDB', '4hmg.cif')
+
+			time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime()) + '.com'
+			pml_path = os.path.join(temp_folder, time_stamp)
+			with open(pml_path, "w") as pml:
+				# write com script for UCSF
+				# fetch PDB on-line
+				# text += "fetch " + pdbPath + ", async=0\n"
+
+				# load local structure. Can use without internet
+				pdbPath = os.path.join(working_prefix, 'PDB', pdbPath)
+				text = "open " + pdbPath + "\n"
+				pml.write(text)
+				text = "~display\n" \
+				       + "surface\n" \
+				       + "background solid white\n" \
+				       + "color " + color_dict[0] + " :\n"
+				pml.write(text)
+
+				iter = 0
+				for ele in stat_ha1_res:
+					if len(ele) > 0:
+						if iter < 6 and iter > 0:
+							str_ele = [str(i) for i in ele]
+							str_ele_sorted = SortAndMerge(str_ele)
+							text= "alias HA1-" + str(iter) + " :" \
+							      + '.A,'.join(str_ele_sorted) + '.A,'\
+							      + '.C,'.join(str_ele_sorted) + '.C,' \
+							      + '.E,'.join(str_ele_sorted) + '.E\n'
+							text += "color " + color_dict[iter] + " HA1-" + str(iter) + '\n'
+							pml.write(text)
+					iter += 1
+
+				iter = 0
+				for ele in stat_ha2_res:
+					if len(ele) > 0:
+						if iter < 6 and iter > 0:
+							str_ele = [str(i) for i in ele]
+							str_ele_sorted = SortAndMerge(str_ele)
+							text = "alias HA2-" + str(iter) + " :" \
+							       + '.B,'.join(str_ele_sorted) + '.B,'\
+							       + '.D,'.join(str_ele_sorted) + '.D,'\
+							       + '.F,'.join(str_ele_sorted) + '.F\n'
+							text += "color " + color_dict[iter] + " HA2-" + str(iter) + '\n'
+							pml.write(text)
+					iter += 1
+
+				if subtype in Group1:
+					text = "alias ABS-Ca1 :172-176.A,209-211.A,172-176.C,209-211.C,172-176.E,209-211.E\n" \
+					       + "alias ABS-Ca2 :142-147.A,227-229.A,142-147.C,227-229.C,142-147.E,227-229.E\n" \
+					       + "alias ABS-Cb :76-81.A,76-81.C,76-81.E\n" \
+					       + "alias ABS-Sa :130-131.A,159-163.A,165-170.A,130-131.C,159-163.C,165-170.C,130-131.E,159-163.E,165-170.E\n" \
+					       + "alias ABS-Sb :190-200.A,190-200.C,190-200.E\n"
+					pml.write(text)
+				elif subtype in Group2:
+					text = "alias ABS-A :122.A,126-133.A,137.A,141-144.A,122.C,126-133.C,137.C,141-144.C,122.E,126-133.E,137.E,141-144.E\n" \
+					       + "alias ABS-B :155-160.A,164.A,188-198.A,201.A,155-160.C,164.C,188-198.C,201.C,155-160.E,164.E,188-198.E,201.E\n" \
+					       + "alias ABS-C :52-54.A,275-276.A,52-54.C,275-276.C,52-54.E,275-276.E\n" \
+					       + "alias ABS-D :174.A,182.A,207.A,220.A,226.A,229-230.A,242.A,244.A,174.C,182.C,207.C,220.C,226.C,229-230.C,242.C,244.C,174.E,182.E,207.E,220.E,226.E,229-230.E,242.E,244.E\n" \
+					       + "alias ABS-E :62-63.A,78.A,81.A,83.A,62-63.C,78.C,81.C,83.C,62-63.E,78.E,81.E,83.E\n"
+					pml.write(text)
+
+			# open pml script with PyMOL
+			cmd = UCSF_path + " " + pml_path
+			# print(cmd)
+			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+			             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 	def calEntropy(self, file):
 		# this function generate entropy score, 0 indicate conserve, 4.32 indicate highest variable
 		Peptide_position = []
