@@ -5224,8 +5224,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# open pml script with PyMOL
 			cmd = pymol_path + " " + pml_path
 			# print(cmd)
-			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
-			             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+			if os.path.isfile(pymol_path):
+				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+				             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+			else:
+				Msg = 'Please check your path setting for PyMOL!'
+				QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 		else:
 			# make com script for UCSF
 			if self.ui.comboBoxColor.currentIndex() == 0:
@@ -5307,8 +5311,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# open pml script with PyMOL
 			cmd = UCSF_path + " " + pml_path
 			# print(cmd)
-			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
-			             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+			if os.path.isfile(UCSF_path):
+				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+				             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+			else:
+				Msg = 'Please check your path setting for PyMOL!'
+				QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+
 	def calEntropy(self, file):
 		# this function generate entropy score, 0 indicate conserve, 4.32 indicate highest variable
 		Peptide_position = []
@@ -13655,7 +13664,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		cmd = pymolPath + " " + pml_path
 		#print(cmd)
-		bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+		if os.path.isfile(pymolPath):
+			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+		else:
+			Msg = 'Please check your path setting for PyMOL!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+
 
 	def show3DstructureUCSF(self, mutation, pdbPath, UCSFPath, subtype):
 		global temp_folder
@@ -13793,7 +13807,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		cmd = UCSFPath + " " + pml_path
 		#print(cmd)
-		bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+		if os.path.isfile(UCSFPath):
+			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+		else:
+			Msg = 'Please check your path setting for UCSF Chimera!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 
 	@pyqtSlot()
 	def on_gibsonBTN_clicked(self):
