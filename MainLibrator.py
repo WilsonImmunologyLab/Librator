@@ -4930,6 +4930,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.mycomboBoxTemplate.setMinimumSize(200,20)
 		self.ui.gridLayout_16.addWidget(self.mycomboBoxTemplate)
 		self.mycomboBoxTemplate.loadItems(TemplateList)
+
+		self.SelfClean()
 		#self.loadPDB()
 
 	def updateUI(self, str):
@@ -5954,6 +5956,15 @@ class LibratorMain(QtWidgets.QMainWindow):
 				QMessageBox.warning(self, 'Warning', 'Fail to clear TEMP folder!', QMessageBox.Ok,
 				                    QMessageBox.Ok)
 				return
+
+	def SelfClean(self):
+		global temp_folder
+		# how many files in TEMP, if > 200, clean
+		temp_files = os.listdir(temp_folder)
+		if len(temp_files) > 200:
+			cmd = 'cd ' + temp_folder + '; rm -rf ' + temp_folder + '/*'
+			os.system(cmd)
+			print('clean')
 
 	@pyqtSlot()
 	def on_actionExport_triggered(self):
