@@ -154,11 +154,6 @@
           <line>197</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/MainLibrator.py</url>
-          <line>4933</line>
-          <option name="timeStamp" value="36" />
-        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">

@@ -4814,6 +4814,39 @@ class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 
 			CurPos += 1
 
+class InfoTextMain(QtWidgets.QMainWindow, ui_TextEditor):
+	vGeneSignal = pyqtSignal(str, str)
+	def __init__(self, parent=None):
+		QtWidgets.QMainWindow.__init__(self, parent)
+		super(InfoTextMain, self).__init__()
+		self.setupUi()
+
+		self.dnaAct.setVisible(False)
+		self.aaAct.setVisible(False)
+		self.baAct.setVisible(False)
+
+	def print_(self):
+		# adjust font size to fit print paper
+		# FontIs = self.textEdit.currentFont()
+		# font = QFont(FontIs)
+		# FontSize = int(font.pointSize())
+		# FontFam = font.family()
+		# FontSize = 7
+		# font.setPointSize(FontSize)
+		# font.setFamily(FontFam)
+		# self.textEdit.setFont(font)
+
+		document = self.textEdit.document()
+		printer = QPrinter()
+
+		dlg = QPrintDialog(printer, self)
+		if dlg.exec_() != QDialog.Accepted:
+			return
+
+		document.print_(printer)
+
+		self.statusBar().showMessage("Ready", 2000)
+
 class htmlDialog(QtWidgets.QDialog):
 	def __init__(self):
 		super(htmlDialog, self).__init__()
@@ -4869,6 +4902,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.modalessMutationDialog = None
 		self.modalessSeqEditDialog = None
 		self.TextEdit = VGenesTextMain()
+		self.InfoTextEdit = InfoTextMain()
 		self.modalessJointDialog = None
 
 		self.fig = 0
@@ -5229,6 +5263,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			if os.path.isfile(pymol_path):
 				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
 				             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+				self.ShowVGenesText(pml_path)
 			else:
 				Msg = 'Please check your path setting for PyMOL!'
 				QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
@@ -5316,6 +5351,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			if os.path.isfile(UCSF_path):
 				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
 				             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+				self.ShowVGenesText(pml_path)
 			else:
 				Msg = 'Please check your path setting for PyMOL!'
 				QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
@@ -12502,6 +12538,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# ID = item[0]
 		UpdateField(ID, ItemValue, FieldName, DBFilename)
 
+	def ShowVGenesText(self, filename):
+		self.InfoTextEdit.show()
+		res = self.InfoTextEdit.size()
+		size_w = self.InfoTextEdit.size().width()
+		size_h = self.InfoTextEdit.size().height()
+		if size_w == 640 and size_h == 480:
+			self.InfoTextEdit.resize(800, 800)
+		if filename != '':
+			self.InfoTextEdit.loadFile(filename)
+
 	@pyqtSlot()
 	def ShowVGenesTextEdit(self, textToShow, style, ColorMap, window_id):
 		global VGenesTextWindows
@@ -13677,6 +13723,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		#print(cmd)
 		if os.path.isfile(pymolPath):
 			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+			self.ShowVGenesText(pml_path)
 		else:
 			Msg = 'Please check your path setting for PyMOL!'
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
@@ -13820,6 +13867,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		#print(cmd)
 		if os.path.isfile(UCSFPath):
 			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+			self.ShowVGenesText(pml_path)
 		else:
 			Msg = 'Please check your path setting for UCSF Chimera!'
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
