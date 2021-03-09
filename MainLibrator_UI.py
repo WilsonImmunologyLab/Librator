@@ -1352,6 +1352,8 @@ class Ui_MainLibrator(object):
         self.actionAntigen_Probe.setObjectName("actionAntigen_Probe")
         self.actionCodon_Optimize = QtWidgets.QAction(MainLibrator)
         self.actionCodon_Optimize.setObjectName("actionCodon_Optimize")
+        self.actionUser_defined_epitopes = QtWidgets.QAction(MainLibrator)
+        self.actionUser_defined_epitopes.setObjectName("actionUser_defined_epitopes")
         self.menuFile.addAction(self.action_New)
         self.menuFile.addAction(self.action_Open)
         self.menuFile.addSeparator()
@@ -1374,6 +1376,7 @@ class Ui_MainLibrator(object):
         self.menuView.addAction(self.actionIncrease_font_size)
         self.menuView.addAction(self.actionDecrease_font_size)
         self.menuSetting.addAction(self.actionPreferences)
+        self.menuSetting.addAction(self.actionUser_defined_epitopes)
         self.menuEdit_Sequence.addAction(self.actionMutation)
         self.menuEdit_Sequence.addSeparator()
         self.menuEdit_Sequence.addAction(self.actionEditing)
@@ -1748,4 +1751,5 @@ class Ui_MainLibrator(object):
         self.actionAntigen_probe.setText(_translate("MainLibrator", "Antigen probe"))
         self.actionAntigen_Probe.setText(_translate("MainLibrator", "Antigen Probe"))
         self.actionCodon_Optimize.setText(_translate("MainLibrator", "Codon Optimize"))
+        self.actionUser_defined_epitopes.setText(_translate("MainLibrator", "User defined epitopes"))
 import VgenesResources_rc

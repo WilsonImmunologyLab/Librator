@@ -238,7 +238,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sequence&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <property name="usesScrollButtons">
        <bool>false</bool>
@@ -2814,6 +2814,7 @@
      <string>Settings</string>
     </property>
     <addaction name="actionPreferences"/>
+    <addaction name="actionUser_defined_epitopes"/>
    </widget>
    <widget class="QMenu" name="menuEdit_Sequence">
     <property name="title">
@@ -3614,6 +3615,11 @@
   <action name="actionCodon_Optimize">
    <property name="text">
     <string>Codon Optimize</string>
+   </property>
+  </action>
+  <action name="actionUser_defined_epitopes">
+   <property name="text">
+    <string>User defined epitopes</string>
    </property>
   </action>
  </widget>

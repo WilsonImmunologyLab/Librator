@@ -58,6 +58,7 @@ from idmutationdialog import Ui_IdMutationDialog
 from findkeydialog import Ui_FindkeyDialog
 from fastaorseqdialog import Ui_FastaOrSeqDialog
 from codon_optimize_dialog import Ui_CodonDialog
+from userdefinedialog import Ui_UserDefineDialog
 
 from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText
 from VgenesTextEdit import VGenesTextMain
@@ -187,6 +188,65 @@ else:
 	file_handle.write(joint_up + '\n')
 	file_handle.write(joint_down)
 	file_handle.close()
+
+
+class UserDefineDialog(QtWidgets.QDialog):
+	def __init__(self):
+		super(UserDefineDialog, self).__init__()
+		self.ui = Ui_UserDefineDialog()
+		self.ui.setupUi(self)
+
+		self.ui.pushButtonSave.clicked.connect(self.accept)
+		self.ui.pushButtonCancel.clicked.connect(self.reject)
+
+	def load(self):
+		UserDefineFile = os.path.join(working_prefix, 'Conf', 'Userdefine.txt')
+		if os.path.exists(UserDefineFile):
+			file_handle = open(UserDefineFile, 'r')
+			configure = file_handle.read()
+			configure = configure.split('\n')
+			self.ui.lineEditH1.setText(configure[0])
+			self.ui.lineEditH3.setText(configure[1])
+
+	def accept(self):
+		global UserDefineH3, UserDefineH1
+
+		try:
+			UserDefineH1_candidate = []
+			UserDefineH3_candidate = []
+
+			if self.ui.lineEditH1.text() != '':
+				tmp_H1 = self.ui.lineEditH1.text().split(',')
+				UserDefineH1_tmp = list(map(int, tmp_H1))
+				for i in UserDefineH1_tmp:
+					if i in LateralPatchH1:
+						pass
+					else:
+						UserDefineH1_candidate.append(i)
+
+			if self.ui.lineEditH3.text() != '':
+				tmp_H3 = self.ui.lineEditH3.text().split(',')
+				UserDefineH3_tmp = list(map(int, tmp_H3))
+				for i in UserDefineH3_tmp:
+					if i in LateralPatchH3:
+						pass
+					else:
+						UserDefineH3_candidate.append(i)
+
+			UserDefineH1 = UserDefineH1_candidate
+			UserDefineH3 = UserDefineH3_candidate
+
+			UserDefineFile = os.path.join(working_prefix, 'Conf', 'Userdefine.txt')
+			file_handle = open(UserDefineFile, 'w')
+			file_handle.write(self.ui.lineEditH1.text() + '\n')
+			file_handle.write(self.ui.lineEditH3.text() + '\n')
+			file_handle.close()
+
+			self.close()
+		except:
+			Msg = 'Something wrong with your input! You edits have not been saved!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+
 
 # this combo check box class is adopted from https://learnku.com/articles/42618
 # author is Bgods
@@ -4973,6 +5033,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.rebuildTree()
 		self.highlightlist()
 
+	def on_actionUser_defined_epitopes_triggered(self):
+		self.myUserDefineDialog = UserDefineDialog()
+		self.myUserDefineDialog.load()
+		self.myUserDefineDialog.show()
+
 	def on_actionCodon_Optimize_triggered(self):
 		global MoveNotChange
 
@@ -5253,7 +5318,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 					       + "sel RBS-150loop, chain A+C+E+G+I+K and (resi 158-166)\n" \
 					       + "sel RBS-190helix, chain A+C+E+G+I+K and (resi 191-198)\n" \
 					       + "sel RBS-220loop, chain A+C+E+G+I+K and (resi 224-231)\n"
-							pml.write(text)
+					pml.write(text)
 				elif subtype in Group2:
 					text = "sel ABS-A, chain A+C+E+G+I+K and (resi 122+126+127+128+129+130+131+132+133+137+141+142+143+144)\n" \
 					       + "sel ABS-B, chain A+C+E+G+I+K and (resi 155+156+157+158+159+160+164+186+188+189+190+191+192+193+194+195+196+197+198+201)\n" \
@@ -17116,6 +17181,8 @@ def SequencesHTML(AAseq, info):
 						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH1:
 						style_code += ' RBS'
+					if cur_data[2] in UserDefineH1:
+						style_code += ' UserDefine'
 					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
@@ -17129,6 +17196,8 @@ def SequencesHTML(AAseq, info):
 						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH1:
 						style_code += ' RBS'
+					if cur_data[2] in UserDefineH1:
+						style_code += ' UserDefine'
 					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
@@ -17148,6 +17217,8 @@ def SequencesHTML(AAseq, info):
 						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH3:
 						style_code += ' RBS'
+					if cur_data[2] in UserDefineH3:
+						style_code += ' UserDefine'
 					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
@@ -17161,6 +17232,8 @@ def SequencesHTML(AAseq, info):
 						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH3:
 						style_code += ' RBS'
+					if cur_data[2] in UserDefineH3:
+						style_code += ' UserDefine'
 					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
@@ -17415,6 +17488,8 @@ def AlignSequencesHTML(DataSet, template):
 						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH1:
 						style_code +=  ' RBS'
+					if cur_data[2] in UserDefineH1:
+						style_code += ' UserDefine'
 					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
@@ -17428,6 +17503,8 @@ def AlignSequencesHTML(DataSet, template):
 						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH1:
 						style_code += ' RBS'
+					if cur_data[2] in UserDefineH1:
+						style_code += ' UserDefine'
 					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
@@ -17447,6 +17524,8 @@ def AlignSequencesHTML(DataSet, template):
 						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH3:
 						style_code += ' RBS'
+					if cur_data[2] in UserDefineH3:
+						style_code += ' UserDefine'
 					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
@@ -17460,6 +17539,8 @@ def AlignSequencesHTML(DataSet, template):
 						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH3:
 						style_code += ' RBS'
+					if cur_data[2] in UserDefineH3:
+						style_code += ' UserDefine'
 					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
@@ -17837,6 +17918,8 @@ def EditSequencesHTML(DataSet, donor_region, template):
 						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH1:
 						style_code += ' RBS'
+					if cur_data[2] in UserDefineH1:
+						style_code += ' UserDefine'
 					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
@@ -17850,6 +17933,8 @@ def EditSequencesHTML(DataSet, donor_region, template):
 						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH1:
 						style_code += ' RBS'
+					if cur_data[2] in UserDefineH1:
+						style_code += ' UserDefine'
 					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
@@ -17868,6 +17953,8 @@ def EditSequencesHTML(DataSet, donor_region, template):
 						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH3:
 						style_code += ' RBS'
+					if cur_data[2] in UserDefineH3:
+						style_code += ' UserDefine'
 					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
@@ -17881,6 +17968,8 @@ def EditSequencesHTML(DataSet, donor_region, template):
 						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH3:
 						style_code += ' RBS'
+					if cur_data[2] in UserDefineH3:
+						style_code += ' UserDefine'
 					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
@@ -18368,6 +18457,34 @@ CodonList={
 
 LateralPatchH3 = [119,129,165,166,169,171,173]
 LateralPatchH1 = [121,131,168,169,172,174,176]
+
+global UserDefineH3, UserDefineH1
+UserDefineH3 = []
+UserDefineH1 = []
+UserDefineFile = os.path.join(working_prefix, 'Conf', 'Userdefine.txt')
+try:
+	if os.path.exists(UserDefineFile):
+		file_handle = open(UserDefineFile, 'r')
+		configure = file_handle.read()
+		configure = configure.split('\n')
+		tmp_H1 = configure[0].split(',')
+		UserDefineH1_tmp = list(map(int, tmp_H1))
+		tmp_H3 = configure[1].split(',')
+		UserDefineH3_tmp = list(map(int, tmp_H3))
+		
+		for i in UserDefineH1_tmp:
+			if i in LateralPatchH1:
+				pass
+			else:
+				UserDefineH1.append(i)
+
+		for i in UserDefineH3_tmp:
+			if i in LateralPatchH3:
+				pass
+			else:
+				UserDefineH3.append(i)
+except:
+	pass
 
 RBSH3 = list(range(134,139)) + list(range(155,164)) + list(range(188,196)) + list(range(221,229))
 RBSH1 = list(range(136,142)) + list(range(158,167)) + list(range(191,199)) + list(range(224,232))

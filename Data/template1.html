@@ -370,6 +370,111 @@ svg line {
       );
 }
 
+.A.UserDefine{
+	background: linear-gradient(
+		45deg, 
+        green 0, green 25%, #f0fbeb 25%, #f0fbeb 40%, 
+        green 40%, green 65%, #f0fbeb 65%, #f0fbeb 80%, green 80%, green
+      );
+}
+
+.B.UserDefine{
+	background: linear-gradient(
+		45deg, 
+        fuchsia 0, fuchsia 25%, #f0fbeb 25%, #f0fbeb 40%, 
+        fuchsia 40%, fuchsia 65%, #f0fbeb 65%, #f0fbeb 80%, fuchsia 80%, fuchsia
+      );
+}
+
+.C.UserDefine{
+	background: linear-gradient(
+		45deg, 
+        silver 0, silver 25%, #f0fbeb 25%, #f0fbeb 40%, 
+        silver 40%, silver 65%, #f0fbeb 65%, #f0fbeb 80%, silver 80%, silver
+      );
+}
+
+.D.UserDefine{
+	background: linear-gradient(
+		45deg, 
+        maroon 0, maroon 25%, #f0fbeb 25%, #f0fbeb 40%, 
+        maroon 40%, maroon 65%, #f0fbeb 65%, #f0fbeb 80%, maroon 80%, maroon
+      );
+}
+
+.E.UserDefine{
+	background: linear-gradient(
+		45deg, 
+        blue 0, blue 25%, #f0fbeb 25%, #f0fbeb 40%, 
+        blue 40%, blue 65%, #f0fbeb 65%, #f0fbeb 80%, blue 80%, blue
+      );
+}
+
+.Ca1.UserDefine{
+	background: linear-gradient(
+		45deg, 
+        fuchsia 0, fuchsia 25%, #f0fbeb 25%, #f0fbeb 40%, 
+        fuchsia 40%, fuchsia 65%, #f0fbeb 65%, #f0fbeb 80%, fuchsia 80%, fuchsia
+      );
+}
+
+.Ca2.UserDefine{
+	background: linear-gradient(
+		45deg, 
+        yellow 0, yellow 25%, #f0fbeb 25%, #f0fbeb 40%, 
+        yellow 40%, yellow 65%, #f0fbeb 65%, #f0fbeb 80%, yellow 80%, yellow
+      );
+}
+
+.Cb.UserDefine{
+	background: linear-gradient(
+		45deg, 
+        silver 0, silver 25%, #f0fbeb 25%, #f0fbeb 40%, 
+        silver 40%, silver 65%, #f0fbeb 65%, #f0fbeb 80%, silver 80%, silver
+      );
+}
+
+
+.Sa.UserDefine{
+	background: linear-gradient(
+		45deg, 
+        maroon 0, maroon 25%, #f0fbeb 25%, #f0fbeb 40%, 
+        maroon 40%, maroon 65%, #f0fbeb 65%, #f0fbeb 80%, maroon 80%, maroon
+      );
+}
+
+.Sb.UserDefine{
+	background: linear-gradient(
+		45deg, 
+       	green 0, green 25%, #f0fbeb 25%, #f0fbeb 40%, 
+        green 40%, green 65%, #f0fbeb 65%, #f0fbeb 80%, green 80%, green
+      );
+}
+
+.Stalk-MN.UserDefine{
+	background: linear-gradient(
+		45deg, 
+       	navy 0, navy 25%, #f0fbeb 25%, #f0fbeb 40%, 
+        navy 40%, navy 65%, #f0fbeb 65%, #f0fbeb 80%, navy 80%, navy
+      );
+}
+
+.UserDefine{
+	background: linear-gradient(
+		45deg,
+       	gray 0, gray 25%, #f0fbeb 25%, #f0fbeb 40%, 
+        gray 40%, gray 65%, #f0fbeb 65%, #f0fbeb 80%, gray 80%, gray
+      );
+}
+
+.unit_long.UserDefine{
+	background: linear-gradient(
+		45deg,
+       	gray 0, gray 25%, #eff7ff 25%, #eff7ff 40%, 
+        gray 40%, gray 65%, #eff7ff 65%, #eff7ff 80%, gray 80%, gray
+      );
+}
+
 .RBS{
 	border-top: solid black 2px;
 	border-bottom: solid black 2px;
@@ -591,27 +696,29 @@ function selectionChange(input) {
 	  <input id = 'h1' type="checkbox"  checked="checked">
 	  <span class="checkmark"></span>
 	</label>
-	<span class="unit_long Ca1">Ca1</span>
-	<span class="unit_long Ca2">Ca2</span>
-	<span class="unit_long Cb">Cb</span>
-	<span class="unit_long Sa">Sa</span>
-	<span class="unit_long Sb">Sb</span>
+	<span class="unit_long Ca1" style="width: 40px">Ca1</span>
+	<span class="unit_long Ca2" style="width: 40px">Ca2</span>
+	<span class="unit_long Cb" style="width: 40px">Cb</span>
+	<span class="unit_long Sa" style="width: 40px">Sa</span>
+	<span class="unit_long Sb" style="width: 40px">Sb</span>
 	<span class="unit_long Stalk-MN">Stalk-MN</span>
+	<span class="unit_long RBS" style="width: 40px">RBS</span>
 	<span class="unit_long LateralPatch" style="width: 100px">Lateral Patch</span>
-	<span class="unit_long RBS">RBS</span>
+	<span class="unit_long UserDefine" style="width: 100px">User Define</span>
 	<br>
 	<label class="container">H3 numbering
 	  <input id = 'h3' type="checkbox"  checked="checked">
 	  <span class="checkmark"></span>
 	</label>
-	<span class="unit_long A">A</span>
-	<span class="unit_long B">B</span>
-	<span class="unit_long C">C</span>
-	<span class="unit_long D">D</span>
-	<span class="unit_long E">E</span>
+	<span class="unit_long A" style="width: 40px">A</span>
+	<span class="unit_long B" style="width: 40px">B</span>
+	<span class="unit_long C" style="width: 40px">C</span>
+	<span class="unit_long D" style="width: 40px">D</span>
+	<span class="unit_long E" style="width: 40px">E</span>
 	<span class="unit_long Stalk-MN">Stalk-MN</span>
+	<span class="unit_long RBS" style="width: 40px">RBS</span>
 	<span class="unit_long LateralPatch" style="width: 100px">Lateral Patch</span>
-	<span class="unit_long RBS">RBS</span>
+	<span class="unit_long UserDefine" style="width: 100px">User Define</span>
 </div>
 
 <div class="box">
