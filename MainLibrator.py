@@ -17071,12 +17071,12 @@ def SequencesHTML(AAseq, info):
 				unit = (cur_data[2], cur_data[2], cur_data[4])
 			else:
 				if cur_data[0] == 'HA1':
+					style_code = cur_data[4]
 					if cur_data[2] in LateralPatchH1:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' LateralPatch')
+						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH1:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' RBS')
-					else:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
+						style_code += ' RBS'
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
 		else:
@@ -17084,12 +17084,12 @@ def SequencesHTML(AAseq, info):
 				unit = (cur_data[2], cur_data[2], '')
 			else:
 				if cur_data[0] == 'HA1':
+					style_code = cur_data[4]
 					if cur_data[2] in LateralPatchH1:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'LateralPatch')
+						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH1:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'RBS')
-					else:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+						style_code += ' RBS'
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
 		pos_h1_data.append(unit)
@@ -17103,12 +17103,12 @@ def SequencesHTML(AAseq, info):
 				unit = (cur_data[2], cur_data[2], cur_data[4])
 			else:
 				if cur_data[0] == 'HA1':
+					style_code = cur_data[4]
 					if cur_data[2] in LateralPatchH3:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' LateralPatch')
+						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH3:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' RBS')
-					else:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
+						style_code += ' RBS'
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
 		else:
@@ -17116,12 +17116,12 @@ def SequencesHTML(AAseq, info):
 				unit = (cur_data[2], cur_data[2], '')
 			else:
 				if cur_data[0] == 'HA1':
+					style_code = cur_data[4]
 					if cur_data[2] in LateralPatchH3:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'LateralPatch')
+						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH3:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'RBS')
-					else:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+						style_code += ' RBS'
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
 		pos_h3_data.append(unit)
@@ -17370,12 +17370,12 @@ def AlignSequencesHTML(DataSet, template):
 				unit = (cur_data[2], cur_data[2], cur_data[4])
 			else:
 				if cur_data[0] == 'HA1':
+					style_code = cur_data[4]
 					if cur_data[2] in LateralPatchH1:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' LateralPatch')
+						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH1:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' RBS')
-					else:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
+						style_code +=  ' RBS'
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
 		else:
@@ -17383,12 +17383,12 @@ def AlignSequencesHTML(DataSet, template):
 				unit = (cur_data[2], cur_data[2], '')
 			else:
 				if cur_data[0] == 'HA1':
+					style_code = cur_data[4]
 					if cur_data[2] in LateralPatchH1:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'LateralPatch')
+						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH1:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'RBS')
-					else:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+						style_code += ' RBS'
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
 		pos_h1_data.append(unit)
@@ -17402,12 +17402,12 @@ def AlignSequencesHTML(DataSet, template):
 				unit = (cur_data[2], cur_data[2], cur_data[4])
 			else:
 				if cur_data[0] == 'HA1':
+					style_code = cur_data[4]
 					if cur_data[2] in LateralPatchH3:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' LateralPatch')
+						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH3:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4] + ' RBS')
-					else:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
+						style_code += ' RBS'
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
 		else:
@@ -17415,12 +17415,12 @@ def AlignSequencesHTML(DataSet, template):
 				unit = (cur_data[2], cur_data[2], '')
 			else:
 				if cur_data[0] == 'HA1':
+					style_code = cur_data[4]
 					if cur_data[2] in LateralPatchH3:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'LateralPatch')
+						style_code += ' LateralPatch'
 					if cur_data[2] in RBSH3:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), 'RBS')
-					else:
-						unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+						style_code += ' RBS'
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
 		pos_h3_data.append(unit)
@@ -17787,12 +17787,17 @@ def EditSequencesHTML(DataSet, donor_region, template):
 	pos_h1_data = []
 	for i in range(1, len(H1Numbering) + 1):
 		cur_data = H1Numbering[i]
-		if cur_data[4] in ['Ca1','Ca2','Cb','Sa','Sb','Stalk-MN']:
+		if cur_data[4] in ['Ca1', 'Ca2', 'Cb', 'Sa', 'Sb', 'Stalk-MN']:
 			if cur_data[2] == '-':
 				unit = (cur_data[2], cur_data[2], cur_data[4])
 			else:
 				if cur_data[0] == 'HA1':
-					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
+					style_code = cur_data[4]
+					if cur_data[2] in LateralPatchH1:
+						style_code += ' LateralPatch'
+					if cur_data[2] in RBSH1:
+						style_code += ' RBS'
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
 		else:
@@ -17800,7 +17805,12 @@ def EditSequencesHTML(DataSet, donor_region, template):
 				unit = (cur_data[2], cur_data[2], '')
 			else:
 				if cur_data[0] == 'HA1':
-					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+					style_code = cur_data[4]
+					if cur_data[2] in LateralPatchH1:
+						style_code += ' LateralPatch'
+					if cur_data[2] in RBSH1:
+						style_code += ' RBS'
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
 		pos_h1_data.append(unit)
@@ -17808,12 +17818,17 @@ def EditSequencesHTML(DataSet, donor_region, template):
 	pos_h3_data = []
 	for i in range(1, len(H3Numbering) + 1):
 		cur_data = H3Numbering[i]
-		if cur_data[4] in ['A','B','C','D','E','Stalk-MN']:
+		if cur_data[4] in ['A', 'B', 'C', 'D', 'E', 'Stalk-MN']:
 			if cur_data[2] == '-':
 				unit = (cur_data[2], cur_data[2], cur_data[4])
 			else:
 				if cur_data[0] == 'HA1':
-					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), cur_data[4])
+					style_code = cur_data[4]
+					if cur_data[2] in LateralPatchH3:
+						style_code += ' LateralPatch'
+					if cur_data[2] in RBSH3:
+						style_code += ' RBS'
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
 		else:
@@ -17821,7 +17836,12 @@ def EditSequencesHTML(DataSet, donor_region, template):
 				unit = (cur_data[2], cur_data[2], '')
 			else:
 				if cur_data[0] == 'HA1':
-					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+					style_code = cur_data[4]
+					if cur_data[2] in LateralPatchH3:
+						style_code += ' LateralPatch'
+					if cur_data[2] in RBSH3:
+						style_code += ' RBS'
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
 		pos_h3_data.append(unit)

@@ -5,6 +5,10 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DB/FragmentDB.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/FragmentDB.ldb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DB/Test.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/Test.ldb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/template.html" beforeDir="false" afterPath="$PROJECT_DIR$/Data/template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/template1.html" beforeDir="false" afterPath="$PROJECT_DIR$/Data/template1.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/template2.html" beforeDir="false" afterPath="$PROJECT_DIR$/Data/template2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/template3.html" beforeDir="false" afterPath="$PROJECT_DIR$/Data/template3.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -153,6 +157,11 @@
           <url>file://$PROJECT_DIR$/../HumanHA/test.py</url>
           <line>197</line>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/MainLibrator.py</url>
+          <line>17134</line>
+          <option name="timeStamp" value="40" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
