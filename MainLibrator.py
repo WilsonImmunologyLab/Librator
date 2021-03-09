@@ -5247,14 +5247,24 @@ class LibratorMain(QtWidgets.QMainWindow):
 					       + "sel ABS-Ca2, chain A+C+E+G+I+K and (resi 142+143+144+145+146+147+227+228+229)\n" \
 					       + "sel ABS-Cb, chain A+C+E+G+I+K and (resi 76+77+78+79+80+81)\n" \
 					       + "sel ABS-Sa, chain A+C+E+G+I+K and (resi 130+131+159+160+161+162+163+165+166+167+168+169+170)\n" \
-					       + "sel ABS-Sb, chain A+C+E+G+I+K and (resi 190+191+192+193+194+195+196+197+198+199+200)\n"
-					pml.write(text)
+					       + "sel ABS-Sb, chain A+C+E+G+I+K and (resi 190+191+192+193+194+195+196+197+198+199+200)\n" \
+					       + "sel LateralPatch, chain A+C+E+G+I+K and (resi 121+131+168+169+172+174+176)\n" \
+					       + "sel RBS-130loop, chain A+C+E+G+I+K and (resi 136-142)\n" \
+					       + "sel RBS-150loop, chain A+C+E+G+I+K and (resi 158-166)\n" \
+					       + "sel RBS-190helix, chain A+C+E+G+I+K and (resi 191-198)\n" \
+					       + "sel RBS-220loop, chain A+C+E+G+I+K and (resi 224-231)\n"
+							pml.write(text)
 				elif subtype in Group2:
 					text = "sel ABS-A, chain A+C+E+G+I+K and (resi 122+126+127+128+129+130+131+132+133+137+141+142+143+144)\n" \
 					       + "sel ABS-B, chain A+C+E+G+I+K and (resi 155+156+157+158+159+160+164+186+188+189+190+191+192+193+194+195+196+197+198+201)\n" \
 					       + "sel ABS-C, chain A+C+E+G+I+K and (resi 52+53+54+275+276)\n" \
 					       + "sel ABS-D, chain A+C+E+G+I+K and (resi 174+182+207+220+226+229+230+242+244)\n" \
-					       + "sel ABS-E, chain A+C+E+G+I+K and (resi 62+63+78+81+83)\n"
+					       + "sel ABS-E, chain A+C+E+G+I+K and (resi 62+63+78+81+83)\n" \
+					       + "sel LateralPatch, chain A+C+E+G+I+K and (resi 119+129+165+166+169+171+173)\n" \
+					       + "sel RBS-130loop, chain A+C+E+G+I+K and (resi 134-138)\n" \
+					       + "sel RBS-150loop, chain A+C+E+G+I+K and (resi 155-163)\n" \
+					       + "sel RBS-190helix, chain A+C+E+G+I+K and (resi 188-195)\n" \
+					       + "sel RBS-220loop, chain A+C+E+G+I+K and (resi 221-228)\n"
 					pml.write(text)
 
 			# open pml script with PyMOL
@@ -5335,14 +5345,24 @@ class LibratorMain(QtWidgets.QMainWindow):
 					       + "alias ABS-Ca2 :142-147.A,227-229.A,142-147.C,227-229.C,142-147.E,227-229.E\n" \
 					       + "alias ABS-Cb :76-81.A,76-81.C,76-81.E\n" \
 					       + "alias ABS-Sa :130-131.A,159-163.A,165-170.A,130-131.C,159-163.C,165-170.C,130-131.E,159-163.E,165-170.E\n" \
-					       + "alias ABS-Sb :190-200.A,190-200.C,190-200.E\n"
+					       + "alias ABS-Sb :190-200.A,190-200.C,190-200.E\n" \
+					       + "alias LateralPatch :121.A,131.A,168.A,169.A,172.A,174.A,176.A,121.C,131.C,168.C,169.C,172.C,174.C,176.C,121.E,131.E,168.E,169.E,172.E,174.E,176.E\n" \
+					       + "alias RBS-130loop :136-142.A,136-142.C,136-142.E\n" \
+					       + "alias RBS-150loop :158-166.A,158-166.C,158-166.E\n" \
+					       + "alias RBS-190helix :191-198.A,191-198.C,191-198.E\n" \
+					       + "alias RBS-220loop :224-231.A,224-231.C,224-231.E\n"
 					pml.write(text)
 				elif subtype in Group2:
 					text = "alias ABS-A :122.A,126-133.A,137.A,141-144.A,122.C,126-133.C,137.C,141-144.C,122.E,126-133.E,137.E,141-144.E\n" \
 					       + "alias ABS-B :155-160.A,164.A,188-198.A,201.A,155-160.C,164.C,188-198.C,201.C,155-160.E,164.E,188-198.E,201.E\n" \
 					       + "alias ABS-C :52-54.A,275-276.A,52-54.C,275-276.C,52-54.E,275-276.E\n" \
 					       + "alias ABS-D :174.A,182.A,207.A,220.A,226.A,229-230.A,242.A,244.A,174.C,182.C,207.C,220.C,226.C,229-230.C,242.C,244.C,174.E,182.E,207.E,220.E,226.E,229-230.E,242.E,244.E\n" \
-					       + "alias ABS-E :62-63.A,78.A,81.A,83.A,62-63.C,78.C,81.C,83.C,62-63.E,78.E,81.E,83.E\n"
+					       + "alias ABS-E :62-63.A,78.A,81.A,83.A,62-63.C,78.C,81.C,83.C,62-63.E,78.E,81.E,83.E\n" \
+					       + "alias LateralPatch :119.A,129.A,165.A,166.A,169.A,171.A,173.A,119.C,129.C,165.C,166.C,169.C,171.C,173.C,119.E,129.E,165.E,166.E,169.E,171.E,173.E\n" \
+					       + "alias RBS-130loop :134-138.A,134-138.C,134-138.E\n" \
+					       + "alias RBS-150loop :155-163.A,155-163.C,155-163.E\n" \
+					       + "alias RBS-190helix :188-195.A,188-195.C,188-195.E\n" \
+					       + "alias RBS-220loop :221-228.A,221-228.C,221-228.E\n"
 					pml.write(text)
 
 			# open pml script with PyMOL
@@ -13617,7 +13637,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 						+ "sel ABS-Cb, chain A+C+E+G+I+K and (resi 76+77+78+79+80+81)\n" \
 						+ "sel ABS-Sa, chain A+C+E+G+I+K and (resi 130+131+159+160+161+162+163+165+166+167+168+169+170)\n" \
 						+ "sel ABS-Sb, chain A+C+E+G+I+K and (resi 190+191+192+193+194+195+196+197+198+199+200)\n" \
-						+ "color purple, ABS-Ca1\n" \
+						+ "sel LateralPatch, chain A+C+E+G+I+K and (resi 121+131+168+169+172+174+176)\n" \
+						+ "sel RBS-130loop, chain A+C+E+G+I+K and (resi 136-142)\n" \
+						+ "sel RBS-150loop, chain A+C+E+G+I+K and (resi 158-166)\n" \
+						+ "sel RBS-190helix, chain A+C+E+G+I+K and (resi 191-198)\n" \
+						+ "sel RBS-220loop, chain A+C+E+G+I+K and (resi 224-231)\n" \
+				        + "color purple, ABS-Ca1\n" \
 						+ "color yellow, ABS-Ca2\n" \
 						+ "color gray, ABS-Cb\n" \
 						+ "color chocolate, ABS-Sa\n" \
@@ -13629,7 +13654,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 						+ "sel ABS-C, chain A+C+E+G+I+K and (resi 52+53+54+275+276)\n" \
 						+ "sel ABS-D, chain A+C+E+G+I+K and (resi 174+182+207+220+226+229+230+242+244)\n" \
 						+ "sel ABS-E, chain A+C+E+G+I+K and (resi 62+63+78+81+83)\n" \
-						+ "color purple, ABS-A\n" \
+						+ "sel LateralPatch, chain A+C+E+G+I+K and (resi 119+129+165+166+169+171+173)\n" \
+				        + "sel RBS-130loop, chain A+C+E+G+I+K and (resi 134-138)\n" \
+				        + "sel RBS-150loop, chain A+C+E+G+I+K and (resi 155-163)\n" \
+				        + "sel RBS-190helix, chain A+C+E+G+I+K and (resi 188-195)\n" \
+				        + "sel RBS-220loop, chain A+C+E+G+I+K and (resi 221-228)\n" \
+				        + "color purple, ABS-A\n" \
 						+ "color yellow, ABS-B\n" \
 						+ "color gray, ABS-C\n" \
 						+ "color chocolate, ABS-D\n" \
@@ -13728,7 +13758,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			Msg = 'Please check your path setting for PyMOL!'
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 
-
 	def show3DstructureUCSF(self, mutation, pdbPath, UCSFPath, subtype):
 		global temp_folder
 		global working_prefix
@@ -13763,7 +13792,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 				       + "color yellow ABS-Ca2\n" \
 				       + "color gray ABS-Cb\n" \
 				       + "color chocolate ABS-Sa\n" \
-				       + "color green ABS-Sb\n"
+				       + "color green ABS-Sb\n" \
+				       + "alias LateralPatch :121.A,131.A,168.A,169.A,172.A,174.A,176.A,121.C,131.C,168.C,169.C,172.C,174.C,176.C,121.E,131.E,168.E,169.E,172.E,174.E,176.E\n" \
+				       + "alias RBS-130loop :136-142.A,136-142.C,136-142.E\n" \
+				       + "alias RBS-150loop :158-166.A,158-166.C,158-166.E\n" \
+				       + "alias RBS-190helix :191-198.A,191-198.C,191-198.E\n" \
+				       + "alias RBS-220loop :224-231.A,224-231.C,224-231.E\n"
 				pml.write(text)
 			elif subtype in Group2:
 				text = "alias ABS-A :122.A,126-133.A,137.A,141-144.A,122.C,126-133.C,137.C,141-144.C,122.E,126-133.E,137.E,141-144.E\n" \
@@ -13775,7 +13809,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 				       + "color yellow ABS-B\n" \
 				       + "color gray ABS-C\n" \
 				       + "color chocolate ABS-D\n" \
-				       + "color green ABS-E\n"
+				       + "color green ABS-E\n" \
+				       + "alias LateralPatch :119.A,129.A,165.A,166.A,169.A,171.A,173.A,119.C,129.C,165.C,166.C,169.C,171.C,173.C,119.E,129.E,165.E,166.E,169.E,171.E,173.E\n" \
+				       + "alias RBS-130loop :134-138.A,134-138.C,134-138.E\n" \
+				       + "alias RBS-150loop :155-163.A,155-163.C,155-163.E\n" \
+				       + "alias RBS-190helix :188-195.A,188-195.C,188-195.E\n" \
+				       + "alias RBS-220loop :221-228.A,221-228.C,221-228.E\n"
 				pml.write(text)
 			else:
 				QMessageBox.warning(self, 'Warning', 'We only support HA structure now!', QMessageBox.Ok, QMessageBox.Ok)
@@ -14511,6 +14550,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			                    QMessageBox.Ok,
 			                    QMessageBox.Ok)
 		'''
+
 	def open_fusion_dialog(self):
 		if self.ui.lblBaseName.toPlainText() == "":
 			QMessageBox.warning(self, 'Warning', 'Please determine a base sequence first!', QMessageBox.Ok, QMessageBox.Ok)
