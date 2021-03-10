@@ -967,8 +967,17 @@ class FindKeyDialog(QtWidgets.QDialog):
 			aa_handle.write(AAseq + '\n')
 		aa_handle.close()
 
-		cmd = muscle_path
-		cmd += " -in " + aafilename + " -out " + outfilename
+		if system() == 'Windows':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		elif system() == 'Darwin':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		elif system() == 'Linux':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		else:
+			cmd = ''
 		try:
 			os.system(cmd)
 		except:
@@ -4327,8 +4336,17 @@ class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 				aa_handle.write(AAseq + '\n')
 			aa_handle.close()
 
-			cmd = muscle_path
-			cmd += " -in " + aafilename + " -out " + outfilename
+			if system() == 'Windows':
+				cmd = muscle_path
+				cmd += " -in " + aafilename + " -out " + outfilename
+			elif system() == 'Darwin':
+				cmd = muscle_path
+				cmd += " -in " + aafilename + " -out " + outfilename
+			elif system() == 'Linux':
+				cmd = muscle_path
+				cmd += " -in " + aafilename + " -out " + outfilename
+			else:
+				cmd = ''
 			try:
 				os.system(cmd)
 			except:
@@ -5203,8 +5221,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 				aa_handle.write(AAseq + '\n')
 			aa_handle.close()
 
-			cmd = muscle_path
-			cmd += " -in " + aafilename + " -out " + outfilename
+			if system() == 'Windows':
+				cmd = muscle_path
+				cmd += " -in " + aafilename + " -out " + outfilename
+			elif system() == 'Darwin':
+				cmd = muscle_path
+				cmd += " -in " + aafilename + " -out " + outfilename
+			elif system() == 'Linux':
+				cmd = muscle_path
+				cmd += " -in " + aafilename + " -out " + outfilename
+			else:
+				cmd = ''
 			try:
 				os.system(cmd)
 			except:
@@ -5333,7 +5360,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 					pml.write(text)
 
 			# open pml script with PyMOL
-			cmd = pymol_path + " " + pml_path
+			if system() == 'Windows':
+				cmd = pymol_path + " " + pml_path
+			elif system() == 'Darwin':
+				cmd = pymol_path + " " + pml_path
+			elif system() == 'Linux':
+				cmd = pymol_path + " " + pml_path
+			else:
+				cmd = ''
 			# print(cmd)
 			if os.path.isfile(pymol_path):
 				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
@@ -5431,7 +5465,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 					pml.write(text)
 
 			# open pml script with PyMOL
-			cmd = UCSF_path + " " + pml_path
+			if system() == 'Windows':
+				cmd = UCSF_path + " " + pml_path
+			elif system() == 'Darwin':
+				cmd = UCSF_path + " " + pml_path
+			elif system() == 'Linux':
+				cmd = UCSF_path + " " + pml_path
+			else:
+				cmd = ''
 			# print(cmd)
 			if os.path.isfile(UCSF_path):
 				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
@@ -6070,7 +6111,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 		if answer == 'No':
 			return
 		else:
-			cmd = 'cd ' + temp_folder + '; rm -rf ' + temp_folder + '/*'
+			if system() == 'Windows':
+				cmd = 'cd ' + temp_folder + '; del ' + temp_folder + '/*.*'
+			elif system() == 'Darwin':
+				cmd = 'cd ' + temp_folder + '; rm -rf ' + temp_folder + '/*'
+			elif system() == 'Linux':
+				cmd = 'cd ' + temp_folder + '; rm -rf ' + temp_folder + '/*'
+			else:
+				cmd = ''
 			try:
 				os.system(cmd)
 			except:
@@ -6083,9 +6131,19 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# how many files in TEMP, if > 200, clean
 		temp_files = os.listdir(temp_folder)
 		if len(temp_files) > 200:
-			cmd = 'cd ' + temp_folder + '; rm -rf ' + temp_folder + '/*'
-			os.system(cmd)
-			print('clean')
+			if system() == 'Windows':
+				cmd = 'cd ' + temp_folder + '; del ' + temp_folder + '/*.*'
+			elif system() == 'Darwin':
+				cmd = 'cd ' + temp_folder + '; rm -rf ' + temp_folder + '/*'
+			elif system() == 'Linux':
+				cmd = 'cd ' + temp_folder + '; rm -rf ' + temp_folder + '/*'
+			else:
+				cmd = ''
+			try:
+				os.system(cmd)
+				print('self clean!')
+			except:
+				return
 
 	@pyqtSlot()
 	def on_actionExport_triggered(self):
@@ -6406,7 +6464,15 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# write sequences into file
 		time_stamp = str(int(time.time() * 100))
 		this_folder = os.path.join(temp_folder, time_stamp)
-		cmd = 'mkdir ' + this_folder
+
+		if system() == 'Windows':
+			cmd = 'mkdir ' + this_folder
+		elif system() == 'Darwin':
+			cmd = 'mkdir ' + this_folder
+		elif system() == 'Linux':
+			cmd = 'mkdir ' + this_folder
+		else:
+			cmd = ''
 		try:
 			os.system(cmd)
 		except:
@@ -6440,8 +6506,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 		out_handle.close()
 
 		# alignment
-		cmd = muscle_path
-		cmd += " -in " + aafilename + " -out " + outfilename
+		if system() == 'Windows':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		elif system() == 'Darwin':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		elif system() == 'Linux':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		else:
+			cmd = ''
 		try:
 			os.system(cmd)
 		except:
@@ -6507,7 +6582,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# write sequences into file
 		time_stamp = str(int(time.time() * 100))
 		this_folder = os.path.join(temp_folder, time_stamp)
-		cmd = 'mkdir ' + this_folder
+		if system() == 'Windows':
+			cmd = 'mkdir ' + this_folder
+		elif system() == 'Darwin':
+			cmd = 'mkdir ' + this_folder
+		elif system() == 'Linux':
+			cmd = 'mkdir ' + this_folder
+		else:
+			cmd = ''
 		try:
 			os.system(cmd)
 		except:
@@ -6534,8 +6616,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 		out_handle.close()
 
 		# alignment
-		cmd = muscle_path
-		cmd += " -in " + aafilename + " -out " + outfilename
+		if system() == 'Windows':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		elif system() == 'Darwin':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		elif system() == 'Linux':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		else:
+			cmd = ''
 		try:
 			os.system(cmd)
 		except:
@@ -7218,8 +7309,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 				aa_handle.write(NTseq + '\n')
 			aa_handle.close()
 
-			cmd = muscle_path
-			cmd += " -in " + aafilename + " -out " + outfilename
+			if system() == 'Windows':
+				cmd = muscle_path
+				cmd += " -in " + aafilename + " -out " + outfilename
+			elif system() == 'Darwin':
+				cmd = muscle_path
+				cmd += " -in " + aafilename + " -out " + outfilename
+			elif system() == 'Linux':
+				cmd = muscle_path
+				cmd += " -in " + aafilename + " -out " + outfilename
+			else:
+				cmd = ''
 			try:
 				os.system(cmd)
 			except:
@@ -7245,7 +7345,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 			out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 			with open(out_eps, 'wb') as f:
 				f.write(eps)
-			cmd = "open " + out_eps
+			if system() == 'Windows':
+				cmd = 'explorer ' + out_eps  # Windows
+			elif system() == 'Darwin':
+				cmd = 'open ' + out_eps  # mac
+			elif system() == 'Linux':
+				cmd = 'nautilus' + out_eps  # Linux
+			else:
+				cmd = ''
 			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
 			             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 		else:
@@ -7276,7 +7383,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 				out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 				with open(out_eps, 'wb') as f:
 					f.write(eps)
-				cmd = "open " + out_eps
+				if system() == 'Windows':
+					cmd = 'explorer ' + out_eps  # Windows
+				elif system() == 'Darwin':
+					cmd = 'open ' + out_eps  # mac
+				elif system() == 'Linux':
+					cmd = 'nautilus' + out_eps  # Linux
+				else:
+					cmd = ''
 				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
 				             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 
@@ -7337,8 +7451,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 				aa_handle.write(AAseq + '\n')
 			aa_handle.close()
 
-			cmd = muscle_path
-			cmd += " -in " + aafilename + " -out " + outfilename
+			if system() == 'Windows':
+				cmd = muscle_path
+				cmd += " -in " + aafilename + " -out " + outfilename
+			elif system() == 'Darwin':
+				cmd = muscle_path
+				cmd += " -in " + aafilename + " -out " + outfilename
+			elif system() == 'Linux':
+				cmd = muscle_path
+				cmd += " -in " + aafilename + " -out " + outfilename
+			else:
+				cmd = ''
 			try:
 				os.system(cmd)
 			except:
@@ -7363,7 +7486,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 			out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 			with open(out_eps, 'wb') as f:
 				f.write(eps)
-			cmd = "open " + out_eps
+			if system() == 'Windows':
+				cmd = 'explorer ' + out_eps  # Windows
+			elif system() == 'Darwin':
+				cmd = 'open ' + out_eps  # mac
+			elif system() == 'Linux':
+				cmd = 'nautilus' + out_eps  # Linux
+			else:
+				cmd = ''
 			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
 			             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 		else:
@@ -7394,7 +7524,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 				out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 				with open(out_eps, 'wb') as f:
 					f.write(eps)
-				cmd = "open " + out_eps
+				if system() == 'Windows':
+					cmd = 'explorer ' + out_eps  # Windows
+				elif system() == 'Darwin':
+					cmd = 'open ' + out_eps  # mac
+				elif system() == 'Linux':
+					cmd = 'nautilus' + out_eps  # Linux
+				else:
+					cmd = ''
 				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
 				             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 
@@ -11329,8 +11466,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 				aa_handle.write(AAseq + '\n')
 			aa_handle.close()
 
-			cmd = muscle_path
-			cmd += " -in " + aafilename + " -out " + outfilename
+			if system() == 'Windows':
+				cmd = muscle_path
+				cmd += " -in " + aafilename + " -out " + outfilename
+			elif system() == 'Darwin':
+				cmd = muscle_path
+				cmd += " -in " + aafilename + " -out " + outfilename
+			elif system() == 'Linux':
+				cmd = muscle_path
+				cmd += " -in " + aafilename + " -out " + outfilename
+			else:
+				cmd = ''
 			try:
 				os.system(cmd)
 			except:
@@ -13814,7 +13960,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 				text = "set label_size, 25\n"
 				pml.write(text)
 
-		cmd = pymolPath + " " + pml_path
+		if system() == 'Windows':
+			cmd = pymolPath + " " + pml_path
+		elif system() == 'Darwin':
+			cmd = pymolPath + " " + pml_path
+		elif system() == 'Linux':
+			cmd = pymolPath + " " + pml_path
+		else:
+			cmd = ''
 		#print(cmd)
 		if os.path.isfile(pymolPath):
 			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
@@ -13967,8 +14120,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 					#		text = "label chain B+D+F+H+J+L and resi " + position + " and name C, \"" + label + "\"\n"
 					#		pml.write(text)
 
-		cmd = UCSFPath + " " + pml_path
-		#print(cmd)
+		if system() == 'Windows':
+			cmd = UCSFPath + " " + pml_path
+		elif system() == 'Darwin':
+			cmd = UCSFPath + " " + pml_path
+		elif system() == 'Linux':
+			cmd = UCSFPath + " " + pml_path
+		else:
+			cmd = ''
 		if os.path.isfile(UCSFPath):
 			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 			self.ShowVGenesText(pml_path)
@@ -14544,16 +14703,43 @@ class LibratorMain(QtWidgets.QMainWindow):
 		file_handle.close()
 
 		# generate tree
-		cmd = 'cd ' + this_path + ';'
-		cmd += raxml_path
-		if seq_type == "AA":
-			cmd += ' -m PROTGAMMAAUTO -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
-		elif seq_type == "NT":
-			cmd += ' -m GTRGAMMA -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
+		if system() == 'Windows':
+			cmd = 'cd ' + this_path + ';'
+			cmd += raxml_path
+			if seq_type == "AA":
+				cmd += ' -m PROTGAMMAAUTO -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
+			elif seq_type == "NT":
+				cmd += ' -m GTRGAMMA -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
+			else:
+				return
+		elif system() == 'Darwin':
+			cmd = 'cd ' + this_path + ';'
+			cmd += raxml_path
+			if seq_type == "AA":
+				cmd += ' -m PROTGAMMAAUTO -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
+			elif seq_type == "NT":
+				cmd += ' -m GTRGAMMA -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
+			else:
+				return
+		elif system() == 'Linux':
+			cmd = 'cd ' + this_path + ';'
+			cmd += raxml_path
+			if seq_type == "AA":
+				cmd += ' -m PROTGAMMAAUTO -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
+			elif seq_type == "NT":
+				cmd += ' -m GTRGAMMA -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
+			else:
+				return
 		else:
-			return
-		os.system(cmd)
-		print("tree done!")
+			cmd = ''
+
+		try:
+			os.system(cmd)
+			print("tree done!")
+		except:
+			Msg = 'Error happens when run RAxML!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+
 
 		# generate html page
 		treefile = os.path.join(this_path, 'RAxML_bestTree.tree')
@@ -15027,9 +15213,18 @@ class LibratorMain(QtWidgets.QMainWindow):
 				QMessageBox.warning(self,'Warning','The muscle file does not exist!',QMessageBox.Ok, QMessageBox.Ok)
 				return
 			# run muscle to align query seuqnece to template sequence
-			cmd = muscle_path
-			cmd += " -in " + in_file + " -out " + out_file
-			# print(cmd)
+
+			if system() == 'Windows':
+				cmd = muscle_path
+				cmd += " -in " + in_file + " -out " + out_file
+			elif system() == 'Darwin':
+				cmd = muscle_path
+				cmd += " -in " + in_file + " -out " + out_file
+			elif system() == 'Linux':
+				cmd = muscle_path
+				cmd += " -in " + in_file + " -out " + out_file
+			else:
+				cmd = ''
 			try:
 				os.system(cmd)
 			except:
@@ -15221,9 +15416,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 				QMessageBox.warning(self, 'Warning', 'The muscle file does not exist!', QMessageBox.Ok, QMessageBox.Ok)
 				return
 			# run muscle to align query seuqnece to template sequence
-			cmd = muscle_path
-			cmd += " -in " + in_file + " -out " + out_file
-			# print(cmd)
+			if system() == 'Windows':
+				cmd = muscle_path
+				cmd += " -in " + in_file + " -out " + out_file
+			elif system() == 'Darwin':
+				cmd = muscle_path
+				cmd += " -in " + in_file + " -out " + out_file
+			elif system() == 'Linux':
+				cmd = muscle_path
+				cmd += " -in " + in_file + " -out " + out_file
+			else:
+				cmd = ''
 			try:
 				os.system(cmd)
 			except:
@@ -15526,9 +15729,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 			QMessageBox.warning(self, 'Warning', 'The muscle file does not exist!', QMessageBox.Ok, QMessageBox.Ok)
 			return
 		# run muscle to align query seuqnece to template sequence
-		cmd = muscle_path
-		cmd += " -in " + in_file + " -out " + out_file
-		# print(cmd)
+		if system() == 'Windows':
+			cmd = muscle_path
+			cmd += " -in " + in_file + " -out " + out_file
+		elif system() == 'Darwin':
+			cmd = muscle_path
+			cmd += " -in " + in_file + " -out " + out_file
+		elif system() == 'Linux':
+			cmd = muscle_path
+			cmd += " -in " + in_file + " -out " + out_file
+		else:
+			cmd = ''
 		try:
 			os.system(cmd)
 		except:
@@ -17391,8 +17602,17 @@ def AlignSequencesHTML(DataSet, template):
 			aa_handle.write(AAseq + '\n')
 		aa_handle.close()
 
-		cmd = muscle_path
-		cmd += " -in " + aafilename + " -out " + outfilename
+		if system() == 'Windows':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		elif system() == 'Darwin':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		elif system() == 'Linux':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		else:
+			cmd = ''
 		try:
 			os.system(cmd)
 		except:
@@ -17708,8 +17928,17 @@ def FLUDBSequencesHTML(DataSet, template):
 
 		aa_handle.close()
 
-		cmd = muscle_path
-		cmd += " -in " + aafilename + " -out " + outfilename
+		if system() == 'Windows':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		elif system() == 'Darwin':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		elif system() == 'Linux':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		else:
+			cmd = ''
 		try:
 			os.system(cmd)
 		except:
@@ -17859,8 +18088,17 @@ def EditSequencesHTML(DataSet, donor_region, template):
 			aa_handle.write(AAseq + '\n')
 		aa_handle.close()
 
-		cmd = muscle_path
-		cmd += " -in " + aafilename + " -out " + outfilename
+		if system() == 'Windows':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		elif system() == 'Darwin':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		elif system() == 'Linux':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		else:
+			cmd = ''
 		try:
 			os.system(cmd)
 		except:
