@@ -3,4 +3,4 @@
 /usr/local/bin/pymol
 /Users/leil/Documents/Projects/Librator/Librator/Tools/raxml
 /Applications/Chimera.app/Contents/MacOS/chimera
-ucsf
+pymol

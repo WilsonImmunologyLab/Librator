@@ -108,7 +108,7 @@ global raxml_path
 global VisualizeSoftWare
 global fragmentdb_path
 
-working_prefix = os.path.dirname(os.path.realpath(sys.argv[0])) + '/'
+working_prefix = os.path.dirname(os.path.realpath(sys.argv[0]))
 temp_folder = os.path.join(working_prefix, 'Temp')
 
 if os.path.exists(conf_file):   # if conf exist, read conf info from file
@@ -126,12 +126,27 @@ if os.path.exists(conf_file):   # if conf exist, read conf info from file
 	if os.path.exists(muscle_path):
 		pass
 	else:	# if muscle_path does not exist, initial conf info and write to file
-		muscle_path = os.path.join(working_prefix,  'Tools', 'muscle')
-		clustal_path = os.path.join(working_prefix, 'Tools', 'clustalo')
-		pymol_path = '/usr/local/bin/pymol'
-		raxml_path = os.path.join(working_prefix,  'Tools', 'raxml')
-		UCSF_path = '/Applications/Chimera.app/Contents/MacOS/chimera'
-		VisualizeSoftWare = 'pymol'
+		if system() == 'Darwin':
+			muscle_path = os.path.join(working_prefix,  'Tools', 'muscle')
+			clustal_path = os.path.join(working_prefix, 'Tools', 'clustalo')
+			pymol_path = '/usr/local/bin/pymol'
+			raxml_path = os.path.join(working_prefix,  'Tools', 'raxml')
+			UCSF_path = '/Applications/Chimera.app/Contents/MacOS/chimera'
+			VisualizeSoftWare = 'pymol'
+		elif system() == 'Windows':
+			muscle_path = os.path.join(working_prefix, 'Tools', 'muscle.exe')
+			clustal_path = os.path.join(working_prefix, 'Tools', 'clustalo.exe')
+			pymol_path = 'C:\AppData\Local\Schrodinger\PyMOL2\PyMOLWin.exe'
+			raxml_path = os.path.join(working_prefix, 'Tools', 'raxml.exe')
+			UCSF_path = 'C:\Program Files\Chimera 1.15\bin\chimera.exe'
+			VisualizeSoftWare = 'pymol'
+		else:
+			muscle_path = os.path.join(working_prefix, 'Tools', 'muscle')
+			clustal_path = os.path.join(working_prefix, 'Tools', 'clustalo')
+			pymol_path = '/usr/local/bin/pymol'
+			raxml_path = os.path.join(working_prefix, 'Tools', 'raxml')
+			UCSF_path = '/Applications/Chimera.app/Contents/MacOS/chimera'
+			VisualizeSoftWare = 'pymol'
 
 		file_handle = open(conf_file, 'w')
 		file_handle.write(muscle_path + '\n')
@@ -139,15 +154,30 @@ if os.path.exists(conf_file):   # if conf exist, read conf info from file
 		file_handle.write(pymol_path + '\n')
 		file_handle.write(raxml_path + '\n')
 		file_handle.write(UCSF_path + '\n')
-		file_handle.write('pymol')
+		file_handle.write(VisualizeSoftWare)
 		file_handle.close()
 else:                           # if conf does not exist, initial conf info and write to file
-	muscle_path = os.path.join(working_prefix, 'Tools', 'muscle')
-	clustal_path = os.path.join(working_prefix, 'Tools', 'clustalo')
-	pymol_path = '/usr/local/bin/pymol'
-	raxml_path = os.path.join(working_prefix,  'Tools', 'raxml')
-	UCSF_path = '/Applications/Chimera.app/Contents/MacOS/chimera'
-	VisualizeSoftWare = 'pymol'
+	if system() == 'Darwin':
+		muscle_path = os.path.join(working_prefix, 'Tools', 'muscle')
+		clustal_path = os.path.join(working_prefix, 'Tools', 'clustalo')
+		pymol_path = '/usr/local/bin/pymol'
+		raxml_path = os.path.join(working_prefix, 'Tools', 'raxml')
+		UCSF_path = '/Applications/Chimera.app/Contents/MacOS/chimera'
+		VisualizeSoftWare = 'pymol'
+	elif system() == 'Windows':
+		muscle_path = os.path.join(working_prefix, 'Tools', 'muscle.exe')
+		clustal_path = os.path.join(working_prefix, 'Tools', 'clustalo.exe')
+		pymol_path = 'C:\AppData\Local\Schrodinger\PyMOL2\PyMOLWin.exe'
+		raxml_path = os.path.join(working_prefix, 'Tools', 'raxml.exe')
+		UCSF_path = 'C:\Program Files\Chimera 1.15\bin\chimera.exe'
+		VisualizeSoftWare = 'pymol'
+	else:
+		muscle_path = os.path.join(working_prefix, 'Tools', 'muscle')
+		clustal_path = os.path.join(working_prefix, 'Tools', 'clustalo')
+		pymol_path = '/usr/local/bin/pymol'
+		raxml_path = os.path.join(working_prefix, 'Tools', 'raxml')
+		UCSF_path = '/Applications/Chimera.app/Contents/MacOS/chimera'
+		VisualizeSoftWare = 'pymol'
 
 	file_handle = open(conf_file, 'w')
 	file_handle.write(muscle_path + '\n')
@@ -155,7 +185,7 @@ else:                           # if conf does not exist, initial conf info and 
 	file_handle.write(pymol_path + '\n')
 	file_handle.write(raxml_path + '\n')
 	file_handle.write(UCSF_path + '\n')
-	file_handle.write('pymol')
+	file_handle.write(VisualizeSoftWare)
 	file_handle.close()
 
 if os.path.exists(ldb_file):   # if conf exist, read conf info from file
