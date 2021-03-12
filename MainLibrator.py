@@ -835,7 +835,7 @@ class FindKeyDialog(QtWidgets.QDialog):
 				AlignIn.append(EachIn)
 
 		# make HTML
-		html_file = AlignSequencesHTML(AlignIn, '')
+		html_file = AlignSequencesHTMLNew(AlignIn, '')
 		if html_file[0] == 'W':
 			QMessageBox.warning(self, 'Warning', html_file, QMessageBox.Ok, QMessageBox.Ok)
 			return
@@ -6760,7 +6760,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			EachIn = (SeqName, Sequence)
 			AlignIn.append(EachIn)
 		# make HTML
-		html_file = AlignSequencesHTML(AlignIn, '')
+		html_file = AlignSequencesHTMLNew(AlignIn, '')
 		if html_file[0] == 'W':
 			QMessageBox.warning(self, 'Warning', html_file, QMessageBox.Ok, QMessageBox.Ok)
 			return
@@ -7201,7 +7201,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				EachIn = (SeqName, Sequence)
 				AlignIn.append(EachIn)
 			# make HTML
-			html_file = AlignSequencesHTML(AlignIn, '')
+			html_file = AlignSequencesHTMLNew(AlignIn, '')
 			if html_file[0] == 'W':
 				QMessageBox.warning(self, 'Warning', html_file, QMessageBox.Ok, QMessageBox.Ok)
 				return
@@ -14536,7 +14536,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				EachIn = (SeqName, Sequence)
 				AlignIn.append(EachIn)
 			# make HTML
-			html_file = AlignSequencesHTML(AlignIn, 'template3')
+			html_file = AlignSequencesHTMLNew(AlignIn, 'template3')
 			if html_file[0] == 'W':
 				QMessageBox.warning(self, 'Warning', html_file, QMessageBox.Ok, QMessageBox.Ok)
 				return
@@ -17410,75 +17410,96 @@ def SequencesHTML(AAseq, info):
 
 	# prepare H1 data
 	pos_h1_data = []
+	H1_epitope_list = []
 	for i in range(1, len(H1Numbering) + 1):
 		cur_data = H1Numbering[i]
-		if cur_data[4] in ['Ca1','Ca2','Cb','Sa','Sb','Stalk-MN']:
-			if cur_data[2] == '-':
-				unit = (cur_data[2], cur_data[2], cur_data[4])
-			else:
-				if cur_data[0] == 'HA1':
-					style_code = cur_data[4]
-					if cur_data[2] in LateralPatchH1:
-						style_code += ' LateralPatch'
-					if cur_data[2] in RBSH1:
-						style_code += ' RBS'
-					if cur_data[2] in UserDefineH1:
-						style_code += ' UserDefine'
+		if cur_data[2] == '-':
+			unit = (cur_data[2], cur_data[2], '')
+		else:
+			if cur_data[0] == 'HA1':
+				if cur_data[2] in EpitopesDictH1_HA1:
+					style_code = EpitopesDictH1_HA1[cur_data[2]]
+					cur_epitopes = style_code.split(' ')
+					for epitope in cur_epitopes:
+						if epitope not in H1_epitope_list:
+							H1_epitope_list.append(epitope)
 					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
-					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
-		else:
-			if cur_data[2] == '-':
-				unit = (cur_data[2], cur_data[2], '')
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
 			else:
-				if cur_data[0] == 'HA1':
-					style_code = cur_data[4]
-					if cur_data[2] in LateralPatchH1:
-						style_code += ' LateralPatch'
-					if cur_data[2] in RBSH1:
-						style_code += ' RBS'
-					if cur_data[2] in UserDefineH1:
-						style_code += ' UserDefine'
-					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
+				if cur_data[2] in EpitopesDictH1_HA2:
+					style_code = EpitopesDictH1_HA2[cur_data[2]]
+					cur_epitopes = style_code.split(' ')
+					for epitope in cur_epitopes:
+						if epitope not in H1_epitope_list:
+							H1_epitope_list.append(epitope)
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
 		pos_h1_data.append(unit)
+	H1_epitope_list = sorted(H1_epitope_list)
 	# prepare H3 data
-	#b = H3Numbering
+	b = H3Numbering
 	pos_h3_data = []
+	H3_epitope_list = []
 	for i in range(1, len(H3Numbering) + 1):
 		cur_data = H3Numbering[i]
-		if cur_data[4] in ['A','B','C','D','E','Stalk-MN']:
-			if cur_data[2] == '-':
-				unit = (cur_data[2], cur_data[2], cur_data[4])
-			else:
-				if cur_data[0] == 'HA1':
-					style_code = cur_data[4]
-					if cur_data[2] in LateralPatchH3:
-						style_code += ' LateralPatch'
-					if cur_data[2] in RBSH3:
-						style_code += ' RBS'
-					if cur_data[2] in UserDefineH3:
-						style_code += ' UserDefine'
+		if cur_data[2] == '-':
+			unit = (cur_data[2], cur_data[2], '')
+		else:
+			if cur_data[0] == 'HA1':
+				if cur_data[2] in EpitopesDictH3_HA1:
+					style_code = EpitopesDictH3_HA1[cur_data[2]]
+					cur_epitopes = style_code.split(' ')
+					for epitope in cur_epitopes:
+						if epitope not in H3_epitope_list:
+							H3_epitope_list.append(epitope)
 					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
-					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
-		else:
-			if cur_data[2] == '-':
-				unit = (cur_data[2], cur_data[2], '')
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
 			else:
-				if cur_data[0] == 'HA1':
-					style_code = cur_data[4]
-					if cur_data[2] in LateralPatchH3:
-						style_code += ' LateralPatch'
-					if cur_data[2] in RBSH3:
-						style_code += ' RBS'
-					if cur_data[2] in UserDefineH3:
-						style_code += ' UserDefine'
-					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
+				if cur_data[2] in EpitopesDictH3_HA2:
+					style_code = EpitopesDictH3_HA2[cur_data[2]]
+					cur_epitopes = style_code.split(' ')
+					for epitope in cur_epitopes:
+						if epitope not in H3_epitope_list:
+							H3_epitope_list.append(epitope)
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
 		pos_h3_data.append(unit)
+	H3_epitope_list = sorted(H3_epitope_list)
+	# make legend HTML
+	legend_html = ''
+	## H1 numbering:
+	legend_html += '\t<label class="container">H1 numbering<input id = "h1" type="checkbox"  checked="checked"><span class="checkmark"></span></label>\n'
+	for epitope in H1_epitope_list:
+		epitope_name = EpitopesAnnotateH1[epitope]
+		str_len = len(epitope_name) * 5 + 30
+		legend_html += '\t<span class="unit_long ' \
+		               + epitope + '" style="width: ' \
+		               + str(str_len) + 'px">' \
+		               + epitope_name + '</span>\n'
+	legend_html += '\t<br>\n'
+	## H3 numbering:
+	legend_html += '\t<label class="container">H3 numbering<input id = "h3" type="checkbox"  checked="checked"><span class="checkmark"></span></label>\n'
+	for epitope in H3_epitope_list:
+		epitope_name = EpitopesAnnotateH3[epitope]
+		str_len = len(epitope_name) * 5 + 30
+		legend_html += '\t<span class="unit_long ' \
+		               + epitope + '" style="width: ' \
+		               + str(str_len) + 'px">' \
+		               + epitope_name + '</span>\n'
+	legend_html += '\t<br>\n'
+	legend_html += '</div>\n'
+
+	legend_html += '<div class="box">\n'
+	legend_html += '\t<div class="name_div">\n'
+	legend_html += '\t\t<div class="line line_pos_aa"><span class="name">Position AA:</span></div>\n'
+	legend_html += '\t\t<div class="line line_h1"><span class="name">H1 numbering</span></div>\n'
+	legend_html += '\t\t<div class="line line_h3"><span class="name">H3 numbering</span></div>\n'
+	legend_html += '\t\t<div class="line line_aa"><span class="name">Original Seq:</span></div>\n'
+	legend_html += '\t</div>\n'
 
 	# make header HTML
 	pos_aa_data = [list(range(1,len(AAseq)+1)),list(range(1,len(AAseq)+1))]
@@ -17504,6 +17525,7 @@ def SequencesHTML(AAseq, info):
 	seq_div += div_seq + '\n'
 	seq_div += '</div>\n'
 
+	out_file_handle.write(legend_html)
 	out_file_handle.write(CSSdata)
 	out_file_handle.write(seq_div)
 	out_file_handle.write('\n</div>')
@@ -17572,6 +17594,345 @@ def checkOverlap(x1,y1,x2,y2):
 		return True
 	else:
 		return False
+
+def AlignSequencesHTMLNew(DataSet, template):
+	# import tempfile
+	import os
+	TupData = ()
+	global GLMsg
+	global working_prefix
+	global clustal_path
+	global temp_folder
+	global VGenesTextWindows
+	global muscle_path
+
+	# align selected sequences (AA) using muscle
+	all = dict()
+	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+	outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
+	aafilename = os.path.join(temp_folder, "in-" + time_stamp + ".fas")
+	if len(DataSet) == 1:
+		SeqName = DataSet[0][0].replace('\n', '').replace('\r', '')
+		SeqName = SeqName.strip()
+		NTseq = DataSet[0][1]
+
+		# sequence check for NT seq
+		pattern = re.compile(r'[^ATCGUatcgu]')
+		cur_strange = pattern.findall(NTseq)
+		cur_strange = list(set(cur_strange))
+		if len(cur_strange) > 0:
+			ErrMsg = "We find Unlawful nucleotide: " + ','.join(cur_strange) + '\nfrom \n' + SeqName + \
+			         '\nPlease remove those Unlawful nucleotide!'
+			return ErrMsg
+
+		AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
+		all[SeqName] = [NTseq, AAseq]
+
+		out_handle = open(outfilename,'w')
+		out_handle.write('>' + SeqName + '\n')
+		out_handle.write(AAseq)
+		out_handle.close()
+	else:
+		aa_handle = open(aafilename,'w')
+		for record in DataSet:
+			SeqName = record[0].replace('\n', '').replace('\r', '')
+			SeqName = SeqName.strip()
+			NTseq = record[1]
+			# sequence check for NT seq
+			pattern = re.compile(r'[^ATCGUatcgu]')
+			cur_strange = pattern.findall(NTseq)
+			cur_strange = list(set(cur_strange))
+			if len(cur_strange) > 0:
+				ErrMsg = "We find Unlawful nucleotide: " + ','.join(cur_strange) + '\nfrom \n' + SeqName + \
+				         '\nPlease remove those Unlawful nucleotide!'
+				return ErrMsg
+
+			AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
+			AAseq = AAseq.replace('*','X').replace('~','Z').replace('.','J')
+			all[SeqName] = [NTseq, AAseq]
+			aa_handle.write('>' + SeqName + '\n')
+			aa_handle.write(AAseq + '\n')
+		aa_handle.close()
+
+		if system() == 'Windows':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		elif system() == 'Darwin':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		elif system() == 'Linux':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		else:
+			cmd = ''
+		try:
+			os.system(cmd)
+		except:
+			QMessageBox.warning(self, 'Warning', 'Fail to run muscle! Check your muscle path!', QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+
+	# read alignment file, make alignment NT and AA sequences
+	SeqName = ''
+	AAseq = ''
+	if os.path.isfile(outfilename):
+		currentfile = open(outfilename, 'r')
+		lines = currentfile.readlines()
+		for line in lines:
+			Readline = line.replace('\n', '').replace('\r', '')
+			Readline = Readline.strip()
+			if Readline[0] == '>':
+				if SeqName != '':
+					AAseq, NTseq = BuildNTalignment(AAseq, all[SeqName][0])
+					all[SeqName] = [NTseq, AAseq]
+				SeqName = Readline[1:]
+				AAseq = ''
+			else:
+				AAseq += Readline
+		AAseq, NTseq = BuildNTalignment(AAseq, all[SeqName][0])
+		all[SeqName] = [NTseq, AAseq]
+	else:
+		return
+
+	#if os.path.exists(outfilename):
+	#	os.remove(outfilename)
+	#if os.path.exists(aafilename):
+	#	os.remove(aafilename)
+
+	# generate consnesus sequences (AA and NT)
+	if len(all) == 1:
+		for key in all:
+			consensusDNA = all[key][0]
+			consensusAA = all[key][1]
+	else:
+		firstOne = all[SeqName]
+		seqlen = len(firstOne[0])
+
+		consensusDNA = ''
+		tester = ''
+
+		for i in range(seqlen):
+			tester = ''
+			Cnuc = ''
+			for key in all:
+				try:
+					seq = all[key][0]
+					tester += seq[i]
+				except:
+					Msg = 'Find sequence error in ' + key + ', please check your sequence!'
+					QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+					return
+
+			frequencies = [(c, tester.count(c)) for c in set(tester)]
+			Cnuc = max(frequencies, key=lambda x: x[1])[0]
+			consensusDNA += Cnuc
+
+
+		consensusAA = ''
+		firstOne = all[SeqName]
+		seqlen = len(firstOne[1])
+		for i in range(seqlen):
+			tester = ''
+			Caa = ''
+			for key in all:
+				seq = all[key][1]
+				tester += seq[i]
+
+			frequencies = [(c, tester.count(c)) for c in set(tester)]
+			Caa = max(frequencies, key=lambda x: x[1])[0]
+			consensusAA += Caa
+
+	# align consensus AA sequence with template to generate H1 and H3 numbering
+	compact_consensusAA = consensusAA.replace(' ', '')
+	HANumbering(compact_consensusAA)
+
+	# prepare H1 data
+	pos_h1_data = []
+	H1_epitope_list = []
+	for i in range(1, len(H1Numbering) + 1):
+		cur_data = H1Numbering[i]
+		if cur_data[2] == '-':
+			unit = (cur_data[2], cur_data[2], '')
+		else:
+			if cur_data[0] == 'HA1':
+				if cur_data[2] in EpitopesDictH1_HA1:
+					style_code = EpitopesDictH1_HA1[cur_data[2]]
+					cur_epitopes = style_code.split(' ')
+					for epitope in cur_epitopes:
+						if epitope not in H1_epitope_list:
+							H1_epitope_list.append(epitope)
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
+				else:
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+			else:
+				if cur_data[2] in EpitopesDictH1_HA2:
+					style_code = EpitopesDictH1_HA2[cur_data[2]]
+					cur_epitopes = style_code.split(' ')
+					for epitope in cur_epitopes:
+						if epitope not in H1_epitope_list:
+							H1_epitope_list.append(epitope)
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), style_code)
+				else:
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
+		pos_h1_data.append(unit)
+	H1_epitope_list = sorted(H1_epitope_list)
+	# prepare H3 data
+	b = H3Numbering
+	pos_h3_data = []
+	H3_epitope_list = []
+	for i in range(1, len(H3Numbering) + 1):
+		cur_data = H3Numbering[i]
+		if cur_data[2] == '-':
+			unit = (cur_data[2], cur_data[2], '')
+		else:
+			if cur_data[0] == 'HA1':
+				if cur_data[2] in EpitopesDictH3_HA1:
+					style_code = EpitopesDictH3_HA1[cur_data[2]]
+					cur_epitopes = style_code.split(' ')
+					for epitope in cur_epitopes:
+						if epitope not in H3_epitope_list:
+							H3_epitope_list.append(epitope)
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
+				else:
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+			else:
+				if cur_data[2] in EpitopesDictH3_HA2:
+					style_code = EpitopesDictH3_HA2[cur_data[2]]
+					cur_epitopes = style_code.split(' ')
+					for epitope in cur_epitopes:
+						if epitope not in H3_epitope_list:
+							H3_epitope_list.append(epitope)
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), style_code)
+				else:
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
+		pos_h3_data.append(unit)
+	H3_epitope_list = sorted(H3_epitope_list)
+	# make legend HTML
+	legend_html = ''
+	## H1 numbering:
+	legend_html += '\t<span class="name" style="margin-left:12px;">H1 highlight region:</span>\n'
+	for epitope in H1_epitope_list:
+		epitope_name = EpitopesAnnotateH1[epitope]
+		str_len = len(epitope_name)*5 + 30
+		legend_html += '\t<span class="unit_long ' \
+		               + epitope + '" style="width: ' \
+		               + str(str_len) + 'px">' \
+		               + epitope_name + '</span>\n'
+	legend_html += '\t<br>\n'
+	## H3 numbering:
+	legend_html += '\t<span class="name" style="margin-left:12px;">H3 highlight region:</span>\n'
+	for epitope in H3_epitope_list:
+		epitope_name = EpitopesAnnotateH3[epitope]
+		str_len = len(epitope_name) * 5 + 30
+		legend_html += '\t<span class="unit_long ' \
+		               + epitope + '" style="width: ' \
+		               + str(str_len) + 'px">' \
+		               + epitope_name + '</span>\n'
+	legend_html += '\t<br>\n'
+	## N gly-site
+	legend_html += '\t<span class="name" style="margin-left:12px;">Potential N-Gly site:</span>\n'
+	legend_html += '\t<span class="unit_long NGlyPattern">N-X-S/T</span>\n'
+	legend_html += '</div>\n'
+
+	# make header HTML
+	pos_aa_data = [list(range(1,len(compact_consensusAA)+1)),list(range(1,len(compact_consensusAA)+1))]
+	div_pos_aa = MakeDivPosAA('line line_pos_aa', 'Position AA:', 'Original AA position: ', pos_aa_data)
+	div_h1 = MakeDivH1N3('line line_h1', 'H1 numbering', 'H1 numbering: ', pos_h1_data)
+	div_h3 = MakeDivH1N3('line line_h3', 'H3 numbering', 'H3 numbering: ', pos_h3_data)
+	#div_con_aa = MakeDivAA('line con_aa', 'Template AA:', compact_consensusAA)
+	pattern_pos = checkNGlyPos(compact_consensusAA)
+	div_con_aa = MakeDivAAHighPos('line con_aa', 'Template AA:', compact_consensusAA, pattern_pos)
+	pos_nt_data = [list(range(1, len(consensusDNA) + 1)), list(range(1, len(consensusDNA) + 1))]
+	div_pos_nt = MakeDivPosNT('line line_pos_nt', 'Position NT:', 'Original NT position: ', pos_nt_data)
+	div_con_nt = MakeDivNT('line con_nt', 'Template NT:', consensusDNA)
+
+	# initial and open HTML file
+	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+	out_html_file = os.path.join(temp_folder, time_stamp + '.html')
+	if template == '':
+		header_file = os.path.join(working_prefix, 'Data', 'template.html')
+	else:
+		header_file = os.path.join(working_prefix, 'Data', template + '.html')
+	shutil.copyfile(header_file, out_html_file)
+	out_file_handle = open(out_html_file, 'a')
+
+	width_aa = 14 * len(compact_consensusAA)
+	width_nt = 40 * len(compact_consensusAA)
+	CSSdata = '<style type="text/css">.seq_div {width: ' + str(width_nt) + 'px;}</style>\n'
+	JSdata = '<script type="text/javascript">\n'
+	JSdata += 'var seq_width = [' + str(width_nt) + ',' + str(width_aa) + '];\n'
+	JSdata += 'var data = {\n'
+	JSarray = []
+	JStext = '"Seq0":["Consensus","' + compact_consensusAA + '","' + consensusDNA + '"]'
+	JSarray.append(JStext)
+
+	Optiondata = '<script type="text/javascript">\n'
+	Optiondata += '$("#option").append("<option value =\'Seq0\'>Consensus Sequence</option>");\n'
+
+	name_div = '<div class="name_div">\n'
+	seq_div = '<div class = "seq_div">\n'
+	# write header section
+	name_div += div_pos_aa[0] + '\n'
+	seq_div += div_pos_aa[1] + '\n'
+	name_div += div_h1[0] + '\n'
+	seq_div += div_h1[1] + '\n'
+	name_div += div_h3[0] + '\n'
+	seq_div += div_h3[1] + '\n'
+	name_div += div_con_aa[0] + '\n'
+	seq_div += div_con_aa[1] + '\n'
+	name_div += div_pos_nt[0] + '\n'
+	seq_div += div_pos_nt[1] + '\n'
+	name_div += div_con_nt[0] + '\n'
+	seq_div += div_con_nt[1] + '\n'
+	# make sequence section HTML
+	i = 1
+	for key in all:
+		seq_nick_name = 'Seq' + str(i)
+
+		seq_nt = all[key][0]
+		seq_aa = all[key][1]
+		con_nt = MakeConSeq(seq_nt, consensusDNA)
+		con_aa = MakeConSeq(seq_aa, compact_consensusAA)
+
+		#div_aa = MakeDivAA('line line_aa ' + seq_nick_name, key, seq_aa)
+		#div_aa_mut = MakeDivAA('line line_con_aa ' + seq_nick_name, key, con_aa)
+		pattern_pos = checkNGlyPos(seq_aa)
+		div_aa = MakeDivAAHighPos('line line_aa ' + seq_nick_name, key, seq_aa, pattern_pos)
+		div_aa_mut = MakeDivAAHighPos('line line_con_aa ' + seq_nick_name, key, con_aa, pattern_pos)
+		div_nt = MakeDivNT('line line_nt ' + seq_nick_name, key, seq_nt)
+		div_nt_mut = MakeDivNT('line line_con_nt ' + seq_nick_name, key, con_nt)
+		# write sequence section
+		name_div += div_aa[0] + '\n'
+		seq_div += div_aa[1] + '\n'
+		name_div += div_aa_mut[0] + '\n'
+		seq_div += div_aa_mut[1] + '\n'
+		name_div += div_nt[0] + '\n'
+		seq_div += div_nt[1] + '\n'
+		name_div += div_nt_mut[0] + '\n'
+		seq_div += div_nt_mut[1] + '\n'
+
+		JStext = '"' + seq_nick_name + '":["' + key + '","' + seq_aa + '","' + seq_nt + '"]'
+		JSarray.append(JStext)
+		Optiondata += '$("#option").append("<option value =\'' + seq_nick_name + '\'>' + key + '</option>");\n'
+		i += 1
+
+	JSdata += ',\n'.join(JSarray)
+	JSdata += '\n}\n</script>\n'
+	Optiondata += '</script>\n'
+
+	name_div += '</div>\n'
+	seq_div += '</div>\n'
+
+	out_file_handle.write(legend_html)
+	out_file_handle.write(CSSdata)
+	out_file_handle.write(JSdata)
+	out_file_handle.write(Optiondata)
+	out_file_handle.write('<div class="box">')
+	out_file_handle.write(name_div)
+	out_file_handle.write(seq_div)
+	out_file_handle.write('\n</div>\n</body>\n</html>')
+	out_file_handle.close()
+	return out_html_file
 
 def AlignSequencesHTML(DataSet, template):
 	# import tempfile
@@ -18174,74 +18535,91 @@ def EditSequencesHTML(DataSet, donor_region, template):
 
 	# prepare H1 data
 	pos_h1_data = []
+	H1_epitope_list = []
 	for i in range(1, len(H1Numbering) + 1):
 		cur_data = H1Numbering[i]
-		if cur_data[4] in ['Ca1', 'Ca2', 'Cb', 'Sa', 'Sb', 'Stalk-MN']:
-			if cur_data[2] == '-':
-				unit = (cur_data[2], cur_data[2], cur_data[4])
-			else:
-				if cur_data[0] == 'HA1':
-					style_code = cur_data[4]
-					if cur_data[2] in LateralPatchH1:
-						style_code += ' LateralPatch'
-					if cur_data[2] in RBSH1:
-						style_code += ' RBS'
-					if cur_data[2] in UserDefineH1:
-						style_code += ' UserDefine'
+		if cur_data[2] == '-':
+			unit = (cur_data[2], cur_data[2], '')
+		else:
+			if cur_data[0] == 'HA1':
+				if cur_data[2] in EpitopesDictH1_HA1:
+					style_code = EpitopesDictH1_HA1[cur_data[2]]
+					cur_epitopes = style_code.split(' ')
+					for epitope in cur_epitopes:
+						if epitope not in H1_epitope_list:
+							H1_epitope_list.append(epitope)
 					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
-					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
-		else:
-			if cur_data[2] == '-':
-				unit = (cur_data[2], cur_data[2], '')
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
 			else:
-				if cur_data[0] == 'HA1':
-					style_code = cur_data[4]
-					if cur_data[2] in LateralPatchH1:
-						style_code += ' LateralPatch'
-					if cur_data[2] in RBSH1:
-						style_code += ' RBS'
-					if cur_data[2] in UserDefineH1:
-						style_code += ' UserDefine'
-					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
+				if cur_data[2] in EpitopesDictH1_HA2:
+					style_code = EpitopesDictH1_HA2[cur_data[2]]
+					cur_epitopes = style_code.split(' ')
+					for epitope in cur_epitopes:
+						if epitope not in H1_epitope_list:
+							H1_epitope_list.append(epitope)
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
 		pos_h1_data.append(unit)
+	H1_epitope_list = sorted(H1_epitope_list)
 	# prepare H3 data
+	b = H3Numbering
 	pos_h3_data = []
+	H3_epitope_list = []
 	for i in range(1, len(H3Numbering) + 1):
 		cur_data = H3Numbering[i]
-		if cur_data[4] in ['A', 'B', 'C', 'D', 'E', 'Stalk-MN']:
-			if cur_data[2] == '-':
-				unit = (cur_data[2], cur_data[2], cur_data[4])
-			else:
-				if cur_data[0] == 'HA1':
-					style_code = cur_data[4]
-					if cur_data[2] in LateralPatchH3:
-						style_code += ' LateralPatch'
-					if cur_data[2] in RBSH3:
-						style_code += ' RBS'
-					if cur_data[2] in UserDefineH3:
-						style_code += ' UserDefine'
+		if cur_data[2] == '-':
+			unit = (cur_data[2], cur_data[2], '')
+		else:
+			if cur_data[0] == 'HA1':
+				if cur_data[2] in EpitopesDictH3_HA1:
+					style_code = EpitopesDictH3_HA1[cur_data[2]]
+					cur_epitopes = style_code.split(' ')
+					for epitope in cur_epitopes:
+						if epitope not in H3_epitope_list:
+							H3_epitope_list.append(epitope)
 					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
 				else:
-					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), cur_data[4])
-		else:
-			if cur_data[2] == '-':
-				unit = (cur_data[2], cur_data[2], '')
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
 			else:
-				if cur_data[0] == 'HA1':
-					style_code = cur_data[4]
-					if cur_data[2] in LateralPatchH3:
-						style_code += ' LateralPatch'
-					if cur_data[2] in RBSH3:
-						style_code += ' RBS'
-					if cur_data[2] in UserDefineH3:
-						style_code += ' UserDefine'
-					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
+				if cur_data[2] in EpitopesDictH3_HA2:
+					style_code = EpitopesDictH3_HA2[cur_data[2]]
+					cur_epitopes = style_code.split(' ')
+					for epitope in cur_epitopes:
+						if epitope not in H3_epitope_list:
+							H3_epitope_list.append(epitope)
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), style_code)
 				else:
 					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
 		pos_h3_data.append(unit)
+	H3_epitope_list = sorted(H3_epitope_list)
+	# make legend HTML
+	legend_html = ''
+	## H1 numbering:
+	legend_html += '\t<span class="name" style="margin-left:12px;">H1 highlight region:</span>\n'
+	for epitope in H1_epitope_list:
+		epitope_name = EpitopesAnnotateH1[epitope]
+		str_len = len(epitope_name) * 5 + 30
+		legend_html += '\t<span class="unit_long ' \
+		               + epitope + '" style="width: ' \
+		               + str(str_len) + 'px">' \
+		               + epitope_name + '</span>\n'
+	legend_html += '\t<br>\n'
+	## H3 numbering:
+	legend_html += '\t<span class="name" style="margin-left:12px;">H3 highlight region:</span>\n'
+	for epitope in H3_epitope_list:
+		epitope_name = EpitopesAnnotateH3[epitope]
+		str_len = len(epitope_name) * 5 + 30
+		legend_html += '\t<span class="unit_long ' \
+		               + epitope + '" style="width: ' \
+		               + str(str_len) + 'px">' \
+		               + epitope_name + '</span>\n'
+	legend_html += '\t<br>\n'
+	## N gly-site
+	legend_html += '\t<span class="name" style="margin-left:12px;">Potential N-Gly site:</span>\n'
+	legend_html += '\t<span class="unit_long NGlyPattern">N-X-S/T</span>\n'
+	legend_html += '</div>\n'
 
 	# make header HTML
 	pos_aa_data = [list(range(1,len(compact_consensusAA)+1)),list(range(1,len(compact_consensusAA)+1))]
@@ -18304,6 +18682,7 @@ def EditSequencesHTML(DataSet, donor_region, template):
 	name_div += '</div>\n'
 	seq_div += '</div>\n'
 
+	out_file_handle.write(legend_html)
 	out_file_handle.write(CSSdata)
 	out_file_handle.write(JSdata)
 	out_file_handle.write('<div class="box">')
@@ -18722,7 +19101,7 @@ CodonList={
 	'R':['CGT','CGC','CGA','CGG','AGA','AGG'],
 	'*':['TAA','TAG','TGA']
 }
-
+# old epitopes define
 LateralPatchH3 = [119,129,165,166,169,171,173]
 LateralPatchH1 = [121,131,168,169,172,174,176]
 
@@ -18756,6 +19135,89 @@ except:
 
 RBSH3 = list(range(134,139)) + list(range(155,164)) + list(range(188,196)) + list(range(221,229))
 RBSH1 = list(range(136,142)) + list(range(158,167)) + list(range(191,199)) + list(range(224,232))
+
+
+# new epitopes define and annotation
+global EpitopesDictH1_HA1, EpitopesDictH1_HA2, EpitopesDictH3_HA1, EpitopesDictH3_HA2, EpitopesAnnotateH1, EpitopesAnnotateH3
+EpitopesDictH1_HA1 = {}
+EpitopesDictH1_HA2 = {}
+EpitopesDictH3_HA1 = {}
+EpitopesDictH3_HA2 = {}
+EpitopesAnnotateH1 = {}
+EpitopesAnnotateH3 = {}
+
+Group_set_file_H1 = os.path.join(working_prefix, 'Conf', 'Group_set_file_H1.txt')
+Group_set_file_H3 = os.path.join(working_prefix, 'Conf', 'Group_set_file_H3.txt')
+Residue_set_file_H1_HA1 = os.path.join(working_prefix, 'Conf', 'Residue_set_file_H1_HA1.txt')
+Residue_set_file_H1_HA2 = os.path.join(working_prefix, 'Conf', 'Residue_set_file_H1_HA2.txt')
+Residue_set_file_H3_HA1 = os.path.join(working_prefix, 'Conf', 'Residue_set_file_H3_HA1.txt')
+Residue_set_file_H3_HA2 = os.path.join(working_prefix, 'Conf', 'Residue_set_file_H3_HA2.txt')
+
+if os.path.exists(Group_set_file_H1) and os.path.exists(Group_set_file_H3) and os.path.exists(Residue_set_file_H1_HA1) and os.path.exists(Residue_set_file_H1_HA2) and os.path.exists(Residue_set_file_H3_HA1) and os.path.exists(Residue_set_file_H3_HA2):
+	# Group_set_file_H1
+	file_handle = open(Group_set_file_H1, 'r')
+	configure = file_handle.read()
+	configure = configure.split('\n')
+	for line in configure:
+		tmp = line.split(',')
+		if len(tmp) > 2:
+			EpitopesAnnotateH1[tmp[1]] = tmp[2]
+	file_handle.close()
+
+	# Group_set_file_H3
+	file_handle = open(Group_set_file_H3, 'r')
+	configure = file_handle.read()
+	configure = configure.split('\n')
+	for line in configure:
+		tmp = line.split(',')
+		if len(tmp) > 2:
+			EpitopesAnnotateH3[tmp[1]] = tmp[2]
+	file_handle.close()
+
+	# Residue_set_file_H1_HA1
+	file_handle = open(Residue_set_file_H1_HA1, 'r')
+	configure = file_handle.read()
+	configure = configure.split('\n')
+	for line in configure:
+		tmp = line.split(',')
+		if len(tmp) > 1:
+			EpitopesDictH1_HA1[int(tmp[0])] = tmp[1]
+	file_handle.close()
+
+	# Residue_set_file_H1_HA2
+	file_handle = open(Residue_set_file_H1_HA2, 'r')
+	configure = file_handle.read()
+	configure = configure.split('\n')
+	for line in configure:
+		tmp = line.split(',')
+		if len(tmp) > 1:
+			EpitopesDictH1_HA2[int(tmp[0])] = tmp[1]
+	file_handle.close()
+
+	# Residue_set_file_H3_HA1
+	file_handle = open(Residue_set_file_H3_HA1, 'r')
+	configure = file_handle.read()
+	configure = configure.split('\n')
+	for line in configure:
+		tmp = line.split(',')
+		if len(tmp) > 1:
+			EpitopesDictH3_HA1[int(tmp[0])] = tmp[1]
+	file_handle.close()
+
+	# Residue_set_file_H3_HA2
+	file_handle = open(Residue_set_file_H3_HA2, 'r')
+	configure = file_handle.read()
+	configure = configure.split('\n')
+	for line in configure:
+		tmp = line.split(',')
+		if len(tmp) > 1:
+			EpitopesDictH3_HA2[int(tmp[0])] = tmp[1]
+	file_handle.close()
+
+else:
+	pass
+	# remove those files and copy new one
+
 
 H1HA1Regions = {'1':'Stalk', '2':'Stalk', '3':'Stalk', '4':'Stalk', '5':'Stalk', '6':'Stalk', '7':'Stalk',
 				'8':'Stalk', '9':'Stalk', '10':'Stalk', '11':'Stalk', '12':'Stalk-MN',
