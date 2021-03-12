@@ -59,6 +59,7 @@ from findkeydialog import Ui_FindkeyDialog
 from fastaorseqdialog import Ui_FastaOrSeqDialog
 from codon_optimize_dialog import Ui_CodonDialog
 from userdefinedialog import Ui_UserDefineDialog
+from userepitopedialog import Ui_UserEpitopeDialog
 
 from LibDialogues import openFile, openFiles, newFile, saveFile, questionMessage, informationMessage, setItem, setText
 from VgenesTextEdit import VGenesTextMain
@@ -219,6 +220,273 @@ else:
 	file_handle.write(joint_down)
 	file_handle.close()
 
+class UserEpitopeDialog(QtWidgets.QDialog):
+	def __init__(self):
+		super(UserEpitopeDialog, self).__init__()
+		self.ui = Ui_UserEpitopeDialog()
+		self.ui.setupUi(self)
+
+		self.ui.comboBox.currentTextChanged.connect(self.loadData)
+		self.ui.pushButtonSaveGroup.clicked.connect(self.accept)
+		self.ui.pushButtonSaveResidue.clicked.connect(self.reject)
+
+		self.loadData()
+
+	def loadData(self):
+		if self.ui.comboBox.currentText == 'H1':
+			Group_set_file = os.path.join(working_prefix, 'Conf', 'Group_set_file_H1.txt')
+			Residue_set_file_HA1 = os.path.join(working_prefix, 'Conf', 'Residue_set_file_H1_HA1.txt')
+			Residue_set_file_HA2 = os.path.join(working_prefix, 'Conf', 'Residue_set_file_H1_HA2.txt')
+
+			HA1 = \
+				'DTLCIGYHANNSTDTVDTVLEKNVTVTHSVNLLEDKHNGKLCKLRGVAPLHLGKCNIAGWILGNPECESLSTASSWSYIV' + \
+				'ETPSSDNGTCYPGDFIDYEELREQLSSVSSFERFEIFPKTSSWPNHDSNKGVTAACPHAGAKSFYKNLIWLVKKGNSYPK' + \
+				'LSKSYINDKGKEVLVLWGIHHPSTSADQQSLYQNADTYVFVGSSRYSKKFKPEIAIRPKVRDQEGRMNYYWTLVEPGDKI' + \
+				'TFEATGNLVVPRYAFAMERNAGSGIIISDTPVHDCNTTCQTPKGAINTSLPFQNIHPITIGKCPKYVKSTKLRLATGLRN' + \
+				'I'
+
+			HA2 = \
+				'GLFGAIAGFIEGGWTGMVDGWYGYHHQNEQGSGYAADLKSTQNAIDEITNKVNSVIEKMNTQFTAVGKEFNHLEKRIENL' + \
+				'NKKVDDGFLDIWTYNAELLVLLENERTLDYHDSNVKNLYEKVRSQLKNNAKEIGNGCFEFYHKCDNTCMESVKNGTYDYP' + \
+				'KY'
+			HA1_pos = 7
+
+			EpitopesDict_HA1 = EpitopesDictH1_HA1
+			EpitopesDict_HA2 = EpitopesDictH1_HA2
+		else:
+			Group_set_file = os.path.join(working_prefix, 'Conf', 'Group_set_file_H3.txt')
+			Residue_set_file_HA1 = os.path.join(working_prefix, 'Conf', 'Residue_set_file_H3_HA1.txt')
+			Residue_set_file_HA2 = os.path.join(working_prefix, 'Conf', 'Residue_set_file_H3_HA2.txt')
+
+			HA1 = \
+				'QDLPGNDNSTATLCLGHHAVPNGTLVKTITDDQIEVTNATELVQSSSTGKICNNPHRILDGIDCTLIDALLGDPHCDVFQ' + \
+				'NETWDLFVERSKAFSNCYPYDVPDYASLRSLVASSGTLEFITEGFTWTGVTQNGGSNACKRGPGSGFFSRLNWLTKSGST' + \
+				'YPVLNVTMPNNDNFDKLYIWGIHHPSTNQEQTSLYVQASGRVTVSTRRSQQTIIPNIGSRPWVRGQSSRISIYWTIVKPG' + \
+				'DVLVINSNGNLIAPRGYFKMRTGKSSIMRSDAPIDTCISECITPNGSIPNDKPFQNVNKITYGACPKYVKQNTLKLATGM' + \
+				'RNVPEKQT'
+
+			HA2 = \
+				'GLFGAIAGFIENGWEGMIDGWYGFRHQNSEGTGQAADLKSTQAAIDQINGKLNRVIEKTNEKFHQIEKEFSEVEGRIQDL' + \
+				'EKYVEDTKIDLWSYNAELLVALENQHTIDLTDSEMNKLFEKTRRQLRENAEEMGNGCFKIYHKCDNACIESIRNGTYDHD' + \
+				'VYRDEALNNRFQIKG'
+			HA1_pos = 1
+
+			EpitopesDict_HA1 = EpitopesDictH3_HA1
+			EpitopesDict_HA2 = EpitopesDictH3_HA2
+
+		color_options = ['G1_1','G1_2','G1_3','G1_4','G1_5','G1_6','G1_7','G1_8','G1_9','G1_10','G1_11','G1_12','G1_13']
+		shade_options = ['G2_1','G2_2','G2_3','G2_4']
+		border_options = ["G3_1","G3_2","G3_3"]
+
+		G1_1_icon = QtGui.QIcon()
+		G1_1_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G1_1.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		G1_2_icon = QtGui.QIcon()
+		G1_2_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G1_2.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		G1_3_icon = QtGui.QIcon()
+		G1_3_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G1_3.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		G1_4_icon = QtGui.QIcon()
+		G1_4_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G1_4.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		G1_5_icon = QtGui.QIcon()
+		G1_5_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G1_5.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		G1_6_icon = QtGui.QIcon()
+		G1_6_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G1_6.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		G1_7_icon = QtGui.QIcon()
+		G1_7_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G1_7.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		G1_8_icon = QtGui.QIcon()
+		G1_8_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G1_8.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		G1_9_icon = QtGui.QIcon()
+		G1_9_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G1_9.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		G1_10_icon = QtGui.QIcon()
+		G1_10_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G1_10.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		G1_11_icon = QtGui.QIcon()
+		G1_11_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G1_11.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		G1_12_icon = QtGui.QIcon()
+		G1_12_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G1_12.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		G1_13_icon = QtGui.QIcon()
+		G1_13_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G1_13.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+		G2_1_icon = QtGui.QIcon()
+		G2_1_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G2_1.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		G2_2_icon = QtGui.QIcon()
+		G2_2_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G2_2.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		G2_3_icon = QtGui.QIcon()
+		G2_3_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G2_3.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		G2_4_icon = QtGui.QIcon()
+		G2_4_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G2_4.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+		G3_1_icon = QtGui.QIcon()
+		G3_1_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G3_1.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		G3_2_icon = QtGui.QIcon()
+		G3_2_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G3_2.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+		G3_3_icon = QtGui.QIcon()
+		G3_3_icon.addPixmap(QtGui.QPixmap(":/PNG-Icons/G3_3.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
+		G1_icons = [G1_1_icon, G1_2_icon, G1_3_icon, G1_4_icon, G1_5_icon, G1_6_icon, G1_7_icon, G1_8_icon, G1_9_icon, G1_10_icon, G1_11_icon, G1_12_icon, G1_13_icon]
+		G2_icons = [G2_1_icon, G2_2_icon, G2_3_icon, G2_4_icon]
+		G3_icons = [G3_1_icon, G3_2_icon, G3_3_icon]
+
+		iconsize = QSize(60, 20)
+
+		# generate annotating group table
+		horizontalHeader = ['Group category', 'Epitope ID', 'Epitope Pattern','Epitope Name', 'Info']
+		num_row = 20
+		num_col = 5
+		self.ui.tableWidgetGroup.setRowCount(num_row)
+		self.ui.tableWidgetGroup.setColumnCount(num_col)
+		self.ui.tableWidgetGroup.setHorizontalHeaderLabels(horizontalHeader)
+		self.ui.tableWidgetGroup.horizontalHeader().setStretchLastSection(True)
+		self.ui.tableWidgetGroup.setSelectionMode(QAbstractItemView.SingleSelection)
+		self.ui.tableWidgetGroup.setSelectionBehavior(QAbstractItemView.SelectRows)
+
+		file_handle = open(Group_set_file, 'r')
+		configure = file_handle.read()
+		configure = configure.split('\n')
+		row_index = 0
+		for line in configure:
+			tmp = line.split(',')
+			item = QTableWidgetItem(tmp[0])
+			if row_index > 12:
+				if row_index > 16:
+					item.setBackground(QColor('#f0fbeb'))
+				else:
+					item.setBackground(QColor('#eff7ff'))
+			self.ui.tableWidgetGroup.setItem(row_index, 0, item)
+			item1 = QTableWidgetItem(tmp[1])
+			if row_index > 12:
+				if row_index > 16:
+					item1.setBackground(QColor('#f0fbeb'))
+				else:
+					item1.setBackground(QColor('#eff7ff'))
+			self.ui.tableWidgetGroup.setItem(row_index, 1, item1)
+
+			item2 = QLabel()
+			item2.setPixmap(QtGui.QPixmap(":/PNG-Icons/" + tmp[1] + ".png").scaled(80,20))
+			self.ui.tableWidgetGroup.setCellWidget(row_index, 2, item2)
+			item3 = QLineEdit()
+			item3.setText(tmp[2])
+			self.ui.tableWidgetGroup.setCellWidget(row_index, 3, item3)
+			item4 = QLineEdit()
+			item4.setText(tmp[3])
+			self.ui.tableWidgetGroup.setCellWidget(row_index, 4, item4)
+			row_index += 1
+		file_handle.close()
+
+		self.ui.tableWidgetGroup.setEditTriggers(QAbstractItemView.NoEditTriggers)
+		self.ui.tableWidgetGroup.resizeColumnsToContents()
+		self.ui.tableWidgetGroup.resizeRowsToContents()
+		# generate annotating residue table
+		horizontalHeader = ['HA structure', 'Residue Number', 'AA on template', 'Color Groups', 'Shade Groups', 'Border Groups']
+		num_row = len(HA1) + len(HA2)
+		num_col = len(horizontalHeader)
+		self.ui.tableWidgetResidue.setRowCount(num_row)
+		self.ui.tableWidgetResidue.setColumnCount(num_col)
+		self.ui.tableWidgetResidue.setHorizontalHeaderLabels(horizontalHeader)
+		self.ui.tableWidgetResidue.horizontalHeader().setStretchLastSection(True)
+		self.ui.tableWidgetResidue.setSelectionMode(QAbstractItemView.SingleSelection)
+		self.ui.tableWidgetResidue.setSelectionBehavior(QAbstractItemView.SelectRows)
+
+		row_index = 0
+		## HA1
+		for AA in HA1:
+			item = QTableWidgetItem('HA1')
+			item.setBackground(QColor('#f0fbeb'))
+			self.ui.tableWidgetResidue.setItem(row_index, 0, item)
+			item1 = QTableWidgetItem(str(HA1_pos))
+			item1.setBackground(QColor('#f0fbeb'))
+			self.ui.tableWidgetResidue.setItem(row_index, 1, item1)
+			item2 = QTableWidgetItem(AA)
+			item2.setBackground(QColor('#f0fbeb'))
+			self.ui.tableWidgetResidue.setItem(row_index, 2, item2)
+
+			item3 = QComboBox()
+			item3.addItem('')
+			for i in range(len(color_options)):
+				item3.addItem(G1_icons[i], ' ' + color_options[i])
+			item3.setIconSize(iconsize)
+			item4 = QComboBox()
+			item4.addItem('')
+			for i in range(len(shade_options)):
+				item4.addItem(G2_icons[i], ' ' + shade_options[i])
+			item4.setIconSize(iconsize)
+			item5 = QComboBox()
+			item5.addItem('')
+			for i in range(len(border_options)):
+				item5.addItem(G3_icons[i], ' ' + border_options[i])
+			item5.setIconSize(iconsize)
+			if HA1_pos in EpitopesDict_HA1:
+				tmp = EpitopesDict_HA1[HA1_pos]
+				list = tmp.split(' ')
+				for ele in list:
+					if ele[1] == '1':
+						item3.setCurrentText(' ' + ele)
+					elif ele[1] == '2':
+						item4.setCurrentText(' ' + ele)
+					elif ele[1] == '3':
+						item5.setCurrentText(' ' + ele)
+
+			self.ui.tableWidgetResidue.setCellWidget(row_index, 3, item3)
+			self.ui.tableWidgetResidue.setCellWidget(row_index, 4, item4)
+			self.ui.tableWidgetResidue.setCellWidget(row_index, 5, item5)
+
+			HA1_pos += 1
+			row_index += 1
+		## HA2
+		HA2_pos = 1
+		for AA in HA2:
+			item = QTableWidgetItem('HA2')
+			item.setBackground(QColor('#eff7ff'))
+			self.ui.tableWidgetResidue.setItem(row_index, 0, item)
+			item1 = QTableWidgetItem(str(HA2_pos))
+			item1.setBackground(QColor('#eff7ff'))
+			self.ui.tableWidgetResidue.setItem(row_index, 1, item1)
+			item2 = QTableWidgetItem(AA)
+			item2.setBackground(QColor('#eff7ff'))
+			self.ui.tableWidgetResidue.setItem(row_index, 2, item2)
+
+			item3 = QComboBox()
+			item3.addItem('')
+			for i in range(len(color_options)):
+				item3.addItem(G1_icons[i], ' ' + color_options[i])
+			item3.setIconSize(iconsize)
+			item4 = QComboBox()
+			item4.addItem('')
+			for i in range(len(shade_options)):
+				item4.addItem(G2_icons[i], ' ' + shade_options[i])
+			item4.setIconSize(iconsize)
+			item5 = QComboBox()
+			item5.addItem('')
+			for i in range(len(border_options)):
+				item5.addItem(G3_icons[i], ' ' + border_options[i])
+			item5.setIconSize(iconsize)
+			if HA2_pos in EpitopesDict_HA2:
+				tmp = EpitopesDict_HA2[HA2_pos]
+				list = tmp.split(' ')
+				for ele in list:
+					if ele[1] == '1':
+						item3.setCurrentText(' ' + ele)
+					elif ele[1] == '2':
+						item4.setCurrentText(' ' + ele)
+					elif ele[1] == '3':
+						item5.setCurrentText(' ' + ele)
+
+			self.ui.tableWidgetResidue.setCellWidget(row_index, 3, item3)
+			self.ui.tableWidgetResidue.setCellWidget(row_index, 4, item4)
+			self.ui.tableWidgetResidue.setCellWidget(row_index, 5, item5)
+
+			HA2_pos += 1
+			row_index += 1
+
+
+		self.ui.tableWidgetResidue.setEditTriggers(QAbstractItemView.NoEditTriggers)
+		self.ui.tableWidgetResidue.resizeColumnsToContents()
+		self.ui.tableWidgetResidue.resizeRowsToContents()
+
+		# resize UI in order to update UI
+		size_w = self.size().width()
+		size_h = self.size().height()
+		offset_pool = [-1, 1]
+		offset = offset_pool[random.randint(0, 1)]
+		self.resize(size_w + offset, size_h + offset)
 
 class UserDefineDialog(QtWidgets.QDialog):
 	def __init__(self):
@@ -276,7 +544,6 @@ class UserDefineDialog(QtWidgets.QDialog):
 		except:
 			Msg = 'Something wrong with your input! You edits have not been saved!'
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
-
 
 # this combo check box class is adopted from https://learnku.com/articles/42618
 # author is Bgods
@@ -5082,9 +5349,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.highlightlist()
 
 	def on_actionUser_defined_epitopes_triggered(self):
-		self.myUserDefineDialog = UserDefineDialog()
-		self.myUserDefineDialog.load()
+		self.myUserDefineDialog = UserEpitopeDialog()
+		#self.myUserDefineDialog.loadData()
 		self.myUserDefineDialog.show()
+
+		#self.myUserDefineDialog = UserDefineDialog()
+		#self.myUserDefineDialog.load()
+		#self.myUserDefineDialog.show()
 
 	def on_actionCodon_Optimize_triggered(self):
 		global MoveNotChange

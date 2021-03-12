@@ -1,5 +1,25 @@
 <RCC>
   <qresource prefix="PNG-Icons">
+    <file>G1_1.png</file>
+    <file>G1_2.png</file>
+    <file>G1_3.png</file>
+    <file>G1_4.png</file>
+    <file>G1_5.png</file>
+    <file>G1_6.png</file>
+    <file>G1_7.png</file>
+    <file>G1_8.png</file>
+    <file>G1_9.png</file>
+    <file>G1_10.png</file>
+    <file>G1_11.png</file>
+    <file>G1_12.png</file>
+    <file>G1_13.png</file>
+    <file>G2_1.png</file>
+    <file>G2_2.png</file>
+    <file>G2_3.png</file>
+    <file>G2_4.png</file>
+    <file>G3_1.png</file>
+    <file>G3_2.png</file>
+    <file>G3_3.png</file>
     <file>probe.png</file>
     <file>Cterminaldomain1.png</file>
     <file>Cterminaldomain.png</file>
