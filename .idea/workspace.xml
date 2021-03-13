@@ -2,15 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f472839-8a65-4dce-be83-d1c7511e6e93" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/userepitopedialog.ui" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Conf/Group_set_file_H1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Conf/Group_set_file_H1.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Conf/Residue_set_file_H1_HA1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Conf/Residue_set_file_H1_HA1.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Conf/Residue_set_file_H1_HA2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Conf/Residue_set_file_H1_HA2.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DB/FragmentDB.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/FragmentDB.ldb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DB/Test.ldb" beforeDir="false" afterPath="$PROJECT_DIR$/DB/Test.ldb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainLibrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainLibrator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainLibrator_UI.ui.autosave" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/VgenesResources.qrc" beforeDir="false" afterPath="$PROJECT_DIR$/Resources/VgenesResources.qrc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/VgenesResources_rc.py" beforeDir="false" afterPath="$PROJECT_DIR$/Resources/VgenesResources_rc.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VgenesResources_rc.py" beforeDir="false" afterPath="$PROJECT_DIR$/VgenesResources_rc.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userepitopedialog.py" beforeDir="false" afterPath="$PROJECT_DIR$/userepitopedialog.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userepitopedialog.ui" beforeDir="false" afterPath="$PROJECT_DIR$/userepitopedialog.ui" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

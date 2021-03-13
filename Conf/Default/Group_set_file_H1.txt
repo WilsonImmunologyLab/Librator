@@ -1,0 +1,20 @@
+Color,G1_1,Ca1,ABS-Ca1
+Color,G1_2,Ca2,ABS-Ca2
+Color,G1_3,Cb,ABS-Cb
+Color,G1_4,Sa,ABS-Sa
+Color,G1_5,Sb,ABS-Sb
+Color,G1_6,TBD,
+Color,G1_7,Stalk-MN,Stalk-MN
+Color,G1_8,TBD,
+Color,G1_9,TBD,
+Color,G1_10,TBD,
+Color,G1_11,TBD,
+Color,G1_12,TBD,
+Color,G1_13,TBD,
+Shade,G2_1,Lattral Patch,Lattral Patch
+Shade,G2_2,TBD,
+Shade,G2_3,TBD,
+Shade,G2_4,TBD,
+Border,G3_1,RBS,RBS
+Border,G3_2,TBD,
+Border,G3_3,TBD,
