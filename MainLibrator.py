@@ -229,8 +229,156 @@ class UserEpitopeDialog(QtWidgets.QDialog):
 		self.ui.comboBox.currentTextChanged.connect(self.loadData)
 		self.ui.pushButtonSaveGroup.clicked.connect(self.SaveGroup)
 		self.ui.pushButtonSaveResidue.clicked.connect(self.SaveResidue)
+		self.ui.pushButtonRestore.clicked.connect(self.Restore)
 
 		self.loadData()
+
+	def Restore(self):
+		global EpitopesAnnotateH1
+		global EpitopesAnnotateH3
+		global EpitopesDictH1_HA1
+		global EpitopesDictH1_HA2
+		global EpitopesDictH3_HA1
+		global EpitopesDictH3_HA2
+
+		question = 'The default setting will over-write your current setting, do you still want to continue?'
+		buttons = 'YN'
+		answer = questionMessage(self, question, buttons)
+		if answer == 'No':
+			return
+
+		try:
+			if self.ui.comboBox.currentText() == 'H1':
+				Group_set_file = os.path.join(working_prefix, 'Conf', 'Group_set_file_H1.txt')
+				Residue_set_file_HA1 = os.path.join(working_prefix, 'Conf', 'Residue_set_file_H1_HA1.txt')
+				Residue_set_file_HA2 = os.path.join(working_prefix, 'Conf', 'Residue_set_file_H1_HA2.txt')
+
+				Default_Group_set_file = os.path.join(working_prefix, 'Conf', 'Default', 'Group_set_file_H1.txt')
+				Default_Residue_set_file_HA1 = os.path.join(working_prefix, 'Conf', 'Default', 'Residue_set_file_H1_HA1.txt')
+				Default_Residue_set_file_HA2 = os.path.join(working_prefix, 'Conf', 'Default', 'Residue_set_file_H1_HA2.txt')
+
+				file_handle_in = open(Default_Group_set_file, 'r')
+				configure = file_handle_in.read()
+				file_handle_in.close()
+				file_handle_out = open(Group_set_file, 'w')
+				file_handle_out.write(configure)
+				file_handle_out.close()
+
+				file_handle_in = open(Default_Residue_set_file_HA1, 'r')
+				configure = file_handle_in.read()
+				file_handle_in.close()
+				file_handle_out = open(Residue_set_file_HA1, 'w')
+				file_handle_out.write(configure)
+				file_handle_out.close()
+
+				file_handle_in = open(Default_Residue_set_file_HA2, 'r')
+				configure = file_handle_in.read()
+				file_handle_in.close()
+				file_handle_out = open(Residue_set_file_HA2, 'w')
+				file_handle_out.write(configure)
+				file_handle_out.close()
+
+				# Group_set_file_H1
+				file_handle = open(Group_set_file, 'r')
+				configure = file_handle.read()
+				configure = configure.split('\n')
+				for line in configure:
+					tmp = line.split(',')
+					if len(tmp) > 2:
+						EpitopesAnnotateH1[tmp[1]] = tmp[2]
+				file_handle.close()
+				# Residue_set_file_H1_HA1
+				EpitopesDictH1_HA1 = {}
+				file_handle = open(Residue_set_file_HA1, 'r')
+				configure = file_handle.read()
+				configure = configure.split('\n')
+				for line in configure:
+					tmp = line.split(',')
+					if len(tmp) > 1:
+						EpitopesDictH1_HA1[int(tmp[0])] = tmp[1]
+				file_handle.close()
+				# Residue_set_file_H1_HA2
+				EpitopesDictH1_HA2 = {}
+				file_handle = open(Residue_set_file_HA2, 'r')
+				configure = file_handle.read()
+				configure = configure.split('\n')
+				for line in configure:
+					tmp = line.split(',')
+					if len(tmp) > 1:
+						EpitopesDictH1_HA2[int(tmp[0])] = tmp[1]
+				file_handle.close()
+
+				Msg = "Default setting for H1 restored!"
+				QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			else:
+				Group_set_file = os.path.join(working_prefix, 'Conf', 'Group_set_file_H3.txt')
+				Residue_set_file_HA1 = os.path.join(working_prefix, 'Conf', 'Residue_set_file_H3_HA1.txt')
+				Residue_set_file_HA2 = os.path.join(working_prefix, 'Conf', 'Residue_set_file_H3_HA2.txt')
+
+				Default_Group_set_file = os.path.join(working_prefix, 'Conf', 'Default', 'Group_set_file_H3.txt')
+				Default_Residue_set_file_HA1 = os.path.join(working_prefix, 'Conf', 'Default',
+				                                            'Residue_set_file_H3_HA1.txt')
+				Default_Residue_set_file_HA2 = os.path.join(working_prefix, 'Conf', 'Default',
+				                                            'Residue_set_file_H3_HA2.txt')
+
+				file_handle_in = open(Default_Group_set_file, 'r')
+				configure = file_handle_in.read()
+				file_handle_in.close()
+				file_handle_out = open(Group_set_file, 'w')
+				file_handle_out.write(configure)
+				file_handle_out.close()
+
+				file_handle_in = open(Default_Residue_set_file_HA1, 'r')
+				configure = file_handle_in.read()
+				file_handle_in.close()
+				file_handle_out = open(Residue_set_file_HA1, 'w')
+				file_handle_out.write(configure)
+				file_handle_out.close()
+
+				file_handle_in = open(Default_Residue_set_file_HA2, 'r')
+				configure = file_handle_in.read()
+				file_handle_in.close()
+				file_handle_out = open(Residue_set_file_HA2, 'w')
+				file_handle_out.write(configure)
+				file_handle_out.close()
+
+				# Group_set_file_H3
+				file_handle = open(Group_set_file, 'r')
+				configure = file_handle.read()
+				configure = configure.split('\n')
+				for line in configure:
+					tmp = line.split(',')
+					if len(tmp) > 2:
+						EpitopesAnnotateH3[tmp[1]] = tmp[2]
+				file_handle.close()
+				# Residue_set_file_H3_HA1
+				EpitopesDictH3_HA1 = {}
+				file_handle = open(Residue_set_file_HA1, 'r')
+				configure = file_handle.read()
+				configure = configure.split('\n')
+				for line in configure:
+					tmp = line.split(',')
+					if len(tmp) > 1:
+						EpitopesDictH3_HA1[int(tmp[0])] = tmp[1]
+				file_handle.close()
+				# Residue_set_file_H3_HA2
+				EpitopesDictH3_HA2 = {}
+				file_handle = open(Residue_set_file_HA2, 'r')
+				configure = file_handle.read()
+				configure = configure.split('\n')
+				for line in configure:
+					tmp = line.split(',')
+					if len(tmp) > 1:
+						EpitopesDictH3_HA2[int(tmp[0])] = tmp[1]
+				file_handle.close()
+
+				Msg = "Default setting for H3 restored!"
+				QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			
+			self.loadData()
+		except:
+			Msg = "Can not find default setting file, please download the latest version!"
+			QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
 
 	def SaveResidue(self):
 		global EpitopesDictH1_HA1
@@ -564,7 +712,6 @@ class UserEpitopeDialog(QtWidgets.QDialog):
 		offset_pool = [-1, 1]
 		offset = offset_pool[random.randint(0, 1)]
 		self.resize(size_w + offset, size_h + offset)
-
 
 	def loadData(self):
 		if self.ui.comboBox.currentText() == 'H1':
@@ -19825,9 +19972,128 @@ if os.path.exists(Group_set_file_H1) and os.path.exists(Group_set_file_H3) and o
 	file_handle.close()
 
 else:
-	pass
-	# remove those files and copy new one
+	# H1
+	Group_set_file = os.path.join(working_prefix, 'Conf', 'Group_set_file_H1.txt')
+	Residue_set_file_HA1 = os.path.join(working_prefix, 'Conf', 'Residue_set_file_H1_HA1.txt')
+	Residue_set_file_HA2 = os.path.join(working_prefix, 'Conf', 'Residue_set_file_H1_HA2.txt')
 
+	Default_Group_set_file = os.path.join(working_prefix, 'Conf', 'Default', 'Group_set_file_H1.txt')
+	Default_Residue_set_file_HA1 = os.path.join(working_prefix, 'Conf', 'Default', 'Residue_set_file_H1_HA1.txt')
+	Default_Residue_set_file_HA2 = os.path.join(working_prefix, 'Conf', 'Default', 'Residue_set_file_H1_HA2.txt')
+
+	file_handle_in = open(Default_Group_set_file, 'r')
+	configure = file_handle_in.read()
+	file_handle_in.close()
+	file_handle_out = open(Group_set_file, 'w')
+	file_handle_out.write(configure)
+	file_handle_out.close()
+
+	file_handle_in = open(Default_Residue_set_file_HA1, 'r')
+	configure = file_handle_in.read()
+	file_handle_in.close()
+	file_handle_out = open(Residue_set_file_HA1, 'w')
+	file_handle_out.write(configure)
+	file_handle_out.close()
+
+	file_handle_in = open(Default_Residue_set_file_HA2, 'r')
+	configure = file_handle_in.read()
+	file_handle_in.close()
+	file_handle_out = open(Residue_set_file_HA2, 'w')
+	file_handle_out.write(configure)
+	file_handle_out.close()
+
+	# H3
+	Group_set_file = os.path.join(working_prefix, 'Conf', 'Group_set_file_H3.txt')
+	Residue_set_file_HA1 = os.path.join(working_prefix, 'Conf', 'Residue_set_file_H3_HA1.txt')
+	Residue_set_file_HA2 = os.path.join(working_prefix, 'Conf', 'Residue_set_file_H3_HA2.txt')
+
+	Default_Group_set_file = os.path.join(working_prefix, 'Conf', 'Default', 'Group_set_file_H3.txt')
+	Default_Residue_set_file_HA1 = os.path.join(working_prefix, 'Conf', 'Default',
+	                                            'Residue_set_file_H3_HA1.txt')
+	Default_Residue_set_file_HA2 = os.path.join(working_prefix, 'Conf', 'Default',
+	                                            'Residue_set_file_H3_HA2.txt')
+
+	file_handle_in = open(Default_Group_set_file, 'r')
+	configure = file_handle_in.read()
+	file_handle_in.close()
+	file_handle_out = open(Group_set_file, 'w')
+	file_handle_out.write(configure)
+	file_handle_out.close()
+
+	file_handle_in = open(Default_Residue_set_file_HA1, 'r')
+	configure = file_handle_in.read()
+	file_handle_in.close()
+	file_handle_out = open(Residue_set_file_HA1, 'w')
+	file_handle_out.write(configure)
+	file_handle_out.close()
+
+	file_handle_in = open(Default_Residue_set_file_HA2, 'r')
+	configure = file_handle_in.read()
+	file_handle_in.close()
+	file_handle_out = open(Residue_set_file_HA2, 'w')
+	file_handle_out.write(configure)
+	file_handle_out.close()
+
+
+	# Group_set_file_H1
+	file_handle = open(Group_set_file_H1, 'r')
+	configure = file_handle.read()
+	configure = configure.split('\n')
+	for line in configure:
+		tmp = line.split(',')
+		if len(tmp) > 2:
+			EpitopesAnnotateH1[tmp[1]] = tmp[2]
+	file_handle.close()
+
+	# Group_set_file_H3
+	file_handle = open(Group_set_file_H3, 'r')
+	configure = file_handle.read()
+	configure = configure.split('\n')
+	for line in configure:
+		tmp = line.split(',')
+		if len(tmp) > 2:
+			EpitopesAnnotateH3[tmp[1]] = tmp[2]
+	file_handle.close()
+
+	# Residue_set_file_H1_HA1
+	file_handle = open(Residue_set_file_H1_HA1, 'r')
+	configure = file_handle.read()
+	configure = configure.split('\n')
+	for line in configure:
+		tmp = line.split(',')
+		if len(tmp) > 1:
+			EpitopesDictH1_HA1[int(tmp[0])] = tmp[1]
+	file_handle.close()
+
+	# Residue_set_file_H1_HA2
+	file_handle = open(Residue_set_file_H1_HA2, 'r')
+	configure = file_handle.read()
+	configure = configure.split('\n')
+	for line in configure:
+		tmp = line.split(',')
+		if len(tmp) > 1:
+			EpitopesDictH1_HA2[int(tmp[0])] = tmp[1]
+	file_handle.close()
+
+	# Residue_set_file_H3_HA1
+	file_handle = open(Residue_set_file_H3_HA1, 'r')
+	configure = file_handle.read()
+	configure = configure.split('\n')
+	for line in configure:
+		tmp = line.split(',')
+		if len(tmp) > 1:
+			EpitopesDictH3_HA1[int(tmp[0])] = tmp[1]
+	file_handle.close()
+
+	# Residue_set_file_H3_HA2
+	file_handle = open(Residue_set_file_H3_HA2, 'r')
+	configure = file_handle.read()
+	configure = configure.split('\n')
+	for line in configure:
+		tmp = line.split(',')
+		if len(tmp) > 1:
+			EpitopesDictH3_HA2[int(tmp[0])] = tmp[1]
+	file_handle.close()
 
 H1HA1Regions = {'1':'Stalk', '2':'Stalk', '3':'Stalk', '4':'Stalk', '5':'Stalk', '6':'Stalk', '7':'Stalk',
 				'8':'Stalk', '9':'Stalk', '10':'Stalk', '11':'Stalk', '12':'Stalk-MN',
