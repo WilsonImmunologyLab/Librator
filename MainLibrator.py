@@ -17511,7 +17511,16 @@ def HANumbering(AASeq):
 	MyOutFiles = NameBase + 'Out.txt'
 
 	workingfilename = os.path.join(temp_folder, MyInFiles)
-	musclepath = re.sub(r'[^\/]+$','',muscle_path)
+	if system() == 'Windows':
+		musclepath = muscle_path
+	elif system() == 'Darwin':
+		musclepath = re.sub(r'[^\/]+$','',muscle_path)
+	elif system() == 'Linux':
+		cmd = muscle_path
+		musclepath = re.sub(r'[^\/]+$','',muscle_path)
+	else:
+		musclepath = re.sub(r'[^\/]+$','',muscle_path)
+
 	savefilename = os.path.join(temp_folder,  MyOutFiles)
 
 	workingdir, filename = os.path.split(workingfilename)

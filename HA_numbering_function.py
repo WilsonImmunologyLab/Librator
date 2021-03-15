@@ -5,6 +5,7 @@ import os
 import tempfile
 import sys
 import subprocess
+from platform import system
 
 def Align(headers_seqs, progpath, program='PROBCONS', musclegapopen=None):
 
@@ -75,17 +76,23 @@ def Align(headers_seqs, progpath, program='PROBCONS', musclegapopen=None):
 
 		raise ValueError('header_seqs does not specify a list with at least two entries.')
 
-	if not os.path.isdir(progpath):
+	#if not os.path.isdir(progpath):
 
-		raise ValueError("Cannot find directory %s." % progpath)
+		#raise ValueError("Cannot find directory %s." % progpath)
 
 	if program == 'PROBCONS':
 
 		exe = os.path.abspath("%s/probcons" % progpath)  # the executable
 
 	elif program == 'MUSCLE':
-
-		exe = os.path.abspath("%s/muscle" % progpath)  # the executable
+		if system() == 'Darwin':
+			exe = os.path.abspath("%s/muscle" % progpath)  # the executable
+		elif system() == 'Linux':
+			exe = os.path.abspath("%s/muscle" % progpath)  # the executable
+		elif system() == 'Windows':
+			exe = progpath
+		else:
+			exe = os.path.abspath("%s/muscle" % progpath)  # the executable
 
 	else:
 
@@ -511,9 +518,9 @@ def HA_numbering_Jesse(infile, outfile):
 
 		alignerpath = lines[0][1].strip()
 
-		if not os.path.isdir(alignerpath):
+		#if not os.path.isdir(alignerpath):
 
-			raise IOError("The directory of %s specified by musclepath does not exist." % (alignerpath))
+			#raise IOError("The directory of %s specified by musclepath does not exist." % (alignerpath))
 
 		prog = 'MUSCLE'
 
