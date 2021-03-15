@@ -19,7 +19,7 @@ from weblogo import read_seq_data, LogoData, LogoOptions, LogoFormat, eps_format
 from HA_numbering_function import HA_numbering_Jesse
 from itertools import combinations
 from collections import Counter
-from subprocess import call, Popen, PIPE
+from subprocess import call, Popen, PIPE, run
 from platform import system
 from dnachisel import *
 
@@ -6157,8 +6157,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 				cmd = ''
 			# print(cmd)
 			if os.path.isfile(pymol_path):
-				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
-				             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+				if system() == 'Windows':
+					run(cmd, shell=True)
+				else:
+					bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+								 env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 				self.ShowVGenesText(pml_path)
 			else:
 				Msg = 'Please check your path setting for PyMOL!'
@@ -6253,7 +6256,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			# open pml script with PyMOL
 			if system() == 'Windows':
-				cmd = UCSF_path + " " + pml_path
+				cmd = '"' + UCSF_path + '" ' + pml_path
 			elif system() == 'Darwin':
 				cmd = UCSF_path + " " + pml_path
 			elif system() == 'Linux':
@@ -6262,8 +6265,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 				cmd = ''
 			# print(cmd)
 			if os.path.isfile(UCSF_path):
-				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
-				             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+				if system() == 'Windows':
+					run(cmd, shell=True)
+				else:
+					bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+								 env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 				self.ShowVGenesText(pml_path)
 			else:
 				Msg = 'Please check your path setting for PyMOL!'
@@ -14748,16 +14754,20 @@ class LibratorMain(QtWidgets.QMainWindow):
 				pml.write(text)
 
 		if system() == 'Windows':
-			cmd = pymolPath + " " + pml_path
+			cmd = '"' + pymolPath + '" ' + pml_path
 		elif system() == 'Darwin':
 			cmd = pymolPath + " " + pml_path
 		elif system() == 'Linux':
 			cmd = pymolPath + " " + pml_path
 		else:
 			cmd = ''
-		#print(cmd)
+		print(cmd)
 		if os.path.isfile(pymolPath):
-			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+			if system() == 'Windows':
+				run(cmd, shell=True, check=True)
+			else:
+				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+							 env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 			self.ShowVGenesText(pml_path)
 		else:
 			Msg = 'Please check your path setting for PyMOL!'
@@ -14908,7 +14918,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 					#		pml.write(text)
 
 		if system() == 'Windows':
-			cmd = UCSFPath + " " + pml_path
+			cmd = '"' + UCSFPath + '" ' + pml_path
+			cmd = [UCSFPath, pml_path]
 		elif system() == 'Darwin':
 			cmd = UCSFPath + " " + pml_path
 		elif system() == 'Linux':
@@ -14916,7 +14927,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 		else:
 			cmd = ''
 		if os.path.isfile(UCSFPath):
-			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True, env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+			if system() == 'Windows':
+				run(cmd, shell=True)
+			else:
+				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True)
 			self.ShowVGenesText(pml_path)
 		else:
 			Msg = 'Please check your path setting for UCSF Chimera!'
