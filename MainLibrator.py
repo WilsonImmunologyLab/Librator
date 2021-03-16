@@ -15541,7 +15541,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 	def drawTree(self, Data, this_path, seq_type):
 		global raxml_path
 		#global figtree_path
-		outfilename = this_path + "/alignment_parsed.fas"
+		outfilename = os.path.join(this_path, "alignment_parsed.fas")
 		treefilename = 'tree'
 		# generate output file
 		file_handle = open(outfilename, 'w')
@@ -15552,7 +15552,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# generate tree
 		if system() == 'Windows':
-			cmd = 'cd ' + this_path + ';'
+			cmd = 'cd ' + this_path + ' & '
 			cmd += raxml_path
 			if seq_type == "AA":
 				cmd += ' -m PROTGAMMAAUTO -p 12345 -T 2 -s ' + outfilename + ' -n ' + treefilename
@@ -15583,6 +15583,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		try:
 			os.system(cmd)
+			print(cmd)
 			print("tree done!")
 		except:
 			Msg = 'Error happens when run RAxML!'
