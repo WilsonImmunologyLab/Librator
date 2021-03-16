@@ -6931,7 +6931,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			return
 		else:
 			if system() == 'Windows':
-				cmd = 'cd ' + temp_folder + ';  ' + temp_folder + '\*.*'
+				#cmd = 'cd ' + temp_folder + '; del ' + temp_folder + '\*.*'
+				cmd = 'del /Q ' + temp_folder + '\*.*'
 			elif system() == 'Darwin':
 				cmd = 'cd ' + temp_folder + '; rm -rf ' + temp_folder + '/*'
 			elif system() == 'Linux':
@@ -6951,7 +6952,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		temp_files = os.listdir(temp_folder)
 		if len(temp_files) > 200:
 			if system() == 'Windows':
-				cmd = 'cd ' + temp_folder + '; del ' + temp_folder + '\*.*'
+				#cmd = 'cd ' + temp_folder + '; del ' + temp_folder + '\*.*'
+				cmd = 'del /Q ' + temp_folder + '\*.*'
 			elif system() == 'Darwin':
 				cmd = 'cd ' + temp_folder + '; rm -rf ' + temp_folder + '/*'
 			elif system() == 'Linux':
