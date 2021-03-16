@@ -1148,6 +1148,16 @@ class CodonDialog(QtWidgets.QDialog):
 		self.ui.pushButtonManualEdit.clicked.connect(self.ManualEdit)
 		self.ui.pushButtonHighlight.clicked.connect(self.decorate)
 
+		if system() == 'Windows':
+			FontIs = self.ui.textEditSeqOri.currentFont()
+			font = QFont(FontIs)
+			font.setPointSize(14)
+			font.setFamily("Courier New")
+			self.ui.textEditSeqOri.setFont(font)
+			self.ui.textEditSeqOpt.setFont(font)
+		else:
+			pass
+
 	def loadSeq(self):
 		global MoveNotChange
 
@@ -2260,7 +2270,6 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 			url = QUrl.fromLocalFile(str(html_file))
 			self.view.load(url)
 			#self.view.load(QUrl("file://" + html_file))
-			
 
 class MyObjectCls(QObject):
 	updateSelectionSignal = pyqtSignal(str)
@@ -3283,6 +3292,16 @@ class fusionDialog(QtWidgets.QDialog):
 		self.ui.endBase.valueChanged.connect(self.highlight)
 		self.ui.startDonor.valueChanged.connect(self.highlight)
 		self.ui.endDonor.valueChanged.connect(self.highlight)
+
+		if system() == 'Windows':
+			FontIs = self.ui.textEditBase.currentFont()
+			font = QFont(FontIs)
+			font.setPointSize(10)
+			font.setFamily("Courier New")
+			self.ui.textEditBase.setFont(font)
+			self.ui.textEditDonor.setFont(font)
+		else:
+			pass
 
 		self.base_len = 0
 		self.donor_len = 0
@@ -4470,6 +4489,15 @@ class MutationDialog(QtWidgets.QDialog):
 		self.ui.HA1mutationH3.textChanged.connect(self.update_name)
 		self.ui.HA2mutationH3.textChanged.connect(self.update_name)
 		self.ui.tabWidget.currentChanged.connect(self.update_name)
+
+		if system() == 'Windows':
+			FontIs = self.ui.textEdit.currentFont()
+			font = QFont(FontIs)
+			font.setPointSize(14)
+			font.setFamily("Courier New")
+			self.ui.textEdit.setFont(font)
+		else:
+			pass
 
 	def disable_name(self):
 		seq_name = self.ui.CurSeq.text()
@@ -5849,6 +5877,15 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		self.SelfClean()
 		#self.loadPDB()
+
+		if system() == 'Windows':
+			FontIs = self.ui.txtAASeq.currentFont()
+			font = QFont(FontIs)
+			font.setPointSize(14)
+			font.setFamily("Courier New")
+			self.ui.txtAASeq.setFont(font)
+		else:
+			pass
 
 	def updateUI(self, str):
 		self.ui.listWidgetStrainsIn.addItem(str)
