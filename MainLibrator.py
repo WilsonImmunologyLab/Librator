@@ -2054,6 +2054,7 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 		my_cur_os = system()
 		if my_cur_os == 'Windows':
 			cmd = 'explorer ' + out_path     # Windows
+			cmd = os.path.normpath(cmd)
 		elif my_cur_os == 'Darwin':
 			cmd = 'open ' + out_path      # mac
 		elif my_cur_os == 'Linux':
@@ -17094,7 +17095,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# get time stamp for current data
 		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
 		# initial output file 1, summary EXCEL file
-		summary_out_file = out_dir + "/Summary_" + time_stamp + ".xlsx"
+		summary_out_file = os.path.join(out_dir, "Summary_" + time_stamp + ".xlsx")
 		writer_summary = pd.ExcelWriter(summary_out_file)
 		summary_array = []
 		summary_index = 0
@@ -17121,7 +17122,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		for index in fragment_data.index:
 			# for each virus, open a file for its all 4 fragments
 			seq_name = fragment_data.loc[index, "Name"]
-			seq_fragment_file_name = out_dir + "/" + seq_name.replace("/", "_") + ".fas"
+			seq_fragment_file_name = os.path.join(out_dir, seq_name.replace("/", "_") + ".fas")
 			temp_file = open(seq_fragment_file_name, "w")
 			tmp_array = ["",seq_name]
 
@@ -17263,7 +17264,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			idt_array = pd.DataFrame(data=idt_array)
 			idt_array.columns = ["Well Position", "Name", "Sequence", "5' Phosphorylation (for blunt cloning only)"]
 
-			idt_out_file = out_dir + "/IDTorder_" + time_stamp + ".xlsx"
+			idt_out_file = os.path.join(out_dir, "IDTorder_" + time_stamp + ".xlsx")
 			writer_idt = pd.ExcelWriter(idt_out_file)
 			idt_array.to_excel(writer_idt, sheet_name='Sheet1', index=False)
 			writer_idt.save()
@@ -17272,7 +17273,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				idt_array = pd.DataFrame(data=idt_array[0:96])
 				idt_array.columns = ["Well Position", "Name", "Sequence", "5' Phosphorylation (for blunt cloning only)"]
 
-				idt_out_file = out_dir + "/IDTorder_" + time_stamp + ".xlsx"
+				idt_out_file = os.path.join(out_dir, "IDTorder_" + time_stamp + ".xlsx")
 				writer_idt = pd.ExcelWriter(idt_out_file)
 				idt_array.to_excel(writer_idt, sheet_name='Sheet1', index=False)
 				writer_idt.save()
@@ -17284,7 +17285,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 						out_idt_array = pd.DataFrame(data=idt_array[first_index_of_cur_file:last_index_of_cur_file])
 						out_idt_array.columns = ["Well Position","Name","Sequence","5' Phosphorylation (for blunt cloning only)"]
 
-						idt_out_file = out_dir + "/IDTorder_" + time_stamp + "_" + str(file_num + 1) + ".xlsx"
+						idt_out_file = os.path.join(out_dir, "IDTorder_" + time_stamp + "_" + str(file_num + 1) + ".xlsx")
 						writer_idt = pd.ExcelWriter(idt_out_file)
 						out_idt_array.to_excel(writer_idt, sheet_name='Sheet1', index=False)
 						writer_idt.save()
@@ -17307,17 +17308,20 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# open Fragments file folder
 		my_cur_os = system()
 		if my_cur_os == 'Windows':
-			cmd = 'explorer ' + path     # Windows
+			cmd = 'explorer ' + out_dir     # Windows
+			cmd = os.path.normpath(cmd)
 		elif my_cur_os == 'Darwin':
 			cmd = 'open ' + out_dir      # mac
 		elif my_cur_os == 'Linux':
 			cmd = 'nautilus' + out_dir   # Linux
 		else:
 			cmd = ''
+
 		if cmd != '':
 			try:
+				print(cmd)
 				os.system(cmd)
-			except ValueError:
+			except:
 				pass
 
 	@pyqtSlot()
