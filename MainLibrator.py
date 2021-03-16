@@ -8176,14 +8176,26 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		if self.ui.radioButtonPop.isChecked():
 			eps = eps_formatter(data, format)
-			out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
-			with open(out_eps, 'wb') as f:
-				f.write(eps)
 			if system() == 'Windows':
-				cmd = 'explorer ' + out_eps  # Windows
+				options = QtWidgets.QFileDialog.Options()
+				out_eps, _ = QtWidgets.QFileDialog.getSaveFileName(self,
+				                                                   "New NT logo",
+				                                                   "New NT logo",
+				                                                   "Encapsulated PostScript Files (*.eps);;All Files (*)",
+				                                                   options=options)
+				if out_eps != 'none':
+					out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
+					with open(out_eps, 'wb') as f:
+						f.write(eps)
 			elif system() == 'Darwin':
+				out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
+				with open(out_eps, 'wb') as f:
+					f.write(eps)
 				cmd = 'open ' + out_eps  # mac
 			elif system() == 'Linux':
+				out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
+				with open(out_eps, 'wb') as f:
+					f.write(eps)
 				cmd = 'nautilus' + out_eps  # Linux
 			else:
 				cmd = ''
@@ -8216,14 +8228,27 @@ class LibratorMain(QtWidgets.QMainWindow):
 				layout.addWidget(view)
 			except:
 				eps = eps_formatter(data, format)
-				out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
-				with open(out_eps, 'wb') as f:
-					f.write(eps)
+
 				if system() == 'Windows':
-					cmd = 'explorer ' + out_eps  # Windows
+					options = QtWidgets.QFileDialog.Options()
+					out_eps, _ = QtWidgets.QFileDialog.getSaveFileName(self,
+					                                                      "New NT logo",
+					                                                      "New NT logo",
+					                                                      "Encapsulated PostScript Files (*.eps);;All Files (*)",
+					                                                      options=options)
+					if out_eps != 'none':
+						out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
+						with open(out_eps, 'wb') as f:
+							f.write(eps)
 				elif system() == 'Darwin':
+					out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
+					with open(out_eps, 'wb') as f:
+						f.write(eps)
 					cmd = 'open ' + out_eps  # mac
 				elif system() == 'Linux':
+					out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
+					with open(out_eps, 'wb') as f:
+						f.write(eps)
 					cmd = 'nautilus' + out_eps  # Linux
 				else:
 					cmd = ''
@@ -8319,14 +8344,26 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		if self.ui.radioButtonPop.isChecked():
 			eps = eps_formatter(data, format)
-			out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
-			with open(out_eps, 'wb') as f:
-				f.write(eps)
 			if system() == 'Windows':
-				cmd = 'explorer ' + out_eps  # Windows
+				options = QtWidgets.QFileDialog.Options()
+				out_eps, _ = QtWidgets.QFileDialog.getSaveFileName(self,
+				                                                   "New AA logo",
+				                                                   "New AA logo",
+				                                                   "Encapsulated PostScript Files (*.eps);;All Files (*)",
+				                                                   options=options)
+				if out_eps != 'none':
+					out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
+					with open(out_eps, 'wb') as f:
+						f.write(eps)
 			elif system() == 'Darwin':
+				out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
+				with open(out_eps, 'wb') as f:
+					f.write(eps)
 				cmd = 'open ' + out_eps  # mac
 			elif system() == 'Linux':
+				out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
+				with open(out_eps, 'wb') as f:
+					f.write(eps)
 				cmd = 'nautilus' + out_eps  # Linux
 			else:
 				cmd = ''
@@ -8359,14 +8396,26 @@ class LibratorMain(QtWidgets.QMainWindow):
 				layout.addWidget(view)
 			except:
 				eps = eps_formatter(data, format)
-				out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
-				with open(out_eps, 'wb') as f:
-					f.write(eps)
 				if system() == 'Windows':
-					cmd = 'explorer ' + out_eps  # Windows
+					options = QtWidgets.QFileDialog.Options()
+					out_eps, _ = QtWidgets.QFileDialog.getSaveFileName(self,
+					                                                   "New AA logo",
+					                                                   "New AA logo",
+					                                                   "Encapsulated PostScript Files (*.eps);;All Files (*)",
+					                                                   options=options)
+					if out_eps != 'none':
+						out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
+						with open(out_eps, 'wb') as f:
+							f.write(eps)
 				elif system() == 'Darwin':
+					out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
+					with open(out_eps, 'wb') as f:
+						f.write(eps)
 					cmd = 'open ' + out_eps  # mac
 				elif system() == 'Linux':
+					out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
+					with open(out_eps, 'wb') as f:
+						f.write(eps)
 					cmd = 'nautilus' + out_eps  # Linux
 				else:
 					cmd = ''
