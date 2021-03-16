@@ -12,12 +12,12 @@ added_files = [
              (r'C:\Users\leili\Documents\GitHub\Librator\Tools\*','Tools'),
              (r'C:\Users\leili\Documents\GitHub\Librator\Js\*','Js'),
              (r'C:\Users\leili\Documents\GitHub\Librator\codon_usage_data','codon_usage_data'),
-             (r'C:\Users\leili\Documents\GitHub\Librator\python_codon_tables','python_codon_tables')
+             (r'C:\Users\leili\Documents\GitHub\Librator\python_codon_tables','python_codon_tables'),
+             (r'C:\Users\leili\Documents\GitHub\Librator\qtweb-resources','.')
              ]
 
-
 a = Analysis(['MainLibrator.py'],
-             pathex=[r'C:\Users\leili\Documents\GitHub\Librator'],
+             pathex=['C:\\Users\\leili\\Documents\\GitHub\\Librator'],
              binaries=[],
              datas=added_files,
              hiddenimports=['cmath'],
@@ -39,7 +39,7 @@ exe = EXE(pyz,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=False )
+          console=True )
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
@@ -48,13 +48,3 @@ coll = COLLECT(exe,
                upx=True,
                upx_exclude=[],
                name='Librator')
-app = BUNDLE(coll,
-             name='Librator.app',
-             icon='Flu.icns',
-             bundle_identifier=None,
-             info_plist={
-              'NSPrincipalClass': 'NSApplication',
-              'NSAppleScriptEnabled': False,
-              'NSHumanReadableCopyright':"Copyright @ 2021, Wilson Lab, All Rights Reserved",
-              'NSHighResolutionCapable': 'True'
-             })
