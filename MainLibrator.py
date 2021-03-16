@@ -5183,6 +5183,7 @@ class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 			AAseq, NTseq = BuildNTalignment(AAseq, all_dict[SeqName][0])
 			each = (SeqName, NTseq, SparseSeq(AAseq))
 			all.append(each)
+			currentfile.close()
 		else:
 			return
 
@@ -16091,6 +16092,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			align_file = open(out_file, "r")
 			alignment = align_file.read()
 			sequences_block = alignment.split(">")
+			align_file.close()
 
 			for cur_block in sequences_block:
 				if cur_block == '':
@@ -16293,6 +16295,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			alignment = align_file.read()
 			sequences_block = alignment.split(">")
 			sequences_block = sequences_block[1:]
+			align_file.close()
 
 			for cur_block in sequences_block:
 				tmp = cur_block.split("\n")
@@ -19352,6 +19355,7 @@ def EditSequencesHTML(DataSet, donor_region, template):
 				AAseq += Readline
 		AAseq, NTseq = BuildNTalignment(AAseq, all[SeqName][0])
 		all[SeqName] = [NTseq, AAseq]
+		currentfile.close()
 	else:
 		return
 
