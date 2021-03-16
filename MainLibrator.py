@@ -1606,7 +1606,9 @@ class FindKeyDialog(QtWidgets.QDialog):
 		VGenesTextWindows[window_id].id = window_id
 		layout = QGridLayout(VGenesTextWindows[window_id])
 		view = QWebEngineView(self)
-		view.load(QUrl("file://" + html_file))
+		#view.load(QUrl("file://" + html_file))
+		url = QUrl.fromLocalFile(str(html_file))
+		view.load(url)
 		view.show()
 		layout.addWidget(view)
 		VGenesTextWindows[window_id].show()
@@ -2111,7 +2113,9 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 		VGenesTextWindows[window_id].id = window_id
 		layout = QGridLayout(VGenesTextWindows[window_id])
 		view = QWebEngineView(self)
-		view.load(QUrl("file://" + html_page))
+		#view.load(QUrl("file://" + html_page))
+		url = QUrl.fromLocalFile(str(html_page))
+		view.load(url)
 		view.show()
 		layout.addWidget(view)
 		VGenesTextWindows[window_id].show()
@@ -2244,13 +2248,18 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 			self.view.page().setWebChannel(channel)
 			my_object.updateSelectionSignal.connect(self.deleteReplacement)
 
-			self.view.load(QUrl("file://" + html_file))
+			#self.view.load(QUrl("file://" + html_file))
+			url = QUrl.fromLocalFile(str(html_file))
+			self.view.load(url)
 			self.view.show()
 
 			layout = self.ui.gridLayoutSeq
 			layout.addWidget(self.view)
 		else:
-			self.view.load(QUrl("file://" + html_file))
+			url = QUrl.fromLocalFile(str(html_file))
+			self.view.load(url)
+			#self.view.load(QUrl("file://" + html_file))
+			
 
 class MyObjectCls(QObject):
 	updateSelectionSignal = pyqtSignal(str)
@@ -2382,11 +2391,15 @@ class IdMutationDialog(QtWidgets.QDialog):
 		if layout.count() == 0:
 			view = QWebEngineView()
 			layout.addWidget(view)
-			view.load(QUrl("file://" + html_file))
+			#view.load(QUrl("file://" + html_file))
+			url = QUrl.fromLocalFile(str(html_file))
+			view.load(url)
 			view.show()
 		else:
 			view = layout.itemAt(0).widget()
-			view.load(QUrl("file://" + html_file))
+			#view.load(QUrl("file://" + html_file))
+			url = QUrl.fromLocalFile(str(html_file))
+			view.load(url)
 			view.show()
 
 	def accept(self):
@@ -3283,7 +3296,9 @@ class fusionDialog(QtWidgets.QDialog):
 		layout = self.ui.groupBox.layout()
 		for i in range(layout.count()):
 			view = layout.itemAt(i).widget()
-			view.load(QUrl("file://" + html_file))
+			#view.load(QUrl("file://" + html_file))
+			url = QUrl.fromLocalFile(str(html_file))
+			view.load(url)
 			view.show()
 
 	def deleteReplacement(self, id):
@@ -3372,7 +3387,9 @@ class fusionDialog(QtWidgets.QDialog):
 			layout = self.ui.groupBox.layout()
 			for i in range(layout.count()):
 				view = layout.itemAt(i).widget()
-				view.load(QUrl("file://" + html_file))
+				#view.load(QUrl("file://" + html_file))
+				url = QUrl.fromLocalFile(str(html_file))
+				view.load(url)
 				view.show()
 
 			self.ui.startBase.setValue(0)
@@ -4970,6 +4987,8 @@ class SequenceEditDialog(QtWidgets.QDialog):
 		for i in range(layout.count()):
 			view = layout.itemAt(i).widget()
 			view.load(QUrl("file://" + html_file))
+			url = QUrl.fromLocalFile(str(html_file))
+			view.load(url)
 			view.show()
 
 	def accept(self):  # redo accept method
@@ -6526,7 +6545,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			file_handle.write(content)
 			file_handle.close()
 			# show local HTML
-			self.ui.HTMLview3.load(QUrl('file://' + html_path))
+			#self.ui.HTMLview3.load(QUrl('file://' + html_path))
+			url = QUrl.fromLocalFile(str(html_path))
+			self.ui.HTMLview3.load(url)
 			self.ui.HTMLview3.show()
 
 	def clearTable(self):
@@ -6536,9 +6557,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 	def resizeHTML(self, w, h):
 		if DBFilename == 'none':
 			return
+		return
 		h = h - 20
 		sender = self.sender()
-		a = sender.id
+		#a = sender.id
 		if sender.id == 1:
 			######  plot stat for subtype
 			# get data
@@ -6577,7 +6599,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			file_handle.write(content)
 			file_handle.close()
 			# show local HTML
-			self.ui.HTMLview1.load(QUrl('file://' + html_path))
+			#self.ui.HTMLview1.load(QUrl('file://' + html_path))
+			url = QUrl.fromLocalFile(str(html_path))
+			self.ui.HTMLview1.load(url)
 			self.ui.HTMLview1.show()
 		elif sender.id == 2:
 			######  plot stat for Role
@@ -6619,7 +6643,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			file_handle.write(content)
 			file_handle.close()
 			# show local HTML
-			self.ui.HTMLview2.load(QUrl('file://' + html_path))
+			#self.ui.HTMLview2.load(QUrl('file://' + html_path))
+			url = QUrl.fromLocalFile(str(html_path))
+			self.ui.HTMLview2.load(url)
 			self.ui.HTMLview2.show()
 		elif sender.id == 3:
 			######  plot stat for H1
@@ -6905,7 +6931,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			return
 		else:
 			if system() == 'Windows':
-				cmd = 'cd ' + temp_folder + '; del ' + temp_folder + '/*.*'
+				cmd = 'cd ' + temp_folder + ';  ' + temp_folder + '\*.*'
 			elif system() == 'Darwin':
 				cmd = 'cd ' + temp_folder + '; rm -rf ' + temp_folder + '/*'
 			elif system() == 'Linux':
@@ -6925,7 +6951,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		temp_files = os.listdir(temp_folder)
 		if len(temp_files) > 200:
 			if system() == 'Windows':
-				cmd = 'cd ' + temp_folder + '; del ' + temp_folder + '/*.*'
+				cmd = 'cd ' + temp_folder + '; del ' + temp_folder + '\*.*'
 			elif system() == 'Darwin':
 				cmd = 'cd ' + temp_folder + '; rm -rf ' + temp_folder + '/*'
 			elif system() == 'Linux':
@@ -7541,7 +7567,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		VGenesTextWindows[window_id].id = window_id
 		layout = QGridLayout(VGenesTextWindows[window_id])
 		view = QWebEngineView(self)
-		view.load(QUrl("file://" + html_file))
+		#view.load(QUrl("file://" + html_file))
+		url = QUrl.fromLocalFile(str(html_file))
+		view.load(url)
 		view.show()
 		layout.addWidget(view)
 		VGenesTextWindows[window_id].show()
@@ -7797,7 +7825,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 				file_handle.write(content)
 				file_handle.close()
 				# show local HTML
-				self.ui.HTMLview1.load(QUrl('file://' + html_path))
+				#self.ui.HTMLview1.load(QUrl('file://' + html_path))
+				url = QUrl.fromLocalFile(str(html_path))
+				self.ui.HTMLview1.load(url)
 				self.ui.HTMLview1.show()
 			if self.ui.HTMLview2.h != 0:
 				######  plot stat for Role
@@ -7839,7 +7869,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 				file_handle.write(content)
 				file_handle.close()
 				# show local HTML
-				self.ui.HTMLview2.load(QUrl('file://' + html_path))
+				#self.ui.HTMLview2.load(QUrl('file://' + html_path))
+				url = QUrl.fromLocalFile(str(html_path))
+				self.ui.HTMLview2.load(url)
 				self.ui.HTMLview2.show()
 			if self.ui.HTMLview3.h != 0:
 				######  plot stat for H1
@@ -7886,7 +7918,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 				file_handle.write(content)
 				file_handle.close()
 				# show local HTML
-				self.ui.HTMLview3.load(QUrl('file://' + html_path))
+				#self.ui.HTMLview3.load(QUrl('file://' + html_path))
+				url = QUrl.fromLocalFile(str(html_path))
+				self.ui.HTMLview3.load(url)
 				self.ui.HTMLview3.show()
 		# Fragment DB
 		elif self.ui.tabWidget.currentIndex() == 7:
@@ -7970,7 +8004,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 				return
 			# display
 			view = QWebEngineView()
-			view.load(QUrl("file://" + html_file))
+			#view.load(QUrl("file://" + html_file))
+			url = QUrl.fromLocalFile(str(html_file))
+			view.load(url)
 			view.show()
 
 			layout = self.ui.MSAgroupBox.layout()
@@ -8034,7 +8070,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# display
 		view = QWebEngineView()
-		view.load(QUrl("file://" + html_file))
+		#view.load(QUrl("file://" + html_file))
+		url = QUrl.fromLocalFile(str(html_file))
+		view.load(url)
 		view.show()
 
 		layout = self.ui.FLUDBgroupBox.layout()
@@ -8161,7 +8199,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 				# display
 				view = QWebEngineView()
-				view.load(QUrl("file://" + out_svg))
+				#view.load(QUrl("file://" + out_svg))
+				url = QUrl.fromLocalFile(str(out_svg))
+				view.load(url)
 				view.show()
 
 				layout = self.ui.groupBoxLogo.layout()
@@ -8302,7 +8342,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 				# display
 				view = QWebEngineView()
-				view.load(QUrl("file://" + out_svg))
+				#view.load(QUrl("file://" + out_svg))
+				url = QUrl.fromLocalFile(str(out_svg))
+				view.load(url)
 				view.show()
 
 				layout = self.ui.groupBoxLogo.layout()
@@ -15313,7 +15355,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 				return
 			layout = self.modalessMutationDialog.ui.gridLayoutHTML
 			view = QWebEngineView(self)
-			view.load(QUrl("file://" + html_file))
+			#view.load(QUrl("file://" + html_file))
+			url = QUrl.fromLocalFile(str(html_file))
+			view.load(url)
 			view.show()
 			layout.addWidget(view)
 			self.modalessMutationDialog.show()
@@ -15569,7 +15613,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		VGenesTextWindows[window_id].id = window_id
 		layout = QGridLayout(VGenesTextWindows[window_id])
 		view = QWebEngineView(self)
-		view.load(QUrl("file://" + out_html_file))
+		#view.load(QUrl("file://" + out_html_file))
+		url = QUrl.fromLocalFile(str(out_html_file))
+		view.load(url)
 		view.show()
 		layout.addWidget(view)
 		VGenesTextWindows[window_id].show()
@@ -15645,7 +15691,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			view.page().setWebChannel(channel)
 			my_object.updateSelectionSignal.connect(self.modalessFusionDialog.deleteReplacement)
 
-			view.load(QUrl("file://" + html_file))
+			#view.load(QUrl("file://" + html_file))
+			url = QUrl.fromLocalFile(str(html_file))
+			view.load(url)
 			view.show()
 
 			layout = self.modalessFusionDialog.ui.groupBox.layout()
@@ -15701,7 +15749,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			view.page().setWebChannel(channel)
 			my_object.updateSelectionSignal.connect(self.modalessFusionDialog.deleteReplacement)
 
-			view.load(QUrl("file://" + html_file))
+			#view.load(QUrl("file://" + html_file))
+			url = QUrl.fromLocalFile(str(html_file))
+			view.load(url)
 			view.show()
 
 			layout = self.modalessFusionDialog.ui.groupBox.layout()
@@ -15757,7 +15807,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 			view.page().setWebChannel(channel)
 			my_object.updateSelectionSignal.connect(self.modalessFusionDialog.deleteReplacement)
 
-			view.load(QUrl("file://" + html_file))
+			#view.load(QUrl("file://" + html_file))
+			url = QUrl.fromLocalFile(str(html_file))
+			view.load(url)
 			view.show()
 
 			layout = self.modalessFusionDialog.ui.groupBox.layout()
@@ -16889,7 +16941,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# display
 		layout = self.modalessGibsonMSADialog.ui.gridLayoutFragment
 		view = QWebEngineView(self)
-		view.load(QUrl("file://" + html_file))
+		#view.load(QUrl("file://" + html_file))
+		url = QUrl.fromLocalFile(str(html_file))
+		view.load(url)
 		view.show()
 		layout.addWidget(view)
 
