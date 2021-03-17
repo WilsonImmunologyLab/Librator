@@ -40,7 +40,7 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           console=False,
-          icon='C:\\Users\\leili\\Documents\\ico\Flu.ico')
+          icon='Flu.ico')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
