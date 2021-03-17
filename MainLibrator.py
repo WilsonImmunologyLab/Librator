@@ -6941,18 +6941,28 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_actionIncrease_font_size_triggered(self):
-
-		if self.ui.tabWidget.currentIndex() == 2:
-			val = int(self.ui.spnAlignFont.value())
-			val += 1
-			self.ui.spnAlignFont.setValue(val)
-		elif self.ui.tabWidget.currentIndex() == 1:
+		if self.ui.tabWidget.currentIndex() == 1:
 			FontIs = self.ui.txtAASeq.currentFont()
 			font = QFont(FontIs)
 
 			FontSize = int(font.pointSize())
 			if FontSize < 36:
 				FontSize += 1
+			font.setPointSize(FontSize)
+			font.setFamily("Courier New")
+
+			# self.ui.txtDNASeq.setFont(font)
+			self.ui.txtAASeq.setFont(font)
+
+	@pyqtSlot()
+	def on_actionDecrease_font_size_triggered(self):
+		if self.ui.tabWidget.currentIndex() == 1:
+			FontIs = self.ui.txtAASeq.currentFont()
+			font = QFont(FontIs)
+
+			FontSize = int(font.pointSize())
+			if FontSize > 3:
+				FontSize -= 1
 			font.setPointSize(FontSize)
 			font.setFamily("Courier New")
 
@@ -7068,26 +7078,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 				out_handle.write('>' + element[0] + '\n')
 				out_handle.write(element[1] + '\n')
 			out_handle.close()
-
-	@pyqtSlot()
-	def on_actionDecrease_font_size_triggered(self):
-
-		if self.ui.tabWidget.currentIndex() == 2:
-			val = int(self.ui.spnAlignFont.value())
-			val -= 1
-			self.ui.spnAlignFont.setValue(val)
-		elif self.ui.tabWidget.currentIndex() == 1:
-			FontIs = self.ui.txtAASeq.currentFont()
-			font = QFont(FontIs)
-
-			FontSize = int(font.pointSize())
-			if FontSize > 3:
-				FontSize -= 1
-			font.setPointSize(FontSize)
-			font.setFamily("Courier New")
-
-			# self.ui.txtDNASeq.setFont(font)
-			self.ui.txtAASeq.setFont(font)
 
 	@pyqtSlot()
 	def on_spnAlignFont_valueChanged(self, value):
@@ -14443,12 +14433,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 			font.setFamily('Courier New')
 			self.ui.txtAASeq.setFont(font)
 			return
-		elif self.ui.tabWidget.currentIndex() == 2:
-			Document = self.ui.txtName.toPlainText() + '\n'
-			Document += self.ui.txtSeqAlignment.toPlainText()
-			Document += ('\n' + self.windowTitle())
-			font.setPointSize(7)
-			font.setFamily('Courier New')
 		else:
 			return
 
