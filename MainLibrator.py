@@ -14433,6 +14433,24 @@ class LibratorMain(QtWidgets.QMainWindow):
 			font.setFamily('Courier New')
 			self.ui.txtAASeq.setFont(font)
 			return
+		elif self.ui.tabWidget.currentIndex() == 2:
+			options = QtWidgets.QFileDialog.Options()
+			pdfName, _ = QtWidgets.QFileDialog.getSaveFileName(self,
+			                                                      "my alignment",
+			                                                      os.path.join(working_prefix, 'my alignment'),
+			                                                      # os.path.join("～/Documents", 'New Database'),
+			                                                      "PDF Files (*.pdf);;All Files (*)",
+			                                                      options=options)
+
+			if pdfName != None and pdfName != 'none' and pdfName != '':
+				try:
+					layout = self.ui.MSAgroupBox.layout()
+					if layout != None:
+						myView = layout.itemAt(0).widget()
+						myView.page().printToPdf(pdfName)
+				except:
+					print('error')
+			return
 		else:
 			return
 
