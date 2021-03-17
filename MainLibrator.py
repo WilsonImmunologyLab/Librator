@@ -14434,6 +14434,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.ui.txtAASeq.setFont(font)
 			return
 		elif self.ui.tabWidget.currentIndex() == 2:
+			Msg = 'We apologize that current "Save to PDF" function does not work well ' \
+			      '(only able to print the start of alignment), we suggest you' \
+			      ' to make snapshot by your self before we figure out how to print full length alignment!\n' \
+			      'BTW, all alignment files are saved under "/Applications/Librator.app/Contents/Resources/Temp"'
+			QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
+
 			options = QtWidgets.QFileDialog.Options()
 			pdfName, _ = QtWidgets.QFileDialog.getSaveFileName(self,
 			                                                      "my alignment",
