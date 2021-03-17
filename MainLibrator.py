@@ -6179,30 +6179,49 @@ class LibratorMain(QtWidgets.QMainWindow):
 							pml.write(text)
 					iter += 1
 
+				EpitopesDict_HA1 = []
+				EpitopesDict_HA2 = []
+				EpitopesAnnotate = []
+				text = ''
 				if subtype in Group1:
-					text = "sel ABS-Ca1, chain A+C+E+G+I+K and (resi 172+173+174+175+176+209+210+211)\n" \
-					       + "sel ABS-Ca2, chain A+C+E+G+I+K and (resi 142+143+144+145+146+147+227+228+229)\n" \
-					       + "sel ABS-Cb, chain A+C+E+G+I+K and (resi 76+77+78+79+80+81)\n" \
-					       + "sel ABS-Sa, chain A+C+E+G+I+K and (resi 130+131+159+160+161+162+163+165+166+167+168+169+170)\n" \
-					       + "sel ABS-Sb, chain A+C+E+G+I+K and (resi 190+191+192+193+194+195+196+197+198+199+200)\n" \
-					       + "sel LateralPatch, chain A+C+E+G+I+K and (resi 121+131+168+169+172+174+176)\n" \
-					       + "sel RBS-130loop, chain A+C+E+G+I+K and (resi 136-142)\n" \
-					       + "sel RBS-150loop, chain A+C+E+G+I+K and (resi 158-166)\n" \
-					       + "sel RBS-190helix, chain A+C+E+G+I+K and (resi 191-198)\n" \
-					       + "sel RBS-220loop, chain A+C+E+G+I+K and (resi 224-231)\n"
-					pml.write(text)
+					EpitopesDict_HA1 = EpitopesDictH1_HA1
+					EpitopesDict_HA2 = EpitopesDictH1_HA2
+					EpitopesAnnotate = EpitopesAnnotateH1
 				elif subtype in Group2:
-					text = "sel ABS-A, chain A+C+E+G+I+K and (resi 122+126+127+128+129+130+131+132+133+137+141+142+143+144)\n" \
-					       + "sel ABS-B, chain A+C+E+G+I+K and (resi 155+156+157+158+159+160+164+186+188+189+190+191+192+193+194+195+196+197+198+201)\n" \
-					       + "sel ABS-C, chain A+C+E+G+I+K and (resi 52+53+54+275+276)\n" \
-					       + "sel ABS-D, chain A+C+E+G+I+K and (resi 174+182+207+220+226+229+230+242+244)\n" \
-					       + "sel ABS-E, chain A+C+E+G+I+K and (resi 62+63+78+81+83)\n" \
-					       + "sel LateralPatch, chain A+C+E+G+I+K and (resi 119+129+165+166+169+171+173)\n" \
-					       + "sel RBS-130loop, chain A+C+E+G+I+K and (resi 134-138)\n" \
-					       + "sel RBS-150loop, chain A+C+E+G+I+K and (resi 155-163)\n" \
-					       + "sel RBS-190helix, chain A+C+E+G+I+K and (resi 188-195)\n" \
-					       + "sel RBS-220loop, chain A+C+E+G+I+K and (resi 221-228)\n"
-					pml.write(text)
+					EpitopesDict_HA1 = EpitopesDictH3_HA1
+					EpitopesDict_HA2 = EpitopesDictH3_HA2
+					EpitopesAnnotate = EpitopesAnnotateH3
+
+				# new code, automatically load user's define
+				text += '\n# HA1 epitopes\n'
+				cur_ha1_epitopes_dic = {}
+				for key in EpitopesDict_HA1:
+					cur_groups = EpitopesDict_HA1[key].split(' ')
+					for group in cur_groups:
+						if group in cur_ha1_epitopes_dic:
+							cur_ha1_epitopes_dic[group] += '+' + str(key)
+						else:
+							cur_ha1_epitopes_dic[group] = str(key)
+
+				for group in cur_ha1_epitopes_dic:
+					group_name = EpitopesAnnotate[group]
+					text += 'sel ' + group_name + ', chain A+C+E+G+I+K and (resi ' + cur_ha1_epitopes_dic[group] + ')\n'
+
+				text += '\n# HA2 epitopes\n'
+				cur_ha2_epitopes_dic = {}
+				for key in EpitopesDict_HA2:
+					cur_groups = EpitopesDict_HA2[key].split(' ')
+					for group in cur_groups:
+						if group in cur_ha2_epitopes_dic:
+							cur_ha2_epitopes_dic[group] += '+' + str(key)
+						else:
+							cur_ha2_epitopes_dic[group] = str(key)
+
+				for group in cur_ha2_epitopes_dic:
+					group_name = EpitopesAnnotate[group]
+					text += 'sel ' + group_name + ', chain B+D+F+H+J+L and (resi ' + cur_ha2_epitopes_dic[group] + ')\n'
+
+				pml.write(text)
 
 			# open pml script with PyMOL
 			if system() == 'Windows':
@@ -6287,30 +6306,47 @@ class LibratorMain(QtWidgets.QMainWindow):
 							pml.write(text)
 					iter += 1
 
+				EpitopesDict_HA1 = []
+				EpitopesDict_HA2 = []
+				EpitopesAnnotate = []
+				text = ''
 				if subtype in Group1:
-					text = "alias ABS-Ca1 :172-176.A,209-211.A,172-176.C,209-211.C,172-176.E,209-211.E\n" \
-					       + "alias ABS-Ca2 :142-147.A,227-229.A,142-147.C,227-229.C,142-147.E,227-229.E\n" \
-					       + "alias ABS-Cb :76-81.A,76-81.C,76-81.E\n" \
-					       + "alias ABS-Sa :130-131.A,159-163.A,165-170.A,130-131.C,159-163.C,165-170.C,130-131.E,159-163.E,165-170.E\n" \
-					       + "alias ABS-Sb :190-200.A,190-200.C,190-200.E\n" \
-					       + "alias LateralPatch :121.A,131.A,168.A,169.A,172.A,174.A,176.A,121.C,131.C,168.C,169.C,172.C,174.C,176.C,121.E,131.E,168.E,169.E,172.E,174.E,176.E\n" \
-					       + "alias RBS-130loop :136-142.A,136-142.C,136-142.E\n" \
-					       + "alias RBS-150loop :158-166.A,158-166.C,158-166.E\n" \
-					       + "alias RBS-190helix :191-198.A,191-198.C,191-198.E\n" \
-					       + "alias RBS-220loop :224-231.A,224-231.C,224-231.E\n"
-					pml.write(text)
+					EpitopesDict_HA1 = EpitopesDictH1_HA1
+					EpitopesDict_HA2 = EpitopesDictH1_HA2
+					EpitopesAnnotate = EpitopesAnnotateH1
 				elif subtype in Group2:
-					text = "alias ABS-A :122.A,126-133.A,137.A,141-144.A,122.C,126-133.C,137.C,141-144.C,122.E,126-133.E,137.E,141-144.E\n" \
-					       + "alias ABS-B :155-160.A,164.A,188-198.A,201.A,155-160.C,164.C,188-198.C,201.C,155-160.E,164.E,188-198.E,201.E\n" \
-					       + "alias ABS-C :52-54.A,275-276.A,52-54.C,275-276.C,52-54.E,275-276.E\n" \
-					       + "alias ABS-D :174.A,182.A,207.A,220.A,226.A,229-230.A,242.A,244.A,174.C,182.C,207.C,220.C,226.C,229-230.C,242.C,244.C,174.E,182.E,207.E,220.E,226.E,229-230.E,242.E,244.E\n" \
-					       + "alias ABS-E :62-63.A,78.A,81.A,83.A,62-63.C,78.C,81.C,83.C,62-63.E,78.E,81.E,83.E\n" \
-					       + "alias LateralPatch :119.A,129.A,165.A,166.A,169.A,171.A,173.A,119.C,129.C,165.C,166.C,169.C,171.C,173.C,119.E,129.E,165.E,166.E,169.E,171.E,173.E\n" \
-					       + "alias RBS-130loop :134-138.A,134-138.C,134-138.E\n" \
-					       + "alias RBS-150loop :155-163.A,155-163.C,155-163.E\n" \
-					       + "alias RBS-190helix :188-195.A,188-195.C,188-195.E\n" \
-					       + "alias RBS-220loop :221-228.A,221-228.C,221-228.E\n"
-					pml.write(text)
+					EpitopesDict_HA1 = EpitopesDictH3_HA1
+					EpitopesDict_HA2 = EpitopesDictH3_HA2
+					EpitopesAnnotate = EpitopesAnnotateH3
+
+				# new code, automatically load user's define
+				text += '\n# HA1 epitopes\n'
+				cur_ha1_epitopes_dic = {}
+				for key in EpitopesDict_HA1:
+					cur_groups = EpitopesDict_HA1[key].split(' ')
+					for group in cur_groups:
+						if group in cur_ha1_epitopes_dic:
+							cur_ha1_epitopes_dic[group] += ',' + str(key) + '.A,' + str(key) + '.C,' + str(key) + '.E'
+						else:
+							cur_ha1_epitopes_dic[group] = str(key) + '.A,' + str(key) + '.C,' + str(key) + '.E'
+				for group in cur_ha1_epitopes_dic:
+					group_name = EpitopesAnnotate[group]
+					text += 'alias ' + group_name + ' :' + cur_ha1_epitopes_dic[group] + '\n'
+
+				text += '\n# HA2 epitopes\n'
+				cur_ha2_epitopes_dic = {}
+				for key in EpitopesDict_HA2:
+					cur_groups = EpitopesDict_HA2[key].split(' ')
+					for group in cur_groups:
+						if group in cur_ha2_epitopes_dic:
+							cur_ha2_epitopes_dic[group] += ',' + str(key) + '.A,' + str(key) + '.C,' + str(key) + '.E'
+						else:
+							cur_ha2_epitopes_dic[group] = str(key) + '.A,' + str(key) + '.C,' + str(key) + '.E'
+				for group in cur_ha2_epitopes_dic:
+					group_name = EpitopesAnnotate[group]
+					text += 'alias ' + group_name + ' :' + cur_ha2_epitopes_dic[group] + '\n'
+
+				pml.write(text)
 
 			# open pml script with PyMOL
 			if system() == 'Windows':
@@ -6997,9 +7033,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	def SelfClean(self):
 		global temp_folder
-		# how many files in TEMP, if > 200, clean
+		# how many files in TEMP, if > 500, clean
 		temp_files = os.listdir(temp_folder)
-		if len(temp_files) > 200:
+		if len(temp_files) > 500:
 			if system() == 'Windows':
 				#cmd = 'cd ' + temp_folder + '; del ' + temp_folder + '\*.*'
 				cmd = 'del /Q ' + temp_folder + '\*.*'
@@ -14794,7 +14830,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 			pml.write(text)
 
 			# highlight antigentic sites for H3N2 (A,B,C,D,E) and H1N1 (Ca1, Ca2, Cb, Sa, Sb)
+			EpitopesDict_HA1 = []
+			EpitopesDict_HA2 = []
+			EpitopesAnnotate = []
+			text = ''
 			if subtype in Group1:
+				'''
+				# old code
 				text = "sel ABS-Ca1, chain A+C+E+G+I+K and (resi 172+173+174+175+176+209+210+211)\n" \
 						+ "sel ABS-Ca2, chain A+C+E+G+I+K and (resi 142+143+144+145+146+147+227+228+229)\n" \
 						+ "sel ABS-Cb, chain A+C+E+G+I+K and (resi 76+77+78+79+80+81)\n" \
@@ -14810,8 +14852,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 						+ "color gray, ABS-Cb\n" \
 						+ "color chocolate, ABS-Sa\n" \
 						+ "color green, ABS-Sb\n"
-				pml.write(text)
+				'''
+				# new code, automatically load user's define
+				EpitopesDict_HA1 = EpitopesDictH1_HA1
+				EpitopesDict_HA2 = EpitopesDictH1_HA2
+				EpitopesAnnotate = EpitopesAnnotateH1
 			elif subtype in Group2:
+				'''
 				text = "sel ABS-A, chain A+C+E+G+I+K and (resi 122+126+127+128+129+130+131+132+133+137+141+142+143+144)\n" \
 						+ "sel ABS-B, chain A+C+E+G+I+K and (resi 155+156+157+158+159+160+164+186+188+189+190+191+192+193+194+195+196+197+198+201)\n" \
 						+ "sel ABS-C, chain A+C+E+G+I+K and (resi 52+53+54+275+276)\n" \
@@ -14827,13 +14874,56 @@ class LibratorMain(QtWidgets.QMainWindow):
 						+ "color gray, ABS-C\n" \
 						+ "color chocolate, ABS-D\n" \
 						+ "color green, ABS-E\n"
-				pml.write(text)
+				'''
+				# new code, automatically load user's define
+				EpitopesDict_HA1 = EpitopesDictH3_HA1
+				EpitopesDict_HA2 = EpitopesDictH3_HA2
+				EpitopesAnnotate = EpitopesAnnotateH3
 			else:
 				QMessageBox.warning(self, 'Warning', 'We only support HA structure now!', QMessageBox.Ok, QMessageBox.Ok)
 				return
+			# new code, automatically load user's define
+			text += '\n# HA1 epitopes\n'
+			cur_ha1_epitopes_dic = {}
+			for key in EpitopesDict_HA1:
+				cur_groups = EpitopesDict_HA1[key].split(' ')
+				for group in cur_groups:
+					if group in cur_ha1_epitopes_dic:
+						cur_ha1_epitopes_dic[group] += '+' + str(key)
+					else:
+						cur_ha1_epitopes_dic[group] = str(key)
+
+			for group in cur_ha1_epitopes_dic:
+				group_name = EpitopesAnnotate[group]
+				text += 'sel ' + group_name + ', chain A+C+E+G+I+K and (resi ' + cur_ha1_epitopes_dic[group] + ')\n'
+				if group in PyMolColorDefine:
+					group_color = PyMolColorDefine[group]
+					text += 'color ' + group_color +  ', ' + group_name + '\n'
+
+			text += '\n# HA2 epitopes\n'
+			cur_ha2_epitopes_dic = {}
+			for key in EpitopesDict_HA2:
+				cur_groups = EpitopesDict_HA2[key].split(' ')
+				for group in cur_groups:
+					if group in cur_ha2_epitopes_dic:
+						cur_ha2_epitopes_dic[group] += '+' + str(key)
+					else:
+						cur_ha2_epitopes_dic[group] = str(key)
+
+			for group in cur_ha2_epitopes_dic:
+				group_name = EpitopesAnnotate[group]
+				text += 'sel ' + group_name + ', chain B+D+F+H+J+L and (resi ' + cur_ha2_epitopes_dic[group] + ')\n'
+				if group in PyMolColorDefine:
+					group_color = PyMolColorDefine[group]
+					text += 'color ' + group_color +  ', ' + group_name + '\n'
+
+			pml.write(text)
 
 			# highlight mutations in red on the 3D structure
 			if mutation != "none":
+				text += '\n# mutations\n'
+				pml.write(text)
+
 				position = re.sub('[A-Za-z]', '', mutation)
 				position = position.strip(',')
 				real_pos_arr = position.split(',')
@@ -14954,9 +15044,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 			pml.write(text)
 
 			# highlight antigentic sites for H3N2 (A,B,C,D,E) and H1N1 (Ca1, Ca2, Cb, Sa, Sb)
-			text = "\n# Antigenic sites\n"
+			text = "\n# Antigenic sites"
 			pml.write(text)
+			EpitopesDict_HA1 = []
+			EpitopesDict_HA2 = []
+			EpitopesAnnotate = []
+			text = ''
 			if subtype in Group1:
+				'''
 				text = "alias ABS-Ca1 :172-176.A,209-211.A,172-176.C,209-211.C,172-176.E,209-211.E\n" \
 				       + "alias ABS-Ca2 :142-147.A,227-229.A,142-147.C,227-229.C,142-147.E,227-229.E\n" \
 				       + "alias ABS-Cb :76-81.A,76-81.C,76-81.E\n" \
@@ -14973,7 +15068,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 				       + "alias RBS-190helix :191-198.A,191-198.C,191-198.E\n" \
 				       + "alias RBS-220loop :224-231.A,224-231.C,224-231.E\n"
 				pml.write(text)
+				'''
+				# new code, automatically load user's define
+				EpitopesDict_HA1 = EpitopesDictH1_HA1
+				EpitopesDict_HA2 = EpitopesDictH1_HA2
+				EpitopesAnnotate = EpitopesAnnotateH1
 			elif subtype in Group2:
+				'''
 				text = "alias ABS-A :122.A,126-133.A,137.A,141-144.A,122.C,126-133.C,137.C,141-144.C,122.E,126-133.E,137.E,141-144.E\n" \
 				       + "alias ABS-B :155-160.A,164.A,188-198.A,201.A,155-160.C,164.C,188-198.C,201.C,155-160.E,164.E,188-198.E,201.E\n" \
 				       + "alias ABS-C :52-54.A,275-276.A,52-54.C,275-276.C,52-54.E,275-276.E\n" \
@@ -14990,9 +15091,49 @@ class LibratorMain(QtWidgets.QMainWindow):
 				       + "alias RBS-190helix :188-195.A,188-195.C,188-195.E\n" \
 				       + "alias RBS-220loop :221-228.A,221-228.C,221-228.E\n"
 				pml.write(text)
+				'''
+				# new code, automatically load user's define
+				EpitopesDict_HA1 = EpitopesDictH3_HA1
+				EpitopesDict_HA2 = EpitopesDictH3_HA2
+				EpitopesAnnotate = EpitopesAnnotateH3
 			else:
 				QMessageBox.warning(self, 'Warning', 'We only support HA structure now!', QMessageBox.Ok, QMessageBox.Ok)
 				return
+			# new code, automatically load user's define
+			text += '\n# HA1 epitopes\n'
+			cur_ha1_epitopes_dic = {}
+			for key in EpitopesDict_HA1:
+				cur_groups = EpitopesDict_HA1[key].split(' ')
+				for group in cur_groups:
+					if group in cur_ha1_epitopes_dic:
+						cur_ha1_epitopes_dic[group] += ',' + str(key) + '.A,' + str(key) + '.C,' + str(key) + '.E'
+					else:
+						cur_ha1_epitopes_dic[group] = str(key) + '.A,' + str(key) + '.C,' + str(key) + '.E'
+			for group in cur_ha1_epitopes_dic:
+				group_name = EpitopesAnnotate[group]
+				text += 'alias ' + group_name + ' :' + cur_ha1_epitopes_dic[group] + '\n'
+				if group in ColorDefine:
+					group_color = ColorDefine[group]
+					text += 'color ' + group_color + ' ' + group_name + '\n'
+
+			text += '\n# HA2 epitopes\n'
+			cur_ha2_epitopes_dic = {}
+			for key in EpitopesDict_HA2:
+				cur_groups = EpitopesDict_HA2[key].split(' ')
+				for group in cur_groups:
+					if group in cur_ha2_epitopes_dic:
+						cur_ha2_epitopes_dic[group] += ',' + str(key) + '.A,' + str(key) + '.C,' + str(key) + '.E'
+					else:
+						cur_ha2_epitopes_dic[group] = str(key) + '.A,' + str(key) + '.C,' + str(key) + '.E'
+			for group in cur_ha2_epitopes_dic:
+				group_name = EpitopesAnnotate[group]
+				text += 'alias ' + group_name + ' :' + cur_ha2_epitopes_dic[group] + '\n'
+				if group in ColorDefine:
+					group_color = ColorDefine[group]
+					text += 'color ' + group_color + ' ' + group_name + '\n'
+
+			pml.write(text)
+
 
 			# highlight mutations in red on the 3D structure
 			if mutation != "none":
@@ -20060,6 +20201,7 @@ CodonList={
 	'*':['TAA','TAG','TGA']
 }
 # old epitopes define
+'''
 LateralPatchH3 = [119,129,165,166,169,171,173]
 LateralPatchH1 = [121,131,168,169,172,174,176]
 
@@ -20093,9 +20235,43 @@ except:
 
 RBSH3 = list(range(134,139)) + list(range(155,164)) + list(range(188,196)) + list(range(221,229))
 RBSH1 = list(range(136,142)) + list(range(158,167)) + list(range(191,199)) + list(range(224,232))
-
+'''
 
 # new epitopes define and annotation
+global ColorDefine
+ColorDefine = {
+	"G1_1" : "#FF00FF",
+	"G1_2" : "#FFFF00",
+	"G1_3" : "#C0C0C0",
+	"G1_4" : "#800000",
+	"G1_5" : "#008000",
+	"G1_6" : "#0000FF",
+	"G1_7" : "#000080",
+	"G1_8" : "#FF0000",
+	"G1_9" : "#A52A2A",
+	"G1_10" : "#808000",
+	"G1_11" : "#FFA500",
+	"G1_12" : "#BFFF00",
+	"G1_13" : "#008080"
+}
+
+global PyMolColorDefine
+PyMolColorDefine = {
+	"G1_1" : "lightmagenta",
+	"G1_2" : "yellow",
+	"G1_3" : "silver",
+	"G1_4" : "firebrick",
+	"G1_5" : "forest",
+	"G1_6" : "blue",
+	"G1_7" : "density",
+	"G1_8" : "red",
+	"G1_9" : "brown",
+	"G1_10" : "olive",
+	"G1_11" : "orange",
+	"G1_12" : "lime",
+	"G1_13" : "teal"
+}
+
 global EpitopesDictH1_HA1, EpitopesDictH1_HA2, EpitopesDictH3_HA1, EpitopesDictH3_HA2, EpitopesAnnotateH1, EpitopesAnnotateH3
 EpitopesDictH1_HA1 = {}
 EpitopesDictH1_HA2 = {}
