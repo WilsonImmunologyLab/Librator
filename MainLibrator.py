@@ -8267,9 +8267,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 				                                                   "Encapsulated PostScript Files (*.eps);;All Files (*)",
 				                                                   options=options)
 				if out_eps != 'none':
-					out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 					with open(out_eps, 'wb') as f:
 						f.write(eps)
+					Msg = 'You sequence logo EPS file has been saved at ' + out_eps
+					QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
+
+				return
 			elif system() == 'Darwin':
 				out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 				with open(out_eps, 'wb') as f:
@@ -8320,9 +8323,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 					                                                      "Encapsulated PostScript Files (*.eps);;All Files (*)",
 					                                                      options=options)
 					if out_eps != 'none':
-						out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 						with open(out_eps, 'wb') as f:
 							f.write(eps)
+
+						Msg = 'You sequence logo EPS file has been saved at ' + out_eps
+						QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
+
+					return
 				elif system() == 'Darwin':
 					out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 					with open(out_eps, 'wb') as f:
@@ -8335,6 +8342,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 					cmd = 'nautilus' + out_eps  # Linux
 				else:
 					cmd = ''
+
 				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
 				             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 
@@ -8438,6 +8446,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 					out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 					with open(out_eps, 'wb') as f:
 						f.write(eps)
+
+					Msg = 'You sequence logo EPS file has been saved at ' + out_eps
+					QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
+				return
 			elif system() == 'Darwin':
 				out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 				with open(out_eps, 'wb') as f:
@@ -8487,9 +8499,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 					                                                   "Encapsulated PostScript Files (*.eps);;All Files (*)",
 					                                                   options=options)
 					if out_eps != 'none':
-						out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 						with open(out_eps, 'wb') as f:
 							f.write(eps)
+
+						Msg = 'You sequence logo EPS file has been saved at ' + out_eps
+						QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
+					return
 				elif system() == 'Darwin':
 					out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 					with open(out_eps, 'wb') as f:
