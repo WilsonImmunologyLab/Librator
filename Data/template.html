@@ -323,6 +323,22 @@
 </style>
 
 <style>
+button {
+	width: 160px; 
+	height: 25px; 
+	border-width: 0px; 
+	border-radius: 3px; 
+	background: #1E90FF; 
+	cursor: pointer; 
+	outline: none; 
+	color: white; 
+	font-size: 17px;
+}
+
+button:hover { 
+	background: #5599FF;
+}
+
 /* The container */
 .container {
   display: inline-block;
@@ -416,10 +432,82 @@ $(document).ready(function() {
         var my_object = channel.objects.connection;
 
         $("#saveImg").click(function(){
-		    var legendURL = document.getElementById("legend_img").href;
-			var headerURL = document.getElementById("header_img").href;
-			var alignmentURL = document.getElementById("alignment_img").href;
-			my_object.imgURL(legendURL, headerURL, alignmentURL)
+        	// run html2canvas first
+        	let promiseArr = [];
+
+			// legend part
+			let p1 = new Promise((resolve, reject) => {
+				html2canvas(document.getElementsByClassName("header_div")[2], {
+			        scale: 1,
+			        allowTaint: false,
+			        useCORS: true,
+			        backgroundColor: '#000000',
+			    }).then((canvas) => {
+			    	// canvas to png
+			        var MIME_TYPE = "image/png";
+			        var fileName = 'legend.png';
+			        var imgURL = canvas.toDataURL(MIME_TYPE);
+			        var dlLink = document.createElement('a');
+			        dlLink.id = 'legend_img';
+				    dlLink.download = fileName;
+				    dlLink.href = imgURL;
+				    document.body.appendChild(dlLink);
+				    resolve();
+			    });    
+			})
+			promiseArr.push(p1);
+
+		    // header part
+		    let p2 = new Promise((resolve, reject) => {
+				html2canvas(document.getElementsByClassName("name_div")[0], {
+			        scale: 1,
+			        allowTaint: false,
+			        useCORS: true,
+			        backgroundColor: '#000000',
+			    }).then((canvas) => {
+			    	// canvas to png
+			        var MIME_TYPE = "image/png";
+			        var fileName = 'header.png';
+			        var imgURL = canvas.toDataURL(MIME_TYPE);
+			        var dlLink = document.createElement('a');
+			        dlLink.id = 'header_img';
+				    dlLink.download = fileName;
+				    dlLink.href = imgURL;
+				    document.body.appendChild(dlLink);
+				    resolve();
+			    });
+			})
+			promiseArr.push(p2);
+
+		    // alignment part
+		    let p3 = new Promise((resolve, reject) => {
+				html2canvas(document.getElementsByClassName("seq_div")[0], {
+			        scale: 1,
+			        allowTaint: false,
+			        useCORS: true,
+			        backgroundColor: '#000000',
+			    }).then((canvas) => {
+			    	// canvas to png
+			        var MIME_TYPE = "image/png";
+			        var fileName = 'alignment.png';
+			        var imgURL = canvas.toDataURL(MIME_TYPE);
+			        var dlLink = document.createElement('a');
+			        dlLink.id = 'alignment_img';
+				    dlLink.download = fileName;
+				    dlLink.href = imgURL;
+				    document.body.appendChild(dlLink);
+				    resolve();
+			    });
+			})
+			promiseArr.push(p3);
+
+			// get into after p1,p2,p3 finished
+			Promise.all(promiseArr).then(res => {
+			    var legendURL = document.getElementById("legend_img").href;
+				var headerURL = document.getElementById("header_img").href;
+				var alignmentURL = document.getElementById("alignment_img").href;
+				my_object.imgURL(legendURL, headerURL, alignmentURL)
+			})
 		});
     });
 });
@@ -494,70 +582,8 @@ $(document).ready(function(){
   	});
 	$(".line_nt.1").find(".name").hide()
 
-	saveImg();
+	
 });
-
-function saveImg() {
-	// legend part
-	html2canvas(document.getElementsByClassName("header_div")[2], {
-        scale: 1,
-        allowTaint: false,
-        useCORS: true,
-        backgroundColor: '#000000',
-    }).then((canvas) => {
-    	// canvas to png
-        var MIME_TYPE = "image/png";
-        var fileName = 'legend.png';
-        var imgURL = canvas.toDataURL(MIME_TYPE);
-        var dlLink = document.createElement('a');
-        dlLink.id = 'legend_img';
-	    dlLink.download = fileName;
-	    dlLink.href = imgURL;
-	    dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
-	    document.body.appendChild(dlLink);
-    });
-
-    // header part
-	html2canvas(document.getElementsByClassName("name_div")[0], {
-        scale: 1,
-        allowTaint: false,
-        useCORS: true,
-        backgroundColor: '#000000',
-    }).then((canvas) => {
-    	// canvas to png
-        var MIME_TYPE = "image/png";
-        var fileName = 'header.png';
-        var imgURL = canvas.toDataURL(MIME_TYPE);
-        var dlLink = document.createElement('a');
-        dlLink.id = 'header_img';
-	    dlLink.download = fileName;
-	    dlLink.href = imgURL;
-	    dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
-	    document.body.appendChild(dlLink);
-    });
-
-    // alignment part
-	html2canvas(document.getElementsByClassName("seq_div")[0], {
-        scale: 1,
-        allowTaint: false,
-        useCORS: true,
-        backgroundColor: '#000000',
-    }).then((canvas) => {
-    	// canvas to png
-        var MIME_TYPE = "image/png";
-        var fileName = 'alignment.png';
-        var imgURL = canvas.toDataURL(MIME_TYPE);
-        var dlLink = document.createElement('a');
-        dlLink.id = 'alignment_img';
-	    dlLink.download = fileName;
-	    dlLink.href = imgURL;
-	    dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
-	    document.body.appendChild(dlLink);
-	    //dlLink.click();
-	    //document.body.removeChild(dlLink);
-    });
-
-}
 
 
 function onmouseover_help(ele,event){
