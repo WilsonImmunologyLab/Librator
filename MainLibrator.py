@@ -233,6 +233,26 @@ class UserEpitopeDialog(QtWidgets.QDialog):
 
 		self.loadData()
 
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}")
+		else:
+			pass
+
 	def Restore(self):
 		global EpitopesAnnotateH1
 		global EpitopesAnnotateH3
@@ -983,6 +1003,26 @@ class UserDefineDialog(QtWidgets.QDialog):
 		self.ui.pushButtonSave.clicked.connect(self.accept)
 		self.ui.pushButtonCancel.clicked.connect(self.reject)
 
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}")
+		else:
+			pass
+
 	def load(self):
 		UserDefineFile = os.path.join(working_prefix, 'Conf', 'Userdefine.txt')
 		if os.path.exists(UserDefineFile):
@@ -1149,6 +1189,23 @@ class CodonDialog(QtWidgets.QDialog):
 		self.ui.pushButtonHighlight.clicked.connect(self.decorate)
 
 		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}")
+
 			FontIs = self.ui.textEditSeqOri.currentFont()
 			font = QFont(FontIs)
 			font.setPointSize(14)
@@ -1531,6 +1588,26 @@ class FindKeyDialog(QtWidgets.QDialog):
 		self.ui.pushButton_3.clicked.connect(self.reject)
 		self.ui.pushButtonPos.clicked.connect(self.updateUI)
 		self.ui.pushButtonNeg.clicked.connect(self.updateUI)
+
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}")
+		else:
+			pass
 
 	def showAlignment(self):
 		global VGenesTextWindows
@@ -1927,6 +2004,26 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 		#self.ui.browseDB.clicked.connect(self.browse_db)
 		#self.ui.createDB.clicked.connect(self.new_db)
 
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}")
+		else:
+			pass
+
 	def browse_db(self):  # browse and select path
 		global temp_folder
 		out_dir, _ = QFileDialog.getOpenFileName(self, "select existing fragment DB", temp_folder,"Librator database Files (*.ldb);;All Files (*)")
@@ -2321,6 +2418,29 @@ class IdMutationDialog(QtWidgets.QDialog):
 		self.ui.comboBoxTemplate.currentTextChanged.connect(self.makeHTML)
 		self.ui.comboBoxTarget.currentTextChanged.connect(self.makeHTML)
 
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}"
+			                   "QLineEdit{font-size:18px;}"
+			                   "QTreeWidget{font-size:18px;}"
+			                   "QSpinBox{font-size:18px;}")
+		else:
+			pass
+
 	def makeHTML(self):
 		template_name = self.ui.comboBoxTemplate.currentText()
 		target_name = self.ui.comboBoxTarget.currentText()
@@ -2437,6 +2557,29 @@ class aantDialog(QtWidgets.QDialog):
 		self.ui.pushButtonNT.clicked.connect(self.returnNT)
 		self.ui.pushButtonCancel.clicked.connect(self.returnCancel)
 
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}"
+			                   "QLineEdit{font-size:18px;}"
+			                   "QTreeWidget{font-size:18px;}"
+			                   "QSpinBox{font-size:18px;}")
+		else:
+			pass
+
 	def returnAA(self):
 		self.aantSignal.emit('AA')
 		self.close()
@@ -2459,6 +2602,29 @@ class FastaOrSeqDialog(QtWidgets.QDialog):
 		self.ui.pushButtonFasta.clicked.connect(self.returnFasta)
 		self.ui.pushButtonSEQ.clicked.connect(self.returnSEQ)
 		self.ui.pushButtonCancel.clicked.connect(self.returnCancel)
+
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}"
+			                   "QLineEdit{font-size:18px;}"
+			                   "QTreeWidget{font-size:18px;}"
+			                   "QSpinBox{font-size:18px;}")
+		else:
+			pass
 
 	def returnFasta(self):
 		self.inputSignal.emit('Fasta')
@@ -2510,6 +2676,29 @@ class jointDialog(QtWidgets.QDialog):
 		self.ui.saveButton.clicked.connect(self.accept)
 		self.ui.cancelButton.clicked.connect(self.reject)
 		self.ui.exitButton.clicked.connect(self.reject)
+
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}"
+			                   "QLineEdit{font-size:18px;}"
+			                   "QTreeWidget{font-size:18px;}"
+			                   "QSpinBox{font-size:18px;}")
+		else:
+			pass
 
 	def accept(self):
 		global H1_start, H1_end, H3_start, H3_end, NA_start, NA_end
@@ -2566,6 +2755,29 @@ class treeDialog(QtWidgets.QDialog):
 		self.ui.endBox.valueChanged.connect(self.highlightRegion)
 		#self.ui.showButton.clicked.connect(self.highlightRegion)
 		self.ui.seqEdit.cursorPositionChanged.connect(self.ruler)
+
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}"
+			                   "QLineEdit{font-size:18px;}"
+			                   "QTreeWidget{font-size:18px;}"
+			                   "QSpinBox{font-size:18px;}")
+		else:
+			pass
 
 	def ruler(self):
 		cursor = self.ui.seqEdit.textCursor()
@@ -2700,6 +2912,29 @@ class GibsonMSADialog(QtWidgets.QDialog):
 		self.ui.confirmButton.clicked.connect(self.accept)
 		self.ui.cancelButton.clicked.connect(self.reject)
 
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}"
+			                   "QLineEdit{font-size:18px;}"
+			                   "QTreeWidget{font-size:18px;}"
+			                   "QSpinBox{font-size:18px;}")
+		else:
+			pass
+
 	def accept(self):
 		self.gibson_msa_Signal.emit(self.fragment_data, self.mode, self.db_file, self.out_dir, self.joint, self.subtype, self.num_frag)
 		self.close()
@@ -2719,6 +2954,29 @@ class GibsonMSAOldDialog(QtWidgets.QDialog):
 
 		self.ui.radioNT.clicked.connect(self.switchSeq)
 		self.ui.radioAA.clicked.connect(self.switchSeq)
+
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}"
+			                   "QLineEdit{font-size:18px;}"
+			                   "QTreeWidget{font-size:18px;}"
+			                   "QSpinBox{font-size:18px;}")
+		else:
+			pass
 
 	def accept(self):
 		self.gibson_msa_Signal.emit(self.fragment_data, self.mode, self.db_file, self.out_dir, self.joint, self.subtype, self.num_frag)
@@ -3142,6 +3400,29 @@ class deleteDialog(QtWidgets.QDialog):
 		self.ui.deleteButton.clicked.connect(self.accept)
 		self.ui.cancelButton.clicked.connect(self.reject)
 
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}"
+			                   "QLineEdit{font-size:18px;}"
+			                   "QTreeWidget{font-size:18px;}"
+			                   "QSpinBox{font-size:18px;}")
+		else:
+			pass
+
 	def accept(self):
 		selItems = self.ui.listWidget.selectedItems()
 		if len(selItems) > 0:
@@ -3166,6 +3447,29 @@ class updateSeqDialog(QtWidgets.QDialog):
 		self.ui.RFstart.valueChanged.connect(self.highRegion)
 		self.ui.RFend.valueChanged.connect(self.highRegion)
 		self.ui.pushButtonCheck.clicked.connect(self.seqCheck)
+
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}"
+			                   "QLineEdit{font-size:18px;}"
+			                   "QTreeWidget{font-size:18px;}"
+			                   "QSpinBox{font-size:18px;}")
+		else:
+			pass
 
 	def seqCheck(self):
 		pattern = re.compile(r'[^ATCUG]')
@@ -4297,6 +4601,29 @@ class basePathDialog(QtWidgets.QDialog):
 		self.ui.yes.clicked.connect(self.accept)
 		self.ui.no.clicked.connect(self.reject)
 
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}"
+			                   "QLineEdit{font-size:18px;}"
+			                   "QTreeWidget{font-size:18px;}"
+			                   "QSpinBox{font-size:18px;}")
+		else:
+			pass
+
 	def browsemuscledir(self):  # browse and select path
 		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
 		if out_dir == '':
@@ -4491,6 +4818,26 @@ class MutationDialog(QtWidgets.QDialog):
 		self.ui.tabWidget.currentChanged.connect(self.update_name)
 
 		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}"
+			                   "QLineEdit{font-size:18px;}"
+			                   "QTreeWidget{font-size:18px;}"
+			                   "QSpinBox{font-size:18px;}")
+
 			FontIs = self.ui.textEdit.currentFont()
 			font = QFont(FontIs)
 			font.setPointSize(14)
@@ -4615,6 +4962,29 @@ class gibsoncloneDialog(QtWidgets.QDialog):
 		size_w = self.size().width()
 		size_h = self.size().height()
 		self.resize(size_w, size_h - 100)
+
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}"
+			                   "QLineEdit{font-size:18px;}"
+			                   "QTreeWidget{font-size:18px;}"
+			                   "QSpinBox{font-size:18px;}")
+		else:
+			pass
 
 	def showhideCT(self):
 		if self.ui.CterminalRadioButton.isChecked():
@@ -4928,6 +5298,29 @@ class SequenceEditDialog(QtWidgets.QDialog):
 		self.ui.GenerateSeq.setToolTip('Generate Sequences!')
 		self.ui.Cancel.setToolTip('Cancel!')
 
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}"
+			                   "QLineEdit{font-size:18px;}"
+			                   "QTreeWidget{font-size:18px;}"
+			                   "QSpinBox{font-size:18px;}")
+		else:
+			pass
+
 	def HTML_pre(self):
 		donor_list = self.ui.DonorList_tab2.selectedItems()
 		if len(donor_list) == 0:
@@ -5079,6 +5472,29 @@ class VGenesTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 		self.dnaAct.changed.connect(self.reformat)
 		self.aaAct.changed.connect(self.reformat)
 		self.baAct.changed.connect(self.reformat)
+
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}"
+			                   "QLineEdit{font-size:18px;}"
+			                   "QTreeWidget{font-size:18px;}"
+			                   "QSpinBox{font-size:18px;}")
+		else:
+			pass
 
 	def print_(self):
 		# adjust font size to fit print paper
@@ -5735,6 +6151,29 @@ class InfoTextMain(QtWidgets.QMainWindow, ui_TextEditor):
 		self.aaAct.setVisible(False)
 		self.baAct.setVisible(False)
 
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}"
+			                   "QLineEdit{font-size:18px;}"
+			                   "QTreeWidget{font-size:18px;}"
+			                   "QSpinBox{font-size:18px;}")
+		else:
+			pass
+
 	def print_(self):
 		# adjust font size to fit print paper
 		# FontIs = self.textEdit.currentFont()
@@ -5762,6 +6201,27 @@ class htmlDialog(QtWidgets.QDialog):
 		super(htmlDialog, self).__init__()
 		self.ui = Ui_htmlDialog()
 		self.ui.setupUi(self)
+
+		if system() == 'Windows':
+			# set style for windows
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}"
+			                   "QLineEdit{font-size:18px;}"
+			                   "QTreeWidget{font-size:18px;}"
+			                   "QSpinBox{font-size:18px;}")
 
 class LibratorMain(QtWidgets.QMainWindow):
 	def __init__(self):  # , parent=None):
@@ -5879,6 +6339,27 @@ class LibratorMain(QtWidgets.QMainWindow):
 		#self.loadPDB()
 
 		if system() == 'Windows':
+			# main tab
+			self.setStyleSheet("QLabel{font-size:18px;}"
+			                   "QTextEdit{font-size:18px;}"
+			                   "QComboBox{font-size:18px;}"
+			                   "QPushButton{font-size:18px;}"
+			                   "QTabWidget{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QRadioButton{font-size:18px;}"
+			                   "QPlainTextEdit{font-size:18px;}"
+			                   "QCheckBox{font-size:18px;}"
+			                   "QTableWidget{font-size:18px;}"
+			                   "QToolBar{font-size:18px;}"
+			                   "QMenuBar{font-size:18px;}"
+			                   "QMenu{font-size:18px;}"
+			                   "QAction{font-size:18px;}"
+			                   "QMainWindow{font-size:18px;}"
+			                   "QLineEdit{font-size:18px;}"
+			                   "QTreeWidget{font-size:18px;}"
+			                   "QSpinBox{font-size:18px;}")
+
+			# sequence tab
 			FontIs = self.ui.txtAASeq.currentFont()
 			font = QFont(FontIs)
 			font.setPointSize(14)
