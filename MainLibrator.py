@@ -8121,7 +8121,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 		VGenesTextWindows[window_id].id = window_id
 		layout = QGridLayout(VGenesTextWindows[window_id])
 		view = QWebEngineView(self)
-		#view.load(QUrl("file://" + html_file))
+		channel = QWebChannel(view.page())
+		my_object = MyObjectCls(view)
+		channel.registerObject('connection', my_object)
+		view.page().setWebChannel(channel)
+		my_object.imgURLSignal.connect(self.savePNGfiles)
 		url = QUrl.fromLocalFile(str(html_file))
 		view.load(url)
 		view.show()
