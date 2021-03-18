@@ -29,6 +29,7 @@ import numpy as np
 import shutil
 import math
 import random
+import base64
 
 import matplotlib
 matplotlib.use("Qt5Agg")
@@ -2370,6 +2371,7 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 
 class MyObjectCls(QObject):
 	updateSelectionSignal = pyqtSignal(str)
+	imgURLSignal = pyqtSignal(str, str, str)
 
 	def __init__(self, parent=None):
 		QObject.__init__(self, parent)
@@ -2381,6 +2383,10 @@ class MyObjectCls(QObject):
 	@pyqtSlot(str)
 	def updateSelection(self, msg):
 		self.updateSelectionSignal.emit(msg)
+
+	@pyqtSlot(str, str, str)
+	def imgURL(self, url1, url2, url3):
+		self.imgURLSignal.emit(url1, url2, url3)
 
 class MyFigure(FigureCanvas):
     def __init__(self,width=5, height=4, dpi=100):
@@ -8571,7 +8577,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 				return
 			# display
 			view = QWebEngineView()
-			#view.load(QUrl("file://" + html_file))
+			channel = QWebChannel(view.page())
+			my_object = MyObjectCls(view)
+			channel.registerObject('connection', my_object)
+			view.page().setWebChannel(channel)
+			my_object.imgURLSignal.connect(self.savePNGfiles)
 			url = QUrl.fromLocalFile(str(html_file))
 			view.load(url)
 			view.show()
@@ -8588,6 +8598,42 @@ class LibratorMain(QtWidgets.QMainWindow):
 			pass
 		else:
 			return
+
+	def savePNGfiles(self, url1, url2, url3):
+		print('save PNG')
+
+		options = QtWidgets.QFileDialog.Options()
+		new_png, _ = QtWidgets.QFileDialog.getSaveFileName(self,
+		                                                  "New png",
+		                                                  "New png",
+		                                                  "PNG Files (*.png);;All Files (*)",
+		                                                  options=options)
+
+		if new_png != None and new_png != '':
+			# set up path
+			path = re.sub('\.[^\.]+', '', new_png)
+			legend_file = path + '_legend.png'
+			header_file = path + '_header.png'
+			alignment_file = path + '_alignment.png'
+
+			# parse base64 string
+			url1 = re.sub(r'^[^,]+,', '', url1)
+			url2 = re.sub(r'^[^,]+,', '', url2)
+			url3 = re.sub(r'^[^,]+,', '', url3)
+
+			# decode and write to PNG file
+			with open(legend_file, 'wb') as fileObj:
+				bytes_base64 = url1.encode()
+				fileObj.write(base64.b64decode(bytes_base64))
+			with open(header_file, 'wb') as fileObj:
+				bytes_base64 = url2.encode()
+				fileObj.write(base64.b64decode(bytes_base64))
+			with open(alignment_file, 'wb') as fileObj:
+				bytes_base64 = url3.encode()
+				fileObj.write(base64.b64decode(bytes_base64))
+
+			Msg = 'Figure Saved!'
+			QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
 
 	@pyqtSlot()
 	def on_RunFLUDB_clicked(self):

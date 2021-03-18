@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <head>
 <script src="../Js/jquery.js"></script>
+<script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+<script src="../Js/html2canvas.min.js"></script>
 </head>
 <html>
 
@@ -408,6 +410,20 @@
     }
 </script>
 
+<script type="text/javascript">
+$(document).ready(function() {
+    new QWebChannel(qt.webChannelTransport, function(channel) {
+        var my_object = channel.objects.connection;
+
+        $("#saveImg").click(function(){
+		    var legendURL = document.getElementById("legend_img").href;
+			var headerURL = document.getElementById("header_img").href;
+			var alignmentURL = document.getElementById("alignment_img").href;
+			my_object.imgURL(legendURL, headerURL, alignmentURL)
+		});
+    });
+});
+</script>
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -477,7 +493,72 @@ $(document).ready(function(){
     	onmouseout_help(this)
   	});
 	$(".line_nt.1").find(".name").hide()
+
+	saveImg();
 });
+
+function saveImg() {
+	// legend part
+	html2canvas(document.getElementsByClassName("header_div")[2], {
+        scale: 1,
+        allowTaint: false,
+        useCORS: true,
+        backgroundColor: '#000000',
+    }).then((canvas) => {
+    	// canvas to png
+        var MIME_TYPE = "image/png";
+        var fileName = 'legend.png';
+        var imgURL = canvas.toDataURL(MIME_TYPE);
+        var dlLink = document.createElement('a');
+        dlLink.id = 'legend_img';
+	    dlLink.download = fileName;
+	    dlLink.href = imgURL;
+	    dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
+	    document.body.appendChild(dlLink);
+    });
+
+    // header part
+	html2canvas(document.getElementsByClassName("name_div")[0], {
+        scale: 1,
+        allowTaint: false,
+        useCORS: true,
+        backgroundColor: '#000000',
+    }).then((canvas) => {
+    	// canvas to png
+        var MIME_TYPE = "image/png";
+        var fileName = 'header.png';
+        var imgURL = canvas.toDataURL(MIME_TYPE);
+        var dlLink = document.createElement('a');
+        dlLink.id = 'header_img';
+	    dlLink.download = fileName;
+	    dlLink.href = imgURL;
+	    dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
+	    document.body.appendChild(dlLink);
+    });
+
+    // alignment part
+	html2canvas(document.getElementsByClassName("seq_div")[0], {
+        scale: 1,
+        allowTaint: false,
+        useCORS: true,
+        backgroundColor: '#000000',
+    }).then((canvas) => {
+    	// canvas to png
+        var MIME_TYPE = "image/png";
+        var fileName = 'alignment.png';
+        var imgURL = canvas.toDataURL(MIME_TYPE);
+        var dlLink = document.createElement('a');
+        dlLink.id = 'alignment_img';
+	    dlLink.download = fileName;
+	    dlLink.href = imgURL;
+	    dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
+	    document.body.appendChild(dlLink);
+	    //dlLink.click();
+	    //document.body.removeChild(dlLink);
+    });
+
+}
+
 
 function onmouseover_help(ele,event){
     var left = ele.offsetLeft + ele.offsetParent.offsetLeft + 4
@@ -639,6 +720,7 @@ function checkNGlyPos(AAseq){
 	  <input id = 'h3' type="checkbox"  checked="checked">
 	  <span class="checkmark"></span>
 	</label>
+	<button id='saveImg' type="button">Save Img</button>
 </div>
 
 <div class = 'header_div' style="margin-top: 100px; height: 65px;">
