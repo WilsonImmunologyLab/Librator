@@ -2021,7 +2021,8 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 			                   "QMenuBar{font-size:18px;}"
 			                   "QMenu{font-size:18px;}"
 			                   "QAction{font-size:18px;}"
-			                   "QMainWindow{font-size:18px;}")
+			                   "QMainWindow{font-size:18px;}"
+			                   "QSpinBox{font-size:18px;}")
 		else:
 			pass
 
@@ -6351,7 +6352,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			                   "QComboBox{font-size:18px;}"
 			                   "QPushButton{font-size:18px;}"
 			                   "QTabWidget{font-size:18px;}"
-			                   "QCommandLinkButton{font-size:18px;}"
+			                   "QCommandLinkButton{font-size:10px;}"
 			                   "QRadioButton{font-size:18px;}"
 			                   "QPlainTextEdit{font-size:18px;}"
 			                   "QCheckBox{font-size:18px;}"
