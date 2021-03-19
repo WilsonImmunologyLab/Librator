@@ -432,6 +432,15 @@ $(document).ready(function() {
         var my_object = channel.objects.connection;
 
         $("#saveImg").click(function(){
+        	// scroll to left first
+        	window.scrollTo({ 
+			    left: 0, 
+			    behavior: "instant" 
+			});
+        	// display loading bar
+        	$("#loading").css('display','block')
+        	var msg='Converting alignment to PNG usually 10-30 seconds, please be patient!'
+			alert(msg)
         	// run html2canvas first
         	let promiseArr = [];
 
@@ -506,6 +515,12 @@ $(document).ready(function() {
 			    var legendURL = document.getElementById("legend_img").href;
 				var headerURL = document.getElementById("header_img").href;
 				var alignmentURL = document.getElementById("alignment_img").href;
+
+				document.body.removeChild(document.getElementById("legend_img"));
+				document.body.removeChild(document.getElementById("header_img"));
+				document.body.removeChild(document.getElementById("alignment_img"));
+
+				$("#loading").css('display','none')
 				my_object.imgURL(legendURL, headerURL, alignmentURL)
 			})
 		});
@@ -580,9 +595,8 @@ $(document).ready(function(){
 	.mouseout(function(){
     	onmouseout_help(this)
   	});
-	$(".line_nt.1").find(".name").hide()
+	$(".line_nt.1").find(".name").hide();
 
-	
 });
 
 
@@ -724,7 +738,40 @@ function checkNGlyPos(AAseq){
 	
 </script>
 
+<style type="text/css">
+.mywrap{
+	position: fixed;
+  	left: 600px;
+  	top: 10px;
+    width: 200px;
+    height: 20px;
+    border: 4px black solid; 
+    border-radius: 15px;
+    margin: 30px;
+    overflow: hidden;
+}
+.mybox{
+    width:400px;
+    height:20px;
+    background: -webkit-repeating-linear-gradient(30deg, #7FFF00 0, #7FFF00 10px,#C0C0C0 10px, #C0C0C0 20px);
+    -webkit-animation: move 5s linear infinite;
+}
+@-webkit-keyframes move{
+    0%{
+        background-position: 0 0;
+    }
+    100%{
+        background-position: -200px 0;
+    }
+}
+</style>
+
 <body style="margin-left: 0px;">
+
+<div class="mywrap" id='loading' style="display:none;position:absolute;z-index:1;pointer-events: none">
+    <div class="mybox" style="padding-left: 10px;">Converting figures...
+    </div>
+</div>
 
 <div id="indicator" style="display:none;position:absolute;z-index:1;pointer-events: none" class = "help-tip"></div>
 
