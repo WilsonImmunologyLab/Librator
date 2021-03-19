@@ -286,6 +286,22 @@ $(document).ready(function(){
           <p class="text">Users can align multiple sequences together and check the results in a graphical viewer. Click Tools-> Multiple Alignment(HTML) in menu. There are two display modes: original sequence mode and template mode. In template mode, users can choose any sequence (including consensus sequence) as template to only highlight sequence difference.</p>
           <img class="img" src="img/MSA.png" style="width: 90%">
         </li>
+
+        <li>
+          <a class="title">Export alignment to PNG files</a>
+          <p class="text">Users are allowed to export their alignment to a long PNG file in “Alignment” tab or the popped-up MSA window. </p>
+          <img class="img" src="img/savepng1.png" style="width: auto;">
+          <p class="text">When the alignment is fully loaded, users are allowed to click “Save Img” button to export their alignment to PNG files. Of note, converting alignment to PNG figures usually takes 10-30 seconds, so please be patient and wait for the pop-up window to choose where you want to save your PNGs. After PNG figures were saved, you can go to the folder to check the results. There will be three PNG files, they are figure legend, alignment header (sequence names) and alignment body (a very long figure). </p>
+          <img class="img" src="img/savepng2.png" style="width: auto;">
+          <p class="text">Here is an example of exported PNG:</p>
+          <p class="text"><b>legend</b></p>
+          <img class="img" src="img/png_legend.png" style="width: auto;">
+          <p class="text"><b>Alignment header</b></p>
+          <img class="img" src="img/png_header.png" style="width: auto;">
+          <p class="text"><b>Alignment body</b></p>
+          <img class="img" src="img/png_alignment.png" style="width: auto;">
+        </li>
+
         <li>
           <a class="title">Generate phylogenetic tree (ML tree)</a>
           <p class="text">Users can generate sequence logo for multiple selected sequences. Users should select multiple sequence in main page, then click “Seq logo” tab. On “Seq logo” tab, users can click Peptide logo or Nucleotide logo to generate sequences logos (Panel A). Users also can check the checkbox called “open Sequence logo on a popup window” to view the sequence logo on a popup window and then can be saved as an EPS file (vector graph) for further use.   Users also can click the button on the right top corner to visualize peptide conservations for selected sequences on a 3D structure using PyMOL (panel B) or UCSF Chimera (Figure not shown). The structure annotation code will also be displayed in a pop-up window. </p>
