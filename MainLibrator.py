@@ -6761,7 +6761,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				text = "open " + pdbPath + "\n"
 				pml.write(text)
 				text = "~display\n" \
-				       + "surface\n" \
+				       + "~ribbon :.G,.H,.I,.J,.K,.L\n" \
+				       + "surface :.A,.B,.C,.D,.E,.F\n" \
 				       + "background solid white\n" \
 				       + "color " + color_dict[0] + " :\n"
 				pml.write(text)
@@ -15586,7 +15587,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			text = "open " + pdbPath + "\n"
 			pml.write(text)
 			text = "~display\n" \
-					+ "surface\n" \
+					+ "~ribbon :.G,.H,.I,.J,.K,.L\n" \
+					+ "surface :.A,.B,.C,.D,.E,.F\n" \
 					+ "background solid white\n"
 			pml.write(text)
 
