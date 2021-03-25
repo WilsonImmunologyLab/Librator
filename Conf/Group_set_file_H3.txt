@@ -11,7 +11,7 @@ Color,G1_10,TBD,
 Color,G1_11,TBD,
 Color,G1_12,TBD,
 Color,G1_13,TBD,
-Shade,G2_1,Lattral Patch,Lattral Patch
+Shade,G2_1,Lateral Patch,Lateral Patch
 Shade,G2_2,TBD,
 Shade,G2_3,TBD,
 Shade,G2_4,TBD,
