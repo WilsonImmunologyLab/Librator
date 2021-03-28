@@ -16392,27 +16392,32 @@ class LibratorMain(QtWidgets.QMainWindow):
 		except:
 			Msg = 'Error happens when run RAxML!'
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
-
+			return
 
 		# generate html page
-		treefile = os.path.join(this_path, 'RAxML_bestTree.tree')
-		f = open(treefile, 'r')
-		tree_str = f.readline()
-		f.close()
-		tree_str = 'var test_string = "' + tree_str.rstrip("\n") + '";\n'
+		try:
+			treefile = os.path.join(this_path, 'RAxML_bestTree.tree')
+			f = open(treefile, 'r')
+			tree_str = f.readline()
+			f.close()
+			tree_str = 'var test_string = "' + tree_str.rstrip("\n") + '";\n'
 
-		out_html_file = os.path.join(this_path, 'tree.html')
-		header_file = os.path.join(working_prefix, 'Data', 'template5.html')
-		shutil.copyfile(header_file, out_html_file)
+			out_html_file = os.path.join(this_path, 'tree.html')
+			header_file = os.path.join(working_prefix, 'Data', 'template5.html')
+			shutil.copyfile(header_file, out_html_file)
 
-		foot = 'var container_id = "#tree_container";\nvar svg = d3.select(container_id).append("svg")' \
-		       '.attr("width", width).attr("height", height);\n$( document ).ready( function () {' \
-		       'default_tree_settings();tree(test_string).svg (svg).layout();update_selection_names();' \
-		       '});\n</script>\n</body>\n</html>'
-		out_file_handle = open(out_html_file, 'a')
-		out_file_handle.write(tree_str)
-		out_file_handle.write(foot)
-		out_file_handle.close()
+			foot = 'var container_id = "#tree_container";\nvar svg = d3.select(container_id).append("svg")' \
+			       '.attr("width", width).attr("height", height);\n$( document ).ready( function () {' \
+			       'default_tree_settings();tree(test_string).svg (svg).layout();update_selection_names();' \
+			       '});\n</script>\n</body>\n</html>'
+			out_file_handle = open(out_html_file, 'a')
+			out_file_handle.write(tree_str)
+			out_file_handle.write(foot)
+			out_file_handle.close()
+		except:
+			Msg = 'Did not find RAxML_bestTree file!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
 
 		print("html done!")
 		# display
