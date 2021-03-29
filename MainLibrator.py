@@ -16415,7 +16415,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			out_file_handle.write(foot)
 			out_file_handle.close()
 		except:
-			Msg = 'Did not find RAxML_bestTree file!'
+			Msg = 'Error happens when run RAxML! Of note, the tree function does not work for ' \
+			      'MAC with M1 chio because of RAxML compatibility issue!'
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 			return
 
