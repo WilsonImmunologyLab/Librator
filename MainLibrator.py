@@ -14669,13 +14669,31 @@ class LibratorMain(QtWidgets.QMainWindow):
 		Where = '("' + '","'.join(unselections) + '")'
 		SQLStatement = 'UPDATE LibDB SET `Active` = "False" WHERE `SeqName` in ' + Where
 		RunInsertion(DBFilename, SQLStatement)
-		# updata interface
+		# update interface
 		MoveNotChange = True
 		self.ui.listWidgetStrainsIn.clear()
 		selections.sort()
 		self.ui.listWidgetStrainsIn.addItems(selections)
 		MoveNotChange = False
 		self.highlightlist()
+
+		# auto check sequence
+		Where = '("' + '","'.join(selections) + '")'
+		SQLStatement = 'SELECT SeqName,Sequence FROM LibDB WHERE `SeqName` in ' + Where
+		DataIs = RunSQL(DBFilename, SQLStatement)
+		StatuesCode, Msg = self.checkSeqBatch(DataIs)
+		if StatuesCode == 0:
+			pass
+		else:
+			QMessageBox.warning(self, 'Warning', Msg,
+			                    QMessageBox.Ok,
+			                    QMessageBox.Ok)
+
+	def checkSeqBatch(self, dataIs):
+		StatuesCode = 0
+		Msg = ''
+
+		return StatuesCode, Msg
 
 	@pyqtSlot()
 	def OpenRecent(self):  # how to activate menu and toolbar actions!!!
