@@ -3494,17 +3494,31 @@ class updateSeqDialog(QtWidgets.QDialog):
 		format.setForeground(QBrush(QColor("red")))
 		pos_list = [i.start() for i in re.finditer(pattern, text)]
 		if len(pos_list) > 0:
+			unlawfulSTR = ''
 			for pos in pos_list:
 				cursor.setPosition(pos)
 				cursor.setPosition(pos + 1, QTextCursor.KeepAnchor)
 				cursor.mergeCharFormat(format)
+				curStr = text[pos: pos + 1]
+				if curStr in unlawfulSTR:
+					pass
+				else:
+					unlawfulSTR += curStr
 
-			Msg = 'We found and highlighted ' + str(len(pos_list)) + ' unlawful nucleotides in your sequence!'
+			infoStr = ''
+			for my_str in unlawfulSTR:
+				infoStr += my_str + ' may be degenerate for ' + unlawfulNT[my_str] + '\n'
+
+			Msg = 'We found and highlighted ' \
+			      + str(len(
+				pos_list)) + ' unlawful nucleotides in your sequence!\nAlignments can only proceed with AGCT nucleotides.\n'
+			Msg = Msg + infoStr
+
 			QMessageBox.warning(self, 'Warning', Msg,
 			                    QMessageBox.Ok, QMessageBox.Ok)
 			return
 		else:
-			Msg = 'Did not found any unlawful nucleotide in your sequence! Your sequence is good!'
+			Msg = 'Did not find any unlawful nucleotide in your sequence! Your sequence is good!'
 			QMessageBox.warning(self, 'Warning', Msg,
 			                    QMessageBox.Ok, QMessageBox.Ok)
 			return
@@ -6427,25 +6441,37 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		format.setBackground(QBrush(QColor("red")))
 		format.setForeground(QBrush(QColor("white")))
-		try:
-			pos_list = [i.start() for i in re.finditer(pattern, text)]
-			if len(pos_list) > 0:
-				for pos in pos_list:
-					cursor.setPosition(pos)
-					cursor.setPosition(pos + 1, QTextCursor.KeepAnchor)
-					cursor.mergeCharFormat(format)
 
-				Msg = 'We found and highlighted ' + str(len(pos_list)) + ' unlawful nucleotides in your sequence!'
-				QMessageBox.warning(self, 'Warning', Msg,
-				                    QMessageBox.Ok, QMessageBox.Ok)
-				return
-			else:
-				Msg = 'Did not found any unlawful nucleotide in your sequence! Your sequence is good!'
-				QMessageBox.warning(self, 'Warning', Msg,
-				                    QMessageBox.Ok, QMessageBox.Ok)
-				return
-		except Exception:
-			pass
+		pos_list = [i.start() for i in re.finditer(pattern, text)]
+		if len(pos_list) > 0:
+			unlawfulSTR = ''
+			for pos in pos_list:
+				cursor.setPosition(pos)
+				cursor.setPosition(pos + 1, QTextCursor.KeepAnchor)
+				cursor.mergeCharFormat(format)
+				curStr = text[pos: pos + 1]
+				if curStr in unlawfulSTR:
+					pass
+				else:
+					unlawfulSTR += curStr
+
+			infoStr = ''
+			for my_str in unlawfulSTR:
+				infoStr += my_str + ' may be degenerate for ' + unlawfulNT[my_str] + '\n'
+
+			Msg = 'We found and highlighted ' \
+			      + str(len(pos_list)) + ' unlawful nucleotides in your sequence!\nAlignments can only proceed with AGCT nucleotides.\n'
+			Msg = Msg + infoStr
+
+			QMessageBox.warning(self, 'Warning', Msg,
+			                    QMessageBox.Ok, QMessageBox.Ok)
+			return
+		else:
+			Msg = 'Did not find any unlawful nucleotide in your sequence! Your sequence is good!'
+			QMessageBox.warning(self, 'Warning', Msg,
+			                    QMessageBox.Ok, QMessageBox.Ok)
+			return
+
 
 	def MaxNotice(self):
 		if self.ui.comboBoxMax.currentText() == "Local Max":
@@ -20562,6 +20588,21 @@ def SortAndMerge(list):
 		merge_list.append(string)
 
 	return merge_list
+
+# unlawful nucleotides
+unlawfulNT = {
+	'R':'A or G',
+	'Y':'C or T',
+	'S':'G or C',
+	'W':'A or T',
+	'K':'G or T',
+	'M':'A or C',
+	'B':'C or G or T',
+	'D':'A or G or T',
+	'H':'A or C or T',
+	'V':'A or C or G',
+	'N':'any base'
+	}
 
 global Group1, Group2, GroupNA
 Group1 = ['H1','H2','H5','H6','H8','H9','H11','H12','H13','H16','H17','H18']
