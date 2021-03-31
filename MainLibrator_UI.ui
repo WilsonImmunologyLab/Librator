@@ -2182,8 +2182,7 @@
         <item row="0" column="4">
          <widget class="QRadioButton" name="radioButtonPop">
           <property name="text">
-           <string>Open on a popup window
-Will always open in pop-up window if miss required packages</string>
+           <string>Open on a popup window</string>
           </property>
          </widget>
         </item>

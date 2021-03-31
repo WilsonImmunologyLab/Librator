@@ -15,6 +15,7 @@ from PyQt5.QtWebChannel import *
 from pyecharts.charts import Bar, Pie, Line, Page, Grid
 from pyecharts import options as opts
 from weblogo import read_seq_data, LogoData, LogoOptions, LogoFormat, eps_formatter, svg_formatter
+from PIL import Image
 
 from HA_numbering_function import HA_numbering_Jesse
 from itertools import combinations
@@ -8843,18 +8844,30 @@ class LibratorMain(QtWidgets.QMainWindow):
 				out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 				with open(out_eps, 'wb') as f:
 					f.write(eps)
-				cmd = 'open ' + out_eps  # mac
+
+				im = Image.open(out_eps)
+				im.load(scale=4)
+				out_png = os.path.join(temp_folder, "out-" + time_stamp + ".png")
+				im.save(out_png)
+				cmd = 'open ' + out_png  # mac
+				#cmd = 'open ' + out_eps  # mac
 			elif system() == 'Linux':
 				out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 				with open(out_eps, 'wb') as f:
 					f.write(eps)
-				cmd = 'nautilus' + out_eps  # Linux
+
+				im = Image.open(out_eps)
+				im.load(scale=4)
+				out_png = os.path.join(temp_folder, "out-" + time_stamp + ".png")
+				im.save(out_png)
+				cmd = 'nautilus' + out_png  # Linux
 			else:
-				cmd = ''
+				return
 			bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
 			             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 		else:
 			try:
+				aa=bb
 				svg = svg_formatter(data, format)
 				svg = svg.decode("utf-8")
 
@@ -8879,41 +8892,38 @@ class LibratorMain(QtWidgets.QMainWindow):
 						layout.removeWidget(layout.itemAt(i).widget())
 				layout.addWidget(view)
 			except:
+				# generate eps and png
 				eps = eps_formatter(data, format)
+				out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
+				with open(out_eps, 'wb') as f:
+					f.write(eps)
 
-				if system() == 'Windows':
-					options = QtWidgets.QFileDialog.Options()
-					out_eps, _ = QtWidgets.QFileDialog.getSaveFileName(self,
-					                                                      "New NT logo",
-					                                                      "New NT logo",
-					                                                      "Encapsulated PostScript Files (*.eps);;All Files (*)",
-					                                                      options=options)
-					if out_eps != 'none':
-						with open(out_eps, 'wb') as f:
-							f.write(eps)
+				im = Image.open(out_eps)
+				im.load(scale=4)
+				out_png = os.path.join(temp_folder, "out-" + time_stamp + ".png")
+				im.save(out_png)
 
-						Msg = 'You sequence logo EPS file has been saved at ' + out_eps
-						QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
+				# load png to HMTL
+				out_html = os.path.join(temp_folder, "out-" + time_stamp + ".html")
+				with open(out_html, 'w') as f:
+					f.write('<!DOCTYPE html>\n<html>\n<body style="margin-left: 0px;\n">')
+					f.write('<p><img src="' + out_png + '" width="960">')
+					f.write('</p>')
+					f.write('\n</body>\n</html>')
 
-					return
-				elif system() == 'Darwin':
-					out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
-					with open(out_eps, 'wb') as f:
-						f.write(eps)
-					cmd = 'open ' + out_eps  # mac
+				view = QWebEngineView()
+				# view.load(QUrl("file://" + out_svg))
+				url = QUrl.fromLocalFile(str(out_html))
+				view.load(url)
+				view.show()
 
-					Msg = 'Fail to find You sequence logo EPS file has been saved at ' + out_eps
-					QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
-				elif system() == 'Linux':
-					out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
-					with open(out_eps, 'wb') as f:
-						f.write(eps)
-					cmd = 'nautilus' + out_eps  # Linux
+				layout = self.ui.groupBoxLogo.layout()
+				if layout == None:
+					layout = QGridLayout(self.ui.groupBoxLogo)
 				else:
-					cmd = ''
-
-				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
-				             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+					for i in range(layout.count()):
+						layout.removeWidget(layout.itemAt(i).widget())
+				layout.addWidget(view)
 
 	def makeAALogo(self):
 		listItems = self.ui.listWidgetStrainsIn.selectedItems()
@@ -9035,6 +9045,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 		else:
 			try:
+				aa = bb
 				svg = svg_formatter(data, format)
 				svg = svg.decode("utf-8")
 
@@ -9059,38 +9070,38 @@ class LibratorMain(QtWidgets.QMainWindow):
 						layout.removeWidget(layout.itemAt(i).widget())
 				layout.addWidget(view)
 			except:
+				# generate eps and png
 				eps = eps_formatter(data, format)
-				if system() == 'Windows':
-					options = QtWidgets.QFileDialog.Options()
-					out_eps, _ = QtWidgets.QFileDialog.getSaveFileName(self,
-					                                                   "New AA logo",
-					                                                   "New AA logo",
-					                                                   "Encapsulated PostScript Files (*.eps);;All Files (*)",
-					                                                   options=options)
-					if out_eps != 'none':
-						with open(out_eps, 'wb') as f:
-							f.write(eps)
+				out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
+				with open(out_eps, 'wb') as f:
+					f.write(eps)
 
-						Msg = 'You sequence logo EPS file has been saved at ' + out_eps
-						QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
-					return
-				elif system() == 'Darwin':
-					out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
-					with open(out_eps, 'wb') as f:
-						f.write(eps)
-					cmd = 'open ' + out_eps  # mac
+				im = Image.open(out_eps)
+				im.load(scale=4)
+				out_png = os.path.join(temp_folder, "out-" + time_stamp + ".png")
+				im.save(out_png)
 
-					Msg = 'Fail to find You sequence logo EPS file has been saved at ' + out_eps
-					QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
-				elif system() == 'Linux':
-					out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
-					with open(out_eps, 'wb') as f:
-						f.write(eps)
-					cmd = 'nautilus' + out_eps  # Linux
+				# load png to HMTL
+				out_html = os.path.join(temp_folder, "out-" + time_stamp + ".html")
+				with open(out_html, 'w') as f:
+					f.write('<!DOCTYPE html>\n<html>\n<body style="margin-left: 0px;\n">')
+					f.write('<p><img src="' + out_png + '" width="960">')
+					f.write('</p>')
+					f.write('\n</body>\n</html>')
+
+				view = QWebEngineView()
+				# view.load(QUrl("file://" + out_svg))
+				url = QUrl.fromLocalFile(str(out_html))
+				view.load(url)
+				view.show()
+
+				layout = self.ui.groupBoxLogo.layout()
+				if layout == None:
+					layout = QGridLayout(self.ui.groupBoxLogo)
 				else:
-					cmd = ''
-				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
-				             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+					for i in range(layout.count()):
+						layout.removeWidget(layout.itemAt(i).widget())
+				layout.addWidget(view)
 
 	def loadFragmentInfo(self):
 		global working_prefix

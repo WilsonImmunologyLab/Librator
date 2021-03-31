@@ -1580,8 +1580,7 @@ class Ui_MainLibrator(object):
         self.MSAgroupBox.setTitle(_translate("MainLibrator", "Multiple Sequence Alignment"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabAliHTML), _translate("MainLibrator", "Alignment"))
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.tabAliHTML), _translate("MainLibrator", "Alignement (HTML) page"))
-        self.radioButtonPop.setText(_translate("MainLibrator", "Open on a popup window\n"
-"Will always open in pop-up window if miss required packages"))
+        self.radioButtonPop.setText(_translate("MainLibrator", "Open on a popup window"))
         self.toolButtonConserve.setText(_translate("MainLibrator", "Peptide conservation"))
         self.label_10.setText(_translate("MainLibrator", "Color Schema "))
         self.groupBoxLogo.setTitle(_translate("MainLibrator", "Sequence Logo"))
