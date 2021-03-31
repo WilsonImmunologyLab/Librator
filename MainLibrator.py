@@ -8939,6 +8939,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 						with open(out_eps, 'wb') as f:
 							f.write(eps)
 						cmd = 'open ' + out_eps  # mac
+						bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+						             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 						Msg = 'Supporting package missed! Will show sequence logo in a file!\n' + out_eps
 						QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
 					# cmd = 'open ' + out_eps  # mac
@@ -8947,10 +8949,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 						with open(out_eps, 'wb') as f:
 							f.write(eps)
 						cmd = 'nautilus' + out_eps  # Linux
+						bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+						             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 					else:
 						return
-					bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
-					             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 
 	def makeAALogo(self):
 		listItems = self.ui.listWidgetStrainsIn.selectedItems()
@@ -9155,6 +9157,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 						with open(out_eps, 'wb') as f:
 							f.write(eps)
 						cmd = 'open ' + out_eps  # mac
+						bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+						             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 						Msg = 'Supporting package missed! Will show sequence logo in a file!\n' + out_eps
 						QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
 					elif system() == 'Linux':
@@ -9162,10 +9166,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 						with open(out_eps, 'wb') as f:
 							f.write(eps)
 						cmd = 'nautilus' + out_eps  # Linux
+						bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+						             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 					else:
-						cmd = ''
-					bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
-					             env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
+						return
+
 
 	def loadFragmentInfo(self):
 		global working_prefix
