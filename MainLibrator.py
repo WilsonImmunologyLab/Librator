@@ -14691,7 +14691,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	def checkSeqBatch(self, dataIs):
 		StatuesCode = 0
-		Msg = ''
+		Msg = 'We found unlawful nucleotides in the following sequence:\n'
+
+		if len(dataIs) > 0:
+			for record in dataIs:
+				currentSeq = record[1]
+				pattern = re.compile(r'[^ATCUG]')
+				pos_list = [i.start() for i in re.finditer(pattern, currentSeq)]
+				if len(pos_list) > 0:
+					StatuesCode = 1
+					Msg += record[0] + '\n'
 
 		return StatuesCode, Msg
 
