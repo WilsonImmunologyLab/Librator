@@ -14696,6 +14696,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		StatuesCode = 0
 		Msg = 'We found unlawful nucleotides in the following sequence:\n'
 
+		errorSeqlist = []
 		if len(dataIs) > 0:
 			for record in dataIs:
 				currentSeq = record[1]
@@ -14704,6 +14705,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 				if len(pos_list) > 0:
 					StatuesCode = 1
 					Msg += record[0] + '\n'
+					errorSeqlist.append(record[0])
+		Msg += 'These sequences have been highlighted in red, click for details!'
+		self.highlightFromList(errorSeqlist)
 
 		return StatuesCode, Msg
 
@@ -18122,6 +18126,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 				os.system(cmd)
 			except:
 				pass
+
+	def highlightFromList(self, candidate_list):
+		for index in range(self.ui.listWidgetStrainsIn.count()):
+			cur_item = self.ui.listWidgetStrainsIn.item(index)
+			if cur_item.text() in candidate_list:
+				cur_item.setForeground(QColor('red'))
+			else:
+				cur_item.setForeground(QColor('black'))
 
 	@pyqtSlot()
 	def highlightlist(self):
