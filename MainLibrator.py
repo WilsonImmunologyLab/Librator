@@ -8939,6 +8939,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 						with open(out_eps, 'wb') as f:
 							f.write(eps)
 						cmd = 'open ' + out_eps  # mac
+						Msg = 'Supporting package missed! Will show sequence logo in a file!\n' + out_eps
+						QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
 					# cmd = 'open ' + out_eps  # mac
 					elif system() == 'Linux':
 						out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
@@ -9153,6 +9155,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 						with open(out_eps, 'wb') as f:
 							f.write(eps)
 						cmd = 'open ' + out_eps  # mac
+						Msg = 'Supporting package missed! Will show sequence logo in a file!\n' + out_eps
+						QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
 					elif system() == 'Linux':
 						out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 						with open(out_eps, 'wb') as f:
