@@ -75,6 +75,9 @@ global MoveNotChange
 MoveNotChange = False
 global SeqMove
 SeqMove = False
+global TreeBuilding
+TreeBuilding = False
+
 global H1Numbering
 global H3Numbering
 global NumberingMap
@@ -6276,7 +6279,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.FragmentTab.currentChanged['int'].connect(self.clearTable)
 		self.ui.EditLock.clicked.connect(self.ChangeEditMode)
 		self.ui.groupCombo.currentTextChanged.connect(self.rebuildTree)
-		self.ui.treeWidget.itemClicked['QTreeWidgetItem*', 'int'].connect(self.TreeItemClicked)
+		#self.ui.treeWidget.itemClicked['QTreeWidgetItem*', 'int'].connect(self.TreeItemClicked)
+		self.ui.treeWidget.itemChanged['QTreeWidgetItem*', 'int'].connect(self.TreeItemClicked)
 		self.ui.pushButtonNT.clicked.connect(self.makeNTLogo)
 		self.ui.pushButtonAA.clicked.connect(self.makeAALogo)
 		self.ui.toolButtonConserve.clicked.connect(self.showDiverse)
@@ -14537,10 +14541,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 	def rebuildTree(self):
 		global DBFilename
 		global MoveNotChange
+		global TreeBuilding
+
 		if MoveNotChange:
 			return
 		if DBFilename == 'none':
 			return
+		TreeBuilding = True
 
 		# clear tree
 		self.ui.treeWidget.clear()
@@ -14628,20 +14635,23 @@ class LibratorMain(QtWidgets.QMainWindow):
 				cur_node.setCheckState(0, Qt.Unchecked)
 
 		self.ui.treeWidget.expandAll()
+		TreeBuilding = False
 
 	def TreeItemClicked(self, item, column):
-		#self.ui.listWidgetStrainsIn.clearSelection()
-		if item.checkState(0):
-			if item.childCount() > 0:
-				for i in range(item.childCount()):
-					cur_child = item.child(i)
-					cur_child.setCheckState(0, Qt.Checked)
-		else:
-			if item.childCount() > 0:
-				for i in range(item.childCount()):
-					cur_child = item.child(i)
-					cur_child.setCheckState(0, Qt.Unchecked)
-		self.updateSelection()
+		global TreeBuilding
+		if TreeBuilding == False:
+			#self.ui.listWidgetStrainsIn.clearSelection()
+			if item.checkState(0):
+				if item.childCount() > 0:
+					for i in range(item.childCount()):
+						cur_child = item.child(i)
+						cur_child.setCheckState(0, Qt.Checked)
+			else:
+				if item.childCount() > 0:
+					for i in range(item.childCount()):
+						cur_child = item.child(i)
+						cur_child.setCheckState(0, Qt.Unchecked)
+			self.updateSelection()
 
 	def updateSelection(self):
 		global DBFilename
