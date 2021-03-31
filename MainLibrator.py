@@ -6420,7 +6420,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.myCodonDialog.updateSignal.connect(self.updateUI)
 		self.myCodonDialog.show()
 
-	def CheckSeq(self):
+	def CheckSeq(self, mode):
 		pattern = re.compile(r'[^ATCUG]')
 
 		text = self.ui.textSeq.toPlainText()
@@ -6467,10 +6467,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 			                    QMessageBox.Ok, QMessageBox.Ok)
 			return
 		else:
-			Msg = 'Did not find any unlawful nucleotide in your sequence! Your sequence is good!'
-			QMessageBox.warning(self, 'Warning', Msg,
-			                    QMessageBox.Ok, QMessageBox.Ok)
-			return
+			if mode == 'auto':
+				return
+			else:
+				Msg = 'Did not find any unlawful nucleotide in your sequence! Your sequence is good!'
+				QMessageBox.warning(self, 'Warning', Msg,
+				                    QMessageBox.Ok, QMessageBox.Ok)
+				return
 
 
 	def MaxNotice(self):
@@ -14902,6 +14905,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 		DataIs = RunSQL(DBFilename, SQLStatement)
 		# 	 SeqName , Sequence , SeqLen, SubType , Form , Placeholder, ID
 		self.UpdateFields()
+		# sequence check
+		self.CheckSeq('auto')
 
 	@pyqtSlot()
 	def UpdateFields(self):
