@@ -100,9 +100,9 @@ DBFilename = 'none'
 
 # read configure information from file. If no conf file, initial conf path
 global conf_file, ldb_file, joint_file
-conf_file = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), 'Conf', 'path_setting.txt')
-ldb_file = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), 'Conf', 'ldb_setting.txt')
-joint_file = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), 'Conf', 'joint_setting.txt')
+conf_file = os.path.join(os.path.dirname(sys.argv[0]), 'Conf', 'path_setting.txt')
+ldb_file = os.path.join(os.path.dirname(sys.argv[0]), 'Conf', 'ldb_setting.txt')
+joint_file = os.path.join(os.path.dirname(sys.argv[0]), 'Conf', 'joint_setting.txt')
 
 global working_prefix
 global temp_folder
@@ -114,7 +114,7 @@ global raxml_path
 global VisualizeSoftWare
 global fragmentdb_path
 
-working_prefix = os.path.dirname(os.path.realpath(sys.argv[0]))
+working_prefix = os.path.dirname(sys.argv[0])
 temp_folder = os.path.join(working_prefix, 'Temp')
 
 if os.path.exists(conf_file):   # if conf exist, read conf info from file
