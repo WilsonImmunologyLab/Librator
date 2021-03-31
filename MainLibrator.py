@@ -8305,6 +8305,21 @@ class LibratorMain(QtWidgets.QMainWindow):
 					for i in range(layout.count()):
 						layout.removeWidget(layout.itemAt(i).widget())
 				layout.addWidget(view)
+			elif system() == 'Darwin':
+				# display
+				view = QWebEngineView()
+				out_svg = os.path.join(working_prefix, 'Data', 'mac.html')
+				url = QUrl.fromLocalFile(str(out_svg))
+				view.load(url)
+				view.show()
+
+				layout = self.ui.groupBoxLogo.layout()
+				if layout == None:
+					layout = QGridLayout(self.ui.groupBoxLogo)
+				else:
+					for i in range(layout.count()):
+						layout.removeWidget(layout.itemAt(i).widget())
+				layout.addWidget(view)
 			else:
 				return
 		# SequenceDB
