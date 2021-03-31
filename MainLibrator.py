@@ -8901,6 +8901,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 					with open(out_eps, 'wb') as f:
 						f.write(eps)
 					cmd = 'open ' + out_eps  # mac
+
+					Msg = 'Fail to find You sequence logo EPS file has been saved at ' + out_eps
+					QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
 				elif system() == 'Linux':
 					out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 					with open(out_eps, 'wb') as f:
@@ -9076,6 +9079,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 					with open(out_eps, 'wb') as f:
 						f.write(eps)
 					cmd = 'open ' + out_eps  # mac
+
+					Msg = 'Fail to find You sequence logo EPS file has been saved at ' + out_eps
+					QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
 				elif system() == 'Linux':
 					out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 					with open(out_eps, 'wb') as f:
