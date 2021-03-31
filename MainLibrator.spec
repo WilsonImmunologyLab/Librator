@@ -55,6 +55,6 @@ app = BUNDLE(coll,
              info_plist={
               'NSPrincipalClass': 'NSApplication',
               'NSAppleScriptEnabled': False,
-              'NSHumanReadableCopyright':"Copyright @ 2020, Wilson Lab, All Rights Reserved",
+              'NSHumanReadableCopyright':"Copyright @ 2021, Wilson Lab, All Rights Reserved",
               'NSHighResolutionCapable': 'True'
              })
