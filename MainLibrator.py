@@ -8290,38 +8290,29 @@ class LibratorMain(QtWidgets.QMainWindow):
 			self.CheckDecorations()
 		# sequence logo
 		elif self.ui.tabWidget.currentIndex() == 3:
-			if system() == 'Windows':
-				# display
-				view = QWebEngineView()
-				out_svg = os.path.join(working_prefix, 'Data', 'win.html')
-				url = QUrl.fromLocalFile(str(out_svg))
-				view.load(url)
-				view.show()
-
-				layout = self.ui.groupBoxLogo.layout()
-				if layout == None:
+			layout = self.ui.groupBoxLogo.layout()
+			if layout == None:
+				if system() == 'Windows':
+					# display
+					view = QWebEngineView()
+					out_svg = os.path.join(working_prefix, 'Data', 'win.html')
+					url = QUrl.fromLocalFile(str(out_svg))
+					view.load(url)
+					view.show()
 					layout = QGridLayout(self.ui.groupBoxLogo)
-				else:
-					for i in range(layout.count()):
-						layout.removeWidget(layout.itemAt(i).widget())
-				layout.addWidget(view)
-			elif system() == 'Darwin':
-				# display
-				view = QWebEngineView()
-				out_svg = os.path.join(working_prefix, 'Data', 'mac.html')
-				url = QUrl.fromLocalFile(str(out_svg))
-				view.load(url)
-				view.show()
-
-				layout = self.ui.groupBoxLogo.layout()
-				if layout == None:
+					layout.addWidget(view)
+				elif system() == 'Darwin':
+					# display
+					view = QWebEngineView()
+					out_svg = os.path.join(working_prefix, 'Data', 'mac.html')
+					url = QUrl.fromLocalFile(str(out_svg))
+					view.load(url)
+					view.show()
+					layout = self.ui.groupBoxLogo.layout()
 					layout = QGridLayout(self.ui.groupBoxLogo)
+					layout.addWidget(view)
 				else:
-					for i in range(layout.count()):
-						layout.removeWidget(layout.itemAt(i).widget())
-				layout.addWidget(view)
-			else:
-				return
+					return
 		# SequenceDB
 		elif self.ui.tabWidget.currentIndex() == 4:
 			# if old table exists, clear table
