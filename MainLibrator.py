@@ -8576,6 +8576,16 @@ class LibratorMain(QtWidgets.QMainWindow):
 			for i in range(count):
 				SeqNames.append(self.ui.listWidgetStrainsIn.item(i).text())
 			self.ui.comboBoxAllSeq.addItems(SeqNames)
+
+			layout = self.ui.FLUDBgroupBox.layout()
+			if layout == None:
+				view = QWebEngineView()
+				out_svg = os.path.join(working_prefix, 'Data', 'fludb.html')
+				url = QUrl.fromLocalFile(str(out_svg))
+				view.load(url)
+				view.show()
+				layout = QGridLayout(self.ui.FLUDBgroupBox)
+				layout.addWidget(view)
 		# Alignment(HTML)
 		elif self.ui.tabWidget.currentIndex() == 2:
 			# load data
@@ -8639,9 +8649,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				for i in range(layout.count()):
 					layout.removeWidget(layout.itemAt(i).widget())
 			layout.addWidget(view)
-		# Alignment logo
-		elif self.ui.tabWidget.currentIndex() == 3:
-			pass
+		# else
 		else:
 			return
 
