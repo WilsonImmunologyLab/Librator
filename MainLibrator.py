@@ -6759,7 +6759,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				if system() == 'Windows':
 					run(cmd, shell=True)
 				else:
-					bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
+					bot1 = Popen(cmd, stdout=PIPE, stderr=STDOUT, stdin=PIPE, shell=True,
 								 env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 				self.ShowVGenesText(pml_path)
 			else:
@@ -6873,7 +6873,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			# open pml script with PyMOL
 			if system() == 'Windows':
-				cmd = '"' + UCSF_path + '" ' + pml_path
+				cmd = '"' + UCSF_path + '" ' + pml_path + ' --debug'
 			elif system() == 'Darwin':
 				cmd = UCSF_path + " " + pml_path
 			elif system() == 'Linux':
@@ -6883,7 +6883,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# print(cmd)
 			if os.path.isfile(UCSF_path):
 				if system() == 'Windows':
-					run(cmd, shell=True)
+					bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True)
 				else:
 					bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
 								 env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
@@ -15931,8 +15931,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 					#		pml.write(text)
 
 		if system() == 'Windows':
-			cmd = '"' + UCSFPath + '" ' + pml_path
-			cmd = [UCSFPath, pml_path]
+			cmd = '"' + UCSFPath + '" ' + pml_path + ' --debug'
 		elif system() == 'Darwin':
 			cmd = UCSFPath + " " + pml_path
 		elif system() == 'Linux':
@@ -15941,7 +15940,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			cmd = ''
 		if os.path.isfile(UCSFPath):
 			if system() == 'Windows':
-				run(cmd, shell=True)
+				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True)
 			else:
 				bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True)
 			self.ShowVGenesText(pml_path)
