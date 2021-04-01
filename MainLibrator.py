@@ -138,7 +138,7 @@ if os.path.exists(conf_file):   # if conf exist, read conf info from file
 			pymol_path = '/usr/local/bin/pymol'
 			raxml_path = os.path.join(working_prefix,  'Tools', 'raxml')
 			UCSF_path = '/Applications/Chimera.app/Contents/MacOS/chimera'
-			VisualizeSoftWare = 'pymol'
+			VisualizeSoftWare = 'ucsf'
 		elif system() == 'Windows':
 			muscle_path = os.path.join(working_prefix, 'Tools', 'muscle.exe')
 			clustal_path = os.path.join(working_prefix, 'Tools', 'clustalo.exe')
@@ -152,7 +152,7 @@ if os.path.exists(conf_file):   # if conf exist, read conf info from file
 			pymol_path = '/usr/local/bin/pymol'
 			raxml_path = os.path.join(working_prefix, 'Tools', 'raxml')
 			UCSF_path = '/Applications/Chimera.app/Contents/MacOS/chimera'
-			VisualizeSoftWare = 'pymol'
+			VisualizeSoftWare = 'ucsf'
 
 		file_handle = open(conf_file, 'w')
 		file_handle.write(muscle_path + '\n')
@@ -169,7 +169,7 @@ else:                           # if conf does not exist, initial conf info and 
 		pymol_path = '/usr/local/bin/pymol'
 		raxml_path = os.path.join(working_prefix, 'Tools', 'raxml')
 		UCSF_path = '/Applications/Chimera.app/Contents/MacOS/chimera'
-		VisualizeSoftWare = 'pymol'
+		VisualizeSoftWare = 'ucsf'
 	elif system() == 'Windows':
 		muscle_path = os.path.join(working_prefix, 'Tools', 'muscle.exe')
 		clustal_path = os.path.join(working_prefix, 'Tools', 'clustalo.exe')
@@ -183,7 +183,7 @@ else:                           # if conf does not exist, initial conf info and 
 		pymol_path = '/usr/local/bin/pymol'
 		raxml_path = os.path.join(working_prefix, 'Tools', 'raxml')
 		UCSF_path = '/Applications/Chimera.app/Contents/MacOS/chimera'
-		VisualizeSoftWare = 'pymol'
+		VisualizeSoftWare = 'ucsf'
 
 	file_handle = open(conf_file, 'w')
 	file_handle.write(muscle_path + '\n')
