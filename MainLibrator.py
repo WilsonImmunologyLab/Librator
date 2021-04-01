@@ -6484,7 +6484,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 	def MaxNotice(self):
 		if self.ui.comboBoxMax.currentText() == "Local Max":
 			Msg = 'Please make sure you know what "Local Max" means!\n' \
-			      'See user guide 4.1.6 for details!'
+			      'See user guide 4.1.8 Generate sequence Logo for details!'
 			QMessageBox.warning(self, 'Warning', Msg,
 			                    QMessageBox.Ok, QMessageBox.Ok)
 
