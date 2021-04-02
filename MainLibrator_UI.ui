@@ -2664,7 +2664,7 @@
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
-        <string>FLUDB HAnumbering</string>
+        <string>Burke and Smith Numbering</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_14">
         <item row="1" column="0" colspan="8">

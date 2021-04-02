@@ -1620,7 +1620,7 @@ class Ui_MainLibrator(object):
         self.RunFLUDB.setText(_translate("MainLibrator", "Run"))
         self.label_14.setText(_translate("MainLibrator", "Choose Quey:"))
         self.label_3.setText(_translate("MainLibrator", "Choose Template:"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainLibrator", "FLUDB HAnumbering"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainLibrator", "Burke and Smith Numbering"))
         self.menuFile.setTitle(_translate("MainLibrator", "File"))
         self.menuSequences.setTitle(_translate("MainLibrator", "Sequences"))
         self.menuTools.setTitle(_translate("MainLibrator", "Tools"))
