@@ -291,7 +291,7 @@ class Ui_gibsoncloneDialog(object):
         self.label_7.setText(_translate("gibsoncloneDialog", "Server IP"))
         self.label_11.setText(_translate("gibsoncloneDialog", "Port"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("gibsoncloneDialog", "Remote DB"))
-        self.label.setText(_translate("gibsoncloneDialog", "Welcome to Gibson Clone Fragment Desgin page!"))
+        self.label.setText(_translate("gibsoncloneDialog", "Welcome to Gibson Clone Fragment design page!"))
         self.checkBoxAll.setText(_translate("gibsoncloneDialog", "Select All"))
         self.label_18.setText(_translate("gibsoncloneDialog", "to"))
         self.label_14.setText(_translate("gibsoncloneDialog", "Fragment 3"))
