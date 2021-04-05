@@ -138,9 +138,9 @@ $(document).ready(function(){
         <img class="img" src="img/FragmentDBTab.png" style="width: 70%">
       </li>
       <li>
-        <a class="title">FLU DB HA numbering Tab</a>
-        <p class="text">Beside structure-based H1/H3 numbering system utilized in Librator, there is another HA numbering system in this field. This HA numbering scheme was proposed in 2004 and has been implemented by FLU DB recently. This numbering system aligns query sequence against a few template sequences and then assign position number of residues according to the alignment. This tab was designed for FLU DB HA numbering scheme. Users are allowed to align a query sequence to multiple template sequences of different HA subtypes to determine residue numbers.</p>
-        <img class="img" src="img/FLUDBnumberingTab.png" style="width: 50%">
+        <a class="title">Burke and Smith HA numbering Tab</a>
+        <p class="text">Beside structure-based H1/H3 numbering system utilized in Librator, there is another HA numbering system in this field. This HA numbering scheme was proposed by Burke and Smith in 2004 and has been implemented by FLU DB recently. This numbering system aligns query sequence against a few template sequences and then assign position number of residues according to the alignment. This tab was designed for Burke and Smith HA numbering scheme. Users are allowed to align a query sequence to multiple template sequences of different HA subtypes to determine residue numbers.</p>
+        <img class="img" src="img/Burke.png" style="width: 50%">
       </li>
     </ul>
     <h1>Functions</h1>
@@ -256,20 +256,15 @@ $(document).ready(function(){
         </li>
         <li>
           <a class="title">Identify possible key residues from two groups of sequences</a>
-          <p class="text">We also implemented an independent viewer for users to easily access the FLUDB HA numbering scheme proposed by Burke et al. since it has also been commonly used in the Influenza community (Burke, David F., et al.  PloS one 9, no. 11 (2014): e112302.). Users are allowed to align a query sequence to multiple template sequences of different HA subtypes to determine residue numbers. User can click “FLUDB HAnumbering” tab to active this function. Users are required to determine one query sequence (from active sequence list), and at least one template sequences. Then users can click “Run” to see the results. </p>
-          <p class='text'>Of note, only in this page, HA numbering is FLU DB numbering. In all other functions/pages, structure-based H1/H3 numbering is still default HA numbering scheme.</p>
-          <img class="img" src="img/fludb1.png" style="width: 50%">
-          <p class='text'>We provide “compact mode” for this viewer:</p>
-          <img class="img" src="img/fludb2.png" style="width: 50%">
-          <p class='text'>We also provide “only alignment” mode that allows users to hide numbering rulers.</p>
-          <img class="img" src="img/fludb3.png" style="width: 50%">
+          <p class="text">Librator allows users to identify possible key residues from two groups of sequences. This function could be helpful in the case of identifying key residues that potentially responsible for antigenic change or antibody binding. </p>
+          <p class='text'>Users can click Tools-> Identify key residues in menu. Users can double click sequence names on the left panel to add them into positive group or negative group to the right. Users can click the corresponding arrow to change the destination (green arrow indicates current destination). Users also can double click sequences on the right panel to remove them from current panel. After that, users can click ‘Identify possible key residues’ button to run analysis. The importance of residues is quantified and ranked by numerical score, which indicates the difference of amino acid composition between two groups. All residues will be listed in a table and be sorted by the score (inverse order). Multiple sequence aliment will also be popped up for users to investigate the details.</p>
+          <img class="img" src="img/Identify.png" style="width: 80%">
         </li>
 
         <li>
-          <a class="title">FLUDB HA numbering</a>
+          <a class="title">Burke and Smith HA numbering</a>
           <p class="text">Users can generate sequence logo for multiple selected sequences. Users should select multiple sequence in main page, then click “Seq logo” tab. On “Seq logo” tab, users can click Peptide logo or Nucleotide logo to generate sequences logos (Panel A). Users also can check the checkbox called “open Sequence logo on a popup window” to view the sequence logo on a popup window and then can be saved as an EPS file (vector graph) for further use.   Users also can click the button on the right top corner to visualize peptide conservations for selected sequences on a 3D structure using PyMOL (panel B) or UCSF Chimera (Figure not shown). The structure annotation code will also be displayed in a pop-up window. </p>
-          <img class="img" src="img/tree.png" style="width: 90%">
-          <img class="img" src="img/tree1.png" style="width: 90%">
+          <img class="img" src="img/Burke.png" style="width: 50%">
         </li>
       </ul>
 
