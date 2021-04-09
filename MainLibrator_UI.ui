@@ -1151,6 +1151,13 @@
                   </spacer>
                  </item>
                  <item>
+                  <widget class="QPushButton" name="pushButtonSetBase">
+                   <property name="text">
+                    <string>Set BaseSeq</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
                   <widget class="QPushButton" name="btnClearAll">
                    <property name="text">
                     <string>Reset active list</string>

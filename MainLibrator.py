@@ -6499,6 +6499,49 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.ui.PDBcombo.addItems(pdb_list)
 
 	@pyqtSlot()
+	def on_pushButtonSetBase_clicked(self):
+		global BaseSeq
+		global MoveNotChange
+		if MoveNotChange:
+			return
+
+		selections = self.ui.listWidgetStrainsIn.selectedItems()
+		if len(selections) == 0:
+			return
+
+		name_selections = []
+		for item in selections:
+			name_selections.append(item.text())
+		if len(name_selections) > 1:
+			Msg = 'You can not set multiple sequences as Base Sequence because it is unique!!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		CurName = self.ui.txtName.toPlainText()
+		if BaseSeq != CurName and BaseSeq != '':
+			question = BaseSeq + ':\n\n is already denoted as the Base sequence and there can only be one.\n' \
+			                     ' Reassign the Base sequence to:\n\n' + CurName + '?'
+			buttons = 'YN'
+			answer = questionMessage(self, question, buttons)
+			if answer == 'Yes':
+				self.UpdateSeq(BaseSeq, 'Unassigned', 'Role')
+				BaseSeq = CurName
+				self.UpdateSeq(BaseSeq, 'BaseSeq', 'Role')
+				self.ui.lblBaseName.setText(BaseSeq)
+				self.ui.cboRole.last_value = BaseSeq
+				MoveNotChange = True
+				self.ui.cboRole.setCurrentText('BaseSeq')
+				MoveNotChange = False
+			else:
+				return
+		else:
+			BaseSeq = CurName
+			self.UpdateSeq(BaseSeq, 'BaseSeq', 'Role')
+			self.ui.lblBaseName.setText(BaseSeq)
+
+		self.rebuildTree()
+
+	@pyqtSlot()
 	def on_actionIdentify_Key_Mutations_triggered(self):
 		self.FindkeyDialog = FindKeyDialog()
 
