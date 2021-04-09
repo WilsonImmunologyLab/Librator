@@ -1313,7 +1313,7 @@ class CodonDialog(QtWidgets.QDialog):
 		               + template + "')"
 		response = RunInsertion(DBFilename, SQLStatement)
 		if response == 1:
-			Msg = "Error happen when insert the new sequence!"
+			Msg = "Error happen when insert the new sequence! Seems like the sequence name has been taken!"
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 		else:
 			self.updateSignal.emit(New_name)
@@ -16149,7 +16149,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 							   + template_name + "')"
 				response = RunInsertion(DBFilename, SQLStatement)
 				if(response == 1):
-					QMessageBox.warning(self, 'Warning', "Error happen when insert the new sequence!",
+					QMessageBox.warning(self, 'Warning', "Error happen when insert the new sequence! Seems like the sequence name has been taken!",
 										QMessageBox.Ok, QMessageBox.Ok)
 				else:
 					# add new sequence information into listWidgetStrainsIn
@@ -16260,7 +16260,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 								   + template_name + "')"
 					response = RunInsertion(DBFilename, SQLStatement)
 					if response == 1:
-						QMessageBox.warning(self, 'Warning', "Error happen when insert the new sequence!",
+						QMessageBox.warning(self, 'Warning', "Error happen when insert the new sequence! Seems like the sequence name has been taken!",
 											QMessageBox.Ok, QMessageBox.Ok)
 					else:
 						# add new sequence information into listWidgetStrainsIn
@@ -16980,7 +16980,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		               + base_name + "')"
 		response = RunInsertion(DBFilename, SQLStatement)
 		if (response == 1):
-			QMessageBox.warning(self, 'Warning', "Error happen when insert the new sequence!",
+			QMessageBox.warning(self, 'Warning', "Error happen when insert the new sequence! Seems like the sequence name has been taken!",
 			                    QMessageBox.Ok, QMessageBox.Ok)
 		else:
 			# add new sequence information into listWidgetStrainsIn
@@ -18175,7 +18175,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 						response = RunMYSQLInsertion(db_file, SQLCommand)
 
 					if response == 1:
-						QMessageBox.warning(self, 'Warning', "Error happen when insert the new fregment records!",
+						QMessageBox.warning(self, 'Warning', "Error happen when insert the new fregment records! Seems like the sequence name has been taken!",
 											QMessageBox.Ok, QMessageBox.Ok)
 						return
 					else:
