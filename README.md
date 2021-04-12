@@ -4,7 +4,14 @@
 
 # Librator
 Librator, a platform for optimized sequence editing, design, and expression of influenza virus proteins
-<!-- Please refer to https://WilsonImmunologyLab.github.io/LinQView/ for installation instruction and tutorial. -->
+
+Instructions, documentation, and tutorials can be found at:
+
+https://wilsonimmunologylab.github.io/Librator/
+
+Source coee of Librator is hosted on GitHub, you can view and clone the repository at
+
+https://github.com/WilsonImmunologyLab/Librator
 
 <img src="/docs/img/FigS4.png"  width="800">
 
