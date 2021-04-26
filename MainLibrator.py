@@ -6905,9 +6905,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 					cur_groups = EpitopesDict_HA2[key].split(' ')
 					for group in cur_groups:
 						if group in cur_ha2_epitopes_dic:
-							cur_ha2_epitopes_dic[group] += ',' + str(key) + '.A,' + str(key) + '.C,' + str(key) + '.E'
+							cur_ha2_epitopes_dic[group] += ',' + str(key) + '.B,' + str(key) + '.D,' + str(key) + '.F'
 						else:
-							cur_ha2_epitopes_dic[group] = str(key) + '.A,' + str(key) + '.C,' + str(key) + '.E'
+							cur_ha2_epitopes_dic[group] = str(key) + '.B,' + str(key) + '.D,' + str(key) + '.F'
 				for group in cur_ha2_epitopes_dic:
 					group_name = EpitopesAnnotate[group]
 					text += 'alias ' + group_name + ' :' + cur_ha2_epitopes_dic[group] + '\n'
@@ -15886,9 +15886,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 				cur_groups = EpitopesDict_HA2[key].split(' ')
 				for group in cur_groups:
 					if group in cur_ha2_epitopes_dic:
-						cur_ha2_epitopes_dic[group] += ',' + str(key) + '.A,' + str(key) + '.C,' + str(key) + '.E'
+						cur_ha2_epitopes_dic[group] += ',' + str(key) + '.B,' + str(key) + '.D,' + str(key) + '.F'
 					else:
-						cur_ha2_epitopes_dic[group] = str(key) + '.A,' + str(key) + '.C,' + str(key) + '.E'
+						cur_ha2_epitopes_dic[group] = str(key) + '.B,' + str(key) + '.D,' + str(key) + '.F'
 			for group in cur_ha2_epitopes_dic:
 				group_name = EpitopesAnnotate[group]
 				text += 'alias ' + group_name + ' :' + cur_ha2_epitopes_dic[group] + '\n'
@@ -15967,9 +15967,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 				if len(position_list) > 0:
 					position_list_sorted = SortAndMerge(position_list)
 					text = "alias HA2-mutation :" \
-					       + '.A,'.join(position_list_sorted) + '.A,' \
-					       + '.C,'.join(position_list_sorted) + '.C,' \
-					       + '.E,'.join(position_list_sorted) + '.E\n'
+					       + '.B,'.join(position_list_sorted) + '.B,' \
+					       + '.D,'.join(position_list_sorted) + '.D,' \
+					       + '.F,'.join(position_list_sorted) + '.F\n'
 					text += "color red HA2-mutation\n"
 					pml.write(text)
 
