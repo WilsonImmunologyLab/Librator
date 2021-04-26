@@ -15658,10 +15658,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			for group in cur_ha1_epitopes_dic:
 				group_name = EpitopesAnnotate[group]
-				text += 'sel ' + group_name + ', chain A+C+E+G+I+K and (resi ' + cur_ha1_epitopes_dic[group] + ')\n'
+				text += 'sel HA1-' + group_name + ', chain A+C+E+G+I+K and (resi ' + cur_ha1_epitopes_dic[group] + ')\n'
 				if group in PyMolColorDefine:
 					group_color = PyMolColorDefine[group]
-					text += 'color ' + group_color +  ', ' + group_name + '\n'
+					text += 'color ' + group_color +  ', HA1-' + group_name + '\n'
 
 			text += '\n# HA2 epitopes\n'
 			cur_ha2_epitopes_dic = {}
@@ -15675,10 +15675,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			for group in cur_ha2_epitopes_dic:
 				group_name = EpitopesAnnotate[group]
-				text += 'sel ' + group_name + ', chain B+D+F+H+J+L and (resi ' + cur_ha2_epitopes_dic[group] + ')\n'
+				text += 'sel HA2-' + group_name + ', chain B+D+F+H+J+L and (resi ' + cur_ha2_epitopes_dic[group] + ')\n'
 				if group in PyMolColorDefine:
 					group_color = PyMolColorDefine[group]
-					text += 'color ' + group_color +  ', ' + group_name + '\n'
+					text += 'color ' + group_color +  ', HA2-' + group_name + '\n'
 
 			pml.write(text)
 
@@ -15875,10 +15875,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 						cur_ha1_epitopes_dic[group] = str(key) + '.A,' + str(key) + '.C,' + str(key) + '.E'
 			for group in cur_ha1_epitopes_dic:
 				group_name = EpitopesAnnotate[group]
-				text += 'alias ' + group_name + ' :' + cur_ha1_epitopes_dic[group] + '\n'
+				text += 'alias HA1-' + group_name + ' :' + cur_ha1_epitopes_dic[group] + '\n'
 				if group in ColorDefine:
 					group_color = ColorDefine[group]
-					text += 'color ' + group_color + ' ' + group_name + '\n'
+					text += 'color ' + group_color + ' HA1-' + group_name + '\n'
 
 			text += '\n# HA2 epitopes\n'
 			cur_ha2_epitopes_dic = {}
@@ -15891,10 +15891,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 						cur_ha2_epitopes_dic[group] = str(key) + '.B,' + str(key) + '.D,' + str(key) + '.F'
 			for group in cur_ha2_epitopes_dic:
 				group_name = EpitopesAnnotate[group]
-				text += 'alias ' + group_name + ' :' + cur_ha2_epitopes_dic[group] + '\n'
+				text += 'alias HA2-' + group_name + ' :' + cur_ha2_epitopes_dic[group] + '\n'
 				if group in ColorDefine:
 					group_color = ColorDefine[group]
-					text += 'color ' + group_color + ' ' + group_name + '\n'
+					text += 'color ' + group_color + ' HA2-' + group_name + '\n'
 
 			pml.write(text)
 
