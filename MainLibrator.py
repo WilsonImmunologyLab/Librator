@@ -3511,18 +3511,21 @@ class updateSeqDialog(QtWidgets.QDialog):
 
 			infoStr = ''
 			for my_str in unlawfulSTR:
-				infoStr += my_str + ' may be degenerate for ' + unlawfulNT[my_str] + '\n'
+				try:
+					infoStr += my_str + ' may be degenerate for ' + unlawfulNT[my_str] + '\n'
+				except:
+					pass
 
 			Msg = 'We found and highlighted ' \
 			      + str(len(
-				pos_list)) + ' unlawful nucleotides in your sequence!\nAlignments can only proceed with AGCT nucleotides.\n'
+				pos_list)) + ' ambiguous nucleotides in your sequence!\nAlignments can only proceed with AGCT nucleotides.\n'
 			Msg = Msg + infoStr
 
 			QMessageBox.warning(self, 'Warning', Msg,
 			                    QMessageBox.Ok, QMessageBox.Ok)
 			return
 		else:
-			Msg = 'Did not find any unlawful nucleotide in your sequence! Your sequence is good!'
+			Msg = 'Did not find any ambiguous nucleotide in your sequence! Your sequence is good!'
 			QMessageBox.warning(self, 'Warning', Msg,
 			                    QMessageBox.Ok, QMessageBox.Ok)
 			return
@@ -6462,24 +6465,40 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			infoStr = ''
 			for my_str in unlawfulSTR:
-				infoStr += my_str + ' may be degenerate for ' + unlawfulNT[my_str] + '\n'
+				try:
+					infoStr += my_str + ' may be degenerate for ' + unlawfulNT[my_str] + '\n'
+				except:
+					pass
 
 			Msg = 'We found and highlighted ' \
-			      + str(len(pos_list)) + ' unlawful nucleotides in your sequence!\nAlignments can only proceed with AGCT nucleotides.\n'
+			      + str(len(pos_list)) + ' ambiguous nucleotides in your sequence!\nAlignments can only proceed with AGCT nucleotides.\n'
 			Msg = Msg + infoStr
 
-			QMessageBox.warning(self, 'Warning', Msg,
-			                    QMessageBox.Ok, QMessageBox.Ok)
+			#QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			self.ShowVGenesTextInfo(Msg)
 			return
 		else:
 			if mode == 'auto':
 				return
 			else:
-				Msg = 'Did not find any unlawful nucleotide in your sequence! Your sequence is good!'
-				QMessageBox.warning(self, 'Warning', Msg,
-				                    QMessageBox.Ok, QMessageBox.Ok)
+				Msg = 'Did not find any ambiguous nucleotide in your sequence! Your sequence is good!'
+				# QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+				self.ShowVGenesTextInfo(Msg)
 				return
 
+	def ShowVGenesTextInfo(self, input):
+		self.InfoTextEdit.show()
+
+		res = self.InfoTextEdit.size()
+		size_w = self.InfoTextEdit.size().width()
+		size_h = self.InfoTextEdit.size().height()
+		if size_w == 640 and size_h == 480:
+			self.InfoTextEdit.resize(800, 800)
+
+		if os.path.exists(input):
+			self.InfoTextEdit.loadFile(input)
+		else:
+			self.InfoTextEdit.textEdit.setText(input)
 
 	def MaxNotice(self):
 		if self.ui.comboBoxMax.currentText() == "Local Max":
@@ -14834,20 +14853,18 @@ class LibratorMain(QtWidgets.QMainWindow):
 		self.highlightlist()
 
 		# auto check sequence
-		Where = '("' + '","'.join(selections) + '")'
-		SQLStatement = 'SELECT SeqName,Sequence FROM LibDB WHERE `SeqName` in ' + Where
+		SQLStatement = 'SELECT SeqName,Sequence FROM LibDB WHERE `Active` = "True"'
 		DataIs = RunSQL(DBFilename, SQLStatement)
 		StatuesCode, Msg = self.checkSeqBatch(DataIs)
 		if StatuesCode == 0:
 			pass
 		else:
-			QMessageBox.warning(self, 'Warning', Msg,
-			                    QMessageBox.Ok,
-			                    QMessageBox.Ok)
+			#QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			self.ShowVGenesTextInfo(Msg)
 
 	def checkSeqBatch(self, dataIs):
 		StatuesCode = 0
-		Msg = 'We found unlawful nucleotides in the following sequence:\n'
+		Msg = 'We found ambiguous nucleotides in the following sequence:\n'
 
 		errorSeqlist = []
 		if len(dataIs) > 0:
@@ -15467,7 +15484,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		SequenceFiltered = []
 		# check if any sequence have strange nt
-		ErrMsg = 'The following sequences will not be imported due to unlawful nucleotide more than 5%:\n\n'
+		ErrMsg = 'The following sequences will not be imported due to ambiguous nucleotide more than 5%:\n\n'
 		ErrSign = False
 		pattern = re.compile(r'[^ATCGUatcgu]')
 		for element in HA_Read:
@@ -20797,7 +20814,8 @@ unlawfulNT = {
 	'D':'A or G or T',
 	'H':'A or C or T',
 	'V':'A or C or G',
-	'N':'any base'
+	'N':'any base',
+	'-':'gap'
 	}
 
 global Group1, Group2, GroupNA
