@@ -9127,7 +9127,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 				                                                   "Encapsulated PostScript Files (*.eps);;All Files (*)",
 				                                                   options=options)
 				if out_eps != 'none':
-					out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 					with open(out_eps, 'wb') as f:
 						f.write(eps)
 
@@ -9221,7 +9220,6 @@ class LibratorMain(QtWidgets.QMainWindow):
 						                                                   "Encapsulated PostScript Files (*.eps);;All Files (*)",
 						                                                   options=options)
 						if out_eps != 'none':
-							out_eps = os.path.join(temp_folder, "out-" + time_stamp + ".eps")
 							with open(out_eps, 'wb') as f:
 								f.write(eps)
 
