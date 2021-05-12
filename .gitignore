@@ -2,4 +2,7 @@
 ./DB
 ./Fragments
 ./ClustalOmega
-.idea/
+./.idea
+./dist
+./build
+./__pycache__
