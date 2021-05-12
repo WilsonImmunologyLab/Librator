@@ -2064,6 +2064,12 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 	def accept(self):  # redo accept method
 		global working_prefix
 
+		# check input
+		joint_up = self.ui.jointUP.text()
+		joint_down = self.ui.jointDOWN.text()
+		out_path = self.ui.outpath.text()
+		seq_name = self.ui.comboBox.currentText()
+
 		if os.path.isdir(self.ui.outpath.text()):
 			pass
 		else:
@@ -2071,80 +2077,23 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 			                    QMessageBox.Ok, QMessageBox.Ok)
 			return
 
-		res = self.GibsonFragments()
-		if res:
-			pass
-		else:
+		if joint_up == "" or joint_down == "":  # OriPos
+			QMessageBox.warning(self, 'Warning',
+			                    'The joint region can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
 			return
 
-		#active_tab = self.ui.tabWidget.currentIndex()
-		active_tab = 1
-		if active_tab == 0:
-			# validate if the DB have correct table
-			SQLStatement = 'SELECT * FROM Fragments ORDER BY Name DESC LIMIT 1 '
-			try:
-				DataIn = RunSQL(self.ui.dbpath.text(), SQLStatement)
-			except:
-				QMessageBox.warning(self, 'Warning', 'There is no Fragments table in the selected database!',
-				                    QMessageBox.Ok, QMessageBox.Ok)
-				return
-			# send signal
-			joint_up = self.ui.jointUP.toPlainText()
-			joint_down = self.ui.jointDOWN.toPlainText()
-			db_path = [self.ui.dbpath.text()]
-			out_path = self.ui.outpath.text()
-
-			if joint_up == "" or joint_down == "":  # OriPos
-				QMessageBox.warning(self, 'Warning',
-				                    'The joint region can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
-				return
-			else:
-				if out_path == "":
-					QMessageBox.warning(self, 'Warning',
-					                    'The output path can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
-					return
-
-			self.GibsonConfirm(self.data, joint_up, joint_down, out_path)
-		elif active_tab == 1:
-			# send signal
-			joint_up = self.ui.jointUP.text()
-			joint_down = self.ui.jointDOWN.text()
-			out_path = self.ui.outpath.text()
-
-			#server_ip = self.ui.IPinput.text()
-			#server_port = self.ui.Portinput.text()
-			#db_name = self.ui.DBnameinput.text()
-			#db_user = self.ui.Userinput.text()
-			#db_pass = self.ui.Passinput.text()
-
-			seq_name = self.ui.comboBox.currentText()
-
-			#db_path = [server_ip, server_port, db_name, db_user, db_pass]
-
-			if joint_up == "" or joint_down == "":  # OriPos
-				QMessageBox.warning(self, 'Warning',
-				                    'The joint region can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
-				return
-
-			if out_path == "":
-				QMessageBox.warning(self, 'Warning',
-				                    'The output path can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
-				return
-
-			#if server_ip == '' or db_name == '' or db_user == '' or db_pass == '':
-			#	QMessageBox.warning(self, 'Warning',
-			#	                    'The output path can not be blank!', QMessageBox.Ok, QMessageBox.Ok)
-			#	return
-
-			# save MYSQL setting
-			#mysql_setting_file = os.path.join(working_prefix, 'Conf', 'mysql_setting.txt')
-			#file_handle = open(mysql_setting_file, 'w')
-			#my_info = self.ui.IPinput.text() + ',' + self.ui.Portinput.text() + ',' + self.ui.DBnameinput.text() + \
-			#          ',' + self.ui.Userinput.text() + ',' + self.ui.Passinput.text()
-			#file_handle.write(my_info)
-			#file_handle.close()
-
+		# generate fragmentrs
+		res, Msg = self.GibsonFragments()
+		if res:
 			self.GibsonConfirm(self.data, joint_up, joint_down, out_path, seq_name)
+		else:
+			if Msg[0] == 'Y':
+				Msg = 'No joint region determined, will consider your entire sequence as one fragment!'
+				QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+				self.GibsonConfirmSingle(joint_up, joint_down, out_path, seq_name)
+			else:
+				QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+				return
 
 	def GibsonConfirm(self, data, joint_up, joint_down, out_path, seq_name):
 		# write result into file
@@ -2156,11 +2105,11 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 		for fragment in data:
 			fw.write('>' + seq_name + '-Fragment' + str(i) + '\n')
 			if i == 1:
-				fw.write(joint_up + fragment[1] + '\n')
+				fw.write(joint_up.lower() + fragment[1].upper() + '\n')
 			elif i == len(data):
-				fw.write(fragment[1] + joint_down + '\n')
+				fw.write(fragment[1].upper() + joint_down.lower() + '\n')
 			else:
-				fw.write(fragment[1] + '\n')
+				fw.write(fragment[1].upper() + '\n')
 			i += 1
 
 		# open Fragments file folder
@@ -2185,28 +2134,60 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 
 		self.close()
 
+	def GibsonConfirmSingle(self, joint_up, joint_down, out_path, seq_name):
+		# fetch sequence
+		fragment = self.ntSeq
+		# write result into file
+		seq_name = re.sub(r'\s+','',seq_name)
+		seq_name = re.sub(r'\W', '_', seq_name)
+		out_file = os.path.join(out_path, seq_name + '.fasta')
+		fw = open(out_file, 'w')
+		fw.write('>' + seq_name + '-Fragment1' + '\n')
+		fw.write(joint_up.lower() + fragment.upper() + joint_down.lower() + '\n')
+
+		# open Fragments file folder
+		my_cur_os = system()
+		if my_cur_os == 'Windows':
+			cmd = 'explorer ' + out_path     # Windows
+			cmd = os.path.normpath(cmd)
+		elif my_cur_os == 'Darwin':
+			cmd = 'open ' + out_path      # mac
+		elif my_cur_os == 'Linux':
+			cmd = 'nautilus' + out_path   # Linux
+		else:
+			cmd = ''
+		if cmd != '':
+			try:
+				os.system(cmd)
+			except ValueError:
+				pass
+
+		self.close()
+
 	def GibsonFragments(self):
 		if len(self.info) == 0:
-			Msg = 'No joint region exist!'
-			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
-			return False
+			Msg = 'You did not determine any joint region, no preview available! ' \
+			      'You still can generate your sequence as one fragment!'
+			#QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return([False, Msg])
 
 		if self.aaSeq == '' or self.ntSeq == '':
 			Msg = 'Please determine a sequence!'
-			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
-			return False
+			#QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return([False, Msg])
 
 		self.data = GenerateGibsonSingleAlignment(self.aaSeq, self.ntSeq, self.info)
-		return True
+		return True,''
 
 	def previewFragments(self):
 		global VGenesTextWindows
 
 		# generate gibson clone
-		res = self.GibsonFragments()
+		res, Msg = self.GibsonFragments()
 		if res:
 			pass
 		else:
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 			return
 
 		# generate HTML
