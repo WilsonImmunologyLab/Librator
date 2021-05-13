@@ -18269,7 +18269,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			cmd = 'explorer ' + out_dir     # Windows
 			cmd = os.path.normpath(cmd)
 		elif my_cur_os == 'Darwin':
-			cmd = 'open ' + out_dir      # mac
+			#cmd = 'open ' + out_dir      # mac
+			cmd = ''
 		elif my_cur_os == 'Linux':
 			cmd = 'nautilus' + out_dir   # Linux
 		else:
@@ -18281,6 +18282,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 				os.system(cmd)
 			except:
 				pass
+
+		Msg = 'Gibson Clone fragments generated under \n' + out_dir
+		QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
 
 	def highlightFromList(self, candidate_list):
 		for index in range(self.ui.listWidgetStrainsIn.count()):
