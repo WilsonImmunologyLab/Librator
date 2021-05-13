@@ -2119,7 +2119,8 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 			cmd = 'explorer ' + out_path     # Windows
 			cmd = os.path.normpath(cmd)
 		elif my_cur_os == 'Darwin':
-			cmd = 'open ' + out_path      # mac
+			#cmd = 'open ' + out_path      # mac
+			cmd = ''
 		elif my_cur_os == 'Linux':
 			cmd = 'nautilus' + out_path   # Linux
 		else:
@@ -2130,7 +2131,7 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 			except ValueError:
 				pass
 
-		Msg = 'Gibson Clone fragments generated!'
+		Msg = 'Gibson Clone fragments generated under \n' + out_path
 		QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
 
 		self.close()
@@ -2153,7 +2154,8 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 			cmd = 'explorer ' + out_path     # Windows
 			cmd = os.path.normpath(cmd)
 		elif my_cur_os == 'Darwin':
-			cmd = 'open ' + out_path      # mac
+			#cmd = 'open ' + out_path      # mac
+			cmd = ''
 		elif my_cur_os == 'Linux':
 			cmd = 'nautilus' + out_path   # Linux
 		else:
@@ -2163,6 +2165,9 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 				os.system(cmd)
 			except ValueError:
 				pass
+
+		Msg = 'Gibson Clone fragments generated under \n' + out_path
+		QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
 
 		self.close()
 
