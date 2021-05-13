@@ -2111,6 +2111,7 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 			else:
 				fw.write(fragment[1].upper() + '\n')
 			i += 1
+		fw.close()
 
 		# open Fragments file folder
 		my_cur_os = system()
@@ -2144,6 +2145,7 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 		fw = open(out_file, 'w')
 		fw.write('>' + seq_name + '-Fragment1' + '\n')
 		fw.write(joint_up.lower() + fragment.upper() + joint_down.lower() + '\n')
+		fw.close()
 
 		# open Fragments file folder
 		my_cur_os = system()
