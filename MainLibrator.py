@@ -7607,6 +7607,17 @@ class LibratorMain(QtWidgets.QMainWindow):
 				                    QMessageBox.Ok)
 				return
 
+			# delete folders in Windows
+			temp_files = os.listdir(temp_folder)
+			if len(temp_files) > 0:
+				if system() == 'Windows':
+					for folder in temp_files:
+						cmd = 'rmdir /S /Q ' + os.path.join(temp_folder, folder)
+						os.system(cmd)
+
+			Msg = 'Your TEMP folder has been cleaned!'
+			QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
+
 	def SelfClean(self):
 		global temp_folder
 		# how many files in TEMP, if > 500, clean
@@ -7626,6 +7637,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 				print('self clean!')
 			except:
 				return
+
+		# delete folders in Windows
+		temp_files = os.listdir(temp_folder)
+		if len(temp_files) > 0:
+			if system() == 'Windows':
+				for folder in temp_files:
+					cmd = 'rmdir /S /Q ' + folder
+					os.system(cmd)
 
 	@pyqtSlot()
 	def on_actionExport_triggered(self):
