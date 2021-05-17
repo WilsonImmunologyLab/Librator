@@ -98,13 +98,17 @@ DataIs = []
 global DBFilename
 DBFilename = 'none'
 
+# a root path of Librator
+global working_prefix
+working_prefix = os.path.normpath(os.path.dirname(sys.argv[0]))
+
 # read configure information from file. If no conf file, initial conf path
 global conf_file, ldb_file, joint_file
-conf_file = os.path.join(os.path.dirname(sys.argv[0]), 'Conf', 'path_setting.txt')
-ldb_file = os.path.join(os.path.dirname(sys.argv[0]), 'Conf', 'ldb_setting.txt')
-joint_file = os.path.join(os.path.dirname(sys.argv[0]), 'Conf', 'joint_setting.txt')
+conf_file = os.path.join(working_prefix, 'Conf', 'path_setting.txt')
+ldb_file = os.path.join(working_prefix, 'Conf', 'ldb_setting.txt')
+joint_file = os.path.join(working_prefix, 'Conf', 'joint_setting.txt')
 
-global working_prefix
+
 global temp_folder
 global muscle_path
 global clustal_path
@@ -114,8 +118,7 @@ global raxml_path
 global VisualizeSoftWare
 global fragmentdb_path
 
-working_prefix = os.path.dirname(sys.argv[0])
-temp_folder = os.path.join(working_prefix, 'Temp')
+temp_folder = os.path.normpath(os.path.join(working_prefix, 'Temp'))
 
 if os.path.exists(conf_file):   # if conf exist, read conf info from file
 	file_handle = open(conf_file, 'r')
@@ -7922,7 +7925,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# write sequences into file
 		time_stamp = str(int(time.time() * 100))
-		this_folder = os.path.join(temp_folder, time_stamp)
+		this_folder = os.path.normpath(os.path.join(temp_folder, time_stamp))
 
 		if system() == 'Windows':
 			cmd = 'mkdir ' + this_folder
@@ -7939,8 +7942,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 			                    QMessageBox.Ok)
 			return
 
-		aafilename = this_folder + "/input.fas"
-		outfilename = this_folder + "/alignment.fas"
+		aafilename = os.path.join(this_folder, 'input.fas')
+		outfilename = os.path.join(this_folder, 'alignment.fas')
+		#aafilename = os.path.normpath(aafilename)
+		#outfilename = os.path.normpath(outfilename)
+
 		treefilename = 'tree'
 		out_handle = open(aafilename, 'w')
 
@@ -8040,7 +8046,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# write sequences into file
 		time_stamp = str(int(time.time() * 100))
-		this_folder = os.path.join(temp_folder, time_stamp)
+		this_folder = os.path.normpath(os.path.join(temp_folder, time_stamp))
 		if system() == 'Windows':
 			cmd = 'mkdir ' + this_folder
 		elif system() == 'Darwin':
@@ -8056,8 +8062,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 			                    QMessageBox.Ok)
 			return
 
-		aafilename = this_folder + "/input.fas"
-		outfilename = this_folder + "/alignment.fas"
+		aafilename = os.path.join(this_folder, 'input.fas')
+		outfilename = os.path.join(this_folder, 'alignment.fas')
 		treefilename = 'tree'
 		out_handle = open(aafilename, 'w')
 
