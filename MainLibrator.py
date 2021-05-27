@@ -6575,6 +6575,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		WhereState = ''
 		NumSeqs = len(listItems)
 		AlignIn = []
+		subtypes = []
 		subtype = ''
 		
 		if NumSeqs < 1:
@@ -6595,6 +6596,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			DataIn = RunSQL(DBFilename, SQLStatement)
 
 			for item in DataIn:
+				'''
 				if subtype == '':
 					subtype = item[4]
 				else:
@@ -6602,6 +6604,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 						Msg = 'This function only allow same subtype!'
 						QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
 						return
+				'''
+				# collect subtypes
+				subtypes.append(item[4])
+				# collect sequence
 				SeqName = item[0]
 				Sequence = item[1]
 				VFrom = int(item[2]) - 1
@@ -6612,6 +6618,45 @@ class LibratorMain(QtWidgets.QMainWindow):
 				Sequence = Sequence.upper()
 				EachIn = (SeqName, Sequence)
 				AlignIn.append(EachIn)
+
+		# determine about subtypes
+		G1_set = set(Group1)
+		G2_set = set(Group2)
+		HAgroups = set(Group1 + Group2)
+		if set(subtypes) < G1_set:
+			subtype = "H1"
+			if len(set(subtypes)) > 1:
+				Msg = 'We identified multiple group 1 HAs from your selected sequences!\n' \
+				      'Will use a H1 model (CA09) as template!'
+				QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
+		elif set(subtypes) < G2_set:
+			subtype = "H3"
+			if len(set(subtypes)) > 1:
+				Msg = 'We identified multiple group 2 HAs from your selected sequences!\n' \
+				      'Will use a H3 model (AICHI68) as template!'
+				QMessageBox.information(self, 'Information', Msg, QMessageBox.Ok, QMessageBox.Ok)
+		elif set(subtypes) < HAgroups:
+			Msg = 'We identified both group 1 HAs and group 2 HAs from your selected sequences!\n' \
+			      'Please type the template you prefer (H1 or H3)!'
+			text, ok = QInputDialog.getText(self, 'input dialog', Msg)
+			while ok:
+				if text.upper() == "H1":
+					subtype = "H1"
+					break
+				elif text.upper() == "H3":
+					subtype = "H3"
+					break
+				else:
+					Msg = 'Your input can not be recognized! Please just type H1 or H3!'
+					text, ok = QInputDialog.getText(self, 'input dialog', Msg)
+			if ok == False:
+				return
+		else:
+			Msg = 'This functions currently only support HA sequences. ' \
+			      'Please make sure that all your selected sequences are HA!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
+
 
 		# align selected sequences (AA) using muscle
 		all_dict = dict()
@@ -6812,7 +6857,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				if system() == 'Windows':
 					run(cmd, shell=True)
 				else:
-					bot1 = Popen(cmd, stdout=PIPE, stderr=STDOUT, stdin=PIPE, shell=True,
+					bot1 = Popen(cmd, stdout=PIPE, stderr=PIPE, stdin=PIPE, shell=True,
 								 env={"LANG": "en_US.UTF-8", "LC_ALL": "en_US.UTF-8"})
 				self.ShowVGenesText(pml_path)
 			else:
