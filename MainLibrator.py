@@ -6761,6 +6761,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			if subtype in Group1:
 				pdbPath = os.path.join(working_prefix, 'PDB', '4jtv.cif')
+				#pdbPath = os.path.join(working_prefix, 'PDB', '4jtv-ba1.pdb')
 			elif subtype in Group2:
 				pdbPath = os.path.join(working_prefix, 'PDB', '4hmg.cif')
 
@@ -6877,7 +6878,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				color_dict = {5: "#8C510A", 4: "#D8B365", 3: "#F6E8C3", 2: "#C7EAE5", 1: "#5AB4AC", 0: "#01665E"}
 
 			if subtype in Group1:
-				pdbPath = os.path.join(working_prefix, 'PDB', '4jtv.cif')
+				#pdbPath = os.path.join(working_prefix, 'PDB', '4jtv.cif')
+				pdbPath = os.path.join(working_prefix, 'PDB', '4jtv-ba1.pdb')
 			elif subtype in Group2:
 				pdbPath = os.path.join(working_prefix, 'PDB', '4hmg.cif')
 
@@ -6967,6 +6969,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 					group_name = EpitopesAnnotate[group]
 					text += 'alias ' + group_name + ' :' + cur_ha2_epitopes_dic[group] + '\n'
 
+				pml.write(text)
+
+				# hide ligand surface
+				text = '\n# hide ligand surface\n~surface ligand'
 				pml.write(text)
 
 			# open pml script with PyMOL
@@ -15870,7 +15876,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			#text += "fetch " + pdbPath + ", async=0\n"
 
 			# load local structure. Can use without internet
-			pdbPath = pdbPath + '.cif'
+			pdbPath = pdbPath + '-ba1.pdb'
 			pdbPath = os.path.join(working_prefix, 'PDB', pdbPath)
 			text = "open " + pdbPath + "\n"
 			pml.write(text)
@@ -16046,6 +16052,9 @@ class LibratorMain(QtWidgets.QMainWindow):
 					text += "color red HA2-mutation\n"
 					pml.write(text)
 
+			# hide ligand surface
+			text = '\n# hide ligand surface\n~surface ligand'
+			pml.write(text)
 					#labels = mutation.split(",")
 					#for label in labels:
 					#	number = int(re.sub('[A-Za-z]', '', label))

@@ -8,6 +8,7 @@ added_files = [
              ('/Users/leil/Documents/Projects/Librator/Librator/Conf/Default','Conf/Default'),
              ('/Users/leil/Documents/Projects/Librator/Librator/Conf/db_record.txt','Temp'),
              ('/Users/leil/Documents/Projects/Librator/Librator/PDB/4jtv.cif','PDB'),
+             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/4jtv-ba1.pdb','PDB'),
              ('/Users/leil/Documents/Projects/Librator/Librator/PDB/4hmg.cif','PDB'),
              ('/Users/leil/Documents/Projects/Librator/Librator/Tools/*','Tools'),
              ('/Users/leil/Documents/Projects/Librator/Librator/Js/*','Js'),
