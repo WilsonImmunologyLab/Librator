@@ -6715,6 +6715,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		# assign entropy score for each H1/H3 position on 3D structure
 		HANumbering(Entropy[0])
+		#H1file = os.path.join(temp_folder, 'H1numbering.csv')
+		#writeToCSV(H1file, H1Numbering)
+		#H3file = os.path.join(temp_folder, 'H3numbering.csv')
+		#writeToCSV(H3file, H3Numbering)
+
 		if subtype in Group2:
 			my_ha_numbering = H3Numbering
 		elif subtype in Group1:
@@ -20870,6 +20875,29 @@ def SortAndMerge(list):
 		merge_list.append(string)
 
 	return merge_list
+
+def writeToCSV(file, inputlist):
+	#try:
+	if isinstance(inputlist,list):
+		with open(file, 'w') as f:
+			for ele in inputlist:
+				str_ele = [str(x) for x in ele]
+				my_str = ','.join(str_ele)
+				f.write(my_str + '\n')
+	elif isinstance(inputlist, dict):
+		with open(file, 'w') as f:
+			for key in inputlist:
+				my_list = list(inputlist[key])
+				str_ele = [str(x) for x in my_list]
+				my_str = ','.join(str_ele)
+				f.write(my_str + '\n')
+	else:
+		return False
+
+		return True
+	#except:
+	#	return False
+
 
 # unlawful nucleotides
 unlawfulNT = {

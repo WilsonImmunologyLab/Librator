@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Lei Li leil@uchicago.edu" />
+
+<meta name="date" content="2020-07-02" />
+
+<title>Librator, a platform for optimized sequence editing, design, and expression of influenza virus proteins</title>
+<link rel="icon" type="image/x-icon" href="logo.ico"/>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+
+<link rel="stylesheet" type="text/css" href="css/style.css">
+
+
+
+<style>
+.title {
+  background: #A6CDE7;
+  border-radius: 0px;
+  display:block;
+  width: 90%;
+  padding: 12px;
+  padding-left: 25px;
+  font-size: 20px;
+  font-weight: 700;
+  font-size: 20px;
+  border: 3px solid black;
+}
+
+.web-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 35px;
+    height: 0;
+    overflow: hidden;
+    border-style: hidden;
+    display: none;
+}
+
+.web-container iframe {
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 90%;
+    height: 90%;
+}
+
+
+</style>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.title').click(function(){
+    var father = $(this).parent('li');
+    var display = father.children(".text").css('display');
+    if(display == 'none'){
+      father.children(".text").css('display','block');
+      father.children(".web-container").css('display','block');
+    } else {
+      father.children(".text").css('display','none');
+      father.children(".web-container").css('display','none');
+    }
+  });
+});
+</script>
+
+</head>
+
+<body>
+
+
+<div class="navbox">
+<ul class="nav">
+  <li><a href="index.html">About</a></li>
+  <li><a href="install.html">Download&Install</a></li>
+  <li><a href="tutorial.html">Tutorial</a></li>
+  <li><a class="active" href="video_tutorial.html">Video Tutorial</a></li>
+  <li><a href="contact.html">Contact</a></li>
+  <li><a href="https://github.com/WilsonImmunologyLab/Librator">Github Page</a></li>
+</ul>
+</div>
+
+<div class="row">
+
+  <div class="col s12 m3">
+    <div class="table cover">
+      <div class="cover-card table-cell table-middle">
+        <div class="center">
+          <img class="logo" src="img/logo.png">
+        </div>
+        
+        <span class="author_name">Librator, a platform for optimized sequence editing, design, and expression of influenza virus proteins</span>
+        <span class="author_bio">Wilson Lab</span>
+        <span class="author_job">The University of Chicago </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col s12 m9">
+    <div class="post-listing">
+    <h1>Before started</h1>
+      <p>We all know that the user guide is too long and nobody want to read it. So I recorded some tutorial videos for users. Please keep in mind, these videos only for demonstration. For details, please refer to the <a href="https://github.com/WilsonImmunologyLab/Librator/releases/download/v1.0.0-alpha/UserGuide-Librator-v1.0.0.pdf" style="color: green;"> User guide </a> and our paper <a href="https://www.biorxiv.org/content/10.1101/2021.04.29.441999v1" target="_blank" style="color: green;">Li, et al., Librator, a platform for optimized sequence editing, design, and expression of influenza virus proteins. 2021</a>. You'are also welcome to email me or Patrick for more information. Enjoy!</p>
+    </ul>
+    <h1>Tutorial Videos</h1>
+    <ul>
+      <h2>Analysis</h2>
+      <li>
+        <a class="title">Path setting in Librator</a>
+        <p class="text">
+          Users can set paths for all required tools and databases.
+        </p>
+        <div class="web-container">
+          <iframe height="500" width="560" src="https://www.youtube.com/embed/n1smw-WHtXI" frameborder="0"></iframe>
+        </div>
+      </li>
+
+      <li>
+        <a class="title">Start with a new database</a>
+        <p class="text">
+          1) Create a new database in Librator
+          2) Import sequences into Librator
+        </p>
+        <div class="web-container">
+          <iframe height="500" width="560" src="https://www.youtube.com/embed/N7-s_w_Py14" frameborder="0"></iframe>
+        </div>
+      </li>
+
+      <li>
+        <a class="title">Brief introduction of Librator user interface</a>
+        <p class="text">
+          Brief introduction of Librator user interface
+        </p>
+        <div class="web-container">
+          <iframe height="500" width="560" src="https://www.youtube.com/embed/yysTXmYclPs" frameborder="0"></iframe>
+        </div>
+      </li>
+
+      <li>
+        <a class="title">HA numbering system and multiple sequence alignment viewer in Librator</a>
+        <p class="text">
+          1) Users are allowed to access the H1/H3 numbering of the selected sequence.
+          2) We also allow users to customize their epitope settings.
+        </p>
+        <div class="web-container">
+          <iframe height="500" width="560" src="https://www.youtube.com/embed/FS9G49dx1Ks" frameborder="0"></iframe>
+        </div>
+      </li>
+
+      <li>
+        <a class="title">Phylogenetic analysis in Librator</a>
+        <p class="text">
+          Users are allowed to generate a phylogenetic tree (Maximum Likelihood tree) for selected sequences.
+Nucleotide and Amino Acid trees are available.
+        </p>
+        <div class="web-container">
+          <iframe height="500" width="560" src="https://www.youtube.com/embed/u6jtkQNwYaU" frameborder="0"></iframe>
+        </div>
+      </li>
+
+      <li>
+        <a class="title">Identify mutations in Librator</a>
+        <p class="text">
+          Users are allowed to identify mutations between any two sequences. If you have a template
+sequence and a mutated sequence (e.g. escape mutants) and want to quickly know all the mutated
+residues, you can use this function to identify all mutations and annotate mutation information on
+your mutated sequence.
+        </p>
+        <div class="web-container">
+          <iframe height="500" width="560" src="https://www.youtube.com/embed/hLd4fkOXNIY" frameborder="0"></iframe>
+        </div>
+      </li>
+
+      <li>
+        <a class="title">Generate SeqLogos and visualize peptide conservations a 3D structure</a>
+        <p class="text">
+          1) Users can generate sequence logos for multiple selected sequences.
+          2) Users also can visualize peptide conservations for
+ selected sequences on a 3D structure using PyMOL or UCSF Chimera. The structure annotation code will also be displayed in a pop-up window.
+        </p>
+        <div class="web-container">
+          <iframe height="500" width="560" src="https://www.youtube.com/embed/JD0fOqc-EqE" frameborder="0"></iframe>
+        </div>
+      </li>
+     
+     <h2>Sequence design</h2>
+     <li>
+        <a class="title">Mutating sequence in Librator</a>
+        <p class="text">
+          Users can generate new sequences with mutations based on any existing sequence.
+        </p>
+        <div class="web-container">
+          <iframe height="500" width="560" src="https://www.youtube.com/embed/oZP_yYmPupA" frameborder="0"></iframe>
+        </div>
+      </li>
+
+      <li>
+        <a class="title">Making antigen probes in Librator</a>
+        <p class="text">
+          Users are allowed to generate antigen probes for given HA sequences with one click.
+        </p>
+        <div class="web-container">
+          <iframe height="500" width="560" src="https://www.youtube.com/embed/933eUvbRytk" frameborder="0"></iframe>
+        </div>
+      </li>
+
+      <li>
+        <a class="title">Design chimeric/mosaic protein sequences in Librator</a>
+        <p class="text">
+          Users can transplant epitopes/regions from sequences of different subtypes. This function could
+be helpful for designing chimeric HA protein.
+Regions being removed from base sequence and that being inserted from donor sequence are not
+necessary to have the same length.
+        </p>
+        <div class="web-container">
+          <iframe height="500" width="560" src="https://www.youtube.com/embed/rE0gNgw6UzU" frameborder="0"></iframe>
+        </div>
+      </li>
+
+     <h2>Gibson cloning</h2>
+    <li>
+        <a class="title">Generate Standardized Gibson Clone fragments for HA/NA in batches</a>
+        <p class="text">
+          Users can generate standardized Gibson Clone Fragments for HA/NA sequences in batches. Those
+fragments are reusable because they are following the same design.
+        </p>
+        <div class="web-container">
+          <iframe height="500" width="560" src="https://www.youtube.com/embed/jgnf2gz2iqk" frameborder="0"></iframe>
+        </div>
+      </li>
+
+      <li>
+        <a class="title">Generate Gibson clone sequence for any given sequence</a>
+        <p class="text">
+          Besides HA/NA sequences, Librator also allows users to split any of their sequences into fragments.
+Users can use this function for some novel research subjects, e.g. COVID-19 proteins.
+        </p>
+        <div class="web-container">
+          <iframe height="500" width="560" src="https://www.youtube.com/embed/wImNryJib-k" frameborder="0"></iframe>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

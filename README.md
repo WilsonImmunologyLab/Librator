@@ -9,7 +9,7 @@ Instructions, documentation, and tutorials can be found at:
 
 https://wilsonimmunologylab.github.io/Librator/
 
-Source coee of Librator is hosted on GitHub, you can view and clone the repository at
+Source code of Librator is hosted on GitHub, you can view and clone the repository at
 
 https://github.com/WilsonImmunologyLab/Librator
 
