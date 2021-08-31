@@ -2174,6 +2174,174 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout_11">
         <item row="0" column="5">
+         <layout class="QGridLayout" name="gridLayout_19">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <item row="1" column="2">
+           <widget class="QComboBox" name="comboBoxLogoColorNT">
+            <item>
+             <property name="text">
+              <string>Base Pairing</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Classic</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Monochrome</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="label_17">
+            <property name="text">
+             <string>NT</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QComboBox" name="comboBoxLogoColorAA">
+            <item>
+             <property name="text">
+              <string>Hydrophobicity</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Chemistry</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Charge</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Monochrome</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_15">
+            <property name="text">
+             <string>AA</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="pushButtonAA">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>250</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="Resources/VgenesResources.qrc">
+              <normaloff>:/PNG-Icons/MKPR.png</normaloff>:/PNG-Icons/MKPR.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>40</width>
+              <height>16</height>
+             </size>
+            </property>
+            <property name="default">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="pushButtonNT">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>250</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="Resources/VgenesResources.qrc">
+              <normaloff>:/PNG-Icons/ATCG.png</normaloff>:/PNG-Icons/ATCG.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>30</width>
+              <height>16</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="1" colspan="12">
+         <widget class="QGroupBox" name="groupBoxLogo">
+          <property name="font">
+           <font>
+            <pointsize>14</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>Sequence Logo</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="10">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Color Schema </string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="9">
+         <widget class="QComboBox" name="comboBoxMax">
+          <property name="toolTip">
+           <string>Choose Global Max if you want compare different models. See user guide 4.1.6 for details.</string>
+          </property>
+          <item>
+           <property name="text">
+            <string>Global Max</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Local Max</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="0" column="6">
+         <widget class="QRadioButton" name="radioButtonPop">
+          <property name="text">
+           <string>popup window</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="7">
          <spacer name="horizontalSpacer_8">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -2186,46 +2354,7 @@
           </property>
          </spacer>
         </item>
-        <item row="0" column="4">
-         <widget class="QRadioButton" name="radioButtonPop">
-          <property name="text">
-           <string>Open on a popup window</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QPushButton" name="pushButtonAA">
-          <property name="minimumSize">
-           <size>
-            <width>100</width>
-            <height>40</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>250</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset resource="Resources/VgenesResources.qrc">
-            <normaloff>:/PNG-Icons/MKPR.png</normaloff>:/PNG-Icons/MKPR.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>40</width>
-            <height>16</height>
-           </size>
-          </property>
-          <property name="default">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="9">
+        <item row="0" column="12">
          <widget class="QPushButton" name="toolButtonConserve">
           <property name="minimumSize">
            <size>
@@ -2248,36 +2377,14 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="3">
-         <widget class="QPushButton" name="pushButtonNT">
-          <property name="minimumSize">
-           <size>
-            <width>100</width>
-            <height>40</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>250</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset resource="Resources/VgenesResources.qrc">
-            <normaloff>:/PNG-Icons/ATCG.png</normaloff>:/PNG-Icons/ATCG.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>30</width>
-            <height>16</height>
-           </size>
+        <item row="0" column="8">
+         <widget class="Line" name="line_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
          </widget>
         </item>
-        <item row="0" column="8">
+        <item row="0" column="11">
          <widget class="QComboBox" name="comboBoxColor">
           <property name="minimumSize">
            <size>
@@ -2291,42 +2398,6 @@
             <height>16</height>
            </size>
           </property>
-         </widget>
-        </item>
-        <item row="0" column="7">
-         <widget class="QLabel" name="label_10">
-          <property name="text">
-           <string>Color Schema </string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1" colspan="9">
-         <widget class="QGroupBox" name="groupBoxLogo">
-          <property name="font">
-           <font>
-            <pointsize>14</pointsize>
-           </font>
-          </property>
-          <property name="title">
-           <string>Sequence Logo</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="6">
-         <widget class="QComboBox" name="comboBoxMax">
-          <property name="toolTip">
-           <string>Choose Global Max if you want compare different models. See user guide 4.1.6 for details.</string>
-          </property>
-          <item>
-           <property name="text">
-            <string>Global Max</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Local Max</string>
-           </property>
-          </item>
          </widget>
         </item>
        </layout>
