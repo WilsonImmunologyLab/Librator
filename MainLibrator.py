@@ -12,7 +12,7 @@ from LibratorSQL import creatnewDB, enterData, RunSQL, UpdateField, deleterecord
 from PyQt5.QtWebEngine import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtWebChannel import *
-from pyecharts.charts import Bar, Pie, Line, Page, Grid
+from pyecharts.charts import Bar, Pie, Line, Page, Grid, HeatMap
 from pyecharts import options as opts
 from weblogo import read_seq_data, LogoData, LogoOptions, LogoFormat, eps_formatter, svg_formatter, SymbolColor, Alphabet, ColorScheme
 from PIL import Image
@@ -8232,6 +8232,125 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 		Notes = ''
 		self.AlignSequences(AlignIn, Notes)
+
+	@pyqtSlot()
+	def on_SeqSimlarPct_triggered(self):
+		listItems = self.ui.listWidgetStrainsIn.selectedItems()
+		if len(listItems) < 2:
+			Msg = 'Please select at lease two sequence from active sequence panel!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
+
+		# fetch data
+		WhereState = 'SeqName IN ('
+		for item in listItems:
+			eachItemIs = item.text()
+			WhereState += '"' + eachItemIs + '",'
+		WhereState = WhereState[:-1] + ')'
+
+		SQLStatement = 'SELECT SeqName, Sequence, Vfrom, VTo FROM LibDB WHERE ' + WhereState
+		DataIn = RunSQL(DBFilename, SQLStatement)
+
+		AAseqArray = []
+		NTseqArray = []
+
+		for item in DataIn:
+			SeqName = item[0]
+			Sequence = item[1]
+			VFrom = int(item[2]) - 1
+			if VFrom == -1: VFrom = 0
+			VTo = int(item[3])
+			Sequence = Sequence[VFrom:VTo]
+			Sequence = Sequence.upper()
+			AASequence, msg = Translator(Sequence,0)
+			EachIn = (SeqName, Sequence)
+			AAEachIn = (SeqName, AASequence)
+			NTseqArray.append(EachIn)
+			AAseqArray.append(AAEachIn)
+
+		# align sequenmce
+		NTseqArrayAlign = AlignSeqMuscle(NTseqArray, muscle_path, temp_folder)
+		AAseqArrayAlign = AlignSeqMuscle(AAseqArray, muscle_path, temp_folder)
+
+		# calculate similar percent matrix
+		data = []
+		seq_names = []
+		min_value = 0
+		max_value = 0
+		for i in range(len(NTseqArrayAlign)):
+			seq_names.append(NTseqArrayAlign[i][0])
+			unit = [i, i, 100.00]
+			data.append(unit)
+			for j in range(i + 1, len(NTseqArrayAlign)):
+				identPct = SequenceIdentity(NTseqArrayAlign[i][1], NTseqArrayAlign[j][1])
+				unit = [i, j, identPct]
+				data.append(unit)
+				unit = [j, i, identPct]
+				data.append(unit)
+
+		xaxis_data = seq_names
+		yaxis_data = seq_names
+
+		# render HTML
+		my_pyecharts = (
+			HeatMap(init_opts=opts.InitOpts(width="380px", height="380px", renderer='svg'))
+				.add_xaxis(
+				xaxis_data,
+			)
+				.add_yaxis(
+				"My data selection",
+				yaxis_data,
+				data,
+				label_opts=opts.LabelOpts(is_show=False, position="inside"),
+			)
+				.set_series_opts()
+				.set_global_opts(
+				title_opts=opts.TitleOpts(title="HeatMap"),
+				visualmap_opts=opts.VisualMapOpts(min_=90, max_=100, range_color=['#ffffcc', '#006699']),
+				xaxis_opts=opts.AxisOpts(
+					type_="category",
+					axislabel_opts=opts.LabelOpts(rotate=-45, interval=0),
+					splitarea_opts=opts.SplitAreaOpts(
+						is_show=True, areastyle_opts=opts.AreaStyleOpts(opacity=1)
+					),
+				),
+			)
+		)
+		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+		html_path = os.path.join(temp_folder, time_stamp + '.html')
+		my_pyecharts.render(path=html_path)
+
+		# modify HTML
+		file_handle = open(html_path, 'r')
+		lines = file_handle.readlines()
+		file_handle.close()
+		## edit js line
+		js_line = '<script type="text/javascript" src="' + \
+		          os.path.join(working_prefix,  'Js', 'echarts.min.js') + '"></script>' + \
+		          '<script src="' + os.path.join(working_prefix,  'Js', 'jquery.js') + '"></script>'
+		lines[5] = js_line
+		## edit style line
+		style_line = lines[9]
+		style_pos = style_line.find('style')
+		style_line = style_line[0:style_pos] + \
+		             'style="position: fixed; top: 0px; left: 5%;width:800px; height:800px;"></div>'
+		lines[9] = style_line
+		content = '\n'.join(lines)
+		file_handle = open(html_path, 'w')
+		file_handle.write(content)
+		file_handle.close()
+
+		# show local HTML
+		window_id = int(time.time() * 100)
+		VGenesTextWindows[window_id] = htmlDialog()
+		VGenesTextWindows[window_id].id = window_id
+		layout = QGridLayout(VGenesTextWindows[window_id])
+		view = QWebEngineView(self)
+		url = QUrl.fromLocalFile(str(html_path))
+		view.load(url)
+		view.show()
+		layout.addWidget(view)
+		VGenesTextWindows[window_id].show()
 
 	@pyqtSlot()
 	def on_actionAlignmentHTML_triggered(self):
@@ -20773,8 +20892,6 @@ def Translator(Sequence, frame):
                 return AASeq, ErMessage
 
         elif UCount > 1:
-
-
             if AASeq2[0] == '~':
                 ErMes += 'The first codon is incomplete. '
                 ErMessage.append(ErMes)
@@ -20959,6 +21076,74 @@ def logoColorSchemeNT(colorOption):
 		colorscheme = 'default'
 
 	return colorscheme
+
+def AlignSeqMuscle(data, muscle_path, temp_folder):
+	# write data into file
+	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+	outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
+	infilename = os.path.join(temp_folder, "in-" + time_stamp + ".fas")
+
+	# align by muscle
+	file_handle = open(infilename, 'w')
+	for record in data:
+		SeqName = record[0].replace('\n', '').replace('\r', '')
+		SeqName = SeqName.strip()
+		NTseq = record[1]
+		file_handle.write('>' + SeqName + '\n')
+		file_handle.write(NTseq + '\n')
+	file_handle.close()
+
+	if system() == 'Windows':
+		cmd = muscle_path
+		cmd += " -in " + infilename + " -out " + outfilename
+	elif system() == 'Darwin':
+		cmd = muscle_path
+		cmd += " -in " + infilename + " -out " + outfilename
+	elif system() == 'Linux':
+		cmd = muscle_path
+		cmd += " -in " + infilename + " -out " + outfilename
+	else:
+		cmd = ''
+	try:
+		os.system(cmd)
+	except:
+		return 'error'
+
+	# read alignment
+	Alignment = []
+	if os.path.isfile(outfilename):
+		currentfile = open(outfilename, 'r')
+		lines = currentfile.readlines()
+		SeqName = ''
+		Seq = ''
+		for line in lines:
+			Readline = line.replace('\n', '').replace('\r', '')
+			Readline = Readline.strip()
+			if Readline[0] == '>':
+				if SeqName != '':
+					each = (SeqName, Seq)
+					Alignment.append(each)
+				SeqName = Readline[1:]
+				Seq = ''
+			else:
+				Seq += Readline
+		each = (SeqName, Seq)
+		Alignment.append(each)
+	else:
+		return
+
+	# return results
+	return Alignment
+
+def SequenceIdentity(seq1, seq2):
+	long = len(seq1)
+	score = 0
+	for i in range(long):
+		if seq1[i] == seq2[i]:
+			score += 1
+
+	identy = score/long*100
+	return identy
 
 # unlawful nucleotides
 unlawfulNT = {

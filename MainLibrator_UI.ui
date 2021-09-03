@@ -2868,6 +2868,7 @@
     <addaction name="actionIdentifyMutation"/>
     <addaction name="actionIdentify_Key_Mutations"/>
     <addaction name="separator"/>
+    <addaction name="SeqSimlarPct"/>
     <addaction name="actionAlignmentHTML"/>
     <addaction name="separator"/>
     <addaction name="actionNTTree"/>
@@ -2981,6 +2982,7 @@
    <addaction name="actionTree"/>
    <addaction name="separator"/>
    <addaction name="actionAlignmentHTML"/>
+   <addaction name="SeqSimlarPct"/>
    <addaction name="separator"/>
    <addaction name="actionPyMOL"/>
    <addaction name="actionGibsonClone"/>
@@ -3698,6 +3700,15 @@
   <action name="actionUser_defined_epitopes">
    <property name="text">
     <string>User defined epitopes</string>
+   </property>
+  </action>
+  <action name="SeqSimlarPct">
+   <property name="icon">
+    <iconset resource="Resources/VgenesResources.qrc">
+     <normaloff>:/PNG-Icons/info.png</normaloff>:/PNG-Icons/info.png</iconset>
+   </property>
+   <property name="text">
+    <string>Calculate percent sequence identity</string>
    </property>
   </action>
  </widget>
