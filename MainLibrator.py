@@ -8273,52 +8273,71 @@ class LibratorMain(QtWidgets.QMainWindow):
 		AAseqArrayAlign = AlignSeqMuscle(AAseqArray, muscle_path, temp_folder)
 
 		# calculate similar percent matrix
-		data = []
+		NTdata = []
 		seq_names = []
-		min_value = 0
-		max_value = 0
 		for i in range(len(NTseqArrayAlign)):
 			seq_names.append(NTseqArrayAlign[i][0])
 			unit = [i, i, 100.00]
-			data.append(unit)
+			NTdata.append(unit)
 			for j in range(i + 1, len(NTseqArrayAlign)):
 				identPct = SequenceIdentity(NTseqArrayAlign[i][1], NTseqArrayAlign[j][1])
-				unit = [i, j, identPct]
-				data.append(unit)
-				unit = [j, i, identPct]
-				data.append(unit)
+				unit = [i, j, round(identPct,2)]
+				NTdata.append(unit)
+				unit = [j, i, round(identPct,2)]
+				NTdata.append(unit)
+
+		AAdata = []
+		for i in range(len(AAseqArrayAlign)):
+			unit = [i, i, 100.00]
+			AAdata.append(unit)
+			for j in range(i + 1, len(AAseqArrayAlign)):
+				identPct = SequenceIdentity(AAseqArrayAlign[i][1], AAseqArrayAlign[j][1])
+				unit = [i, j, round(identPct, 2)]
+				AAdata.append(unit)
+				unit = [j, i, round(identPct, 2)]
+				AAdata.append(unit)
 
 		xaxis_data = seq_names
 		yaxis_data = seq_names
 
-		# render HTML
-		my_pyecharts = (
-			HeatMap(init_opts=opts.InitOpts(width="380px", height="380px", renderer='svg'))
-				.add_xaxis(
-				xaxis_data,
-			)
-				.add_yaxis(
-				"My data selection",
-				yaxis_data,
-				data,
-				label_opts=opts.LabelOpts(is_show=False, position="inside"),
-			)
-				.set_series_opts()
-				.set_global_opts(
-				title_opts=opts.TitleOpts(title="HeatMap"),
-				visualmap_opts=opts.VisualMapOpts(min_=90, max_=100, range_color=['#ffffcc', '#006699']),
-				xaxis_opts=opts.AxisOpts(
-					type_="category",
-					axislabel_opts=opts.LabelOpts(rotate=-45, interval=0),
-					splitarea_opts=opts.SplitAreaOpts(
-						is_show=True, areastyle_opts=opts.AreaStyleOpts(opacity=1)
-					),
-				),
+		# render HTML NT
+		my_pyecharts = HeatMap(init_opts=opts.InitOpts(width="380px", height="380px", renderer='svg'))
+		my_pyecharts.add_xaxis(xaxis_data)
+		my_pyecharts.add_yaxis("My data selection",yaxis_data,NTdata,label_opts=opts.LabelOpts(is_show=True,position="inside", color='black',font_weight=2))
+		my_pyecharts.set_series_opts()
+		my_pyecharts.set_global_opts(
+			title_opts=opts.TitleOpts(title="Sequence similarity HeatMap (Pct. %)\nLeft: NT, Right: AA"),
+			visualmap_opts=opts.VisualMapOpts(min_=90, max_=100, range_color=['#ffffcc', '#006699']),
+			tooltip_opts=opts.TooltipOpts(),
+			xaxis_opts=opts.AxisOpts(
+				type_="category",
+				axislabel_opts=opts.LabelOpts(rotate=-45, interval=0),
+				splitarea_opts=opts.SplitAreaOpts(is_show=True, areastyle_opts=opts.AreaStyleOpts(opacity=1))
 			)
 		)
+
+		# render HTML AA
+		my_pyechartsAA = HeatMap(init_opts=opts.InitOpts(width="380px", height="380px", renderer='svg'))
+		my_pyechartsAA.add_xaxis(xaxis_data)
+		my_pyechartsAA.add_yaxis("My data selection", yaxis_data, AAdata,
+		                       label_opts=opts.LabelOpts(is_show=True, position="inside", color='black', font_weight=2))
+		my_pyechartsAA.set_series_opts()
+		my_pyechartsAA.set_global_opts(
+			visualmap_opts=opts.VisualMapOpts(min_=90, max_=100, range_color=['#ffffcc', '#006699']),
+			tooltip_opts=opts.TooltipOpts(),
+			xaxis_opts=opts.AxisOpts(
+				type_="category",
+				axislabel_opts=opts.LabelOpts(rotate=-45, interval=0),
+				splitarea_opts=opts.SplitAreaOpts(is_show=True, areastyle_opts=opts.AreaStyleOpts(opacity=1))
+			)
+		)
+
+		grid = Grid()
+		grid.add(my_pyecharts, grid_opts=opts.GridOpts(pos_bottom="20%", pos_left="20%", pos_right="50%"))
+		grid.add(my_pyechartsAA, grid_opts=opts.GridOpts(pos_bottom="20%", pos_left="65%", pos_right="5%"))
 		time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
 		html_path = os.path.join(temp_folder, time_stamp + '.html')
-		my_pyecharts.render(path=html_path)
+		grid.render(path=html_path)
 
 		# modify HTML
 		file_handle = open(html_path, 'r')
@@ -8333,7 +8352,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		style_line = lines[9]
 		style_pos = style_line.find('style')
 		style_line = style_line[0:style_pos] + \
-		             'style="position: fixed; top: 0px; left: 5%;width:800px; height:800px;"></div>'
+		             'style="position: fixed; top: 0px; left: 5%;width:95%; height:600px;"></div>'
 		lines[9] = style_line
 		content = '\n'.join(lines)
 		file_handle = open(html_path, 'w')
