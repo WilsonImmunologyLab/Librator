@@ -14,6 +14,7 @@ from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtWebChannel import *
 from pyecharts.charts import Bar, Pie, Line, Page, Grid, HeatMap
 from pyecharts import options as opts
+from pyecharts.commons.utils import JsCode
 from weblogo import read_seq_data, LogoData, LogoOptions, LogoFormat, eps_formatter, svg_formatter, SymbolColor, Alphabet, ColorScheme
 from PIL import Image
 
@@ -8303,7 +8304,23 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# render HTML NT
 		my_pyecharts = HeatMap(init_opts=opts.InitOpts(width="380px", height="380px", renderer='svg'))
 		my_pyecharts.add_xaxis(xaxis_data)
-		my_pyecharts.add_yaxis("My data selection",yaxis_data,NTdata,label_opts=opts.LabelOpts(is_show=True,position="inside", color='black',font_weight=2))
+		my_pyecharts.add_yaxis(
+			"Sequence identity(%)",
+			yaxis_data,
+			NTdata,
+			label_opts=opts.LabelOpts(
+				is_show=True,
+				position="inside",
+				color='black',
+				font_weight=2,
+				formatter=JsCode("""
+					function(params) {
+						data = params.data;
+						return data[2] + '%';
+					}					
+				""")
+			)
+		)
 		my_pyecharts.set_series_opts()
 		my_pyecharts.set_global_opts(
 			title_opts=opts.TitleOpts(title="Sequence similarity HeatMap (Pct. %)\nLeft: NT, Right: AA"),
@@ -8319,8 +8336,23 @@ class LibratorMain(QtWidgets.QMainWindow):
 		# render HTML AA
 		my_pyechartsAA = HeatMap(init_opts=opts.InitOpts(width="380px", height="380px", renderer='svg'))
 		my_pyechartsAA.add_xaxis(xaxis_data)
-		my_pyechartsAA.add_yaxis("My data selection", yaxis_data, AAdata,
-		                       label_opts=opts.LabelOpts(is_show=True, position="inside", color='black', font_weight=2))
+		my_pyechartsAA.add_yaxis(
+			"Sequence identity(%)",
+			yaxis_data,
+			AAdata,
+			label_opts=opts.LabelOpts(
+				is_show=True,
+				position="inside",
+				color='black',
+				font_weight=2,
+				formatter=JsCode("""
+					function(params) {
+						data = params.data;
+						return data[2] + '%';
+					}					
+				""")
+			)
+		)
 		my_pyechartsAA.set_series_opts()
 		my_pyechartsAA.set_global_opts(
 			visualmap_opts=opts.VisualMapOpts(min_=90, max_=100, range_color=['#ffffcc', '#006699']),
@@ -21163,6 +21195,9 @@ def SequenceIdentity(seq1, seq2):
 
 	identy = score/long*100
 	return identy
+
+def pctLabelFormatter(params):
+	return params.value + '%'
 
 # unlawful nucleotides
 unlawfulNT = {
