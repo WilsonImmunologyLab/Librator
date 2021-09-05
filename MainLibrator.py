@@ -8315,17 +8315,24 @@ class LibratorMain(QtWidgets.QMainWindow):
 				font_weight=2,
 				formatter=JsCode("""
 					function(params) {
-						data = params.data;
-						return data[2] + '%';
+						mydata = params.data;
+						return mydata[2] + '%';
 					}					
 				""")
 			)
 		)
 		my_pyecharts.set_series_opts()
 		my_pyecharts.set_global_opts(
-			title_opts=opts.TitleOpts(title="Sequence similarity HeatMap (Pct. %)\nLeft: NT, Right: AA"),
+			title_opts=opts.TitleOpts(title="Sequence similarity HeatMap\nLeft: NT, Right: AA"),
 			visualmap_opts=opts.VisualMapOpts(min_=90, max_=100, range_color=['#ffffcc', '#006699']),
-			tooltip_opts=opts.TooltipOpts(),
+			tooltip_opts=opts.TooltipOpts(
+				formatter=JsCode("""
+					function(params) {
+						mydata = params.data;
+						return 'Seq1: ' + Seqdata[mydata[0]] + '<br>' + 'Seq2: ' + Seqdata[mydata[1]] + '<br>' + 'Similarity: ' + mydata[2] + '%';
+					}	
+				""")
+			),
 			xaxis_opts=opts.AxisOpts(
 				type_="category",
 				axislabel_opts=opts.LabelOpts(rotate=-45, interval=0),
@@ -8347,8 +8354,8 @@ class LibratorMain(QtWidgets.QMainWindow):
 				font_weight=2,
 				formatter=JsCode("""
 					function(params) {
-						data = params.data;
-						return data[2] + '%';
+						mydata = params.data;
+						return mydata[2] + '%';
 					}					
 				""")
 			)
@@ -8356,7 +8363,14 @@ class LibratorMain(QtWidgets.QMainWindow):
 		my_pyechartsAA.set_series_opts()
 		my_pyechartsAA.set_global_opts(
 			visualmap_opts=opts.VisualMapOpts(min_=90, max_=100, range_color=['#ffffcc', '#006699']),
-			tooltip_opts=opts.TooltipOpts(),
+			tooltip_opts=opts.TooltipOpts(
+				formatter=JsCode("""
+								function(params) {
+									mydata = params.data;
+									return 'Seq1: ' + Seqdata[mydata[0]] + '<br>' + 'Seq2: ' + Seqdata[mydata[1]] + '<br>' + 'Similarity: ' + mydata[2] + '%';
+								}	
+							""")
+			),
 			xaxis_opts=opts.AxisOpts(
 				type_="category",
 				axislabel_opts=opts.LabelOpts(rotate=-45, interval=0),
@@ -8379,7 +8393,10 @@ class LibratorMain(QtWidgets.QMainWindow):
 		js_line = '<script type="text/javascript" src="' + \
 		          os.path.join(working_prefix,  'Js', 'echarts.min.js') + '"></script>' + \
 		          '<script src="' + os.path.join(working_prefix,  'Js', 'jquery.js') + '"></script>'
-		lines[5] = js_line
+		SeqdataLine = '<script>Seqdata=["'
+		SeqdataLine += '","'.join(seq_names)
+		SeqdataLine += '"]</script>'
+		lines[5] = js_line + "\n" + SeqdataLine
 		## edit style line
 		style_line = lines[9]
 		style_pos = style_line.find('style')
