@@ -19260,6 +19260,49 @@ def ReadFASTA(outfilename):
 		# Returns a list of seqname and sequences, but now aligned
 		return ReadFile
 
+def pct2color(data):
+	if data == 1:
+		color_group = 'con_lvl1'
+	elif data >= 0.75:
+		color_group = 'con_lvl2'
+	elif data >= 0.5:
+		color_group = 'con_lvl3'
+	elif data >= 0.25:
+		color_group = 'con_lvl4'
+	else:
+		color_group = 'con_lvl5'
+
+	return color_group
+
+def MakeConDivNT(class_name, line_name, data):
+	div_name = 	'<div class="' + class_name + ' 1">'
+	div_name += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
+	div_name += '</div>'
+	div_seq = '<div class="' + class_name + ' 2">'
+	count = 0
+	for i in range(len(data)):
+		if count == 0:
+			div_seq += '<span class="unit_pack">'
+		elif count%3 == 0:
+			div_seq += '</span><span class="unit_pack">'
+		div_seq += '<span class="unit ' + pct2color(data[i]) + '">&nbsp;</span>'
+		count += 1
+	div_seq += '</span>'
+	div_seq += '</div>'
+
+	return div_name, div_seq
+
+def MakeConDivAA(class_name, line_name, data):
+	div_name = '<div class="' + class_name + ' 1">'
+	div_name += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
+	div_name += '</div>'
+	div_seq = '<div class="' + class_name + ' 2">'
+	for i in range(len(data)):
+		div_seq += '<span class="unit_pack"><span class="insert ' + pct2color(data[i]) + '">&nbsp;</span><span class="unit ' + pct2color(data[i]) + '">&nbsp;</span><span class="insert ' + pct2color(data[i]) + '">&nbsp;</span></span>'
+	div_seq += '</div>'
+
+	return div_name, div_seq
+
 def MakeDivNT(class_name, line_name, data):
 	div_name = 	'<div class="' + class_name + ' 1">'
 	div_name += '<span class="name">' + line_name + '<span class ="name_tip">' +  line_name + '</span></span>'
@@ -19872,11 +19915,9 @@ def AlignSequencesHTMLNew(DataSet, template):
 		seqlen = len(firstOne[0])
 
 		consensusDNA = ''
-		tester = ''
-
+		conserveDNA = []
 		for i in range(seqlen):
 			tester = ''
-			Cnuc = ''
 			for key in all:
 				try:
 					seq = all[key][0]
@@ -19887,23 +19928,25 @@ def AlignSequencesHTMLNew(DataSet, template):
 					return
 
 			frequencies = [(c, tester.count(c)) for c in set(tester)]
-			Cnuc = max(frequencies, key=lambda x: x[1])[0]
-			consensusDNA += Cnuc
+			Cnuc = max(frequencies, key=lambda x: x[1])
+			conserveDNA.append(Cnuc[1]/len(tester))
+			consensusDNA += Cnuc[0]
 
 
 		consensusAA = ''
+		conserveAA = []
 		firstOne = all[SeqName]
 		seqlen = len(firstOne[1])
 		for i in range(seqlen):
 			tester = ''
-			Caa = ''
 			for key in all:
 				seq = all[key][1]
 				tester += seq[i]
 
 			frequencies = [(c, tester.count(c)) for c in set(tester)]
-			Caa = max(frequencies, key=lambda x: x[1])[0]
-			consensusAA += Caa
+			Caa = max(frequencies, key=lambda x: x[1])
+			conserveAA.append(Caa[1]/len(tester))
+			consensusAA += Caa[0]
 
 	# align consensus AA sequence with template to generate H1 and H3 numbering
 	compact_consensusAA = consensusAA.replace(' ', '')
@@ -20008,6 +20051,10 @@ def AlignSequencesHTMLNew(DataSet, template):
 	pos_nt_data = [list(range(1, len(consensusDNA) + 1)), list(range(1, len(consensusDNA) + 1))]
 	div_pos_nt = MakeDivPosNT('line line_pos_nt', 'Position NT:', 'Original NT position: ', pos_nt_data)
 	div_con_nt = MakeDivNT('line con_nt', 'Template NT:', consensusDNA)
+	# SEQ CONSERVE
+	if template == '':
+		div_seqcon_score_aa = MakeConDivAA('line line_pos_aa', 'AA conservation:', conserveAA)
+		div_seqcon_score_nt = MakeConDivNT('line line_pos_nt', 'NT conservation:', conserveDNA)
 
 	# initial and open HTML file
 	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
@@ -20047,6 +20094,11 @@ def AlignSequencesHTMLNew(DataSet, template):
 	seq_div += div_pos_nt[1] + '\n'
 	name_div += div_con_nt[0] + '\n'
 	seq_div += div_con_nt[1] + '\n'
+	if template == '':
+		name_div += div_seqcon_score_aa[0] + '\n'
+		seq_div += div_seqcon_score_aa[1] + '\n'
+		name_div += div_seqcon_score_nt[0] + '\n'
+		seq_div += div_seqcon_score_nt[1] + '\n'
 	# make sequence section HTML
 	i = 1
 	for key in all:
