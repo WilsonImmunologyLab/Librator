@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="PNG-Icons">
+    <file>SeqID.png</file>
     <file>G1_1.png</file>
     <file>G1_2.png</file>
     <file>G1_3.png</file>

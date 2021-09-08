@@ -1388,7 +1388,7 @@ class Ui_MainLibrator(object):
         self.actionUser_defined_epitopes.setObjectName("actionUser_defined_epitopes")
         self.SeqSimlarPct = QtWidgets.QAction(MainLibrator)
         icon49 = QtGui.QIcon()
-        icon49.addPixmap(QtGui.QPixmap(":/PNG-Icons/info.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon49.addPixmap(QtGui.QPixmap(":/PNG-Icons/SeqID.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.SeqSimlarPct.setIcon(icon49)
         self.SeqSimlarPct.setObjectName("SeqSimlarPct")
         self.menuFile.addAction(self.action_New)
