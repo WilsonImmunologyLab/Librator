@@ -8,7 +8,7 @@ added_files = [
              (r'C:\Users\leili\Documents\GitHub\Librator\Conf\Default','Conf/Default'),
              (r'C:\Users\leili\Documents\GitHub\Librator\Conf\db_record.txt','Temp'),
              (r'C:\Users\leili\Documents\GitHub\Librator\PDB\4jtv.cif','PDB'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/4jtv-ba1.pdb','PDB'),
+             (r'C:\Users\leili\Documents\GitHub\Librator\PDB\4jtv-ba1.pdb','PDB'),
              (r'C:\Users\leili\Documents\GitHub\Librator\PDB\4hmg.cif','PDB'),
              (r'C:\Users\leili\Documents\GitHub\Librator\Tools\*','Tools'),
              (r'C:\Users\leili\Documents\GitHub\Librator\Js\*','Js'),
