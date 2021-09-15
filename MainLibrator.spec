@@ -1,4 +1,6 @@
 # -*- mode: python ; coding: utf-8 -*-
+import sys
+sys.setrecursionlimit(5000)
 
 block_cipher = None
 
@@ -15,7 +17,6 @@ added_files = [
              ('/Users/leil/Documents/Projects/Librator/codon_usage_data','codon_usage_data'),
              ('/Users/leil/anaconda3/lib/python3.7/site-packages/python_codon_tables','python_codon_tables')
              ]
-
 
 a = Analysis(['MainLibrator.py'],
              pathex=['/Users/leil/Documents/Projects/Librator/Librator'],
@@ -54,8 +55,6 @@ app = BUNDLE(coll,
              icon='Flu.icns',
              bundle_identifier=None,
              info_plist={
-              'NSPrincipalClass': 'NSApplication',
-              'NSAppleScriptEnabled': False,
               'NSHumanReadableCopyright':"Copyright @ 2021, Wilson Lab, All Rights Reserved",
               'NSHighResolutionCapable': 'True'
              })

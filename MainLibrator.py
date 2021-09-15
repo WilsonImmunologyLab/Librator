@@ -1,7 +1,7 @@
 # Librator by Patrick Wilson Lab @Uchicago
 __author__ = 'wilsonp, lei'
 from PyQt5.QtCore import QObject, pyqtSlot, QTimer, QDateTime, Qt, QSortFilterProxyModel, QModelIndex, QEventLoop, pyqtSignal,\
-	QEventLoop, QUrl, QSize
+	QEventLoop, QUrl, QSize, QCoreApplication
 from PyQt5 import QtWidgets, QtPrintSupport, QtGui
 from PyQt5.QtWidgets import *
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
@@ -21907,6 +21907,9 @@ H3HA2Regions = {'1':'Stalk', '2':'Stalk', '3':'Stalk', '4':'Stalk', '5':'Stalk',
 
 if __name__ == '__main__':
 	import sys
+
+	QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
+	QCoreApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
 
 	app = QtWidgets.QApplication(sys.argv)
 	if system() == 'Windows':
