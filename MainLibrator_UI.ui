@@ -32,6 +32,9 @@
   <property name="windowTitle">
    <string>Librator</string>
   </property>
+  <property name="toolTip">
+   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Make a new Librator database file from checked records&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+  </property>
   <property name="animated">
    <bool>false</bool>
   </property>
@@ -379,7 +382,7 @@
               </size>
              </property>
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Make a new VGenes database file from checked records&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Make a new Librator database file from checked records&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="icon">
               <iconset resource="Resources/VgenesResources.qrc">
