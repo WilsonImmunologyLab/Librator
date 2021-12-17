@@ -102,6 +102,23 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
+       <widget class="QRadioButton" name="radioButtonNoneWeight">
+        <property name="text">
+         <string>None-weighted scoring</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="radioButtonPIMA">
+        <property name="text">
+         <string>PIMA-weighted scoring</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
        <widget class="QPushButton" name="FindKey">
         <property name="text">
          <string>Identify possible key residues</string>

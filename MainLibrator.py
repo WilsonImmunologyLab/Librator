@@ -1900,49 +1900,58 @@ class FindKeyDialog(QtWidgets.QDialog):
 			alignment_len = len(AAseq)
 		else:
 			return
-		
-		# start identify key residues between pos and neg group
-		AAIndexMap = {'I': 0, 'L': 1, 'V': 2, 'F': 3, 'M': 4, 'C': 5,
-		               'A': 6, 'G': 7, 'P': 8, 'T': 9, 'S': 10, 'Y': 11,
-		               'W': 12, 'Q': 13, 'N': 14, 'H': 15, 'E': 16, 'D': 17,
-		               'K': 18, 'R': 19}
-		score_list = dict()
-		pos_aa_list = []
-		neg_aa_list = []
-		for pos in range(alignment_len):
-			cur_pos_vector = [0] * 21
-			cur_neg_vector = [0] * 21
-			cur_pos_aa_str = ''
-			cur_neg_aa_str = ''
 
-			for key in pos_dict:
-				cur_seq = pos_dict[key]
-				cur_aa = cur_seq[pos]
-				cur_pos_aa_str += cur_aa
-				try:
-					cur_pos_vector[AAIndexMap[cur_aa]] += 1
-				except:
-					cur_pos_vector[20] += 1
-	
-			for key in neg_dict:
-				cur_seq = neg_dict[key]
-				cur_aa = cur_seq[pos]
-				cur_neg_aa_str += cur_aa
-				try:
-					cur_neg_vector[AAIndexMap[cur_aa]] += 1
-				except:
-					cur_neg_vector[20] += 1
+		if self.ui.radioButtonNoneWeight.isChecked():
+			# start identify key residues between pos and neg group
+			AAIndexMap = {'I': 0, 'L': 1, 'V': 2, 'F': 3, 'M': 4, 'C': 5,
+						   'A': 6, 'G': 7, 'P': 8, 'T': 9, 'S': 10, 'Y': 11,
+						   'W': 12, 'Q': 13, 'N': 14, 'H': 15, 'E': 16, 'D': 17,
+						   'K': 18, 'R': 19}
+			score_list = dict()
+			pos_aa_list = []
+			neg_aa_list = []
+			for pos in range(alignment_len):
+				cur_pos_vector = [0] * 21
+				cur_neg_vector = [0] * 21
+				cur_pos_aa_str = ''
+				cur_neg_aa_str = ''
 
-			cur_pos_vector = [i / float(len(pos_dict)) for i in cur_pos_vector]
-			cur_neg_vector = [i / float(len(neg_dict)) for i in cur_neg_vector]
-			
-			score = [cur_pos_vector[i] - cur_neg_vector[i] for i in range(len(cur_pos_vector))]
-			score = [i**2 for i in score]
-			score = sum(score)
-			score_list[pos] = score
-			pos_aa_list.append(cur_pos_aa_str)
-			neg_aa_list.append(cur_neg_aa_str)
-		
+				for key in pos_dict:
+					cur_seq = pos_dict[key]
+					cur_aa = cur_seq[pos]
+					cur_pos_aa_str += cur_aa
+					try:
+						cur_pos_vector[AAIndexMap[cur_aa]] += 1
+					except:
+						cur_pos_vector[20] += 1
+
+				for key in neg_dict:
+					cur_seq = neg_dict[key]
+					cur_aa = cur_seq[pos]
+					cur_neg_aa_str += cur_aa
+					try:
+						cur_neg_vector[AAIndexMap[cur_aa]] += 1
+					except:
+						cur_neg_vector[20] += 1
+
+				cur_pos_vector = [i / float(len(pos_dict)) for i in cur_pos_vector]
+				cur_neg_vector = [i / float(len(neg_dict)) for i in cur_neg_vector]
+
+				score = [cur_pos_vector[i] - cur_neg_vector[i] for i in range(len(cur_pos_vector))]
+				score = [i**2 for i in score]
+				score = sum(score)
+				score_list[pos] = score
+				pos_aa_list.append(cur_pos_aa_str)
+				neg_aa_list.append(cur_neg_aa_str)
+		elif self.ui.radioButtonPIMA.isChecked():
+			Msg = 'Will develop PIMA later!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
+		else:
+			Msg = 'Please choose a score method!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
+
 		# output
 		out_str = []
 		rank = 1
