@@ -1944,9 +1944,39 @@ class FindKeyDialog(QtWidgets.QDialog):
 				pos_aa_list.append(cur_pos_aa_str)
 				neg_aa_list.append(cur_neg_aa_str)
 		elif self.ui.radioButtonPIMA.isChecked():
-			Msg = 'Will develop PIMA later!'
-			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
-			return
+			score_list = dict()
+			pos_aa_list = []
+			neg_aa_list = []
+			# for each residue:
+			for index in range(alignment_len):
+				cur_pos_vector = [0] * 21
+				cur_neg_vector = [0] * 21
+				cur_pos_aa_str = ''
+				cur_neg_aa_str = ''
+				score = 0
+
+				print(index)
+				# compare amino acids between pos group and neg group pairwisely
+				for pos_key in pos_dict:
+					cur_pos_seq = pos_dict[pos_key]
+					cur_pos_aa = cur_pos_seq[index]
+					cur_pos_aa_str += cur_pos_aa
+
+					for neg_key in neg_dict:
+						cur_neg_seq = neg_dict[neg_key]
+						cur_neg_aa = cur_neg_seq[index]
+						cur_neg_aa_str += cur_neg_aa
+
+						# base number of PIMA is 1, we let PIMA - 1 so that score for same AAs will be 0
+						score += getScore(cur_pos_aa, cur_neg_aa, PIMA_MATRIX) - 1
+
+					cur_neg_aa_str += ','
+
+				cur_neg_aa_str = cur_neg_aa_str.split(',')[0]
+
+				score_list[index] = score
+				pos_aa_list.append(cur_pos_aa_str)
+				neg_aa_list.append(cur_neg_aa_str)
 		else:
 			Msg = 'Please choose a score method!'
 			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
@@ -21280,6 +21310,15 @@ def SequenceIdentity(seq1, seq2):
 def pctLabelFormatter(params):
 	return params.value + '%'
 
+def getScore(aa1, aa2, aaDict):
+	if aa1 not in aaDict.index:
+		aa1 = 'X'
+	if aa2 not in aaDict.columns:
+		aa2 = 'X'
+
+	return aaDict[aa1][aa2]
+
+
 # unlawful nucleotides
 unlawfulNT = {
 	'R':'A or G',
@@ -21916,6 +21955,32 @@ H3HA2Regions = {'1':'Stalk', '2':'Stalk', '3':'Stalk', '4':'Stalk', '5':'Stalk',
 				'170':'Stalk', '171':'Stalk', '172':'Stalk','173':'Stalk', '174':'Stalk', '175':'Stalk', '176':'Stalk',
 				'177':'Stalk', '178':'Stalk','179':'Stalk', '180':'Stalk', '181':'Stalk', '182':'Stalk', '183':'Stalk',
 				'184':'Stalk','185':'Stalk'}
+
+pima_data = np.array([
+	[1,6,6,6,6,6,6,3,6,6,6,6,6,6,4,4,4,6,6,6,1],
+	[6,1,5,5,6,4,4,6,6,6,6,3,6,6,6,5,5,6,6,6,1],
+	[6,5,1,3,6,5,4,6,6,6,6,5,6,6,6,5,5,6,6,6,1],
+	[6,5,3,1,6,5,3,6,6,6,6,5,6,6,6,5,5,6,6,6,1],
+	[6,6,6,6,1,6,6,6,6,5,5,6,5,5,6,6,6,5,5,5,1],
+	[6,4,5,5,6,1,3,6,6,6,6,4,6,6,6,5,5,6,6,6,1],
+	[6,4,4,3,6,3,1,6,6,6,6,4,6,6,6,5,5,6,6,6,1],
+	[3,6,6,6,6,6,6,1,6,6,6,6,6,6,4,4,4,6,6,6,1],
+	[6,6,6,6,6,6,6,6,1,6,6,6,6,4,6,6,6,4,4,6,1],
+	[6,6,6,6,5,6,6,6,6,1,4,6,4,5,6,6,6,5,5,3,1],
+	[6,6,6,6,5,6,6,6,6,4,1,6,3,5,6,6,6,5,5,4,1],
+	[6,3,5,5,6,4,4,6,6,6,6,1,6,6,6,5,5,6,6,6,1],
+	[6,6,6,6,5,6,6,6,6,4,3,6,1,5,6,6,6,5,5,4,1],
+	[6,6,6,6,5,6,6,6,4,5,5,6,5,1,6,6,6,3,3,5,1],
+	[4,6,6,6,6,6,6,4,6,6,6,6,6,6,1,4,4,6,6,6,1],
+	[4,5,5,5,6,5,5,4,6,6,6,5,6,6,4,1,3,6,6,6,1],
+	[4,5,5,5,6,5,5,4,6,6,6,5,6,6,4,3,1,6,6,6,1],
+	[6,6,6,6,5,6,6,6,4,5,5,6,5,3,6,6,6,1,3,5,1],
+	[6,6,6,6,5,6,6,6,4,5,5,6,5,3,6,6,6,3,1,5,1],
+	[6,6,6,6,5,6,6,6,6,3,4,6,4,5,6,6,6,5,5,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+					])
+AA_list = ["A","R","N","D","C","Q","E","G","H","I","L","K","M","F","P","S","T","W","Y","V","X"]
+PIMA_MATRIX = pd.DataFrame(pima_data, index=AA_list, columns=AA_list)
 
 if __name__ == '__main__':
 	import sys
