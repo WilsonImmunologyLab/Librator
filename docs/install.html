@@ -193,7 +193,12 @@ $(document).ready(function(){
                       <div class="MysourceCode">
                         <p>xattr -cr /Applications/Librator.app</p>
                       </div>
-                    Then your Librator will be working.
+                    Then your Librator will be working. </br>
+                    If you see: <div class="MysourceCode">
+                        <p>xattr: [Errno 13] Permission denied: '/Applications/Librator.app/Contents/Resources/tcl8/8.6/tdbc/sqlite3-1.0.6.tm'</p>
+                      </div>
+                      please try:<div class="MysourceCode"><p>sudo xattr -cr /Applications/Librator.app</p></div> and type your password.
+
                     </span>
                     <h3 class = 'title0' style="border: none; background: #4DAF4A;"> <img src="./img/windows.png" style="width: 21px;"><p style="margin-left: 30px; display: inline;">Windows 10</p></h3>
                     <p>For windows users, your system may notify you that this App is downloaded from internet and not safe, plase just click "details" and then click "trust" or "open anyway":</p>
