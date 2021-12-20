@@ -5,21 +5,21 @@ sys.setrecursionlimit(5000)
 block_cipher = None
 
 added_files = [
-             ('/Users/leil/Documents/Projects/Librator/Librator/Data/*','Data'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/Conf/db_record.txt','Conf'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/Conf/Default','Conf/Default'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/Conf/db_record.txt','Temp'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/4jtv.cif','PDB'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/4jtv-ba1.pdb','PDB'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/PDB/4hmg.cif','PDB'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/Tools/*','Tools'),
-             ('/Users/leil/Documents/Projects/Librator/Librator/Js/*','Js'),
-             ('/Users/leil/Documents/Projects/Librator/codon_usage_data','codon_usage_data'),
-             ('/Users/leil/anaconda3/lib/python3.7/site-packages/python_codon_tables','python_codon_tables')
+             ('/Users/lel4003/Documents/Projects/Librator/Librator/Data/*','Data'),
+             ('/Users/lel4003/Documents/Projects/Librator/Librator/Conf/db_record.txt','Conf'),
+             ('/Users/lel4003/Documents/Projects/Librator/Librator/Conf/Default','Conf/Default'),
+             ('/Users/lel4003/Documents/Projects/Librator/Librator/Conf/db_record.txt','Temp'),
+             ('/Users/lel4003/Documents/Projects/Librator/Librator/PDB/4jtv.cif','PDB'),
+             ('/Users/lel4003/Documents/Projects/Librator/Librator/PDB/4jtv-ba1.pdb','PDB'),
+             ('/Users/lel4003/Documents/Projects/Librator/Librator/PDB/4hmg.cif','PDB'),
+             ('/Users/lel4003/Documents/Projects/Librator/Librator/Tools/*','Tools'),
+             ('/Users/lel4003/Documents/Projects/Librator/Librator/Js/*','Js'),
+             ('/Users/lel4003/Documents/Projects/Librator/codon_usage_data','codon_usage_data'),
+             ('/Users/lel4003/Documents/Projects/Librator/python_codon_tables','python_codon_tables')
              ]
 
 a = Analysis(['MainLibrator.py'],
-             pathex=['/Users/leil/Documents/Projects/Librator/Librator'],
+             pathex=['/Users/lel4003/Documents/Projects/Librator/Librator'],
              binaries=[],
              datas=added_files,
              hiddenimports=['cmath'],
