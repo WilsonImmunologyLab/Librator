@@ -7838,6 +7838,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 			filename = openFile(self, 'FASTA')
 			HA_Read = ReadFASTA(filename)
 
+			if HA_Read == 'err':
+				Msg = 'Fail to read your fasta file! Please double check your sequence file to make sure it is correct!'
+				QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+				return
+
 			if len(HA_Read) == 0:
 				answer = informationMessage(self, 'Please select a FASTA file of a full length HA beginning at the first coding nucleotide', 'OK')
 				return
@@ -9064,6 +9069,12 @@ class LibratorMain(QtWidgets.QMainWindow):
 			return
 		template_path = os.path.join(working_prefix, 'Data', 'templates.fasta')
 		All_Template = ReadFASTA(template_path)
+
+		if All_Template == 'err':
+			Msg = 'Fail to read your fasta file! Please double check your sequence file to make sure it is correct!'
+			QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+			return
+
 		template = []
 		for item in All_Template:
 			if item[0] in checked_template:
@@ -15764,7 +15775,13 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 			for single_file_name in filename:
 				if os.path.isfile(single_file_name):
-					HA_Read = HA_Read + ReadFASTA(single_file_name)
+					fasta_res = ReadFASTA(single_file_name)
+					if fasta_res == 'err':
+						Msg = 'Fail to read your fasta file! Please double check your sequence file to make sure it is correct!'
+						QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+						return
+					else:
+						HA_Read = HA_Read + fasta_res
 				else:
 					Msg = 'File ' + single_file_name + ' do not exist! Please specify a folder for SEQ files!'
 					QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
@@ -19271,33 +19288,36 @@ def ReadFASTA(outfilename):
 	# SeqRead = []
 	Readline = ''
 	currentFile2 = ''
-	if outfilename is None:
-		pass
-	else:
-		with open(outfilename, 'r') as currentFile2:  # using with for this automatically closes the file even if you crash
-			# currentFile.write(FASTAfile)
-			Seq = ''
-			SeqName = ''
-			Readline = ''
-			for line in currentFile2:
-				Readline = line.replace('\n', '').replace('\r', '')
-				if Readline != '':
-					if Readline[0] == '>':
-						if Seq != '':  # saves the previous except on first round
-							SeqRead = (SeqName, Seq)
-							ReadFile.append(SeqRead)
-							Seq = ''
-						SeqName = Readline[1:]
-					else:
-						Seq += Readline
-			SeqRead = (SeqName, Seq)  # must save last one at end
-			ReadFile.append(SeqRead)
+	try:
+		if outfilename is None:
+			pass
+		else:
+			with open(outfilename, 'r') as currentFile2:  # using with for this automatically closes the file even if you crash
+				# currentFile.write(FASTAfile)
+				Seq = ''
+				SeqName = ''
+				Readline = ''
+				for line in currentFile2:
+					Readline = line.replace('\n', '').replace('\r', '')
+					if Readline != '':
+						if Readline[0] == '>':
+							if Seq != '':  # saves the previous except on first round
+								SeqRead = (SeqName, Seq)
+								ReadFile.append(SeqRead)
+								Seq = ''
+							SeqName = Readline[1:]
+						else:
+							Seq += Readline
+				SeqRead = (SeqName, Seq)  # must save last one at end
+				ReadFile.append(SeqRead)
 
-		# os.remove(workingfilename)
-		# os.chdir(CurDir)
+			# os.remove(workingfilename)
+			# os.chdir(CurDir)
 
-		# Returns a list of seqname and sequences, but now aligned
-		return ReadFile
+			# Returns a list of seqname and sequences, but now aligned
+			return ReadFile
+	except:
+		return 'err'
 
 def pct2color(data):
 	if data == 1:
