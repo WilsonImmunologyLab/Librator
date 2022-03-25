@@ -91,6 +91,10 @@ function showorhide(id)
     document.getElementById(id).style.display ="none";
   }
 }
+
+function messageFunction(){
+  alert("if you fail to install or open Librator later, please come back and click the yellow rect for solution!");
+}
 </script> 
 
 <style type="text/css">
@@ -165,14 +169,14 @@ $(document).ready(function(){
           <h1>Download Librator</h1>
           
           <a href="https://github.com/WilsonImmunologyLab/Librator/releases/download/v1.0.0/Librator-MAC.dmg">
-            <div class = 'download mac'>
+            <div class = 'download mac' onclick="messageFunction()">
               <img src="./img/mac.png" style="width: 23px;"> 
               <p style="margin-left: 80px; margin-right: 80px; display: inline;">Download for Mac</p>
             </div>
           </a>
           
           <a href="https://github.com/WilsonImmunologyLab/Librator/releases/download/v1.0.0/Librator-Win10.zip">
-            <div class = 'download windows' style="margin-left: 20px;">
+            <div class = 'download windows' style="margin-left: 20px;" onclick="messageFunction()">
               <img src="./img/windows.png" style="width: 21px;">
               <p style="margin-left: 80px; margin-right: 80px; display: inline;">Download for Windows</p>
             </div>
