@@ -9053,6 +9053,11 @@ class LibratorMain(QtWidgets.QMainWindow):
 
 	@pyqtSlot()
 	def on_RunFLUDB_clicked(self):
+		# disable this function for now
+		Msg = 'We found there are some inconsistence between our results and FLU DB results (due to different alignment tools), we decide to disable this function in Librator for now to avoid any misleading!'
+		QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+		return
+
 		# determine query sequence
 		query_name = self.ui.comboBoxAllSeq.currentText()
 		if query_name == '':
