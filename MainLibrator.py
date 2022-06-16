@@ -4684,36 +4684,36 @@ class basePathDialog(QtWidgets.QDialog):
 			pass
 
 	def browsemuscledir(self):  # browse and select path
-		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
-		if out_dir == '':
+		out_dir = QFileDialog.getOpenFileName(self, "select path", '~/')
+		if out_dir[0] == '':
 			return
-		self.ui.musclePath.setText(out_dir)
+		self.ui.musclePath.setText(out_dir[0])
 	def browseclustaldir(self):  # browse and select path
-		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
-		if out_dir == '':
+		out_dir = QFileDialog.getOpenFileName(self, "select path", '~/')
+		if out_dir[0] == '':
 			return
-		self.ui.clustaloPath.setText(out_dir)
+		self.ui.clustaloPath.setText(out_dir[0])
 	def browsepymoldir(self):  # browse and select path
-		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
-		if out_dir == '':
+		out_dir = QFileDialog.getOpenFileName(self, "select path", '~/')
+		if out_dir[0] == '':
 			return
-		self.ui.pymolPath.setText(out_dir)
+		self.ui.pymolPath.setText(out_dir[0])
 	def browseUCSFdir(self):  # browse and select path
-		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
-		if out_dir == '':
+		out_dir = QFileDialog.getOpenFileName(self, "select path", '~/')
+		if out_dir[0] == '':
 			return
-		self.ui.UCSFpath.setText(out_dir)
+		self.ui.UCSFpath.setText(out_dir[0])
 	def browseraxmldir(self):  # browse and select path
-		out_dir = QFileDialog.getExistingDirectory(self, "select path", '~/')
-		if out_dir == '':
+		out_dir = QFileDialog.getOpenFileName(self, "select path", '~/')
+		if out_dir[0] == '':
 			return
-		self.ui.RaxmlPath.setText(out_dir)
+		self.ui.RaxmlPath.setText(out_dir[0])
 	def browsesqlitedir(self):
 		out_dir, _ = QFileDialog.getOpenFileName(self, "select existing fragment DB", temp_folder,
 		                                         "Librator database Files (*.ldb);;All Files (*)")
-		if out_dir == '':
+		if out_dir[0] == '':
 			return
-		self.ui.FragmentDB_path.setText(out_dir)
+		self.ui.FragmentDB_path.setText(out_dir[0])
 
 	def accept(self):  # redo accept method
 		global working_prefix
