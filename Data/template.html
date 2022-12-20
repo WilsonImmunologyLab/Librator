@@ -132,7 +132,7 @@
 	border-top: 1px solid #9bdf70;
 	border-bottom:  1px solid #9bdf70;
 	background: #f0fbeb; 
-	margin-top:310px;
+	margin-top:160px;
 	z-index: -1;
 	position: fixed;
 	width: 200px;
@@ -144,7 +144,7 @@
 	border-top: 1px solid #9bdf70;
 	border-bottom:  1px solid #9bdf70;
 	background:#f0fbeb; 
-	margin-top:310px;
+	margin-top:160px;
 	margin-left: 200px;
 	z-index: -2;
 	position: absolute;
@@ -379,9 +379,9 @@ button:hover {
 .container {
   display: inline-block;
   position: relative;
-  padding-left: 35px;
+  padding-left: 20px;
   margin-left: 12px;
-  margin-right: 35px;
+  margin-right: 15px;
   cursor: pointer;
   font-size: 16px;
   -webkit-user-select: none;
@@ -457,8 +457,15 @@ button:hover {
 </style>
 <script>
     window.onscroll = function () {
-        var st = -Math.max(document.body.scrollTop, document.documentElement.scrollTop) + 310;
+	    	if($("#Legend").css('display') == 'none'){
+					var offset = 55;
+				} else {
+					var offset = 160;
+				}
+        
+        var st = -Math.max(document.body.scrollTop, document.documentElement.scrollTop) + offset;
         $(".name_div").css('margin-top',st + 'px');
+
     }
 </script>
 
@@ -566,6 +573,17 @@ $(document).ready(function() {
 
 <script type="text/javascript">
 $(document).ready(function(){
+	$("#showLegend").click(function(){
+		if($("#Legend").css('display') == 'none'){
+			$("#Legend").show("slow");
+			$(".name_div").css('margin-top','160px')
+			$(".seq_div").css('margin-top','160px')
+		} else {
+			$("#Legend").hide("slow")
+			$(".name_div").css('margin-top','55px')
+			$(".seq_div").css('margin-top','55px')
+		}
+	});
 	$("#aa").click(function(){
 		selectionChange()
 	});
@@ -811,40 +829,42 @@ function checkNGlyPos(AAseq){
 
 <div id="indicator" style="display:none;position:absolute;z-index:1;pointer-events: none" class = "help-tip"></div>
 
-<div class = 'header_div' style="margin-top: 10px; height: 65px;">
-	<h3 style="margin-left:12px;margin-top:5px;margin-bottom:5px;">Options:</h3>
-	<label class="container">AA
-	  <input id = 'aa' type="checkbox" checked="checked">
-	  <span class="checkmark"></span>
-	</label>
-	<label class="container">NT
-	  <input id = 'nt' type="checkbox" checked="checked">
-	  <span class="checkmark"></span>
-	</label>
-	<label class="container">H1
-	  <input id = 'h1' type="checkbox"  checked="checked">
-	  <span class="checkmark"></span>
-	</label>
-	<label class="container">H3
-	  <input id = 'h3' type="checkbox"  checked="checked">
-	  <span class="checkmark"></span>
-	</label>
-	<button id='saveImg' type="button">Save Img</button>
+<div class = 'header_div' style="margin-top: 10px; height: 35px;">
+	<h3 style="margin-left:12px;margin-top:5px;margin-bottom:5px;">
+		Options:
+		<label class="container">AA
+		  <input id = 'aa' type="checkbox" checked="checked">
+		  <span class="checkmark"></span>
+		</label>
+		<label class="container">NT
+		  <input id = 'nt' type="checkbox" checked="checked">
+		  <span class="checkmark"></span>
+		</label>
+		<label class="container">H1
+		  <input id = 'h1' type="checkbox"  checked="checked">
+		  <span class="checkmark"></span>
+		</label>
+		<label class="container">H3
+		  <input id = 'h3' type="checkbox"  checked="checked">
+		  <span class="checkmark"></span>
+		</label>
+		<button id='saveImg' type="button">Save Img</button>
+		
+		&nbsp;&nbsp;&nbsp;&nbsp; Display Mode:
+		<label class="container">Original
+		  <input id = 'original' type="checkbox"  checked="checked">
+		  <span class="checkmark"></span>
+		</label>
+		<label class="container">Template
+		  <input id = 'consensus' type="checkbox">
+		  <span class="checkmark"></span>
+		</label>
+		<select id = 'option' style="display: none;">
+		</select>
+
+		<button id='showLegend' type="button">Show/Hide Legend</button>
+	</h3>
 </div>
 
-<div class = 'header_div' style="margin-top: 100px; height: 65px;">
-	<h3 style="margin-left:12px;margin-top:5px;margin-bottom:5px;">Display Mode:</h3>
-	<label class="container">Original:
-	  <input id = 'original' type="checkbox"  checked="checked">
-	  <span class="checkmark"></span>
-	</label>
-	<label class="container">Template:
-	  <input id = 'consensus' type="checkbox">
-	  <span class="checkmark"></span>
-	</label>
-	<select id = 'option' style="display: none;">
-	</select>
-</div>
-
-<div class="header_div" style="margin-top: 200px;">
+<div id='Legend' class="header_div" style="margin-top: 60px;">
 	<h3 style="margin-left:12px;margin-top:0px;margin-bottom:0px;">Legend:</h3>
