@@ -3,6 +3,10 @@
 <script src="../Js/jquery.js"></script>
 <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
 <script src="../Js/html2canvas.min.js"></script>
+
+<!-- Latest Sortable -->
+<script src="../Js/Sortable.js"></script>
+
 </head>
 <html>
 
@@ -52,6 +56,15 @@
   z-index: 1;
 }
 
+.seq_pack:hover{
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+  -webkit-box-sizing:border-box;
+  background-color: #AFE1AF;
+  border: solid 1px black;
+  border-radius: 5px;
+}
+
 .unit_pack:hover .unit .unit_tip {
   visibility: visible;
 }
@@ -78,11 +91,12 @@
 }
 
 .name {
-	width: 200px;
-	height: 18px;
+	width: 180px;
+	height: auto;
 	display: inline-block;
 	font-size: 16px;
 	overflow: hidden;
+	padding-bottom: 0px;
 }
 
 .name .name_tip {
@@ -145,7 +159,7 @@
 	border-bottom:  1px solid #9bdf70;
 	background:#f0fbeb; 
 	margin-top:160px;
-	margin-left: 200px;
+	margin-left: 0px;
 	z-index: -2;
 	position: absolute;
 	display: block;
@@ -471,6 +485,16 @@ button:hover {
 
 <script type="text/javascript">
 $(document).ready(function() {
+	var el = document.getElementById('seq_div');
+	var sortable = Sortable.create(el, {
+			filter: '#ruler',
+	    animation: 150
+	});
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
     new QWebChannel(qt.webChannelTransport, function(channel) {
         var my_object = channel.objects.connection;
 
@@ -625,8 +649,8 @@ $(document).ready(function(){
 		var class_name_nt = ".line.con_nt.2";
 
 		var NGlyPos = checkNGlyPos(con_aa);
-		$(class_name_aa).html(MakeDivAA(con_aa, NGlyPos));
-		$(class_name_nt).html(MakeDivNT(con_nt));
+		$(class_name_aa).html('<span class="name">Template AA:<span class ="name_tip">Template AA:</span></span>' + MakeDivAA(con_aa, NGlyPos));
+		$(class_name_nt).html('<span class="name">Template NT:<span class ="name_tip">Template NT:</span></span>' + MakeDivNT(con_nt));
 
 		for(var seq in data) {
 			if(seq != 'Seq0'){
@@ -636,8 +660,9 @@ $(document).ready(function(){
 				var cur_con_nt = MakeConSeq(data[seq][2],con_nt);
 
 				var NGlyPos = checkNGlyPos(data[seq][1]);
-				$(class_name_aa).html(MakeDivAA(cur_con_aa, NGlyPos));
-				$(class_name_nt).html(MakeDivNT(cur_con_nt));
+				var name_span = '<span class="name">' + data[seq][0] + '<span class ="name_tip">' + data[seq][0] + '</span></span>'
+				$(class_name_aa).html(name_span + MakeDivAA(cur_con_aa, NGlyPos));
+				$(class_name_nt).html(name_span + MakeDivNT(cur_con_nt));
 			}
 		}
 		selectionChange()

@@ -8501,7 +8501,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 			EachIn = (SeqName, Sequence)
 			AlignIn.append(EachIn)
 		# make HTML
-		html_file = AlignSequencesHTMLNew(AlignIn, '')
+		html_file = AlignSequencesHTMLNewDrag(AlignIn, '')
 		if html_file[0] == 'W':
 			QMessageBox.warning(self, 'Warning', html_file, QMessageBox.Ok, QMessageBox.Ok)
 			return
@@ -8989,7 +8989,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 				EachIn = (SeqName, Sequence)
 				AlignIn.append(EachIn)
 			# make HTML
-			html_file = AlignSequencesHTMLNew(AlignIn, '')
+			html_file = AlignSequencesHTMLNewDrag(AlignIn, '')
 			if html_file[0] == 'W':
 				QMessageBox.warning(self, 'Warning', html_file, QMessageBox.Ok, QMessageBox.Ok)
 				return
@@ -19864,6 +19864,353 @@ def checkOverlap(x1,y1,x2,y2):
 		return True
 	else:
 		return False
+
+def AlignSequencesHTMLNewDrag(DataSet, template):
+	# import tempfile
+	import os
+	TupData = ()
+	global GLMsg
+	global working_prefix
+	global clustal_path
+	global temp_folder
+	global VGenesTextWindows
+	global muscle_path
+
+	# align selected sequences (AA) using muscle
+	all = dict()
+	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+	outfilename = os.path.join(temp_folder, "out-" + time_stamp + ".fas")
+	aafilename = os.path.join(temp_folder, "in-" + time_stamp + ".fas")
+	if len(DataSet) == 1:
+		SeqName = DataSet[0][0].replace('\n', '').replace('\r', '')
+		SeqName = SeqName.strip()
+		NTseq = DataSet[0][1]
+
+		# sequence check for NT seq
+		pattern = re.compile(r'[^ATCGUatcgu]')
+		cur_strange = pattern.findall(NTseq)
+		cur_strange = list(set(cur_strange))
+		if len(cur_strange) > 0:
+			ErrMsg = "We find Unlawful nucleotide: " + ','.join(cur_strange) + '\nfrom \n' + SeqName + \
+			         '\nPlease remove those Unlawful nucleotide!'
+			return ErrMsg
+
+		AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
+		all[SeqName] = [NTseq, AAseq]
+
+		out_handle = open(outfilename,'w')
+		out_handle.write('>' + SeqName + '\n')
+		out_handle.write(AAseq)
+		out_handle.close()
+	else:
+		aa_handle = open(aafilename,'w')
+		for record in DataSet:
+			SeqName = record[0].replace('\n', '').replace('\r', '')
+			SeqName = SeqName.strip()
+			NTseq = record[1]
+			# sequence check for NT seq
+			pattern = re.compile(r'[^ATCGUatcgu]')
+			cur_strange = pattern.findall(NTseq)
+			cur_strange = list(set(cur_strange))
+			if len(cur_strange) > 0:
+				ErrMsg = "We find Unlawful nucleotide: " + ','.join(cur_strange) + '\nfrom \n' + SeqName + \
+				         '\nPlease remove those Unlawful nucleotide!'
+				return ErrMsg
+
+			AAseq, ErMessage = LibratorSeq.Translator(NTseq, 0)
+			AAseq = AAseq.replace('*','X').replace('~','Z').replace('.','J')
+			all[SeqName] = [NTseq, AAseq]
+			aa_handle.write('>' + SeqName + '\n')
+			aa_handle.write(AAseq + '\n')
+		aa_handle.close()
+
+		if system() == 'Windows':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		elif system() == 'Darwin':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		elif system() == 'Linux':
+			cmd = muscle_path
+			cmd += " -in " + aafilename + " -out " + outfilename
+		else:
+			cmd = ''
+		try:
+			os.system(cmd)
+		except:
+			QMessageBox.warning(self, 'Warning', 'Fail to run muscle! Check your muscle path!', QMessageBox.Ok,
+			                    QMessageBox.Ok)
+			return
+
+	# read alignment file, make alignment NT and AA sequences
+	SeqName = ''
+	AAseq = ''
+	if os.path.isfile(outfilename):
+		currentfile = open(outfilename, 'r')
+		lines = currentfile.readlines()
+		for line in lines:
+			Readline = line.replace('\n', '').replace('\r', '')
+			Readline = Readline.strip()
+			if Readline[0] == '>':
+				if SeqName != '':
+					AAseq, NTseq = BuildNTalignment(AAseq, all[SeqName][0])
+					all[SeqName] = [NTseq, AAseq]
+				SeqName = Readline[1:]
+				AAseq = ''
+			else:
+				AAseq += Readline
+		AAseq, NTseq = BuildNTalignment(AAseq, all[SeqName][0])
+		all[SeqName] = [NTseq, AAseq]
+	else:
+		return
+
+	#if os.path.exists(outfilename):
+	#	os.remove(outfilename)
+	#if os.path.exists(aafilename):
+	#	os.remove(aafilename)
+
+	# generate consnesus sequences (AA and NT)
+	if len(all) == 1:
+		for key in all:
+			consensusDNA = all[key][0]
+			consensusAA = all[key][1]
+
+		conserveDNA = [1] * len(consensusDNA)
+		conserveAA = [1] * len(consensusAA)
+	else:
+		firstOne = all[SeqName]
+		seqlen = len(firstOne[0])
+
+		consensusDNA = ''
+		conserveDNA = []
+		for i in range(seqlen):
+			tester = ''
+			for key in all:
+				try:
+					seq = all[key][0]
+					tester += seq[i]
+				except:
+					Msg = 'Find sequence error in ' + key + ', please check your sequence!'
+					QMessageBox.warning(self, 'Warning', Msg, QMessageBox.Ok, QMessageBox.Ok)
+					return
+
+			frequencies = [(c, tester.count(c)) for c in set(tester)]
+			Cnuc = max(frequencies, key=lambda x: x[1])
+			conserveDNA.append(Cnuc[1]/len(tester))
+			consensusDNA += Cnuc[0]
+
+
+		consensusAA = ''
+		conserveAA = []
+		firstOne = all[SeqName]
+		seqlen = len(firstOne[1])
+		for i in range(seqlen):
+			tester = ''
+			for key in all:
+				seq = all[key][1]
+				tester += seq[i]
+
+			frequencies = [(c, tester.count(c)) for c in set(tester)]
+			Caa = max(frequencies, key=lambda x: x[1])
+			conserveAA.append(Caa[1]/len(tester))
+			consensusAA += Caa[0]
+
+	# align consensus AA sequence with template to generate H1 and H3 numbering
+	compact_consensusAA = consensusAA.replace(' ', '')
+	HANumbering(compact_consensusAA)
+
+	# prepare H1 data
+	pos_h1_data = []
+	H1_epitope_list = []
+	for i in range(1, len(H1Numbering) + 1):
+		cur_data = H1Numbering[i]
+		if cur_data[2] == '-':
+			unit = (cur_data[2], cur_data[2], '')
+		else:
+			if cur_data[0] == 'HA1':
+				if cur_data[2] in EpitopesDictH1_HA1:
+					style_code = EpitopesDictH1_HA1[cur_data[2]]
+					cur_epitopes = style_code.split(' ')
+					for epitope in cur_epitopes:
+						if epitope not in H1_epitope_list:
+							H1_epitope_list.append(epitope)
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
+				else:
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+			else:
+				if cur_data[2] in EpitopesDictH1_HA2:
+					style_code = EpitopesDictH1_HA2[cur_data[2]]
+					cur_epitopes = style_code.split(' ')
+					for epitope in cur_epitopes:
+						if epitope not in H1_epitope_list:
+							H1_epitope_list.append(epitope)
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), style_code)
+				else:
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
+		pos_h1_data.append(unit)
+	H1_epitope_list = sorted(H1_epitope_list)
+	# prepare H3 data
+	b = H3Numbering
+	pos_h3_data = []
+	H3_epitope_list = []
+	for i in range(1, len(H3Numbering) + 1):
+		cur_data = H3Numbering[i]
+		if cur_data[2] == '-':
+			unit = (cur_data[2], cur_data[2], '')
+		else:
+			if cur_data[0] == 'HA1':
+				if cur_data[2] in EpitopesDictH3_HA1:
+					style_code = EpitopesDictH3_HA1[cur_data[2]]
+					cur_epitopes = style_code.split(' ')
+					for epitope in cur_epitopes:
+						if epitope not in H3_epitope_list:
+							H3_epitope_list.append(epitope)
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), style_code)
+				else:
+					unit = (cur_data[2], 'HA1 ' + str(cur_data[2]), '')
+			else:
+				if cur_data[2] in EpitopesDictH3_HA2:
+					style_code = EpitopesDictH3_HA2[cur_data[2]]
+					cur_epitopes = style_code.split(' ')
+					for epitope in cur_epitopes:
+						if epitope not in H3_epitope_list:
+							H3_epitope_list.append(epitope)
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), style_code)
+				else:
+					unit = (cur_data[2], 'HA2 ' + str(cur_data[2]), '')
+		pos_h3_data.append(unit)
+	H3_epitope_list = sorted(H3_epitope_list)
+	# make legend HTML
+	legend_html = ''
+	## H1 numbering:
+	legend_html += '\t<span class="name" style="margin-left:12px;">H1 highlight region:</span>\n'
+	for epitope in H1_epitope_list:
+		epitope_name = EpitopesAnnotateH1[epitope]
+		str_len = len(epitope_name)*5 + 30
+		legend_html += '\t<span class="unit_long ' \
+		               + epitope + '" style="width: ' \
+		               + str(str_len) + 'px">' \
+		               + epitope_name + '</span>\n'
+	legend_html += '\t<br>\n'
+	## H3 numbering:
+	legend_html += '\t<span class="name" style="margin-left:12px;">H3 highlight region:</span>\n'
+	for epitope in H3_epitope_list:
+		epitope_name = EpitopesAnnotateH3[epitope]
+		str_len = len(epitope_name) * 5 + 30
+		legend_html += '\t<span class="unit_long ' \
+		               + epitope + '" style="width: ' \
+		               + str(str_len) + 'px">' \
+		               + epitope_name + '</span>\n'
+	legend_html += '\t<br>\n'
+	## N gly-site
+	legend_html += '\t<span class="name" style="margin-left:12px;">Potential N-Gly site:</span>\n'
+	legend_html += '\t<span class="unit_long NGlyPattern">N-X-S/T</span>\n'
+	legend_html += '</div>\n'
+
+	# make header HTML
+	pos_aa_data = [list(range(1,len(compact_consensusAA)+1)),list(range(1,len(compact_consensusAA)+1))]
+	div_pos_aa = MakeDivPosAA('line line_pos_aa', 'Position AA:', 'Original AA position: ', pos_aa_data)
+	div_h1 = MakeDivH1N3('line line_h1', 'H1 numbering', 'H1 numbering: ', pos_h1_data)
+	div_h3 = MakeDivH1N3('line line_h3', 'H3 numbering', 'H3 numbering: ', pos_h3_data)
+	#div_con_aa = MakeDivAA('line con_aa', 'Template AA:', compact_consensusAA)
+	pattern_pos = checkNGlyPos(compact_consensusAA)
+	div_con_aa = MakeDivAAHighPos('line con_aa', 'Template AA:', compact_consensusAA, pattern_pos)
+	pos_nt_data = [list(range(1, len(consensusDNA) + 1)), list(range(1, len(consensusDNA) + 1))]
+	div_pos_nt = MakeDivPosNT('line line_pos_nt', 'Position NT:', 'Original NT position: ', pos_nt_data)
+	div_con_nt = MakeDivNT('line con_nt', 'Template NT:', consensusDNA)
+	# SEQ CONSERVE
+	if template == '':
+		div_seqcon_score_aa = MakeConDivAA('line line_pos_aa', 'AA conservation:', conserveAA)
+		div_seqcon_score_nt = MakeConDivNT('line line_pos_nt', 'NT conservation:', conserveDNA)
+
+	# initial and open HTML file
+	time_stamp = time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+	out_html_file = os.path.join(temp_folder, time_stamp + '.html')
+	if template == '':
+		header_file = os.path.join(working_prefix, 'Data', 'template.html')
+	else:
+		header_file = os.path.join(working_prefix, 'Data', template + '.html')
+	shutil.copyfile(header_file, out_html_file)
+	out_file_handle = open(out_html_file, 'a')
+
+	width_aa = 14 * len(compact_consensusAA)
+	width_nt = 40 * len(compact_consensusAA)
+	CSSdata = '<style type="text/css">.seq_div {width: ' + str(width_nt) + 'px;}</style>\n'
+	JSdata = '<script type="text/javascript">\n'
+	JSdata += 'var seq_width = [' + str(width_nt) + ',' + str(width_aa) + '];\n'
+	JSdata += 'var data = {\n'
+	JSarray = []
+	JStext = '"Seq0":["Consensus","' + compact_consensusAA + '","' + consensusDNA + '"]'
+	JSarray.append(JStext)
+
+	Optiondata = '<script type="text/javascript">\n'
+	Optiondata += '$("#option").append("<option value =\'Seq0\'>Consensus Sequence</option>");\n'
+
+	name_div = '<div class="name_div">\n'
+	seq_div = '<div class = "seq_div" id="seq_div">\n<div id="ruler">\n'
+	# write header section
+	seq_div += div_pos_aa[1][0:30] + '<span class="name">Position AA:</span>' + div_pos_aa[1][30:] + '\n'
+	seq_div += div_h1[1][0:26] + '<span class="name">H1 numbering</span>' + div_h1[1][26:] + '\n'
+	seq_div += div_h3[1][0:26] + '<span class="name">H3 numbering</span>' + div_h3[1][26:] + '\n'
+	seq_div += div_con_aa[1][0:27] + '<span class="name">Template AA:<span class ="name_tip">Template AA:</span></span>' + div_con_aa[1][27:] + '\n'
+	seq_div += div_pos_nt[1][0:30] + '<span class="name">Position NT:</span>' + div_pos_nt[1][30:] + '\n'
+	seq_div += div_con_nt[1][0:27] + '<span class="name">Template NT:<span class ="name_tip">Template NT:</span></span>' + div_con_nt[1][27:] + '\n'
+	if template == '':
+		seq_div += div_seqcon_score_aa[1][0:32] + '<span class="name">AA conservation:<span class ="name_tip">AA conservation:</span></span>' + div_seqcon_score_aa[1][32:] + '\n'
+		seq_div += div_seqcon_score_nt[1][0:32] + '<span class="name">AA conservation:<span class ="name_tip">AA conservation:</span></span>' + div_seqcon_score_nt[1][32:] + '\n'
+	seq_div += '</div>\n'
+	# make sequence section HTML
+	i = 1
+	for key in all:
+		seq_nick_name = 'Seq' + str(i)
+
+		seq_nt = all[key][0]
+		seq_aa = all[key][1]
+		con_nt = MakeConSeq(seq_nt, consensusDNA)
+		con_aa = MakeConSeq(seq_aa, compact_consensusAA)
+
+		#div_aa = MakeDivAA('line line_aa ' + seq_nick_name, key, seq_aa)
+		#div_aa_mut = MakeDivAA('line line_con_aa ' + seq_nick_name, key, con_aa)
+		pattern_pos = checkNGlyPos(seq_aa)
+		div_aa = list(MakeDivAAHighPos('line line_aa ' + seq_nick_name, key, seq_aa, pattern_pos))
+		div_aa_mut = list(MakeDivAAHighPos('line line_con_aa ' + seq_nick_name, key, con_aa, pattern_pos))
+		div_nt = list(MakeDivNT('line line_nt ' + seq_nick_name, key, seq_nt))
+		div_nt_mut = list(MakeDivNT('line line_con_nt ' + seq_nick_name, key, con_nt))
+		name_span = '<span class="name">' + key + '<span class ="name_tip">' + key + '</span></span>'
+
+		# write sequence section
+		seq_div += '<div id="' + seq_nick_name + '" class="seq_pack">\n'
+		insert_index = div_aa[1].find('>') + 1
+		seq_div += div_aa[1][0:insert_index] + name_span + div_aa[1][insert_index:] + '\n'
+		insert_index = div_aa_mut[1].find('>') + 1
+		seq_div += div_aa_mut[1][0:insert_index] + name_span + div_aa_mut[1][insert_index:] + '\n'
+		insert_index = div_nt[1].find('>') + 1
+		seq_div += div_nt[1][0:insert_index] + name_span + div_nt[1][insert_index:] + '\n'
+		insert_index = div_nt_mut[1].find('>') + 1
+		seq_div += div_nt_mut[1][0:insert_index] + name_span + div_nt_mut[1][insert_index:] + '\n'
+		seq_div += '</div>\n'
+		JStext = '"' + seq_nick_name + '":["' + key + '","' + seq_aa + '","' + seq_nt + '"]'
+		JSarray.append(JStext)
+		Optiondata += '$("#option").append("<option value =\'' + seq_nick_name + '\'>' + key + '</option>");\n'
+		i += 1
+
+	JSdata += ',\n'.join(JSarray)
+	JSdata += '\n}\n</script>\n'
+	Optiondata += '</script>\n'
+
+	name_div += '</div>\n'
+	seq_div += '</div>\n'
+
+	out_file_handle.write(legend_html)
+	out_file_handle.write(CSSdata)
+	out_file_handle.write(JSdata)
+	out_file_handle.write(Optiondata)
+	out_file_handle.write('<div class="box">')
+	#out_file_handle.write(name_div)
+	out_file_handle.write(seq_div)
+	out_file_handle.write('\n</div>\n</body>\n</html>')
+	out_file_handle.close()
+	return out_html_file
 
 def AlignSequencesHTMLNew(DataSet, template):
 	# import tempfile
