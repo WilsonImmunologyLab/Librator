@@ -5,21 +5,21 @@ sys.setrecursionlimit(5000)
 block_cipher = None
 
 added_files = [
-             ('/Users/lel4003/Documents/Projects/Librator/Librator/Data/*','Data'),
-             ('/Users/lel4003/Documents/Projects/Librator/Librator/Conf/db_record.txt','Conf'),
-             ('/Users/lel4003/Documents/Projects/Librator/Librator/Conf/Default','Conf/Default'),
-             ('/Users/lel4003/Documents/Projects/Librator/Librator/Conf/db_record.txt','Temp'),
-             ('/Users/lel4003/Documents/Projects/Librator/Librator/PDB/4jtv.cif','PDB'),
-             ('/Users/lel4003/Documents/Projects/Librator/Librator/PDB/4jtv-ba1.pdb','PDB'),
-             ('/Users/lel4003/Documents/Projects/Librator/Librator/PDB/4hmg.cif','PDB'),
-             ('/Users/lel4003/Documents/Projects/Librator/Librator/Tools/*','Tools'),
-             ('/Users/lel4003/Documents/Projects/Librator/Librator/Js/*','Js'),
-             ('/Users/lel4003/Documents/Projects/Librator/codon_usage_data','codon_usage_data'),
-             ('/Users/lel4003/Documents/Projects/Librator/python_codon_tables','python_codon_tables')
+             ('./Data/*','Data'),
+             ('./Conf/db_record.txt','Conf'),
+             ('./Conf/Default','Conf/Default'),
+             ('./Conf/db_record.txt','Temp'),
+             ('./PDB/4jtv.cif','PDB'),
+             ('./PDB/4jtv-ba1.pdb','PDB'),
+             ('./PDB/4hmg.cif','PDB'),
+             ('./Tools/*','Tools'),
+             ('./Js/*','Js'),
+             ('./codon_usage_data','codon_usage_data'),
+             ('./python_codon_tables','python_codon_tables')
              ]
 
 a = Analysis(['MainLibrator.py'],
-             pathex=['/Users/lel4003/Documents/Projects/Librator/Librator'],
+             pathex=['./'],
              binaries=[],
              datas=added_files,
              hiddenimports=['cmath'],
@@ -55,6 +55,6 @@ app = BUNDLE(coll,
              icon='Flu.icns',
              bundle_identifier=None,
              info_plist={
-              'NSHumanReadableCopyright':"Copyright @ 2021, Wilson Lab, All Rights Reserved",
+              'NSHumanReadableCopyright':"Copyright @ 2022, Wilson Lab, All Rights Reserved",
               'NSHighResolutionCapable': 'True'
              })
