@@ -97,6 +97,7 @@
 	font-size: 16px;
 	overflow: hidden;
 	padding-bottom: 0px;
+	text-overflow: hidden;
 }
 
 .name .name_tip {
@@ -660,7 +661,11 @@ $(document).ready(function(){
 				var cur_con_nt = MakeConSeq(data[seq][2],con_nt);
 
 				var NGlyPos = checkNGlyPos(data[seq][1]);
-				var name_span = '<span class="name">' + data[seq][0] + '<span class ="name_tip">' + data[seq][0] + '</span></span>'
+				var seq_name = data[seq][0];
+				if (seq_name.length > 22) {
+					seq_name = seq_name.substr(0,20) + ' ...'
+				}
+				var name_span = '<span class="name">' + seq_name + '<span class ="name_tip">' + data[seq][0] + '</span></span>'
 				$(class_name_aa).html(name_span + MakeDivAA(cur_con_aa, NGlyPos));
 				$(class_name_nt).html(name_span + MakeDivNT(cur_con_nt));
 			}

@@ -20176,7 +20176,10 @@ def AlignSequencesHTMLNewDrag(DataSet, template):
 		div_aa_mut = list(MakeDivAAHighPos('line line_con_aa ' + seq_nick_name, key, con_aa, pattern_pos))
 		div_nt = list(MakeDivNT('line line_nt ' + seq_nick_name, key, seq_nt))
 		div_nt_mut = list(MakeDivNT('line line_con_nt ' + seq_nick_name, key, con_nt))
-		name_span = '<span class="name">' + key + '<span class ="name_tip">' + key + '</span></span>'
+		seq_name = key
+		if len(seq_name) > 22:
+			seq_name = seq_name[0:20] + ' ...'
+		name_span = '<span class="name">' + seq_name + '<span class ="name_tip">' + key + '</span></span>'
 
 		# write sequence section
 		seq_div += '<div id="' + seq_nick_name + '" class="seq_pack">\n'
