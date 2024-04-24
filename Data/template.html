@@ -514,7 +514,7 @@ $(document).ready(function() {
 
 			// legend part
 			let p1 = new Promise((resolve, reject) => {
-				html2canvas(document.getElementsByClassName("header_div")[2], {
+				html2canvas(document.getElementsByClassName("header_div")[1], {
 			        scale: 1,
 			        allowTaint: false,
 			        useCORS: true,
@@ -535,6 +535,7 @@ $(document).ready(function() {
 			promiseArr.push(p1);
 
 		    // header part
+			/*
 		    let p2 = new Promise((resolve, reject) => {
 				html2canvas(document.getElementsByClassName("name_div")[0], {
 			        scale: 1,
@@ -555,6 +556,7 @@ $(document).ready(function() {
 			    });
 			})
 			promiseArr.push(p2);
+			*/
 
 		    // alignment part
 		    let p3 = new Promise((resolve, reject) => {
@@ -581,15 +583,16 @@ $(document).ready(function() {
 			// get into after p1,p2,p3 finished
 			Promise.all(promiseArr).then(res => {
 			    var legendURL = document.getElementById("legend_img").href;
-				var headerURL = document.getElementById("header_img").href;
+				//var headerURL = document.getElementById("header_img").href;
 				var alignmentURL = document.getElementById("alignment_img").href;
 
 				document.body.removeChild(document.getElementById("legend_img"));
-				document.body.removeChild(document.getElementById("header_img"));
+				//document.body.removeChild(document.getElementById("header_img"));
 				document.body.removeChild(document.getElementById("alignment_img"));
 
 				$("#loading").css('display','none')
-				my_object.imgURL(legendURL, headerURL, alignmentURL)
+				//my_object.imgURL(legendURL, headerURL, alignmentURL)
+				my_object.imgURL(legendURL, alignmentURL)
 			})
 		});
     });

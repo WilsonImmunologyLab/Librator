@@ -2407,7 +2407,7 @@ class GibsonSingleDialog(QtWidgets.QDialog):
 
 class MyObjectCls(QObject):
 	updateSelectionSignal = pyqtSignal(str)
-	imgURLSignal = pyqtSignal(str, str, str)
+	imgURLSignal = pyqtSignal(str, str)
 
 	def __init__(self, parent=None):
 		QObject.__init__(self, parent)
@@ -2420,9 +2420,9 @@ class MyObjectCls(QObject):
 	def updateSelection(self, msg):
 		self.updateSelectionSignal.emit(msg)
 
-	@pyqtSlot(str, str, str)
-	def imgURL(self, url1, url2, url3):
-		self.imgURLSignal.emit(url1, url2, url3)
+	@pyqtSlot(str,  str)
+	def imgURL(self, url1,  url3):
+		self.imgURLSignal.emit(url1,  url3)
 
 class MyFigure(FigureCanvas):
     def __init__(self,width=5, height=4, dpi=100):
@@ -9015,7 +9015,7 @@ class LibratorMain(QtWidgets.QMainWindow):
 		else:
 			return
 
-	def savePNGfiles(self, url1, url2, url3):
+	def savePNGfiles(self, url1, url3):
 		print('save PNG')
 
 		options = QtWidgets.QFileDialog.Options()
@@ -9029,21 +9029,21 @@ class LibratorMain(QtWidgets.QMainWindow):
 			# set up path
 			path = re.sub('\.[^\.]+', '', new_png)
 			legend_file = path + '_legend.png'
-			header_file = path + '_header.png'
+			#header_file = path + '_header.png'
 			alignment_file = path + '_alignment.png'
 
 			# parse base64 string
 			url1 = re.sub(r'^[^,]+,', '', url1)
-			url2 = re.sub(r'^[^,]+,', '', url2)
+			#url2 = re.sub(r'^[^,]+,', '', url2)
 			url3 = re.sub(r'^[^,]+,', '', url3)
 
 			# decode and write to PNG file
 			with open(legend_file, 'wb') as fileObj:
 				bytes_base64 = url1.encode()
 				fileObj.write(base64.b64decode(bytes_base64))
-			with open(header_file, 'wb') as fileObj:
-				bytes_base64 = url2.encode()
-				fileObj.write(base64.b64decode(bytes_base64))
+			#with open(header_file, 'wb') as fileObj:
+			#	bytes_base64 = url2.encode()
+			#	fileObj.write(base64.b64decode(bytes_base64))
 			with open(alignment_file, 'wb') as fileObj:
 				bytes_base64 = url3.encode()
 				fileObj.write(base64.b64decode(bytes_base64))
