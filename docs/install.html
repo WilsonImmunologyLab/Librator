@@ -73,6 +73,23 @@
 .user:hover {
   background: #808A87;
 }
+
+/* Big pop + flash for the whole troubleshooting box after a download click */
+@keyframes popFlash {
+  0%   { transform: scale(1);    box-shadow: 0 0 0 0    rgba(244, 67, 54, 0); }
+  15%  { transform: scale(1.12); box-shadow: 0 0 0 14px rgba(244, 67, 54, 0.95); }
+  35%  { transform: scale(0.98); box-shadow: 0 0 0 22px rgba(244, 67, 54, 0.35); }
+  55%  { transform: scale(1.08); box-shadow: 0 0 0 14px rgba(244, 67, 54, 0.95); }
+  100% { transform: scale(1);    box-shadow: 0 0 0 0    rgba(244, 67, 54, 0); }
+}
+
+.flash-highlight {
+  animation: popFlash 1.3s ease-out 3;
+  transform-origin: top left;
+  border-radius: 6px;
+  position: relative;
+  z-index: 10;
+}
 </style>
 
 
@@ -93,7 +110,20 @@ function showorhide(id)
 }
 
 function messageFunction(){
-  alert("If you fail to install or open Librator later, please come back and click the yellow rect for solution!");
+  var section = document.getElementById('troubleshoot-section');
+  var header = document.getElementById('troubleshoot-header');
+  if (!section || !header) { return; }
+
+  // Expand the ENTIRE section, including every nested subsection (Mac / Windows)
+  $(section).find('.mycontent').css('display', 'block');
+
+  // Smooth-scroll the yellow box to the top of the view
+  header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Restart the pop + flash so the whole box zooms and glows every time
+  section.classList.remove('flash-highlight');
+  void section.offsetWidth; // force reflow to replay the animation
+  section.classList.add('flash-highlight');
 }
 </script> 
 
@@ -183,9 +213,9 @@ $(document).ready(function(){
           </a>
 
           <ul style="margin-top: 50px; list-style-type: none; margin-left: 0px; padding-left: 0px;">
-            <li style="margin-left: 0px;">
-              <h3 class = 'title0' style="background: yellow; color: black;"> 
-                <img src="./img/warning.png" style="width: 23px;"> 
+            <li id="troubleshoot-section" style="margin-left: 0px;">
+              <h3 id="troubleshoot-header" class = 'title0' style="background: yellow; color: black;">
+                <img src="./img/warning.png" style="width: 23px;">
                 <p style="margin-left: 30px; display: inline;"> Click here if you fail to install or open Librator!</p>
               </h3>
               <div class='mycontent' style="margin-left: 5%; width: 80%; ">
